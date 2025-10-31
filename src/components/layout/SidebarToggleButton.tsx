@@ -11,7 +11,11 @@ export function SidebarToggleButton({ className }: { className?: string }) {
       variant="ghost"
       size="icon"
       onClick={toggleSidebar}
-      className={cn("h-8 w-8 rounded-full", className)}
+      className={cn(
+        "absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 z-50",
+        "h-8 w-8 rounded-full",
+        className
+      )}
     >
       <Menu className="h-4 w-4" />
       <span className="sr-only">Toggle Sidebar</span>
