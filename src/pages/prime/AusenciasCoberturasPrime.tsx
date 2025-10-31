@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { KPICard } from "@/components/dashboard/KPICard";
 import { Users, Clock, CheckCircle, TrendingUp } from "lucide-react";
 import { ChartCard } from "@/components/dashboard/ChartCard";
@@ -10,6 +9,7 @@ import { useState } from "react";
 import { AusenciaClienteDetailModal } from "@/components/prime/AusenciaClienteDetailModal";
 import { AusenciaPostoDetailModal } from "@/components/prime/AusenciaPostoDetailModal";
 import { AusenciaColaboradorDetailModal } from "@/components/prime/AusenciaColaboradorDetailModal";
+
 export default function AusenciasCoberturasPrime() {
   const {
     selectedEmpresa,
@@ -98,7 +98,9 @@ export default function AusenciasCoberturasPrime() {
       setAusenciasColaboradorModalOpen(true);
     }
   };
-  return <div className="space-y-6 p-6">
+
+  return (
+    <div className="container mx-auto p-6 space-y-6">
       {/* KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard title="Absenteísmo" value={`${mediaAbsenteismo}%`} icon={Users} />
@@ -110,211 +112,188 @@ export default function AusenciasCoberturasPrime() {
         }} />
       </div>
 
-      {/* Absenteísmo e Ausência Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Absenteísmo e Ausência</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Absenteísmo por Empresa */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Absenteísmo por Empresa</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Empresa</TableHead>
-                    <TableHead className="text-right">% Absenteísmo</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredAbsenteismo.map(item => <TableRow key={item.empresa} className="cursor-pointer hover:bg-accent" onClick={() => handleAbsenteismoEmpresaClick(item.empresa)}>
-                      <TableCell className="font-medium">{item.empresa}</TableCell>
-                      <TableCell className="text-right">
-                        <span className="text-destructive font-semibold">{item.percentualAbsenteismo}%</span>
-                      </TableCell>
-                    </TableRow>)}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+      {/* Absenteísmo e Ausência por Empresa */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Absenteísmo por Empresa */}
+        <ChartCard title="Absenteísmo por Empresa">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Empresa</TableHead>
+                <TableHead className="text-right">% Absenteísmo</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAbsenteismo.map(item => (
+                <TableRow key={item.empresa} className="cursor-pointer hover:bg-accent" onClick={() => handleAbsenteismoEmpresaClick(item.empresa)}>
+                  <TableCell className="font-medium">{item.empresa}</TableCell>
+                  <TableCell className="text-right">
+                    <span className="text-destructive font-semibold">{item.percentualAbsenteismo}%</span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ChartCard>
 
-          {/* Ausências por Empresa */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Ausências por Empresa</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Empresa</TableHead>
-                    <TableHead className="text-right">Total de Horas</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredAusencias.map(item => <TableRow key={item.empresa} className="cursor-pointer hover:bg-accent" onClick={() => handleAusenciasEmpresaClick(item.empresa)}>
-                      <TableCell className="font-medium">{item.empresa}</TableCell>
-                      <TableCell className="text-right">{item.totalHoras}h</TableCell>
-                    </TableRow>)}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Ausências por Empresa */}
+        <ChartCard title="Ausências por Empresa">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Empresa</TableHead>
+                <TableHead className="text-right">Total de Horas</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAusencias.map(item => (
+                <TableRow key={item.empresa} className="cursor-pointer hover:bg-accent" onClick={() => handleAusenciasEmpresaClick(item.empresa)}>
+                  <TableCell className="font-medium">{item.empresa}</TableCell>
+                  <TableCell className="text-right">{item.totalHoras}h</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ChartCard>
+      </div>
 
+      {/* Evolução da Quantidade de Horas de Ausência */}
+      <ChartCard title="Evolução da Quantidade de Horas de Ausência">
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={evolucaoHorasAusencia}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="mes" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="horas" stroke="hsl(var(--destructive))" name="Horas Ausentes" strokeWidth={2} />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartCard>
 
-        {/* Evolução da Quantidade de Horas de Ausência - Full Width */}
-        <ChartCard title="Evolução da Quantidade de Horas de Ausência">
+      {/* Motivos e CIDs */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Motivos de Ausência */}
+        <ChartCard title="Motivos de Ausência">
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={evolucaoHorasAusencia}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="mes" />
-              <YAxis />
+            <PieChart>
+              <Pie data={motivosAusencia} cx="50%" cy="50%" labelLine={false} label={({
+                name,
+                value
+              }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                {motivosAusencia.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+              </Pie>
               <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="horas" stroke="hsl(var(--destructive))" name="Horas Ausentes" strokeWidth={2} />
-            </LineChart>
+            </PieChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Motivos de Ausência */}
-          <ChartCard title="Motivos de Ausência">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={motivosAusencia} cx="50%" cy="50%" labelLine={false} label={({
-                  name,
-                  value
-                }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
-                  {motivosAusencia.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartCard>
-
-          {/* Principais CIDs dos Atestados */}
-          <ChartCard title="Principais CIDs dos Atestados">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={principaisCIDs} cx="50%" cy="50%" labelLine={false} label={({
-                  name,
-                  value
-                }) => `${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
-                  {principaisCIDs.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-                <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{
-                  fontSize: '12px'
-                }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartCard>
-        </div>
-        </CardContent>
-      </Card>
-
-      {/* Cobertura Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Cobertura</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Evolução Coberturas vs. Ausências - Full Width */}
-          <ChartCard title="Evolução Coberturas vs. Ausências">
+        {/* Principais CIDs dos Atestados */}
+        <ChartCard title="Principais CIDs dos Atestados">
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={evolucaoCoberturasAusencias}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="mes" />
-              <YAxis />
+            <PieChart>
+              <Pie data={principaisCIDs} cx="50%" cy="50%" labelLine={false} label={({
+                name,
+                value
+              }) => `${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                {principaisCIDs.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+              </Pie>
               <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="horasAusentes" stroke="hsl(var(--destructive))" name="Horas Ausentes" strokeWidth={2} />
-              <Line type="monotone" dataKey="horasCobertas" stroke="hsl(var(--chart-1))" name="Horas Cobertas" strokeWidth={2} />
-            </LineChart>
+              <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{
+                fontSize: '12px'
+              }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      </div>
+
+      {/* Evolução Coberturas vs. Ausências */}
+      <ChartCard title="Evolução Coberturas vs. Ausências">
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={evolucaoCoberturasAusencias}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="mes" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="horasAusentes" stroke="hsl(var(--destructive))" name="Horas Ausentes" strokeWidth={2} />
+            <Line type="monotone" dataKey="horasCobertas" stroke="hsl(var(--chart-1))" name="Horas Cobertas" strokeWidth={2} />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      {/* Coberturas e Tipo de Cobertura */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Coberturas por Empresa */}
+        <ChartCard title="Coberturas por Empresa">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Empresa</TableHead>
+                <TableHead className="text-right">% de Cobertura de Ausência</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredCoberturas.map(item => (
+                <TableRow key={item.empresa}>
+                  <TableCell className="font-medium">{item.empresa}</TableCell>
+                  <TableCell className="text-right">
+                    <span className="text-success font-semibold">{item.percentualCobertura}%</span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ChartCard>
+
+        {/* Tipo de Cobertura */}
+        <ChartCard title="Tipo de Cobertura">
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie data={tipoCobertura} cx="50%" cy="50%" labelLine={false} label={({
+                name,
+                value
+              }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                {tipoCobertura.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      </div>
+
+      {/* Motivo e Recurso de Cobertura */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Motivo de Cobertura */}
+        <ChartCard title="Motivo de Cobertura">
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie data={motivoCobertura} cx="50%" cy="50%" labelLine={false} label={({
+                name,
+                value
+              }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                {motivoCobertura.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+              </Pie>
+              <Tooltip />
+            </PieChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Coberturas por Empresa */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Coberturas por Empresa</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Empresa</TableHead>
-                    <TableHead className="text-right">% de Cobertura de Ausência</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredCoberturas.map(item => <TableRow key={item.empresa}>
-                      <TableCell className="font-medium">{item.empresa}</TableCell>
-                      <TableCell className="text-right">
-                        <span className="text-success font-semibold">{item.percentualCobertura}%</span>
-                      </TableCell>
-                    </TableRow>)}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-
-          {/* Tipo de Cobertura */}
-          <ChartCard title="Tipo de Cobertura">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={tipoCobertura} cx="50%" cy="50%" labelLine={false} label={({
-                  name,
-                  value
-                }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
-                  {tipoCobertura.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartCard>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Motivo de Cobertura */}
-          <ChartCard title="Motivo de Cobertura">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={motivoCobertura} cx="50%" cy="50%" labelLine={false} label={({
-                  name,
-                  value
-                }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
-                  {motivoCobertura.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartCard>
-
-          {/* Recurso de Cobertura */}
-          <ChartCard title="Recurso de Cobertura">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={recursoCobertura} cx="50%" cy="50%" labelLine={false} label={({
-                  name,
-                  value
-                }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
-                  {recursoCobertura.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartCard>
-        </div>
-        </CardContent>
-      </Card>
+        {/* Recurso de Cobertura */}
+        <ChartCard title="Recurso de Cobertura">
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie data={recursoCobertura} cx="50%" cy="50%" labelLine={false} label={({
+                name,
+                value
+              }) => `${name}: ${value}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                {recursoCobertura.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      </div>
 
       {/* Modals */}
       <AusenciaClienteDetailModal isOpen={absenteismoModalOpen} onClose={() => setAbsenteismoModalOpen(false)} empresa={absenteismoSelectedEmpresa} clientes={absenteismoClientes} onClienteClick={handleAbsenteismoClienteClick} tipo="absenteismo" />
@@ -323,5 +302,6 @@ export default function AusenciasCoberturasPrime() {
       <AusenciaClienteDetailModal isOpen={ausenciasModalOpen} onClose={() => setAusenciasModalOpen(false)} empresa={ausenciasSelectedEmpresa} clientes={ausenciasClientes} onClienteClick={handleAusenciasClienteClick} tipo="ausencias" />
       <AusenciaPostoDetailModal isOpen={ausenciasPostoModalOpen} onClose={() => setAusenciasPostoModalOpen(false)} cliente={ausenciasSelectedCliente} postos={ausenciasPostos} tipo="ausencias" onPostoClick={handleAusenciasPostoClick} />
       <AusenciaColaboradorDetailModal isOpen={ausenciasColaboradorModalOpen} onClose={() => setAusenciasColaboradorModalOpen(false)} posto={ausenciasSelectedPosto} colaboradores={ausenciasColaboradores} tipo="ausencias" />
-    </div>;
+    </div>
+  );
 }
