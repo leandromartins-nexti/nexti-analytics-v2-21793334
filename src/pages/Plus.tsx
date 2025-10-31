@@ -4,131 +4,64 @@ import { KPICard } from "@/components/dashboard/KPICard";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DollarSign, Users, TrendingUp, Percent, Gift } from "lucide-react";
 import { useState, useMemo } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  Cell,
-} from "recharts";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  custoTotalBeneficios,
-  custoPerCapita,
-  variacaoMensal,
-  taxaMediaUtilizacao,
-  totalGratificacoes,
-  evolucaoCustos,
-  custoPorEmpresa,
-  evolucaoPerCapita,
-  utilizacaoVRVA,
-  rankingMenorUtilizacao,
-  rankingMaiorUtilizacao,
-  utilizacaoVT,
-  evolucaoGratificacoes,
-  rankingGratificacoesCargo,
-  custoDetalhadoPorEmpresa,
-} from "@/lib/plusData";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Cell } from "recharts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { custoTotalBeneficios, custoPerCapita, variacaoMensal, taxaMediaUtilizacao, totalGratificacoes, evolucaoCustos, custoPorEmpresa, evolucaoPerCapita, utilizacaoVRVA, rankingMenorUtilizacao, rankingMaiorUtilizacao, utilizacaoVT, evolucaoGratificacoes, rankingGratificacoesCargo, custoDetalhadoPorEmpresa } from "@/lib/plusData";
 import { CustoClienteDetailModal } from "@/components/plus/CustoClienteDetailModal";
 import { CustoPostoDetailModal } from "@/components/plus/CustoPostoDetailModal";
-
 const COLORS = {
   chart1: "hsl(var(--chart-1))",
   chart2: "hsl(var(--chart-2))",
   chart3: "hsl(var(--chart-3))",
   chart4: "hsl(var(--chart-4))",
-  chart5: "hsl(var(--chart-5))",
+  chart5: "hsl(var(--chart-5))"
 };
-
 function PlusDashboardContent() {
   // State for drilldown modals - Custo
   const [selectedEmpresaCusto, setSelectedEmpresaCusto] = useState<string | null>(null);
   const [selectedClienteCusto, setSelectedClienteCusto] = useState<string | null>(null);
 
   // Prepare data for custo table
-  const custoTable = Object.entries(custoDetalhadoPorEmpresa).map(
-    ([empresa, data]: [string, any]) => ({
-      empresa,
-      cnpj: data.cnpj,
-      custo: data.custo,
-      perCapita: data.perCapita,
-      variacao: data.variacao,
-    })
-  );
+  const custoTable = Object.entries(custoDetalhadoPorEmpresa).map(([empresa, data]: [string, any]) => ({
+    empresa,
+    cnpj: data.cnpj,
+    custo: data.custo,
+    perCapita: data.perCapita,
+    variacao: data.variacao
+  }));
 
   // Get clientes for selected empresa - Custo
-  const clientesCusto = selectedEmpresaCusto
-    ? Object.entries(
-        (custoDetalhadoPorEmpresa as any)[selectedEmpresaCusto].clientes
-      ).map(([cliente, data]: [string, any]) => ({
-        cliente,
-        cnpj: data.cnpj,
-        custo: data.custo,
-        perCapita: data.perCapita,
-        variacao: data.variacao,
-      }))
-    : [];
+  const clientesCusto = selectedEmpresaCusto ? Object.entries((custoDetalhadoPorEmpresa as any)[selectedEmpresaCusto].clientes).map(([cliente, data]: [string, any]) => ({
+    cliente,
+    cnpj: data.cnpj,
+    custo: data.custo,
+    perCapita: data.perCapita,
+    variacao: data.variacao
+  })) : [];
 
   // Get postos for selected cliente - Custo
-  const postosCusto =
-    selectedEmpresaCusto && selectedClienteCusto
-      ? (custoDetalhadoPorEmpresa as any)[selectedEmpresaCusto].clientes[
-          selectedClienteCusto
-        ].postos
-      : [];
-
-  return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader title="Gestão e Custo de Benefícios: Nexti Plus" />
+  const postosCusto = selectedEmpresaCusto && selectedClienteCusto ? (custoDetalhadoPorEmpresa as any)[selectedEmpresaCusto].clientes[selectedClienteCusto].postos : [];
+  return <div className="min-h-screen bg-background">
+      
 
       <div className="container mx-auto p-6 space-y-6">
         {/* Big Numbers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard
-            title="Custo Total de Benefícios"
-            value={`R$ ${custoTotalBeneficios.toLocaleString("pt-BR")}`}
-            icon={DollarSign}
-          />
+          <KPICard title="Custo Total de Benefícios" value={`R$ ${custoTotalBeneficios.toLocaleString("pt-BR")}`} icon={DollarSign} />
 
-          <KPICard
-            title="Custo Per Capita"
-            value={`R$ ${custoPerCapita.toLocaleString("pt-BR")}`}
-            icon={Users}
-          />
+          <KPICard title="Custo Per Capita" value={`R$ ${custoPerCapita.toLocaleString("pt-BR")}`} icon={Users} />
 
-          <KPICard
-            title="Variação Mensal"
-            value={`${variacaoMensal}%`}
-            icon={TrendingUp}
-            trend={{
-              value: variacaoMensal,
-              isPositive: false,
-            }}
-          />
+          <KPICard title="Variação Mensal" value={`${variacaoMensal}%`} icon={TrendingUp} trend={{
+          value: variacaoMensal,
+          isPositive: false
+        }} />
 
-          <KPICard
-            title="Taxa Média de Utilização"
-            value={`${taxaMediaUtilizacao}%`}
-            icon={Percent}
-          />
+          <KPICard title="Taxa Média de Utilização" value={`${taxaMediaUtilizacao}%`} icon={Percent} />
         </div>
 
         {/* 1. CUSTOS TOTAIS */}
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold mb-4">Custos Totais</h2>
+          
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Evolução mensal do custo total */}
@@ -138,19 +71,11 @@ function PlusDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="custo"
-                    stroke={COLORS.chart1}
-                    strokeWidth={2}
-                    name="Custo (R$)"
-                  />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
+                  <Line type="monotone" dataKey="custo" stroke={COLORS.chart1} strokeWidth={2} name="Custo (R$)" />
                 </LineChart>
               </ResponsiveContainer>
             </ChartCard>
@@ -162,12 +87,10 @@ function PlusDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="empresa" stroke="hsl(var(--muted-foreground))" fontSize={10} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                    }}
-                  />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Bar dataKey="custo" fill={COLORS.chart2} name="Custo (R$)" />
                 </BarChart>
               </ResponsiveContainer>
@@ -188,12 +111,7 @@ function PlusDashboardContent() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {custoTable.map((item) => (
-                  <TableRow
-                    key={item.empresa}
-                    className="cursor-pointer hover:bg-accent"
-                    onClick={() => setSelectedEmpresaCusto(item.empresa)}
-                  >
+                {custoTable.map(item => <TableRow key={item.empresa} className="cursor-pointer hover:bg-accent" onClick={() => setSelectedEmpresaCusto(item.empresa)}>
                     <TableCell className="font-medium">{item.empresa}</TableCell>
                     <TableCell>{item.cnpj}</TableCell>
                     <TableCell className="text-right">
@@ -203,23 +121,16 @@ function PlusDashboardContent() {
                       {item.perCapita.toLocaleString("pt-BR")}
                     </TableCell>
                     <TableCell className="text-right">
-                      <span
-                        className={
-                          item.variacao > 0 ? "text-destructive" : "text-success"
-                        }
-                      >
+                      <span className={item.variacao > 0 ? "text-destructive" : "text-success"}>
                         {item.variacao > 0 ? "+" : ""}
                         {item.variacao}%
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      {custoPorEmpresa
-                        .find((e) => e.empresa === item.empresa)
-                        ?.percentualTotal.toFixed(1)}
+                      {custoPorEmpresa.find(e => e.empresa === item.empresa)?.percentualTotal.toFixed(1)}
                       %
                     </TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </ChartCard>
@@ -235,19 +146,11 @@ function PlusDashboardContent() {
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--popover))",
-                    border: "1px solid hsl(var(--border))",
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="perCapita"
-                  stroke={COLORS.chart3}
-                  strokeWidth={2}
-                  name="Per Capita (R$)"
-                />
+                <Tooltip contentStyle={{
+                backgroundColor: "hsl(var(--popover))",
+                border: "1px solid hsl(var(--border))"
+              }} />
+                <Line type="monotone" dataKey="perCapita" stroke={COLORS.chart3} strokeWidth={2} name="Per Capita (R$)" />
               </LineChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -265,12 +168,10 @@ function PlusDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="empresa" stroke="hsl(var(--muted-foreground))" fontSize={10} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                    }}
-                  />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Bar dataKey="percentual" fill={COLORS.chart4} name="Utilização (%)" />
                 </BarChart>
               </ResponsiveContainer>
@@ -289,16 +190,14 @@ function PlusDashboardContent() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {utilizacaoVRVA.map((item, index) => (
-                      <TableRow key={index}>
+                    {utilizacaoVRVA.map((item, index) => <TableRow key={index}>
                         <TableCell className="font-medium">{item.empresa}</TableCell>
                         <TableCell>{item.fornecedor}</TableCell>
                         <TableCell className="text-right">
                           R$ {item.utilizado.toLocaleString("pt-BR")}
                         </TableCell>
                         <TableCell className="text-right">{item.percentual}%</TableCell>
-                      </TableRow>
-                    ))}
+                      </TableRow>)}
                   </TableBody>
                 </Table>
               </div>
@@ -318,15 +217,13 @@ function PlusDashboardContent() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {rankingMenorUtilizacao.map((item, index) => (
-                      <TableRow key={index}>
+                    {rankingMenorUtilizacao.map((item, index) => <TableRow key={index}>
                         <TableCell className="font-medium">{item.nome}</TableCell>
                         <TableCell>{item.cargo}</TableCell>
                         <TableCell className="text-right">
                           <span className="text-destructive">{item.percentual}%</span>
                         </TableCell>
-                      </TableRow>
-                    ))}
+                      </TableRow>)}
                   </TableBody>
                 </Table>
               </div>
@@ -343,15 +240,13 @@ function PlusDashboardContent() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {rankingMaiorUtilizacao.map((item, index) => (
-                      <TableRow key={index}>
+                    {rankingMaiorUtilizacao.map((item, index) => <TableRow key={index}>
                         <TableCell className="font-medium">{item.nome}</TableCell>
                         <TableCell>{item.cargo}</TableCell>
                         <TableCell className="text-right">
                           <span className="text-success">{item.percentual}%</span>
                         </TableCell>
-                      </TableRow>
-                    ))}
+                      </TableRow>)}
                   </TableBody>
                 </Table>
               </div>
@@ -371,12 +266,10 @@ function PlusDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="empresa" stroke="hsl(var(--muted-foreground))" fontSize={10} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                    }}
-                  />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Bar dataKey="percentual" fill={COLORS.chart5} name="Utilização (%)" />
                 </BarChart>
               </ResponsiveContainer>
@@ -395,16 +288,14 @@ function PlusDashboardContent() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {utilizacaoVT.map((item, index) => (
-                      <TableRow key={index}>
+                    {utilizacaoVT.map((item, index) => <TableRow key={index}>
                         <TableCell className="font-medium">{item.empresa}</TableCell>
                         <TableCell>{item.fornecedor}</TableCell>
                         <TableCell className="text-right">
                           R$ {item.utilizado.toLocaleString("pt-BR")}
                         </TableCell>
                         <TableCell className="text-right">{item.percentual}%</TableCell>
-                      </TableRow>
-                    ))}
+                      </TableRow>)}
                   </TableBody>
                 </Table>
               </div>
@@ -424,19 +315,11 @@ function PlusDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    stroke={COLORS.chart1}
-                    strokeWidth={2}
-                    name="Total (R$)"
-                  />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
+                  <Line type="monotone" dataKey="total" stroke={COLORS.chart1} strokeWidth={2} name="Total (R$)" />
                 </LineChart>
               </ResponsiveContainer>
             </ChartCard>
@@ -447,19 +330,11 @@ function PlusDashboardContent() {
                 <BarChart data={rankingGratificacoesCargo} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis
-                    type="category"
-                    dataKey="cargo"
-                    stroke="hsl(var(--muted-foreground))"
-                    fontSize={10}
-                    width={150}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                    }}
-                  />
+                  <YAxis type="category" dataKey="cargo" stroke="hsl(var(--muted-foreground))" fontSize={10} width={150} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Bar dataKey="total" fill={COLORS.chart2} name="Total (R$)" />
                 </BarChart>
               </ResponsiveContainer>
@@ -479,8 +354,7 @@ function PlusDashboardContent() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {rankingGratificacoesCargo.map((item, index) => (
-                  <TableRow key={index}>
+                {rankingGratificacoesCargo.map((item, index) => <TableRow key={index}>
                     <TableCell className="font-medium">{item.cargo}</TableCell>
                     <TableCell className="text-right">
                       R$ {item.total.toLocaleString("pt-BR")}
@@ -491,43 +365,24 @@ function PlusDashboardContent() {
                     </TableCell>
                     <TableCell className="text-right">
                       R${" "}
-                      {Math.round(item.total / item.colaboradores).toLocaleString(
-                        "pt-BR"
-                      )}
+                      {Math.round(item.total / item.colaboradores).toLocaleString("pt-BR")}
                     </TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </ChartCard>
         </div>
 
         {/* Modals - Custo */}
-        <CustoClienteDetailModal
-          isOpen={selectedEmpresaCusto !== null && selectedClienteCusto === null}
-          onClose={() => setSelectedEmpresaCusto(null)}
-          empresa={selectedEmpresaCusto || ""}
-          clientes={clientesCusto}
-          onClienteClick={(cliente) => setSelectedClienteCusto(cliente)}
-        />
+        <CustoClienteDetailModal isOpen={selectedEmpresaCusto !== null && selectedClienteCusto === null} onClose={() => setSelectedEmpresaCusto(null)} empresa={selectedEmpresaCusto || ""} clientes={clientesCusto} onClienteClick={cliente => setSelectedClienteCusto(cliente)} />
 
-        <CustoPostoDetailModal
-          isOpen={selectedClienteCusto !== null}
-          onClose={() => setSelectedClienteCusto(null)}
-          cliente={selectedClienteCusto || ""}
-          postos={postosCusto}
-        />
+        <CustoPostoDetailModal isOpen={selectedClienteCusto !== null} onClose={() => setSelectedClienteCusto(null)} cliente={selectedClienteCusto || ""} postos={postosCusto} />
       </div>
-    </div>
-  );
+    </div>;
 }
-
 const Plus = () => {
-  return (
-    <PlusDashboardProvider>
+  return <PlusDashboardProvider>
       <PlusDashboardContent />
-    </PlusDashboardProvider>
-  );
+    </PlusDashboardProvider>;
 };
-
 export default Plus;
