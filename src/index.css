@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+Nexti Official Theme
+*/
+
+@layer base {
+  :root {
+    /* Nexti Brand Colors */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 0 0% 13%; /* #222222 */
+
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 0 0% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 13%;
+
+    --primary: 16 87% 54%; /* #F15A24 - Nexti Orange */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 16 87% 64%;
+
+    --secondary: 44 98% 54%; /* #FDB813 - Nexti Yellow */
+    --secondary-foreground: 0 0% 13%;
+
+    --muted: 220 9% 65%; /* #9CA3AF */
+    --muted-foreground: 0 0% 42%; /* #6B6B6B */
+
+    --accent: 0 0% 31%; /* #4E4E4E */
+    --accent-foreground: 0 0% 100%;
+
+    --success: 162 100% 38%; /* #00C48C */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 44 98% 54%; /* #FDB813 */
+    --warning-foreground: 0 0% 13%;
+
+    --destructive: 355 78% 56%; /* #E63946 */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%; /* #E5E7EB */
+    --input: 220 13% 91%;
+    --ring: 16 87% 54%;
+
+    --radius: 0.75rem;
+
+    --surface: 24 100% 98%; /* #FFF8F4 */
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 13%;
+    --sidebar-primary: 16 87% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 32 100% 95%;
+    --sidebar-accent-foreground: 16 87% 54%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 16 87% 54%;
+
+    /* Chart colors - Nexti Palette */
+    --chart-1: 16 87% 54%; /* #F15A24 */
+    --chart-2: 44 98% 54%; /* #FDB813 */
+    --chart-3: 29 100% 50%; /* #FF7A00 */
+    --chart-4: 21 93% 63%; /* #F98F45 */
+    --chart-5: 44 100% 70%; /* #FFD166 */
+    --chart-6: 0 0% 31%; /* #4E4E4E */
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(16 87% 54%), hsl(44 98% 54%));
+    --gradient-card: linear-gradient(to bottom, hsl(0 0% 100%), hsl(24 100% 98%));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+  }
+}
