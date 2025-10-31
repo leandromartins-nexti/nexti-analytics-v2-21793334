@@ -126,7 +126,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/plus" 
                       className={({ isActive }) => cn(
-                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-gray-400 hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
