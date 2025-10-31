@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarToggleButton } from "@/components/layout/SidebarToggleButton";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { PrimeFilterProvider } from "@/contexts/PrimeFilterContext";
 
@@ -13,7 +14,7 @@ const DashboardLayout = () => {
             <DashboardSidebar />
             <div className="flex-1 flex flex-col">
               <header className="h-12 flex items-center border-b border-border bg-card px-4">
-                <SidebarTrigger />
+                <SidebarToggleButton />
               </header>
               <main className="flex-1">
                 <Outlet />

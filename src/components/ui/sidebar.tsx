@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
-import { ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -152,34 +151,6 @@ const Sidebar = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & {
     </div>;
 });
 Sidebar.displayName = "Sidebar";
-const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.ComponentProps<typeof Button>>(({
-  className,
-  onClick,
-  ...props
-}, ref) => {
-  const {
-    toggleSidebar
-  } = useSidebar();
-  return <Button 
-    ref={ref} 
-    data-sidebar="trigger" 
-    variant="ghost" 
-    size="icon" 
-    className={cn(
-      "h-8 w-8 rounded-full",
-      className
-    )} 
-    onClick={(event) => {
-      onClick?.(event);
-      toggleSidebar();
-    }} 
-    {...props}
-  >
-    <ChevronRight className="h-4 w-4" />
-    <span className="sr-only">Toggle Sidebar</span>
-  </Button>;
-});
-SidebarTrigger.displayName = "SidebarTrigger";
 const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(({
   className,
   ...props
@@ -394,7 +365,7 @@ const SidebarMenuSubButton = React.forwardRef<HTMLAnchorElement, React.Component
   return <Comp ref={ref} data-sidebar="menu-sub-button" data-size={size} data-active={isActive} className={cn("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground", "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground", size === "sm" && "text-xs", size === "md" && "text-sm", "group-data-[collapsible=icon]:hidden", className)} {...props} />;
 });
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
-export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInput, SidebarInset, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator, SidebarTrigger, useSidebar };
+export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInput, SidebarInset, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator, useSidebar };
 
 // Re-export Collapsible components for use in sidebar
 export { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";

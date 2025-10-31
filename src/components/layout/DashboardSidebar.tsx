@@ -1,4 +1,4 @@
-import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown, Menu } from "lucide-react";
+import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -13,12 +13,12 @@ import {
   SidebarMenu, 
   SidebarMenuButton, 
   SidebarMenuItem,
-  SidebarTrigger,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
   useSidebar 
 } from "@/components/ui/sidebar";
+import { SidebarToggleButton } from "./SidebarToggleButton";
 
 export function DashboardSidebar() {
   const { state } = useSidebar();
@@ -49,7 +49,7 @@ export function DashboardSidebar() {
             <img src={nextiLogoSmall} alt="N" className="h-8" />
           </div>
         )}
-        <SidebarTrigger className="text-white hover:bg-[rgba(255,255,255,0.1)] h-8 w-8 p-0 ml-auto" />
+        <SidebarToggleButton className="text-white hover:bg-[rgba(255,255,255,0.1)] h-8 w-8 p-0 ml-auto" />
       </SidebarHeader>
 
       <SidebarContent className="flex-1 overflow-y-auto bg-[#3d4449]">
