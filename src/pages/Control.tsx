@@ -33,14 +33,6 @@ function ControlContent() {
             </Button>}
         </div>
 
-        {/* Active Filters */}
-        {hasFilters && <div className="flex gap-2 flex-wrap">
-            {empresa && <Badge variant="secondary">Empresa: {empresa}</Badge>}
-            {cliente && <Badge variant="secondary">Cliente: {cliente}</Badge>}
-            {posto && <Badge variant="secondary">Posto: {posto}</Badge>}
-            {colaborador && <Badge variant="secondary">Colaborador: {colaborador}</Badge>}
-          </div>}
-
         {/* Big Numbers */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
           <KPICard title="Visitas Realizadas" value={controlBigNumbers.visitasRealizadas} icon={MapPin} />
