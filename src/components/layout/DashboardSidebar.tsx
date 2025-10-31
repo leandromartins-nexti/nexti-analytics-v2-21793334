@@ -84,8 +84,8 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/prime" 
                       className={({ isActive }) => cn(
-                        "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                        isActive && "text-white bg-[rgba(255,255,255,0.05)] border-l-2 border-l-orange-500"
+                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        isActive && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
                       <Star className="w-4 h-4 mr-2" />
@@ -98,8 +98,8 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/haas" 
                       className={({ isActive }) => cn(
-                        "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                        isActive && "text-white bg-[rgba(255,255,255,0.05)] border-l-2 border-l-orange-500"
+                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        isActive && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
                       <Smartphone className="w-4 h-4 mr-2" />
@@ -112,8 +112,8 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/rh-digital" 
                       className={() => cn(
-                        "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                        location.pathname.startsWith("/rh-digital") && "text-white bg-[rgba(255,255,255,0.05)] border-l-2 border-l-orange-500"
+                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        location.pathname.startsWith("/rh-digital") && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
                       <Users className="w-4 h-4 mr-2" />
@@ -126,8 +126,8 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/plus" 
                       className={({ isActive }) => cn(
-                        "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                        isActive && "text-white bg-[rgba(255,255,255,0.05)] border-l-2 border-l-orange-500"
+                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        isActive && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
                       <PlusCircle className="w-4 h-4 mr-2" />
@@ -140,8 +140,8 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/time" 
                       className={({ isActive }) => cn(
-                        "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                        isActive && "text-white bg-[rgba(255,255,255,0.05)] border-l-2 border-l-orange-500"
+                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        isActive && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
                       <Timer className="w-4 h-4 mr-2" />
@@ -154,8 +154,8 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/control" 
                       className={({ isActive }) => cn(
-                        "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                        isActive && "text-white bg-[rgba(255,255,255,0.05)] border-l-2 border-l-orange-500"
+                        "text-[#929DA7] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        isActive && "text-white border-l-2 border-l-orange-500"
                       )}
                     >
                       <Shield className="w-4 h-4 mr-2" />
