@@ -68,7 +68,7 @@ export function DashboardSidebar() {
               <CollapsibleTrigger className="w-full">
                 <SidebarMenuButton className="text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3 w-full justify-between">
                   <div className="flex items-center">
-                    <Car className="w-5 h-5 mr-3" />
+                    <BarChart3 className="w-5 h-5 mr-3" />
                     <span className="font-normal text-[15px]">Nexti Analytics</span>
                   </div>
                   <ChevronDown className={cn("w-4 h-4 transition-transform", analyticsOpen && "rotate-180")} />
