@@ -99,26 +99,16 @@ export default function AusenciasCoberturasPrime() {
     }
   };
   return <div className="space-y-6 p-6">
-      
-
-      {/* Coberturas Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Coberturas</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* KPIs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard title="Absenteísmo" value={`${mediaAbsenteismo}%`} icon={Users} />
-          <KPICard title="Total de Horas Ausentes" value={totalHorasAusentes.toLocaleString()} icon={Clock} />
-          <KPICard title="Coberturas Realizadas" value={totalCoberturas.toLocaleString()} icon={CheckCircle} />
-          <KPICard title="Porcentagem de Cobertura de Ausências" value={`${mediaCobertura}%`} icon={TrendingUp} trend={{
-            value: 8,
-            isPositive: true
-          }} />
-        </div>
-        </CardContent>
-      </Card>
+      {/* KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <KPICard title="Absenteísmo" value={`${mediaAbsenteismo}%`} icon={Users} />
+        <KPICard title="Total de Horas Ausentes" value={totalHorasAusentes.toLocaleString()} icon={Clock} />
+        <KPICard title="Coberturas Realizadas" value={totalCoberturas.toLocaleString()} icon={CheckCircle} />
+        <KPICard title="Porcentagem de Cobertura de Ausências" value={`${mediaCobertura}%`} icon={TrendingUp} trend={{
+          value: 8,
+          isPositive: true
+        }} />
+      </div>
 
       {/* Absenteísmo e Ausência Section */}
       <Card>
