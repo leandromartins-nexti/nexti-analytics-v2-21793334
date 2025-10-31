@@ -1,4 +1,4 @@
-import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown } from "lucide-react";
+import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown, Menu } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import {
   SidebarMenu, 
   SidebarMenuButton, 
   SidebarMenuItem,
+  SidebarTrigger,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -35,7 +36,7 @@ export function DashboardSidebar() {
       )} 
       collapsible="icon"
     >
-      <SidebarHeader className="p-4 border-b border-[rgba(255,255,255,0.05)] bg-[#FF5722]">
+      <SidebarHeader className="p-4 border-b border-[rgba(255,255,255,0.05)] bg-[#FF5722] flex flex-row items-center justify-between">
         {!isCollapsed && (
           <div className="text-white">
             <svg viewBox="0 0 120 40" className="w-32 h-10" fill="white">
@@ -46,6 +47,7 @@ export function DashboardSidebar() {
         {isCollapsed && (
           <div className="text-white font-bold text-2xl italic">n</div>
         )}
+        <SidebarTrigger className="text-white hover:bg-[rgba(255,255,255,0.1)] h-8 w-8 p-0 ml-auto" />
       </SidebarHeader>
 
       <SidebarContent className="flex-1 overflow-y-auto bg-[#3d4449]">
