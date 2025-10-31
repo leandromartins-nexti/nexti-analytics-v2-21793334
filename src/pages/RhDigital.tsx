@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { InlineFilters } from "@/components/dashboard/InlineFilters";
 import DirectPage from "./rh-digital/DirectPage";
 import AvisosPage from "./rh-digital/AvisosPage";
 import ChecklistPage from "./rh-digital/ChecklistPage";
@@ -7,28 +8,32 @@ const RhDigital = () => {
   return (
     <div className="min-h-screen bg-background">
       <Tabs defaultValue="direct" className="w-full">
+        <InlineFilters />
+        
         <div className="border-b border-border bg-card">
           <div className="container mx-auto px-6">
-            <TabsList className="h-auto bg-transparent p-0 gap-6">
-              <TabsTrigger 
-                value="direct" 
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#003399] rounded-none bg-transparent px-0 pb-3 data-[state=active]:bg-transparent data-[state=active]:text-[#003399] data-[state=active]:shadow-none"
-              >
-                Direct
-              </TabsTrigger>
-              <TabsTrigger 
-                value="avisos"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#003399] rounded-none bg-transparent px-0 pb-3 data-[state=active]:bg-transparent data-[state=active]:text-[#003399] data-[state=active]:shadow-none"
-              >
-                Avisos e Convocações
-              </TabsTrigger>
-              <TabsTrigger 
-                value="checklist"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#003399] rounded-none bg-transparent px-0 pb-3 data-[state=active]:bg-transparent data-[state=active]:text-[#003399] data-[state=active]:shadow-none"
-              >
-                Check-list
-              </TabsTrigger>
-            </TabsList>
+            <div className="flex items-center justify-between">
+              <TabsList className="h-auto bg-transparent p-0 gap-6 flex-1">
+                <TabsTrigger 
+                  value="direct" 
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-[#003399] rounded-none bg-transparent px-0 pb-3 data-[state=active]:bg-transparent data-[state=active]:text-[#003399] data-[state=active]:shadow-none"
+                >
+                  Direct
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="avisos"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-[#003399] rounded-none bg-transparent px-0 pb-3 data-[state=active]:bg-transparent data-[state=active]:text-[#003399] data-[state=active]:shadow-none"
+                >
+                  Avisos e Convocações
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="checklist"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-[#003399] rounded-none bg-transparent px-0 pb-3 data-[state=active]:bg-transparent data-[state=active]:text-[#003399] data-[state=active]:shadow-none"
+                >
+                  Check-list
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
         </div>
 

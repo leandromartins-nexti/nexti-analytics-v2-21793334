@@ -87,4 +87,16 @@ Nexti Official Theme
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
   }
+  
+  /* Sidebar Dark Theme Override */
+  [data-sidebar] {
+    --sidebar-background: 210 11% 21%; /* #343a40 */
+    --sidebar-foreground: 210 17% 92%; /* #e9ecef */
+    --sidebar-primary: 220 100% 30%; /* #003399 */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 100% / 0.1; /* rgba(255, 255, 255, 0.1) */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 100% / 0.1; /* rgba(255, 255, 255, 0.1) */
+    --sidebar-ring: 220 100% 30%;
+  }
 }

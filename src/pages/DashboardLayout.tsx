@@ -3,7 +3,6 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { PrimeFilterProvider } from "@/contexts/PrimeFilterContext";
-import { DashboardFilters } from "@/components/dashboard/DashboardFilters";
 
 const DashboardLayout = () => {
   return (
@@ -16,7 +15,6 @@ const DashboardLayout = () => {
               <header className="h-12 flex items-center border-b border-border bg-card px-4">
                 <SidebarTrigger />
               </header>
-              <DashboardFilters />
               <main className="flex-1">
                 <Outlet />
               </main>
