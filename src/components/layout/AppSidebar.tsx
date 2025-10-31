@@ -31,13 +31,59 @@ export const AppSidebar = () => {
 
   const mainNavItems = [
     { label: "Dashboard", icon: BarChart3, path: "/" },
-    { label: "Nexti Analytics", icon: BarChart3, path: "/analytics" },
-    { label: "Prime", icon: null, path: "/prime", hasSubmenu: true },
-    { label: "HaaS", icon: null, path: "/haas" },
-    { label: "RH Digital", icon: null, path: "/rh-digital" },
-    { label: "Plus", icon: null, path: "/plus" },
-    { label: "Time", icon: null, path: "/time" },
-    { label: "Control", icon: null, path: "/control" },
+  ];
+
+  const analyticsSections = [
+    { 
+      id: "prime",
+      label: "Prime", 
+      items: [
+        { label: "Registro de Ponto", path: "/prime/time-tracking" },
+        { label: "Operacional", path: "/prime/operational" },
+        { label: "Ausências e Coberturas", path: "/prime/ausencias-coberturas" },
+        { label: "Dispositivos", path: "/prime/devices" },
+        { label: "Engajamento", path: "/prime/engagement" },
+      ]
+    },
+    { 
+      id: "haas",
+      label: "HaaS", 
+      items: [
+        { label: "Geral", path: "/haas/general" },
+        { label: "Smart", path: "/haas/smart" },
+        { label: "Terminal", path: "/haas/terminal" },
+      ]
+    },
+    { 
+      id: "rh-digital",
+      label: "RH Digital", 
+      items: [
+        { label: "Checklist", path: "/rh-digital/checklist" },
+        { label: "Avisos", path: "/rh-digital/avisos" },
+        { label: "Direct", path: "/rh-digital/direct" },
+      ]
+    },
+    { 
+      id: "plus",
+      label: "Plus", 
+      items: [
+        { label: "Dashboard Plus", path: "/plus" },
+      ]
+    },
+    { 
+      id: "time",
+      label: "Time", 
+      items: [
+        { label: "Dashboard Time", path: "/time" },
+      ]
+    },
+    { 
+      id: "control",
+      label: "Control", 
+      items: [
+        { label: "Dashboard Control", path: "/control" },
+      ]
+    },
   ];
 
   const secondaryNavItems = [
@@ -45,17 +91,7 @@ export const AppSidebar = () => {
     { label: "Mapa de Postos", icon: MapPin, path: "/map" },
   ];
 
-  const expandableSections = [
-    {
-      id: "rh-digital-section",
-      label: "RH Digital",
-      icon: Megaphone,
-      items: [
-        { label: "Checklist", path: "/rh-digital/checklist" },
-        { label: "Avisos", path: "/rh-digital/avisos" },
-        { label: "Direct", path: "/rh-digital/direct" },
-      ],
-    },
+  const otherExpandableSections = [
     {
       id: "nexti-control",
       label: "Nexti Control",
@@ -132,6 +168,80 @@ export const AppSidebar = () => {
               )}
             </NavLink>
           ))}
+
+          {/* Nexti Analytics with submenu */}
+          <div>
+            <button
+              onClick={() => !isCollapsed && toggleSection("nexti-analytics")}
+              className={cn(
+                "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors hover:bg-white/5 w-full",
+                isCollapsed && "justify-center"
+              )}
+            >
+              <BarChart3 className="h-5 w-5 flex-shrink-0" />
+              {!isCollapsed && (
+                <>
+                  <span className="text-sm font-medium flex-1 text-left">
+                    Nexti Analytics
+                  </span>
+                  {expandedSections.includes("nexti-analytics") ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                </>
+              )}
+            </button>
+
+            {!isCollapsed && expandedSections.includes("nexti-analytics") && (
+              <div className="ml-4 mt-1 space-y-1">
+                {analyticsSections.map((section) => (
+                  <div key={section.id}>
+                    <button
+                      onClick={() => toggleSection(section.id)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-white/5 w-full text-white/70 hover:text-white"
+                    >
+                      <span className="text-sm font-medium flex-1 text-left">
+                        {section.label}
+                      </span>
+                      {expandedSections.includes(section.id) ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
+
+                    {expandedSections.includes(section.id) && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {section.items.map((item) => (
+                          <NavLink
+                            key={item.path}
+                            to={item.path}
+                            className={({ isActive }) =>
+                              cn(
+                                "block px-3 py-2 text-sm rounded-lg transition-colors relative",
+                                "hover:bg-white/5 text-white/70 hover:text-white",
+                                isActive && "bg-[#2a3840] text-white"
+                              )
+                            }
+                          >
+                            {({ isActive }) => (
+                              <>
+                                {isActive && (
+                                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#ff5722]" />
+                                )}
+                                {item.label}
+                              </>
+                            )}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Divider */}
@@ -163,7 +273,7 @@ export const AppSidebar = () => {
         {/* Divider */}
         <div className="my-4 mx-4 border-t border-white/10" />
 
-        {/* Expandable Sections */}
+        {/* Other Expandable Sections */}
         <nav className="space-y-1 px-2">
           {!isCollapsed && (
             <>
@@ -189,7 +299,7 @@ export const AppSidebar = () => {
             </>
           )}
 
-          {expandableSections.map((section) => (
+          {otherExpandableSections.map((section) => (
             <div key={section.id}>
               <button
                 onClick={() => !isCollapsed && toggleSection(section.id)}
@@ -225,13 +335,20 @@ export const AppSidebar = () => {
                         to={item.path}
                         className={({ isActive }) =>
                           cn(
-                            "block px-3 py-2 text-sm rounded-lg transition-colors",
+                            "block px-3 py-2 text-sm rounded-lg transition-colors relative",
                             "hover:bg-white/5",
                             isActive && "bg-[#2a3840] text-white"
                           )
                         }
                       >
-                        {item.label}
+                        {({ isActive }) => (
+                          <>
+                            {isActive && (
+                              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#ff5722]" />
+                            )}
+                            {item.label}
+                          </>
+                        )}
                       </NavLink>
                     ))}
                   </div>
