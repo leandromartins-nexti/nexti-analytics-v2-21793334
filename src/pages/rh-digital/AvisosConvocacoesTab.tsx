@@ -265,7 +265,7 @@ export default function AvisosConvocacoesTab() {
             {engajamentoGeralDetalhado.map((item) => (
               <TableRow
                 key={item.empresa}
-                className="cursor-pointer hover:bg-accent"
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
                 onClick={() => handleEngajamentoEmpresaClick(item.empresa)}
               >
                 <TableCell className="font-medium">{item.empresa}</TableCell>
