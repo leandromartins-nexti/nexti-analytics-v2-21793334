@@ -167,7 +167,7 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
     size="icon" 
     className={cn(
       "absolute top-6 right-0 translate-x-1/2 z-50",
-      "h-8 w-8 rounded-full border border-white/20 bg-sidebar hover:bg-sidebar-accent",
+      "h-8 w-8 rounded-full border-2 border-orange-500 bg-white hover:bg-orange-50",
       className
     )} 
     onClick={(event) => {
@@ -176,7 +176,7 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
     }} 
     {...props}
   >
-    <ChevronRight className="h-4 w-4" />
+    <ChevronRight className="h-4 w-4 text-orange-500" />
     <span className="sr-only">Toggle Sidebar</span>
   </Button>;
 });
