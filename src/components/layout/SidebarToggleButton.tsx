@@ -13,7 +13,7 @@ export function SidebarToggleButton({ className }: { className?: string }) {
       onClick={toggleSidebar}
       className={cn(
         "absolute top-9 right-0 translate-x-1/2 z-50",
-        "h-8 w-8 rounded-full border border-orange-500 bg-white hover:bg-white",
+        "h-8 w-8 rounded-full border border-orange-500 bg-white hover:!bg-white focus:!bg-white active:!bg-white",
         className
       )}
     >
