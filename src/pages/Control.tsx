@@ -21,18 +21,6 @@ function ControlContent() {
     hasFilters
   } = useControlFilter();
   return <div className="container mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            
-            
-          </div>
-          {hasFilters && <Button variant="outline" onClick={clearFilters}>
-              <X className="h-4 w-4 mr-2" />
-              Limpar Filtros
-            </Button>}
-        </div>
-
         {/* Big Numbers */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
           <KPICard title="Visitas Realizadas" value={controlBigNumbers.visitasRealizadas} icon={MapPin} />
