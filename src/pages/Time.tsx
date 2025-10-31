@@ -6,45 +6,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  AreaChart, 
-  Area, 
-  BarChart, 
-  Bar, 
-  LineChart,
-  Line,
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer, 
-  Cell,
-  PieChart,
-  Pie,
-  ScatterChart,
-  Scatter,
-} from "recharts";
+import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, PieChart, Pie, ScatterChart, Scatter } from "recharts";
 import { X, Clock, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, XCircle, Users } from "lucide-react";
-import {
-  bigNumbers,
-  jornadaMensal,
-  jornadaPorEmpresa,
-  horasExtrasPorPosto,
-  colaboradorHorasExtras,
-  bancoHorasMensal,
-  eventosCompliance,
-  compliancePorCliente,
-  complianceMensal,
-  aprovacaoHorasExtras,
-  motivosReprovacao,
-  gestoresAprovacao,
-  aprovacaoMensal,
-  atrasosFaltasPorCliente,
-  colaboradorAtrasosFaltas,
-} from "@/lib/timeData";
+import { bigNumbers, jornadaMensal, jornadaPorEmpresa, horasExtrasPorPosto, colaboradorHorasExtras, bancoHorasMensal, eventosCompliance, compliancePorCliente, complianceMensal, aprovacaoHorasExtras, motivosReprovacao, gestoresAprovacao, aprovacaoMensal, atrasosFaltasPorCliente, colaboradorAtrasosFaltas } from "@/lib/timeData";
 import { useMemo } from "react";
-
 const COLORS = {
   primary: "hsl(var(--chart-1))",
   secondary: "hsl(var(--chart-2))",
@@ -55,11 +20,16 @@ const COLORS = {
   warning: "hsl(var(--warning))",
   destructive: "hsl(var(--destructive))",
   muted: "hsl(var(--muted))",
-  accent: "hsl(var(--accent))",
+  accent: "hsl(var(--accent))"
 };
-
 function TimeDashboardContent() {
-  const { activeFilters, addFilter, removeFilter, clearFilters, isFilterActive } = useTimeDashboard();
+  const {
+    activeFilters,
+    addFilter,
+    removeFilter,
+    clearFilters,
+    isFilterActive
+  } = useTimeDashboard();
 
   // Filtered data based on active filters
   const filteredJornadaPorEmpresa = useMemo(() => {
@@ -73,7 +43,6 @@ function TimeDashboardContent() {
     });
     return filtered;
   }, [activeFilters]);
-
   const filteredHorasExtrasPorPosto = useMemo(() => {
     let filtered = [...horasExtrasPorPosto];
     activeFilters.forEach(filter => {
@@ -87,7 +56,6 @@ function TimeDashboardContent() {
     });
     return filtered;
   }, [activeFilters]);
-
   const filteredColaboradorHorasExtras = useMemo(() => {
     let filtered = [...colaboradorHorasExtras];
     activeFilters.forEach(filter => {
@@ -103,7 +71,6 @@ function TimeDashboardContent() {
     });
     return filtered;
   }, [activeFilters]);
-
   const filteredCompliancePorCliente = useMemo(() => {
     let filtered = [...compliancePorCliente];
     activeFilters.forEach(filter => {
@@ -115,7 +82,6 @@ function TimeDashboardContent() {
     });
     return filtered;
   }, [activeFilters]);
-
   const filteredAtrasosFaltasPorCliente = useMemo(() => {
     let filtered = [...atrasosFaltasPorCliente];
     activeFilters.forEach(filter => {
@@ -127,7 +93,6 @@ function TimeDashboardContent() {
     });
     return filtered;
   }, [activeFilters]);
-
   const filteredColaboradorAtrasosFaltas = useMemo(() => {
     let filtered = [...colaboradorAtrasosFaltas];
     activeFilters.forEach(filter => {
@@ -143,125 +108,96 @@ function TimeDashboardContent() {
     });
     return filtered;
   }, [activeFilters]);
-
   const handleEmpresaClick = (empresa: string) => {
     if (isFilterActive("empresa", empresa)) {
       removeFilter("empresa", empresa);
     } else {
-      addFilter({ type: "empresa", value: empresa, label: `Empresa: ${empresa}` });
+      addFilter({
+        type: "empresa",
+        value: empresa,
+        label: `Empresa: ${empresa}`
+      });
     }
   };
-
   const handleClienteClick = (cliente: string) => {
     if (isFilterActive("cliente", cliente)) {
       removeFilter("cliente", cliente);
     } else {
-      addFilter({ type: "cliente", value: cliente, label: `Cliente: ${cliente}` });
+      addFilter({
+        type: "cliente",
+        value: cliente,
+        label: `Cliente: ${cliente}`
+      });
     }
   };
-
   const handlePostoClick = (posto: string) => {
     if (isFilterActive("posto", posto)) {
       removeFilter("posto", posto);
     } else {
-      addFilter({ type: "posto", value: posto, label: `Posto: ${posto}` });
+      addFilter({
+        type: "posto",
+        value: posto,
+        label: `Posto: ${posto}`
+      });
     }
   };
-
   const handleColaboradorClick = (id: string, colaborador: string) => {
     if (isFilterActive("colaborador", id)) {
       removeFilter("colaborador", id);
     } else {
-      addFilter({ type: "colaborador", value: id, label: `Colaborador: ${colaborador}` });
+      addFilter({
+        type: "colaborador",
+        value: id,
+        label: `Colaborador: ${colaborador}`
+      });
     }
   };
-
-  const aprovacaoData = [
-    { name: "Aprovadas", value: aprovacaoHorasExtras.aprovadas, fill: COLORS.success },
-    { name: "Reprovadas", value: aprovacaoHorasExtras.reprovadas, fill: COLORS.destructive },
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#F8F8F8]">
-      <DashboardHeader title="Nexti Time - Jornada & Horas Extras" />
+  const aprovacaoData = [{
+    name: "Aprovadas",
+    value: aprovacaoHorasExtras.aprovadas,
+    fill: COLORS.success
+  }, {
+    name: "Reprovadas",
+    value: aprovacaoHorasExtras.reprovadas,
+    fill: COLORS.destructive
+  }];
+  return <div className="min-h-screen bg-[#F8F8F8]">
+      
       
       <div className="max-w-[1440px] mx-auto p-6 space-y-6">
         
         {/* Active Filters Display */}
-        {activeFilters.length > 0 && (
-          <Card className="border-primary/20 shadow-md">
+        {activeFilters.length > 0 && <Card className="border-primary/20 shadow-md">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm font-semibold text-foreground">Filtros ativos:</span>
-                {activeFilters.map((filter, idx) => (
-                  <Badge key={idx} variant="secondary" className="gap-2 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+                {activeFilters.map((filter, idx) => <Badge key={idx} variant="secondary" className="gap-2 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
                     {filter.label}
                     <X className="h-3 w-3 cursor-pointer hover:text-destructive" onClick={() => removeFilter(filter.type, filter.value)} />
-                  </Badge>
-                ))}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={clearFilters}
-                  className="hover:bg-destructive/10 hover:text-destructive"
-                >
+                  </Badge>)}
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="hover:bg-destructive/10 hover:text-destructive">
                   Limpar todos
                 </Button>
               </div>
             </CardContent>
-          </Card>
-        )}
+          </Card>}
 
         {/* BIG NUMBERS - 4x2 Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard
-            title="Horas Previstas"
-            value={bigNumbers.horasPrevistas.toLocaleString("pt-BR") + "h"}
-            icon={Clock}
-          />
-          <KPICard
-            title="Horas Realizadas"
-            value={bigNumbers.horasRealizadas.toLocaleString("pt-BR") + "h"}
-            icon={TrendingUp}
-          />
-          <KPICard
-            title="Diferença Previsto vs Realizado"
-            value={`+${bigNumbers.diferencaPrevistoRealizado.toLocaleString("pt-BR")}h`}
-            trend={{
-              value: ((bigNumbers.diferencaPrevistoRealizado / bigNumbers.horasPrevistas) * 100),
-              isPositive: false,
-            }}
-            icon={TrendingUp}
-          />
-          <KPICard
-            title="Horas Extras Totais"
-            value={bigNumbers.horasExtrasTotais.toLocaleString("pt-BR") + "h"}
-            icon={AlertTriangle}
-          />
-          <KPICard
-            title="Saldo Banco de Horas (Média)"
-            value={`${bigNumbers.saldoBancoHoras.toFixed(1)}h`}
-            icon={Clock}
-          />
-          <KPICard
-            title="Compliance Trabalhista"
-            value={`${bigNumbers.complianceTrabalhista.toFixed(1)}%`}
-            trend={{
-              value: bigNumbers.complianceTrabalhista,
-              isPositive: bigNumbers.complianceTrabalhista >= 85,
-            }}
-            icon={CheckCircle2}
-          />
-          <KPICard
-            title="HE Aprovadas"
-            value={`${bigNumbers.horasExtrasAprovadas.toFixed(1)}%`}
-            icon={CheckCircle2}
-          />
-          <KPICard
-            title="HE Reprovadas"
-            value={`${bigNumbers.horasExtrasReprovadas.toFixed(1)}%`}
-            icon={XCircle}
-          />
+          <KPICard title="Horas Previstas" value={bigNumbers.horasPrevistas.toLocaleString("pt-BR") + "h"} icon={Clock} />
+          <KPICard title="Horas Realizadas" value={bigNumbers.horasRealizadas.toLocaleString("pt-BR") + "h"} icon={TrendingUp} />
+          <KPICard title="Diferença Previsto vs Realizado" value={`+${bigNumbers.diferencaPrevistoRealizado.toLocaleString("pt-BR")}h`} trend={{
+          value: bigNumbers.diferencaPrevistoRealizado / bigNumbers.horasPrevistas * 100,
+          isPositive: false
+        }} icon={TrendingUp} />
+          <KPICard title="Horas Extras Totais" value={bigNumbers.horasExtrasTotais.toLocaleString("pt-BR") + "h"} icon={AlertTriangle} />
+          <KPICard title="Saldo Banco de Horas (Média)" value={`${bigNumbers.saldoBancoHoras.toFixed(1)}h`} icon={Clock} />
+          <KPICard title="Compliance Trabalhista" value={`${bigNumbers.complianceTrabalhista.toFixed(1)}%`} trend={{
+          value: bigNumbers.complianceTrabalhista,
+          isPositive: bigNumbers.complianceTrabalhista >= 85
+        }} icon={CheckCircle2} />
+          <KPICard title="HE Aprovadas" value={`${bigNumbers.horasExtrasAprovadas.toFixed(1)}%`} icon={CheckCircle2} />
+          <KPICard title="HE Reprovadas" value={`${bigNumbers.horasExtrasReprovadas.toFixed(1)}%`} icon={XCircle} />
         </div>
 
         {/* SEÇÃO 1: JORNADA PREVISTA X REALIZADA */}
@@ -279,7 +215,10 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Legend />
                   <Area type="monotone" dataKey="previstas" stackId="1" stroke={COLORS.primary} fill={COLORS.primary} fillOpacity={0.6} name="Previstas" />
                   <Area type="monotone" dataKey="realizadas" stackId="2" stroke={COLORS.success} fill={COLORS.success} fillOpacity={0.6} name="Realizadas" />
@@ -294,7 +233,10 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[95, 125]} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Legend />
                   <Line type="monotone" dataKey="aderencia" stroke={COLORS.secondary} strokeWidth={3} name="Aderência (%)" />
                 </LineChart>
@@ -317,18 +259,7 @@ function TimeDashboardContent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredJornadaPorEmpresa.map((row, idx) => (
-                    <TableRow
-                      key={idx}
-                      onClick={() => handleClienteClick(row.cliente)}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        isFilterActive("cliente", row.cliente) 
-                          ? "bg-primary/10 border-l-4 border-l-primary" 
-                          : idx % 2 === 0 
-                            ? "bg-background hover:bg-[#FFF5EF]" 
-                            : "bg-muted/30 hover:bg-[#FFF5EF]"
-                      }`}
-                    >
+                  {filteredJornadaPorEmpresa.map((row, idx) => <TableRow key={idx} onClick={() => handleClienteClick(row.cliente)} className={`cursor-pointer transition-all duration-200 ${isFilterActive("cliente", row.cliente) ? "bg-primary/10 border-l-4 border-l-primary" : idx % 2 === 0 ? "bg-background hover:bg-[#FFF5EF]" : "bg-muted/30 hover:bg-[#FFF5EF]"}`}>
                       <TableCell className="font-medium">{row.empresa}</TableCell>
                       <TableCell>{row.cliente}</TableCell>
                       <TableCell className="text-right">{row.previstas.toLocaleString("pt-BR")}</TableCell>
@@ -341,8 +272,7 @@ function TimeDashboardContent() {
                           {row.aderencia.toFixed(1)}%
                         </Badge>
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </div>
@@ -364,11 +294,12 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis type="category" dataKey="posto" stroke="hsl(var(--muted-foreground))" fontSize={10} width={200} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
-                  <Bar dataKey="horasExtras" fill={COLORS.warning} radius={[0, 4, 4, 0]} name="Horas Extras" onClick={(data) => handlePostoClick(data.posto)} cursor="pointer">
-                    {filteredHorasExtrasPorPosto.slice(0, 10).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={isFilterActive("posto", entry.posto) ? COLORS.accent : COLORS.warning} />
-                    ))}
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
+                  <Bar dataKey="horasExtras" fill={COLORS.warning} radius={[0, 4, 4, 0]} name="Horas Extras" onClick={data => handlePostoClick(data.posto)} cursor="pointer">
+                    {filteredHorasExtrasPorPosto.slice(0, 10).map((entry, index) => <Cell key={`cell-${index}`} fill={isFilterActive("posto", entry.posto) ? COLORS.accent : COLORS.warning} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -381,7 +312,10 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Legend />
                   <Area type="monotone" dataKey="credito" stackId="1" stroke={COLORS.success} fill={COLORS.success} fillOpacity={0.6} name="Crédito" />
                   <Area type="monotone" dataKey="debito" stackId="2" stroke={COLORS.destructive} fill={COLORS.destructive} fillOpacity={0.6} name="Débito" />
@@ -404,18 +338,7 @@ function TimeDashboardContent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredColaboradorHorasExtras.map((row, idx) => (
-                    <TableRow
-                      key={row.id}
-                      onClick={() => handleColaboradorClick(row.id, row.colaborador)}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        isFilterActive("colaborador", row.id)
-                          ? "bg-primary/10 border-l-4 border-l-primary"
-                          : idx % 2 === 0
-                            ? "bg-background hover:bg-[#FFF5EF]"
-                            : "bg-muted/30 hover:bg-[#FFF5EF]"
-                      }`}
-                    >
+                  {filteredColaboradorHorasExtras.map((row, idx) => <TableRow key={row.id} onClick={() => handleColaboradorClick(row.id, row.colaborador)} className={`cursor-pointer transition-all duration-200 ${isFilterActive("colaborador", row.id) ? "bg-primary/10 border-l-4 border-l-primary" : idx % 2 === 0 ? "bg-background hover:bg-[#FFF5EF]" : "bg-muted/30 hover:bg-[#FFF5EF]"}`}>
                       <TableCell className="font-medium">{row.colaborador}</TableCell>
                       <TableCell>{row.posto}</TableCell>
                       <TableCell>{row.cliente}</TableCell>
@@ -423,8 +346,7 @@ function TimeDashboardContent() {
                       <TableCell className={`text-right font-medium ${row.saldoBH >= 0 ? "text-success" : "text-destructive"}`}>
                         {row.saldoBH >= 0 ? "+" : ""}{row.saldoBH}h
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </div>
@@ -446,7 +368,10 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="tipo" stroke="hsl(var(--muted-foreground))" fontSize={10} angle={-20} textAnchor="end" height={100} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Bar dataKey="ocorrencias" fill={COLORS.destructive} radius={[4, 4, 0, 0]} name="Ocorrências" />
                 </BarChart>
               </ResponsiveContainer>
@@ -459,7 +384,10 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[80, 92]} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Legend />
                   <Line type="monotone" dataKey="percentualCompliance" stroke={COLORS.success} strokeWidth={3} name="Compliance (%)" />
                 </LineChart>
@@ -482,18 +410,7 @@ function TimeDashboardContent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredCompliancePorCliente.map((row, idx) => (
-                    <TableRow
-                      key={idx}
-                      onClick={() => handleClienteClick(row.cliente)}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        isFilterActive("cliente", row.cliente)
-                          ? "bg-primary/10 border-l-4 border-l-primary"
-                          : idx % 2 === 0
-                            ? "bg-background hover:bg-[#FFF5EF]"
-                            : "bg-muted/30 hover:bg-[#FFF5EF]"
-                      }`}
-                    >
+                  {filteredCompliancePorCliente.map((row, idx) => <TableRow key={idx} onClick={() => handleClienteClick(row.cliente)} className={`cursor-pointer transition-all duration-200 ${isFilterActive("cliente", row.cliente) ? "bg-primary/10 border-l-4 border-l-primary" : idx % 2 === 0 ? "bg-background hover:bg-[#FFF5EF]" : "bg-muted/30 hover:bg-[#FFF5EF]"}`}>
                       <TableCell className="font-medium">{row.cliente}</TableCell>
                       <TableCell>{row.empresa}</TableCell>
                       <TableCell className="text-right">{row.totalOcorrencias}</TableCell>
@@ -504,8 +421,7 @@ function TimeDashboardContent() {
                           {row.percentualCompliance.toFixed(1)}%
                         </Badge>
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </div>
@@ -521,21 +437,9 @@ function TimeDashboardContent() {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* KPIs de Aprovação */}
-            <KPICard
-              title="Total Solicitadas"
-              value={aprovacaoHorasExtras.totalSolicitadas.toString()}
-              icon={Users}
-            />
-            <KPICard
-              title="Aprovadas"
-              value={aprovacaoHorasExtras.aprovadas.toString()}
-              icon={CheckCircle2}
-            />
-            <KPICard
-              title="Reprovadas"
-              value={aprovacaoHorasExtras.reprovadas.toString()}
-              icon={XCircle}
-            />
+            <KPICard title="Total Solicitadas" value={aprovacaoHorasExtras.totalSolicitadas.toString()} icon={Users} />
+            <KPICard title="Aprovadas" value={aprovacaoHorasExtras.aprovadas.toString()} icon={CheckCircle2} />
+            <KPICard title="Reprovadas" value={aprovacaoHorasExtras.reprovadas.toString()} icon={XCircle} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -543,19 +447,8 @@ function TimeDashboardContent() {
             <ChartCard title="Distribuição - Aprovadas vs Reprovadas">
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie
-                    data={aprovacaoData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={5}
-                    dataKey="value"
-                    label={(entry) => `${entry.name}: ${entry.value}`}
-                  >
-                    {aprovacaoData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
+                  <Pie data={aprovacaoData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value" label={entry => `${entry.name}: ${entry.value}`}>
+                    {aprovacaoData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                   </Pie>
                   <Tooltip />
                 </PieChart>
@@ -569,7 +462,10 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis type="category" dataKey="motivo" stroke="hsl(var(--muted-foreground))" fontSize={11} width={150} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Bar dataKey="quantidade" fill={COLORS.destructive} radius={[0, 4, 4, 0]} name="Quantidade" />
                 </BarChart>
               </ResponsiveContainer>
@@ -583,7 +479,10 @@ function TimeDashboardContent() {
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                <Tooltip contentStyle={{
+                backgroundColor: "hsl(var(--popover))",
+                border: "1px solid hsl(var(--border))"
+              }} />
                 <Legend />
                 <Bar dataKey="solicitadas" fill={COLORS.primary} radius={[4, 4, 0, 0]} name="Solicitadas" />
                 <Bar dataKey="aprovadas" fill={COLORS.success} radius={[4, 4, 0, 0]} name="Aprovadas" />
@@ -607,11 +506,7 @@ function TimeDashboardContent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {gestoresAprovacao.map((row, idx) => (
-                    <TableRow 
-                      key={idx}
-                      className={idx % 2 === 0 ? "bg-background hover:bg-[#FFF5EF]" : "bg-muted/30 hover:bg-[#FFF5EF]"}
-                    >
+                  {gestoresAprovacao.map((row, idx) => <TableRow key={idx} className={idx % 2 === 0 ? "bg-background hover:bg-[#FFF5EF]" : "bg-muted/30 hover:bg-[#FFF5EF]"}>
                       <TableCell className="font-medium">{row.gestor}</TableCell>
                       <TableCell>{row.empresa}</TableCell>
                       <TableCell className="text-right">{row.solicitadas}</TableCell>
@@ -622,8 +517,7 @@ function TimeDashboardContent() {
                           {row.taxaReprovacao.toFixed(1)}%
                         </Badge>
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </div>
@@ -645,17 +539,16 @@ function TimeDashboardContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="cliente" stroke="hsl(var(--muted-foreground))" fontSize={10} angle={-20} textAnchor="end" height={120} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} />
                   <Legend />
-                  <Bar dataKey="atrasos" stackId="a" fill={COLORS.warning} radius={[0, 0, 0, 0]} name="Atrasos" onClick={(data) => handleClienteClick(data.cliente)} cursor="pointer">
-                    {filteredAtrasosFaltasPorCliente.map((entry, index) => (
-                      <Cell key={`cell-atrasos-${index}`} fill={isFilterActive("cliente", entry.cliente) ? COLORS.accent : COLORS.warning} />
-                    ))}
+                  <Bar dataKey="atrasos" stackId="a" fill={COLORS.warning} radius={[0, 0, 0, 0]} name="Atrasos" onClick={data => handleClienteClick(data.cliente)} cursor="pointer">
+                    {filteredAtrasosFaltasPorCliente.map((entry, index) => <Cell key={`cell-atrasos-${index}`} fill={isFilterActive("cliente", entry.cliente) ? COLORS.accent : COLORS.warning} />)}
                   </Bar>
-                  <Bar dataKey="faltas" stackId="a" fill={COLORS.destructive} radius={[4, 4, 0, 0]} name="Faltas" onClick={(data) => handleClienteClick(data.cliente)} cursor="pointer">
-                    {filteredAtrasosFaltasPorCliente.map((entry, index) => (
-                      <Cell key={`cell-faltas-${index}`} fill={isFilterActive("cliente", entry.cliente) ? COLORS.accent : COLORS.destructive} />
-                    ))}
+                  <Bar dataKey="faltas" stackId="a" fill={COLORS.destructive} radius={[4, 4, 0, 0]} name="Faltas" onClick={data => handleClienteClick(data.cliente)} cursor="pointer">
+                    {filteredAtrasosFaltasPorCliente.map((entry, index) => <Cell key={`cell-faltas-${index}`} fill={isFilterActive("cliente", entry.cliente) ? COLORS.accent : COLORS.destructive} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -666,9 +559,21 @@ function TimeDashboardContent() {
               <ResponsiveContainer width="100%" height={400}>
                 <ScatterChart>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="atrasos" name="Atrasos" stroke="hsl(var(--muted-foreground))" fontSize={12} label={{ value: "Atrasos", position: "bottom" }} />
-                  <YAxis dataKey="horasExtras" name="Horas Extras" stroke="hsl(var(--muted-foreground))" fontSize={12} label={{ value: "Horas Extras", angle: -90, position: "left" }} />
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))" }} cursor={{ strokeDasharray: '3 3' }} />
+                  <XAxis dataKey="atrasos" name="Atrasos" stroke="hsl(var(--muted-foreground))" fontSize={12} label={{
+                  value: "Atrasos",
+                  position: "bottom"
+                }} />
+                  <YAxis dataKey="horasExtras" name="Horas Extras" stroke="hsl(var(--muted-foreground))" fontSize={12} label={{
+                  value: "Horas Extras",
+                  angle: -90,
+                  position: "left"
+                }} />
+                  <Tooltip contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))"
+                }} cursor={{
+                  strokeDasharray: '3 3'
+                }} />
                   <Scatter name="Colaboradores" data={filteredColaboradorAtrasosFaltas} fill={COLORS.secondary} />
                 </ScatterChart>
               </ResponsiveContainer>
@@ -690,26 +595,14 @@ function TimeDashboardContent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredColaboradorAtrasosFaltas.map((row, idx) => (
-                    <TableRow
-                      key={row.id}
-                      onClick={() => handleColaboradorClick(row.id, row.colaborador)}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        isFilterActive("colaborador", row.id)
-                          ? "bg-primary/10 border-l-4 border-l-primary"
-                          : idx % 2 === 0
-                            ? "bg-background hover:bg-[#FFF5EF]"
-                            : "bg-muted/30 hover:bg-[#FFF5EF]"
-                      }`}
-                    >
+                  {filteredColaboradorAtrasosFaltas.map((row, idx) => <TableRow key={row.id} onClick={() => handleColaboradorClick(row.id, row.colaborador)} className={`cursor-pointer transition-all duration-200 ${isFilterActive("colaborador", row.id) ? "bg-primary/10 border-l-4 border-l-primary" : idx % 2 === 0 ? "bg-background hover:bg-[#FFF5EF]" : "bg-muted/30 hover:bg-[#FFF5EF]"}`}>
                       <TableCell className="font-medium">{row.colaborador}</TableCell>
                       <TableCell>{row.posto}</TableCell>
                       <TableCell>{row.cliente}</TableCell>
                       <TableCell className="text-right text-warning font-medium">{row.atrasos}</TableCell>
                       <TableCell className="text-right text-destructive font-medium">{row.faltas}</TableCell>
                       <TableCell className="text-right">{row.horasExtras}h</TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </div>
@@ -717,16 +610,11 @@ function TimeDashboardContent() {
         </div>
 
       </div>
-    </div>
-  );
+    </div>;
 }
-
 const Time = () => {
-  return (
-    <TimeDashboardProvider>
+  return <TimeDashboardProvider>
       <TimeDashboardContent />
-    </TimeDashboardProvider>
-  );
+    </TimeDashboardProvider>;
 };
-
 export default Time;
