@@ -53,7 +53,7 @@ function ControlContent() {
 
         {/* Section 1: Execução Operacional */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground">1. Execução Operacional (Planejado vs. Realizado)</h2>
+          <h2 className="text-xl font-semibold mb-4">1. Execução Operacional (Planejado vs. Realizado)</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard title="Evolução Mensal - Visitas Planejadas vs Realizadas">
@@ -130,7 +130,7 @@ function ControlContent() {
 
         {/* Section 2: Não Conformidades */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground">2. Não Conformidades</h2>
+          <h2 className="text-xl font-semibold mb-4">2. Não Conformidades</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <KPICard title="Total de Não Conformidades" value={controlBigNumbers.naoConformidades} />
@@ -216,7 +216,7 @@ function ControlContent() {
 
         {/* Section 3: Eficiência Operacional */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground">3. Eficiência Operacional (Deslocamento & Permanência)</h2>
+          <h2 className="text-xl font-semibold mb-4">3. Eficiência Operacional (Deslocamento & Permanência)</h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard title="Dispersão: Deslocamento x Permanência">
@@ -273,7 +273,7 @@ function ControlContent() {
 
         {/* Section 4: Últimas Visitas e Frequência */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground">4. Últimas Visitas e Frequência</h2>
+          <h2 className="text-xl font-semibold mb-4">4. Últimas Visitas e Frequência</h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard title="Frequência por Dia da Semana e Turno">
