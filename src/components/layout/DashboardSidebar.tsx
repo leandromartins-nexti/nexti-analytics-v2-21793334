@@ -85,8 +85,8 @@ export function DashboardSidebar() {
                       <NavLink 
                         to="/prime" 
                         className={({ isActive }) => cn(
-                          "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                          isActive && "text-white bg-[rgba(255,255,255,0.05)]"
+                          "text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                          isActive && "bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
                         <span>Prime</span>
@@ -98,8 +98,8 @@ export function DashboardSidebar() {
                       <NavLink 
                         to="/haas" 
                         className={({ isActive }) => cn(
-                          "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                          isActive && "text-white bg-[rgba(255,255,255,0.05)]"
+                          "text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                          isActive && "bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
                         <span>HaaS</span>
@@ -111,8 +111,8 @@ export function DashboardSidebar() {
                       <NavLink 
                         to="/rh-digital" 
                         className={() => cn(
-                          "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                          location.pathname.startsWith("/rh-digital") && "text-white bg-[rgba(255,255,255,0.05)]"
+                          "text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                          location.pathname.startsWith("/rh-digital") && "bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
                         <span>RH Digital</span>
@@ -124,8 +124,8 @@ export function DashboardSidebar() {
                       <NavLink 
                         to="/plus" 
                         className={({ isActive }) => cn(
-                          "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                          isActive && "text-white bg-[rgba(255,255,255,0.05)]"
+                          "text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                          isActive && "bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
                         <span>Plus</span>
@@ -137,8 +137,8 @@ export function DashboardSidebar() {
                       <NavLink 
                         to="/time" 
                         className={({ isActive }) => cn(
-                          "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                          isActive && "text-white bg-[rgba(255,255,255,0.05)]"
+                          "text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                          isActive && "bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
                         <span>Time</span>
@@ -150,8 +150,8 @@ export function DashboardSidebar() {
                       <NavLink 
                         to="/control" 
                         className={({ isActive }) => cn(
-                          "text-[#929DA7] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
-                          isActive && "text-white bg-[rgba(255,255,255,0.05)]"
+                          "text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                          isActive && "bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
                         <span>Control</span>
