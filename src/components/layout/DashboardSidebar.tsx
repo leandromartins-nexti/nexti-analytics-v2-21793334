@@ -84,11 +84,11 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/prime" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
-                      <Star className="w-4 h-4 mr-2" />
+                      <Star className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                       <span>Prime</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -98,11 +98,11 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/haas" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
-                      <Smartphone className="w-4 h-4 mr-2" />
+                      <Smartphone className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                       <span>HaaS</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -112,11 +112,11 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/rh-digital" 
                       className={() => cn(
-                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         location.pathname.startsWith("/rh-digital") && "text-white font-medium"
                       )}
                     >
-                      <Users className="w-4 h-4 mr-2" />
+                      <Users className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                       <span>RH Digital</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -126,11 +126,11 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/plus" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
-                      <PlusCircle className="w-4 h-4 mr-2" />
+                      <PlusCircle className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                       <span>Plus</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -140,11 +140,11 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/time" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
-                      <Timer className="w-4 h-4 mr-2" />
+                      <Timer className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                       <span>Time</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -154,11 +154,11 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/control" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
-                      <Shield className="w-4 h-4 mr-2" />
+                      <Shield className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                       <span>Control</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -217,14 +217,14 @@ export function DashboardSidebar() {
             <CollapsibleContent>
               <SidebarMenu className="mt-1">
                 <SidebarMenuItem>
-                  <SidebarMenuButton className="text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]">
-                    <CheckSquare className="w-4 h-4 mr-2" />
+                  <SidebarMenuButton className="text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]">
+                    <CheckSquare className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                     <span>Checklist</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton className="text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]">
-                    <ArrowLeftRight className="w-4 h-4 mr-2" />
+                  <SidebarMenuButton className="text-[#CCCCCC] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]">
+                    <ArrowLeftRight className="w-4 h-4 mr-2 text-[#CCCCCC]" />
                     <span>Movimentações em Lote</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
