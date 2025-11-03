@@ -84,7 +84,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/prime" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
@@ -98,7 +98,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/haas" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
@@ -112,7 +112,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/rh-digital" 
                       className={() => cn(
-                        "text-[#B0B0B0] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         location.pathname.startsWith("/rh-digital") && "text-white font-medium"
                       )}
                     >
@@ -126,7 +126,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/plus" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
@@ -140,7 +140,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/time" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
@@ -154,7 +154,7 @@ export function DashboardSidebar() {
                     <NavLink 
                       to="/control" 
                       className={({ isActive }) => cn(
-                        "text-[#B0B0B0] hover:text-white transition-colors pl-11 h-10 font-normal text-[15px]",
+                        "text-[#B0B0B0] hover:text-white hover:bg-[rgba(255,255,255,0.05)] transition-colors pl-11 h-10 font-normal text-[15px]",
                         isActive && "text-white font-medium"
                       )}
                     >
