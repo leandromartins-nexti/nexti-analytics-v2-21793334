@@ -14,6 +14,7 @@ export interface OperationalOverview {
   qtdAusentes: number;
   qtdFerias: number;
   coberturasDia: number;
+  coberturaDiaPercentual: number;
 }
 
 export const operationalOverview: OperationalOverview = {
@@ -24,7 +25,78 @@ export const operationalOverview: OperationalOverview = {
   qtdAusentes: 87,
   qtdFerias: 51,
   coberturasDia: 15,
+  coberturaDiaPercentual: 95.13,
 };
+
+export interface CoberturaPorHora {
+  hora: string;
+  colaboradores: number;
+  coberturaPercentual: number;
+  possivelmenteFaltantes: string[];
+}
+
+export const coberturaPorHora: CoberturaPorHora[] = [
+  { hora: "00h00", colaboradores: 12, coberturaPercentual: 85.71, possivelmenteFaltantes: ["João Silva", "Maria Santos"] },
+  { hora: "01h00", colaboradores: 12, coberturaPercentual: 85.71, possivelmenteFaltantes: ["Pedro Costa"] },
+  { hora: "02h00", colaboradores: 11, coberturaPercentual: 78.57, possivelmenteFaltantes: ["Ana Oliveira", "Carlos Souza"] },
+  { hora: "03h00", colaboradores: 11, coberturaPercentual: 78.57, possivelmenteFaltantes: ["Fernanda Lima"] },
+  { hora: "04h00", colaboradores: 15, coberturaPercentual: 107.14, possivelmenteFaltantes: [] },
+  { hora: "05h00", colaboradores: 18, coberturaPercentual: 128.57, possivelmenteFaltantes: [] },
+  { hora: "06h00", colaboradores: 45, coberturaPercentual: 321.43, possivelmenteFaltantes: [] },
+  { hora: "07h00", colaboradores: 52, coberturaPercentual: 371.43, possivelmenteFaltantes: [] },
+  { hora: "08h00", colaboradores: 48, coberturaPercentual: 342.86, possivelmenteFaltantes: [] },
+  { hora: "09h00", colaboradores: 51, coberturaPercentual: 364.29, possivelmenteFaltantes: [] },
+  { hora: "10h00", colaboradores: 50, coberturaPercentual: 357.14, possivelmenteFaltantes: [] },
+  { hora: "11h00", colaboradores: 49, coberturaPercentual: 350.00, possivelmenteFaltantes: [] },
+  { hora: "12h00", colaboradores: 47, coberturaPercentual: 335.71, possivelmenteFaltantes: [] },
+  { hora: "13h00", colaboradores: 52, coberturaPercentual: 371.43, possivelmenteFaltantes: [] },
+  { hora: "14h00", colaboradores: 53, coberturaPercentual: 203.85, possivelmenteFaltantes: [] },
+  { hora: "15h00", colaboradores: 51, coberturaPercentual: 196.15, possivelmenteFaltantes: [] },
+  { hora: "16h00", colaboradores: 50, coberturaPercentual: 192.31, possivelmenteFaltantes: [] },
+  { hora: "17h00", colaboradores: 48, coberturaPercentual: 184.62, possivelmenteFaltantes: ["Lucas Ferreira"] },
+  { hora: "18h00", colaboradores: 35, coberturaPercentual: 134.62, possivelmenteFaltantes: ["Juliana Alves", "Roberto Dias"] },
+  { hora: "19h00", colaboradores: 28, coberturaPercentual: 107.69, possivelmenteFaltantes: ["Patrícia Rocha"] },
+  { hora: "20h00", colaboradores: 22, coberturaPercentual: 84.62, possivelmenteFaltantes: ["Ricardo Mendes", "Camila Castro"] },
+  { hora: "21h00", colaboradores: 18, coberturaPercentual: 69.23, possivelmenteFaltantes: ["Bruno Cardoso", "Larissa Moura", "Diego Ribeiro"] },
+  { hora: "22h00", colaboradores: 15, coberturaPercentual: 57.69, possivelmenteFaltantes: ["Amanda Correia", "Gabriel Martins"] },
+  { hora: "23h00", colaboradores: 13, coberturaPercentual: 50.00, possivelmenteFaltantes: ["Tatiana Lopes", "Felipe Barros", "Renata Pires"] },
+];
+
+export interface CoberturaDiaria {
+  dia: number;
+  coberturaPercentual: number;
+}
+
+export const coberturaDiariaMensal: CoberturaDiaria[] = [
+  { dia: 1, coberturaPercentual: 92.5 },
+  { dia: 2, coberturaPercentual: 95.8 },
+  { dia: 3, coberturaPercentual: 88.3 },
+  { dia: 4, coberturaPercentual: 91.2 },
+  { dia: 5, coberturaPercentual: 96.7 },
+  { dia: 6, coberturaPercentual: 94.1 },
+  { dia: 7, coberturaPercentual: 89.5 },
+  { dia: 8, coberturaPercentual: 97.2 },
+  { dia: 9, coberturaPercentual: 93.8 },
+  { dia: 10, coberturaPercentual: 90.4 },
+  { dia: 11, coberturaPercentual: 85.6 },
+  { dia: 12, coberturaPercentual: 91.9 },
+  { dia: 13, coberturaPercentual: 96.3 },
+  { dia: 14, coberturaPercentual: 94.7 },
+  { dia: 15, coberturaPercentual: 87.2 },
+  { dia: 16, coberturaPercentual: 92.8 },
+  { dia: 17, coberturaPercentual: 95.4 },
+  { dia: 18, coberturaPercentual: 89.1 },
+  { dia: 19, coberturaPercentual: 93.5 },
+  { dia: 20, coberturaPercentual: 96.9 },
+  { dia: 21, coberturaPercentual: 91.6 },
+  { dia: 22, coberturaPercentual: 88.7 },
+  { dia: 23, coberturaPercentual: 94.2 },
+  { dia: 24, coberturaPercentual: 97.5 },
+  { dia: 25, coberturaPercentual: 90.8 },
+  { dia: 26, coberturaPercentual: 93.1 },
+  { dia: 27, coberturaPercentual: 95.6 },
+  { dia: 28, coberturaPercentual: 89.9 },
+];
 
 export interface ColaboradoresPorSituacao {
   situacao: string;

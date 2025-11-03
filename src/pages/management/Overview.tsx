@@ -2,8 +2,10 @@ import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { KPICard } from "@/components/dashboard/KPICard";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { Users, UserCheck, UserX, AlertTriangle, Umbrella, Calendar, Shield } from "lucide-react";
-import { operationalOverview, colaboradoresPorSituacao } from "@/lib/managementData";
+import { operationalOverview, colaboradoresPorSituacao, coberturaPorHora, coberturaDiariaMensal } from "@/lib/managementData";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { CoberturaPorHoraTable } from "@/components/management/CoberturaPorHoraTable";
+import { CalendarioCobertura } from "@/components/management/CalendarioCobertura";
 
 const ManagementOverview = () => {
   return (
@@ -50,37 +52,45 @@ const ManagementOverview = () => {
             icon={Umbrella}
           />
           <KPICard
-            title="Coberturas do Dia"
-            value={operationalOverview.coberturasDia.toLocaleString()}
+            title="Cobertura do Dia"
+            value={`${operationalOverview.coberturaDiaPercentual.toFixed(2)}%`}
             icon={Shield}
           />
         </div>
 
         {/* Colaboradores por Situação - Donut Chart */}
-        <ChartCard title="Colaboradores por Situação">
-          <div className="h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={colaboradoresPorSituacao}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={100}
-                  outerRadius={150}
-                  paddingAngle={2}
-                  dataKey="quantidade"
-                  label={({ situacao, quantidade }) => `${situacao}: ${quantidade}`}
-                >
-                  {colaboradoresPorSituacao.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </ChartCard>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ChartCard title="Colaboradores por Situação">
+            <div className="h-96">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={colaboradoresPorSituacao}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={100}
+                    outerRadius={150}
+                    paddingAngle={2}
+                    dataKey="quantidade"
+                    label={({ situacao, quantidade }) => `${situacao}: ${quantidade}`}
+                  >
+                    {colaboradoresPorSituacao.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </ChartCard>
+
+          {/* Cobertura por Hora */}
+          <CoberturaPorHoraTable data={coberturaPorHora} />
+        </div>
+
+        {/* Calendário de Cobertura */}
+        <CalendarioCobertura data={coberturaDiariaMensal} />
       </main>
     </div>
   );
