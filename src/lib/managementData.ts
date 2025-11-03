@@ -157,9 +157,9 @@ export interface BancoHorasOverview {
 }
 
 export const bancoHorasOverview: BancoHorasOverview = {
-  saldoPositivoTotal: 125480,
-  saldoNegativoTotal: -42350,
-  horasExtrasTotal: 23400,
+  saldoPositivoTotal: 12500,
+  saldoNegativoTotal: -3400,
+  horasExtrasTotal: 8500,
 };
 
 export interface SaldoBancoHoras {

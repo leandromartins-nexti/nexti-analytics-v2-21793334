@@ -48,7 +48,7 @@ const ManagementCompliance = () => {
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <KPICard
-            title="Total de Violações de TAC (Últimos 30 dias)"
+            title="Total de Violações (Últimos 30 dias)"
             value={complianceOverview.totalViolacoesTAC.toLocaleString()}
             icon={AlertTriangle}
           />

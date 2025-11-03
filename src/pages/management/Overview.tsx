@@ -17,22 +17,22 @@ const ManagementOverview = () => {
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KPICard
-            title="Qtde Vagas"
+            title="Vagas"
             value={operationalOverview.qtdVagas.toLocaleString()}
             icon={Calendar}
           />
           <KPICard
-            title="Qtde Colaboradores Efetivos"
+            title="Colaboradores Ativos"
             value={operationalOverview.qtdColaboradoresEfetivos.toLocaleString()}
             icon={Users}
           />
           <KPICard
-            title="Qtde Presentes"
+            title="Presentes"
             value={operationalOverview.qtdPresentes.toLocaleString()}
             icon={UserCheck}
           />
           <KPICard
-            title="Qtde Possíveis Faltantes"
+            title="Possíveis Faltantes"
             value={operationalOverview.qtdPossiveisFaltantes.toLocaleString()}
             icon={AlertTriangle}
           />
@@ -40,12 +40,12 @@ const ManagementOverview = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <KPICard
-            title="Qtde Ausentes"
+            title="Ausentes"
             value={operationalOverview.qtdAusentes.toLocaleString()}
             icon={UserX}
           />
           <KPICard
-            title="Qtde Férias"
+            title="Em Férias"
             value={operationalOverview.qtdFerias.toLocaleString()}
             icon={Umbrella}
           />

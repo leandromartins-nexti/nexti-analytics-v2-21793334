@@ -47,18 +47,18 @@ const ManagementTimeBank = () => {
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <KPICard
-            title="Saldo Positivo Banco de Horas (Total R$)"
-            value={`R$ ${bancoHorasOverview.saldoPositivoTotal.toLocaleString()}`}
+            title="Saldo Positivo (Total de Horas)"
+            value={`${bancoHorasOverview.saldoPositivoTotal.toLocaleString()}h`}
             icon={TrendingUp}
           />
           <KPICard
-            title="Saldo Negativo Banco de Horas (Total R$)"
-            value={`R$ ${Math.abs(bancoHorasOverview.saldoNegativoTotal).toLocaleString()}`}
+            title="Saldo Negativo (Total de Horas)"
+            value={`${Math.abs(bancoHorasOverview.saldoNegativoTotal).toLocaleString()}h`}
             icon={TrendingDown}
           />
           <KPICard
-            title="Qtde Horas Extras (Total)"
-            value={bancoHorasOverview.horasExtrasTotal.toLocaleString()}
+            title="Total de Horas Extras"
+            value={`${bancoHorasOverview.horasExtrasTotal.toLocaleString()}h`}
             icon={Clock}
           />
         </div>

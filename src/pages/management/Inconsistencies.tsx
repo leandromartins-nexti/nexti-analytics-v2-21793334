@@ -33,17 +33,17 @@ const ManagementInconsistencies = () => {
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <KPICard
-            title="Qtde Total de Inconsistências"
+            title="Total de Inconsistências"
             value={inconsistenciesOverview.totalInconsistencias.toLocaleString()}
             icon={AlertTriangle}
           />
           <KPICard
-            title="Qtde Requisições Pendentes (Facial)"
+            title="Requisições Pendentes (Facial)"
             value={inconsistenciesOverview.requisiçõesPendentesFacial.toLocaleString()}
             icon={Clock}
           />
           <KPICard
-            title="Qtde Solicitação de Ajuste"
+            title="Solicitação de Ajuste"
             value={inconsistenciesOverview.solicitaçãoAjuste.toLocaleString()}
             icon={FileText}
           />
