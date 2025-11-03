@@ -6,6 +6,7 @@ import { operationalOverview, colaboradoresPorSituacao, coberturaPorHora, cobert
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { CoberturaPorHoraTable } from "@/components/management/CoberturaPorHoraTable";
 import { CalendarioCobertura } from "@/components/management/CalendarioCobertura";
+import { CoberturaVsNecessidade } from "@/components/management/CoberturaVsNecessidade";
 
 const ManagementOverview = () => {
   return (
@@ -88,6 +89,9 @@ const ManagementOverview = () => {
           {/* Cobertura por Hora */}
           <CoberturaPorHoraTable data={coberturaPorHora} />
         </div>
+
+        {/* Cobertura vs Necessidade */}
+        <CoberturaVsNecessidade />
 
         {/* Calendário de Cobertura */}
         <CalendarioCobertura data={coberturaDiariaMensal} />

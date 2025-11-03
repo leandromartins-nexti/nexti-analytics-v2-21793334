@@ -111,6 +111,132 @@ export const colaboradoresPorSituacao: ColaboradoresPorSituacao[] = [
   { situacao: "Possíveis Faltantes", quantidade: 23, color: "hsl(var(--chart-4))" },
 ];
 
+// Cobertura vs Necessidade - Semanal
+export interface CoberturaVsNecessidadeDia {
+  dia: number;
+  cobertura: number;
+  necessidade: number;
+}
+
+export const coberturaVsNecessidadeSemanal: CoberturaVsNecessidadeDia[] = [
+  { dia: 1, cobertura: 245, necessidade: 260 },
+  { dia: 2, cobertura: 268, necessidade: 260 },
+  { dia: 3, cobertura: 255, necessidade: 260 },
+  { dia: 4, cobertura: 272, necessidade: 260 },
+  { dia: 5, cobertura: 260, necessidade: 260 },
+  { dia: 6, cobertura: 238, necessidade: 260 },
+  { dia: 7, cobertura: 195, necessidade: 210 },
+];
+
+// Cobertura vs Necessidade - Heatmap (Hora x Dia)
+export interface CoberturaHeatmapData {
+  hora: string;
+  dias: {
+    dia: number;
+    cobertura: number;
+    necessidade: number;
+  }[];
+}
+
+export const coberturaHeatmapSemanal: CoberturaHeatmapData[] = [
+  {
+    hora: "06h",
+    dias: [
+      { dia: 1, cobertura: 45, necessidade: 50 },
+      { dia: 2, cobertura: 52, necessidade: 50 },
+      { dia: 3, cobertura: 48, necessidade: 50 },
+      { dia: 4, cobertura: 50, necessidade: 50 },
+      { dia: 5, cobertura: 47, necessidade: 50 },
+      { dia: 6, cobertura: 43, necessidade: 50 },
+      { dia: 7, cobertura: 38, necessidade: 40 },
+    ],
+  },
+  {
+    hora: "08h",
+    dias: [
+      { dia: 1, cobertura: 48, necessidade: 52 },
+      { dia: 2, cobertura: 55, necessidade: 52 },
+      { dia: 3, cobertura: 52, necessidade: 52 },
+      { dia: 4, cobertura: 54, necessidade: 52 },
+      { dia: 5, cobertura: 52, necessidade: 52 },
+      { dia: 6, cobertura: 47, necessidade: 52 },
+      { dia: 7, cobertura: 39, necessidade: 42 },
+    ],
+  },
+  {
+    hora: "10h",
+    dias: [
+      { dia: 1, cobertura: 50, necessidade: 54 },
+      { dia: 2, cobertura: 58, necessidade: 54 },
+      { dia: 3, cobertura: 54, necessidade: 54 },
+      { dia: 4, cobertura: 56, necessidade: 54 },
+      { dia: 5, cobertura: 54, necessidade: 54 },
+      { dia: 6, cobertura: 49, necessidade: 54 },
+      { dia: 7, cobertura: 41, necessidade: 44 },
+    ],
+  },
+  {
+    hora: "12h",
+    dias: [
+      { dia: 1, cobertura: 47, necessidade: 50 },
+      { dia: 2, cobertura: 52, necessidade: 50 },
+      { dia: 3, cobertura: 50, necessidade: 50 },
+      { dia: 4, cobertura: 53, necessidade: 50 },
+      { dia: 5, cobertura: 50, necessidade: 50 },
+      { dia: 6, cobertura: 45, necessidade: 50 },
+      { dia: 7, cobertura: 37, necessidade: 40 },
+    ],
+  },
+  {
+    hora: "14h",
+    dias: [
+      { dia: 1, cobertura: 53, necessidade: 56 },
+      { dia: 2, cobertura: 60, necessidade: 56 },
+      { dia: 3, cobertura: 55, necessidade: 56 },
+      { dia: 4, cobertura: 58, necessidade: 56 },
+      { dia: 5, cobertura: 56, necessidade: 56 },
+      { dia: 6, cobertura: 51, necessidade: 56 },
+      { dia: 7, cobertura: 43, necessidade: 46 },
+    ],
+  },
+  {
+    hora: "16h",
+    dias: [
+      { dia: 1, cobertura: 50, necessidade: 52 },
+      { dia: 2, cobertura: 55, necessidade: 52 },
+      { dia: 3, cobertura: 52, necessidade: 52 },
+      { dia: 4, cobertura: 54, necessidade: 52 },
+      { dia: 5, cobertura: 52, necessidade: 52 },
+      { dia: 6, cobertura: 47, necessidade: 52 },
+      { dia: 7, cobertura: 40, necessidade: 42 },
+    ],
+  },
+  {
+    hora: "18h",
+    dias: [
+      { dia: 1, cobertura: 35, necessidade: 38 },
+      { dia: 2, cobertura: 40, necessidade: 38 },
+      { dia: 3, cobertura: 38, necessidade: 38 },
+      { dia: 4, cobertura: 39, necessidade: 38 },
+      { dia: 5, cobertura: 38, necessidade: 38 },
+      { dia: 6, cobertura: 34, necessidade: 38 },
+      { dia: 7, cobertura: 28, necessidade: 30 },
+    ],
+  },
+  {
+    hora: "20h",
+    dias: [
+      { dia: 1, cobertura: 22, necessidade: 26 },
+      { dia: 2, cobertura: 28, necessidade: 26 },
+      { dia: 3, cobertura: 25, necessidade: 26 },
+      { dia: 4, cobertura: 27, necessidade: 26 },
+      { dia: 5, cobertura: 26, necessidade: 26 },
+      { dia: 6, cobertura: 23, necessidade: 26 },
+      { dia: 7, cobertura: 18, necessidade: 20 },
+    ],
+  },
+];
+
 // ============================================
 // PÁGINA 2: INCONSISTÊNCIAS
 // ============================================

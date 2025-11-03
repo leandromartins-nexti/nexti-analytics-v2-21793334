@@ -36,26 +36,35 @@ export function CoberturaPorHoraTable({ data }: CoberturaPorHoraTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((item) => (
-                <TableRow
-                  key={item.hora}
-                  className={item.possivelmenteFaltantes.length > 0 ? "cursor-pointer hover:bg-muted/50" : ""}
-                  onClick={() => handleRowClick(item)}
-                >
-                  <TableCell className="font-medium">{item.hora}</TableCell>
-                  <TableCell className="text-right">{item.colaboradores}</TableCell>
-                  <TableCell className="text-right">
-                    <span className={
-                      item.coberturaPercentual >= 95 ? "text-success font-medium" :
-                      item.coberturaPercentual >= 80 ? "text-primary font-medium" :
-                      item.coberturaPercentual >= 65 ? "text-warning font-medium" :
-                      "text-destructive font-medium"
-                    }>
-                      {item.coberturaPercentual.toFixed(2)}%
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {data.map((item) => {
+                const getRowColor = () => {
+                  if (item.coberturaPercentual === 100) return "bg-green-500/10 hover:bg-green-500/20";
+                  if (item.coberturaPercentual > 100) return "bg-orange-500/10 hover:bg-orange-500/20";
+                  return "bg-red-500/10 hover:bg-red-500/20";
+                };
+
+                const getTextColor = () => {
+                  if (item.coberturaPercentual === 100) return "text-green-600 dark:text-green-400";
+                  if (item.coberturaPercentual > 100) return "text-orange-600 dark:text-orange-400";
+                  return "text-red-600 dark:text-red-400";
+                };
+
+                return (
+                  <TableRow
+                    key={item.hora}
+                    className={`${getRowColor()} ${item.possivelmenteFaltantes.length > 0 ? "cursor-pointer" : ""}`}
+                    onClick={() => handleRowClick(item)}
+                  >
+                    <TableCell className="font-medium">{item.hora}</TableCell>
+                    <TableCell className="text-right">{item.colaboradores}</TableCell>
+                    <TableCell className="text-right">
+                      <span className={`${getTextColor()} font-medium`}>
+                        {item.coberturaPercentual.toFixed(2)}%
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
