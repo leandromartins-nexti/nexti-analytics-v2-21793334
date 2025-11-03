@@ -57,8 +57,8 @@ export function DashboardSidebar() {
         <SidebarGroup className="px-3 py-2">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3">
-                <BarChart3 className="w-5 h-5 mr-3" />
+              <SidebarMenuButton className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <BarChart3 className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
                 {!isCollapsed && <span className="font-normal text-[15px]">Dashboard</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -182,8 +182,8 @@ export function DashboardSidebar() {
         <SidebarGroup className="px-3">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3">
-                <Clock className="w-5 h-5 mr-3" />
+              <SidebarMenuButton className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <Clock className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
                 {!isCollapsed && <span className="font-normal text-[15px]">Mesa de Operações</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -194,8 +194,8 @@ export function DashboardSidebar() {
         <SidebarGroup className="px-3">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3">
-                <Map className="w-5 h-5 mr-3" />
+              <SidebarMenuButton className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <Map className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
                 {!isCollapsed && <span className="font-normal text-[15px]">Mapa de Postos</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
