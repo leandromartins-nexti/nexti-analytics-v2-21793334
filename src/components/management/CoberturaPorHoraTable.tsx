@@ -16,10 +16,15 @@ interface CoberturaPorHoraTableProps {
 
 export function CoberturaPorHoraTable({ data }: CoberturaPorHoraTableProps) {
   const [selectedHora, setSelectedHora] = useState<CoberturaPorHora | null>(null);
+  const [modalType, setModalType] = useState<'deficit' | 'excesso' | null>(null);
 
   const handleRowClick = (hora: CoberturaPorHora) => {
     if (hora.possivelmenteFaltantes.length > 0) {
       setSelectedHora(hora);
+      setModalType('deficit');
+    } else if (hora.colaboradoresEmExcesso.length > 0) {
+      setSelectedHora(hora);
+      setModalType('excesso');
     }
   };
 
@@ -49,10 +54,12 @@ export function CoberturaPorHoraTable({ data }: CoberturaPorHoraTableProps) {
                   return "text-red-600 dark:text-red-400";
                 };
 
+                const isClickable = item.possivelmenteFaltantes.length > 0 || item.colaboradoresEmExcesso.length > 0;
+                
                 return (
                   <TableRow
                     key={item.hora}
-                    className={`${getRowColor()} ${item.possivelmenteFaltantes.length > 0 ? "cursor-pointer" : ""}`}
+                    className={`${getRowColor()} ${isClickable ? "cursor-pointer" : ""}`}
                     onClick={() => handleRowClick(item)}
                   >
                     <TableCell className="font-medium">{item.hora}</TableCell>
@@ -70,24 +77,34 @@ export function CoberturaPorHoraTable({ data }: CoberturaPorHoraTableProps) {
         </div>
       </ChartCard>
 
-      <Dialog open={!!selectedHora} onOpenChange={() => setSelectedHora(null)}>
+      <Dialog open={!!selectedHora} onOpenChange={() => { setSelectedHora(null); setModalType(null); }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Possivelmente Faltantes - {selectedHora?.hora}
+              {modalType === 'deficit' ? `possíveis faltantes - ${selectedHora?.hora}` : `Colaboradores em Excesso - ${selectedHora?.hora}`}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground mb-4">
-              Total: {selectedHora?.possivelmenteFaltantes.length} colaborador(es)
+              Total: {modalType === 'deficit' 
+                ? selectedHora?.possivelmenteFaltantes.length 
+                : selectedHora?.colaboradoresEmExcesso.length} colaborador(es)
             </p>
             <div className="space-y-2">
-              {selectedHora?.possivelmenteFaltantes.map((nome, index) => (
-                <div key={index} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-                  <Badge variant="destructive" className="shrink-0">Faltante</Badge>
-                  <span className="font-medium">{nome}</span>
-                </div>
-              ))}
+              {modalType === 'deficit' 
+                ? selectedHora?.possivelmenteFaltantes.map((nome, index) => (
+                    <div key={index} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+                      <Badge variant="destructive" className="shrink-0">Faltante</Badge>
+                      <span className="font-medium">{nome}</span>
+                    </div>
+                  ))
+                : selectedHora?.colaboradoresEmExcesso.map((nome, index) => (
+                    <div key={index} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+                      <Badge className="shrink-0 bg-orange-500 hover:bg-orange-600">Excesso</Badge>
+                      <span className="font-medium">{nome}</span>
+                    </div>
+                  ))
+              }
             </div>
           </div>
         </DialogContent>

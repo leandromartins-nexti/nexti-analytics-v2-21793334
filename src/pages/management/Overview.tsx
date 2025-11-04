@@ -73,6 +73,7 @@ const ManagementOverview = () => {
                     outerRadius={150}
                     paddingAngle={2}
                     dataKey="quantidade"
+                    nameKey="situacao"
                     label={({ situacao, quantidade }) => `${situacao}: ${quantidade}`}
                   >
                     {colaboradoresPorSituacao.map((entry, index) => (
@@ -80,7 +81,7 @@ const ManagementOverview = () => {
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend />
+                  <Legend formatter={(value) => value} />
                 </PieChart>
               </ResponsiveContainer>
             </div>

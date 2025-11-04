@@ -33,33 +33,34 @@ export interface CoberturaPorHora {
   colaboradores: number;
   coberturaPercentual: number;
   possivelmenteFaltantes: string[];
+  colaboradoresEmExcesso: string[];
 }
 
 export const coberturaPorHora: CoberturaPorHora[] = [
-  { hora: "00h00", colaboradores: 12, coberturaPercentual: 85.71, possivelmenteFaltantes: ["João Silva", "Maria Santos"] },
-  { hora: "01h00", colaboradores: 12, coberturaPercentual: 85.71, possivelmenteFaltantes: ["Pedro Costa"] },
-  { hora: "02h00", colaboradores: 11, coberturaPercentual: 78.57, possivelmenteFaltantes: ["Ana Oliveira", "Carlos Souza"] },
-  { hora: "03h00", colaboradores: 11, coberturaPercentual: 78.57, possivelmenteFaltantes: ["Fernanda Lima"] },
-  { hora: "04h00", colaboradores: 15, coberturaPercentual: 107.14, possivelmenteFaltantes: [] },
-  { hora: "05h00", colaboradores: 18, coberturaPercentual: 128.57, possivelmenteFaltantes: [] },
-  { hora: "06h00", colaboradores: 45, coberturaPercentual: 321.43, possivelmenteFaltantes: [] },
-  { hora: "07h00", colaboradores: 52, coberturaPercentual: 371.43, possivelmenteFaltantes: [] },
-  { hora: "08h00", colaboradores: 48, coberturaPercentual: 342.86, possivelmenteFaltantes: [] },
-  { hora: "09h00", colaboradores: 51, coberturaPercentual: 364.29, possivelmenteFaltantes: [] },
-  { hora: "10h00", colaboradores: 50, coberturaPercentual: 357.14, possivelmenteFaltantes: [] },
-  { hora: "11h00", colaboradores: 49, coberturaPercentual: 350.00, possivelmenteFaltantes: [] },
-  { hora: "12h00", colaboradores: 47, coberturaPercentual: 335.71, possivelmenteFaltantes: [] },
-  { hora: "13h00", colaboradores: 52, coberturaPercentual: 371.43, possivelmenteFaltantes: [] },
-  { hora: "14h00", colaboradores: 53, coberturaPercentual: 203.85, possivelmenteFaltantes: [] },
-  { hora: "15h00", colaboradores: 51, coberturaPercentual: 196.15, possivelmenteFaltantes: [] },
-  { hora: "16h00", colaboradores: 50, coberturaPercentual: 192.31, possivelmenteFaltantes: [] },
-  { hora: "17h00", colaboradores: 48, coberturaPercentual: 184.62, possivelmenteFaltantes: ["Lucas Ferreira"] },
-  { hora: "18h00", colaboradores: 35, coberturaPercentual: 134.62, possivelmenteFaltantes: ["Juliana Alves", "Roberto Dias"] },
-  { hora: "19h00", colaboradores: 28, coberturaPercentual: 107.69, possivelmenteFaltantes: ["Patrícia Rocha"] },
-  { hora: "20h00", colaboradores: 22, coberturaPercentual: 84.62, possivelmenteFaltantes: ["Ricardo Mendes", "Camila Castro"] },
-  { hora: "21h00", colaboradores: 18, coberturaPercentual: 69.23, possivelmenteFaltantes: ["Bruno Cardoso", "Larissa Moura", "Diego Ribeiro"] },
-  { hora: "22h00", colaboradores: 15, coberturaPercentual: 57.69, possivelmenteFaltantes: ["Amanda Correia", "Gabriel Martins"] },
-  { hora: "23h00", colaboradores: 13, coberturaPercentual: 50.00, possivelmenteFaltantes: ["Tatiana Lopes", "Felipe Barros", "Renata Pires"] },
+  { hora: "00h00", colaboradores: 12, coberturaPercentual: 85.71, possivelmenteFaltantes: ["João Silva", "Maria Santos"], colaboradoresEmExcesso: [] },
+  { hora: "01h00", colaboradores: 12, coberturaPercentual: 85.71, possivelmenteFaltantes: ["Pedro Costa"], colaboradoresEmExcesso: [] },
+  { hora: "02h00", colaboradores: 11, coberturaPercentual: 78.57, possivelmenteFaltantes: ["Ana Oliveira", "Carlos Souza"], colaboradoresEmExcesso: [] },
+  { hora: "03h00", colaboradores: 14, coberturaPercentual: 100.00, possivelmenteFaltantes: [], colaboradoresEmExcesso: [] },
+  { hora: "04h00", colaboradores: 15, coberturaPercentual: 107.14, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Marcos Vieira"] },
+  { hora: "05h00", colaboradores: 18, coberturaPercentual: 128.57, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Sandra Nunes", "Paulo Teixeira"] },
+  { hora: "06h00", colaboradores: 45, coberturaPercentual: 321.43, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Rafael Gomes", "Beatriz Costa", "Thiago Amaral"] },
+  { hora: "07h00", colaboradores: 52, coberturaPercentual: 371.43, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Vanessa Silva", "Eduardo Pereira"] },
+  { hora: "08h00", colaboradores: 48, coberturaPercentual: 342.86, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Isabela Freitas", "Guilherme Sousa"] },
+  { hora: "09h00", colaboradores: 51, coberturaPercentual: 364.29, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Cristiane Borges", "Leonardo Ramos", "Adriana Campos"] },
+  { hora: "10h00", colaboradores: 50, coberturaPercentual: 357.14, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Rodrigo Farias", "Simone Tavares"] },
+  { hora: "11h00", colaboradores: 49, coberturaPercentual: 350.00, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Mariana Duarte", "André Moreira"] },
+  { hora: "12h00", colaboradores: 47, coberturaPercentual: 335.71, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Priscila Medeiros"] },
+  { hora: "13h00", colaboradores: 52, coberturaPercentual: 371.43, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Claudio Baptista", "Elaine Moura", "Fábio Carvalho"] },
+  { hora: "14h00", colaboradores: 53, coberturaPercentual: 203.85, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Viviane Reis", "Henrique Azevedo"] },
+  { hora: "15h00", colaboradores: 51, coberturaPercentual: 196.15, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Daniela Monteiro", "Samuel Leal"] },
+  { hora: "16h00", colaboradores: 50, coberturaPercentual: 192.31, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Carolina Brito", "Igor Nogueira"] },
+  { hora: "17h00", colaboradores: 48, coberturaPercentual: 184.62, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Luciana Fernandes"] },
+  { hora: "18h00", colaboradores: 35, coberturaPercentual: 134.62, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Michele Araújo", "Renato Lima"] },
+  { hora: "19h00", colaboradores: 28, coberturaPercentual: 107.69, possivelmenteFaltantes: [], colaboradoresEmExcesso: ["Bianca Cunha"] },
+  { hora: "20h00", colaboradores: 22, coberturaPercentual: 84.62, possivelmenteFaltantes: ["Ricardo Mendes", "Camila Castro"], colaboradoresEmExcesso: [] },
+  { hora: "21h00", colaboradores: 18, coberturaPercentual: 69.23, possivelmenteFaltantes: ["Bruno Cardoso", "Larissa Moura", "Diego Ribeiro"], colaboradoresEmExcesso: [] },
+  { hora: "22h00", colaboradores: 15, coberturaPercentual: 57.69, possivelmenteFaltantes: ["Amanda Correia", "Gabriel Martins"], colaboradoresEmExcesso: [] },
+  { hora: "23h00", colaboradores: 13, coberturaPercentual: 50.00, possivelmenteFaltantes: ["Tatiana Lopes", "Felipe Barros", "Renata Pires"], colaboradoresEmExcesso: [] },
 ];
 
 export interface CoberturaDiaria {
