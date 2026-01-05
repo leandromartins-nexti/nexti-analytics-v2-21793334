@@ -45,6 +45,40 @@ export const rankingHorasExtras = [
 ];
 
 // ============================================
+// DADOS OPERACIONAIS - HORAS EXTRAS (VOLUME TOTAL)
+// ============================================
+
+// Total de Horas Extras (sem distinção de status)
+export const totalHorasExtras = {
+  horasAtuais: 2170,
+  horasPeriodoAnterior: 1985,
+  variacao: 9.3, // percentual de variação
+  distribuicaoPorDia: [
+    { dia: 'Seg', horas: 377 },
+    { dia: 'Ter', horas: 338 },
+    { dia: 'Qua', horas: 380 },
+    { dia: 'Qui', horas: 350 },
+    { dia: 'Sex', horas: 418 },
+    { dia: 'Sáb', horas: 186 },
+    { dia: 'Dom', horas: 121 },
+  ],
+};
+
+// Ranking de Colaboradores com mais Horas Extras (sem distinção de status)
+export const rankingColaboradoresHE = [
+  { id: '5', colaborador: 'Ricardo Souza', horasExtras: 52, area: 'Operações', gestor: 'Maria Fernandes', distribuicao: [8, 10, 12, 10, 8, 4, 0] },
+  { id: '3', colaborador: 'João Pereira', horasExtras: 45, area: 'Operações', gestor: 'Ana Oliveira', distribuicao: [7, 8, 9, 8, 7, 4, 2] },
+  { id: '8', colaborador: 'Patrícia Rocha', horasExtras: 41, area: 'Logística', gestor: 'Roberto Alves', distribuicao: [6, 7, 8, 7, 8, 3, 2] },
+  { id: '1', colaborador: 'Carlos Silva', horasExtras: 38, area: 'Operações', gestor: 'Ana Oliveira', distribuicao: [5, 6, 8, 7, 6, 4, 2] },
+  { id: '9', colaborador: 'Marcos Oliveira', horasExtras: 35, area: 'Operações', gestor: 'Maria Fernandes', distribuicao: [5, 6, 7, 6, 6, 3, 2] },
+  { id: '10', colaborador: 'Luciana Ferreira', horasExtras: 32, area: 'Administrativo', gestor: 'Pedro Costa', distribuicao: [4, 5, 6, 6, 5, 4, 2] },
+  { id: '4', colaborador: 'Fernanda Lima', horasExtras: 28, area: 'Logística', gestor: 'Roberto Alves', distribuicao: [4, 5, 5, 5, 4, 3, 2] },
+  { id: '11', colaborador: 'Thiago Barbosa', horasExtras: 25, area: 'TI', gestor: 'Thiago Santos', distribuicao: [3, 4, 5, 5, 4, 3, 1] },
+  { id: '7', colaborador: 'André Martins', horasExtras: 22, area: 'Operações', gestor: 'Ana Oliveira', distribuicao: [3, 4, 4, 4, 4, 2, 1] },
+  { id: '2', colaborador: 'Maria Santos', horasExtras: 18, area: 'Administrativo', gestor: 'Pedro Costa', distribuicao: [2, 3, 3, 4, 3, 2, 1] },
+];
+
+// ============================================
 // DADOS OPERACIONAIS - APROVAÇÃO DE HORAS EXTRAS
 // ============================================
 

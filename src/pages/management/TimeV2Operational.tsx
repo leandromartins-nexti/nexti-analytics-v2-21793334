@@ -44,6 +44,8 @@ import {
   solicitacoesHEPorStatus,
   rankingGestoresPendentes,
   aprovacaoVsReprovacao,
+  totalHorasExtras,
+  rankingColaboradoresHE,
 } from "@/lib/timeV2OperationalData";
 
 const COLORS = {
@@ -67,6 +69,7 @@ type FilterType = {
   periodo?: string;
   tipoViolacao?: string;
   gestorId?: string;
+  colaboradorId?: string;
 };
 
 const getStatusBadge = (status: string) => {
@@ -147,6 +150,12 @@ export default function TimeV2Operational() {
     }
     if (filters.gestorId) {
       data = data.filter(d => d.gestor === filters.gestorId);
+    }
+    if (filters.colaboradorId) {
+      const colaborador = rankingColaboradoresHE.find(c => c.id === filters.colaboradorId);
+      if (colaborador) {
+        data = data.filter(d => d.colaborador === colaborador.colaborador);
+      }
     }
     if (filters.kpiType === 'horasExtrasPendentes') {
       data = data.filter(d => d.status === 'Pendente');
@@ -272,6 +281,12 @@ export default function TimeV2Operational() {
             <X className="h-3 w-3 cursor-pointer" onClick={() => clearFilter('gestorId')} />
           </Badge>
         )}
+        {filters.colaboradorId && (
+          <Badge variant="secondary" className="gap-1 text-xs">
+            Colaborador: {rankingColaboradoresHE.find(c => c.id === filters.colaboradorId)?.colaborador || filters.colaboradorId}
+            <X className="h-3 w-3 cursor-pointer" onClick={() => clearFilter('colaboradorId')} />
+          </Badge>
+        )}
         <Button variant="ghost" size="sm" onClick={clearAllFilters} className="h-6 text-xs">
           Limpar todos
         </Button>
@@ -374,12 +389,125 @@ export default function TimeV2Operational() {
         </section>
 
         {/* SEÇÃO 2 – Horas Extras */}
-        <section className="space-y-3">
+        <section className="space-y-4">
           <div className="flex items-center gap-2">
             <div className="h-1 w-6 bg-secondary rounded-full" />
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Horas Extras - Aprovações
+              Horas Extras
             </h2>
+          </div>
+
+          {/* TOPO DA SEÇÃO - Visão Rápida */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Widget 1 - KPI Total de Horas Extras */}
+            <Card 
+              className={`border-0 shadow-lg bg-gradient-to-br from-primary/5 to-primary/10 cursor-pointer transition-all hover:shadow-xl hover:scale-[1.01] ${filters.kpiType === 'totalHE' ? 'ring-2 ring-primary' : ''}`}
+              onClick={() => handleKPIClick('totalHE')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-primary" />
+                      <p className="text-sm font-medium text-muted-foreground">Total de Horas Extras</p>
+                    </div>
+                    <p className="text-4xl font-bold text-foreground">{totalHorasExtras.horasAtuais.toLocaleString('pt-BR')}h</p>
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant="outline" 
+                        className={`text-[10px] ${totalHorasExtras.variacao >= 0 ? 'bg-warning/10 text-warning border-warning/20' : 'bg-success/10 text-success border-success/20'}`}
+                      >
+                        {totalHorasExtras.variacao >= 0 ? '↑' : '↓'} {Math.abs(totalHorasExtras.variacao).toFixed(1)}% vs período anterior
+                      </Badge>
+                    </div>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-xs gap-1 hover:bg-primary/20"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDetailModal({ type: 'totalHE', data: totalHorasExtras });
+                    }}
+                  >
+                    <Eye className="h-3.5 w-3.5" /> Detalhes
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Widget 2 - Ranking de Colaboradores com mais HE */}
+            <Card className="border-0 shadow-md lg:col-span-2">
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-sm font-semibold">Top 10 Colaboradores com Mais HE</CardTitle>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-7 px-2 text-xs gap-1"
+                    onClick={() => setDetailModal({ type: 'rankingColaboradoresHE', data: rankingColaboradoresHE })}
+                  >
+                    <Eye className="h-3 w-3" /> Ver detalhes
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={180}>
+                  <BarChart data={rankingColaboradoresHE.slice(0, 10)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={10} unit="h" />
+                    <YAxis dataKey="colaborador" type="category" stroke="hsl(var(--muted-foreground))" fontSize={9} width={100} />
+                    <RechartsTooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-popover border border-border rounded-md p-2 shadow-lg">
+                              <p className="font-semibold text-xs">{data.colaborador}</p>
+                              <p className="text-xs text-primary">{data.horasExtras}h no período</p>
+                              <p className="text-[10px] text-muted-foreground">Área: {data.area}</p>
+                              <p className="text-[10px] text-muted-foreground">Gestor: {data.gestor}</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar 
+                      dataKey="horasExtras" 
+                      fill={COLORS.chart1} 
+                      radius={[0, 4, 4, 0]} 
+                      cursor="pointer"
+                      onClick={(data) => {
+                        if (data && data.id) {
+                          setFilters(prev => ({ 
+                            ...prev, 
+                            colaboradorId: prev.colaboradorId === data.id ? undefined : data.id 
+                          }));
+                        }
+                      }}
+                    >
+                      {rankingColaboradoresHE.slice(0, 10).map((entry) => (
+                        <Cell 
+                          key={entry.id} 
+                          fill={COLORS.chart1}
+                          opacity={filters.colaboradorId && filters.colaboradorId !== entry.id ? 0.3 : 1}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Subseção - Aprovações */}
+          <div className="flex items-center gap-2 pt-2">
+            <div className="h-0.5 w-4 bg-muted-foreground/30 rounded-full" />
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">Aprovações</span>
           </div>
 
           {/* Widget 1 - Solicitações de HE por Status (Stacked Bar) */}
@@ -1099,15 +1227,99 @@ export default function TimeV2Operational() {
 
       {/* Detail Modal */}
       <Dialog open={!!detailModal} onOpenChange={() => setDetailModal(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg">
               {detailModal?.type === 'colaborador' && `Detalhes - ${detailModal.data.colaborador}`}
               {detailModal?.type === 'colaboradoresImpactados' && `Colaboradores Impactados - ${detailModal.data.periodo}`}
               {detailModal?.type === 'exportar' && 'Exportar Dados'}
+              {detailModal?.type === 'totalHE' && 'Total de Horas Extras - Distribuição'}
+              {detailModal?.type === 'rankingColaboradoresHE' && 'Ranking de Colaboradores com Mais HE'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {detailModal?.type === 'totalHE' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-muted/30 rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground">Total no Período</p>
+                    <p className="text-2xl font-bold">{detailModal.data.horasAtuais.toLocaleString('pt-BR')}h</p>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground">Período Anterior</p>
+                    <p className="text-2xl font-bold">{detailModal.data.horasPeriodoAnterior.toLocaleString('pt-BR')}h</p>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground">Variação</p>
+                    <p className={`text-2xl font-bold ${detailModal.data.variacao >= 0 ? 'text-warning' : 'text-success'}`}>
+                      {detailModal.data.variacao >= 0 ? '+' : ''}{detailModal.data.variacao.toFixed(1)}%
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-3">Distribuição por Dia da Semana</p>
+                  <div className="h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={detailModal.data.distribuicaoPorDia}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="dia" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                        <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} unit="h" />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "6px", fontSize: "12px" }}
+                          formatter={(value: number) => [`${value}h`, 'Horas']}
+                        />
+                        <Bar dataKey="horas" fill={COLORS.chart1} radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <Button variant="outline" size="sm" className="text-xs">
+                    <Download className="h-3 w-3 mr-1" /> Exportar dados
+                  </Button>
+                </div>
+              </div>
+            )}
+            {detailModal?.type === 'rankingColaboradoresHE' && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Top 10 colaboradores com maior volume de horas extras no período.
+                </p>
+                <div className="max-h-[350px] overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs">#</TableHead>
+                        <TableHead className="text-xs">Colaborador</TableHead>
+                        <TableHead className="text-xs">Área</TableHead>
+                        <TableHead className="text-xs">Gestor</TableHead>
+                        <TableHead className="text-xs text-right">Total HE</TableHead>
+                        <TableHead className="text-xs w-[80px]">Distrib. Semanal</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {detailModal.data.map((row: any, idx: number) => (
+                        <TableRow key={row.id} className="hover:bg-muted/50">
+                          <TableCell className="text-xs font-medium py-2">{idx + 1}</TableCell>
+                          <TableCell className="text-xs font-medium py-2">{row.colaborador}</TableCell>
+                          <TableCell className="text-xs py-2">{row.area}</TableCell>
+                          <TableCell className="text-xs py-2">{row.gestor}</TableCell>
+                          <TableCell className="text-xs py-2 text-right font-semibold">{row.horasExtras}h</TableCell>
+                          <TableCell className="py-2">
+                            <MiniSparkline data={row.distribuicao} color={COLORS.chart1} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <Button variant="outline" size="sm" className="text-xs">
+                    <Download className="h-3 w-3 mr-1" /> Exportar dados
+                  </Button>
+                </div>
+              </div>
+            )}
             {detailModal?.type === 'colaborador' && (
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
