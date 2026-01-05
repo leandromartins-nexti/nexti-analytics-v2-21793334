@@ -19,8 +19,10 @@ import {
   Cell,
   LineChart,
   Line,
+  PieChart,
+  Pie,
 } from "recharts";
-import { Clock, CheckCircle2, XCircle, AlertTriangle, UserX, Timer, Calendar, X, TrendingUp, Users, Download, ExternalLink } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, AlertTriangle, UserX, Timer, Calendar, X, TrendingUp, Users, Download, ExternalLink, Eye } from "lucide-react";
 import {
   heroKPIsOperational,
   horasExtrasPorStatus,
@@ -39,6 +41,9 @@ import {
   rankingSaldoNegativo,
   rankingHorasVencer,
   rankingViolacoes,
+  solicitacoesHEPorStatus,
+  rankingGestoresPendentes,
+  aprovacaoVsReprovacao,
 } from "@/lib/timeV2OperationalData";
 
 const COLORS = {
@@ -61,6 +66,7 @@ type FilterType = {
   saldoTipo?: 'positivo' | 'negativo';
   periodo?: string;
   tipoViolacao?: string;
+  gestorId?: string;
 };
 
 const getStatusBadge = (status: string) => {
@@ -138,6 +144,9 @@ export default function TimeV2Operational() {
     let data = [...horasExtrasPorColaborador];
     if (filters.status) {
       data = data.filter(d => d.status.toLowerCase() === filters.status?.toLowerCase());
+    }
+    if (filters.gestorId) {
+      data = data.filter(d => d.gestor === filters.gestorId);
     }
     if (filters.kpiType === 'horasExtrasPendentes') {
       data = data.filter(d => d.status === 'Pendente');
@@ -257,6 +266,12 @@ export default function TimeV2Operational() {
             <X className="h-3 w-3 cursor-pointer" onClick={() => clearFilter('periodo')} />
           </Badge>
         )}
+        {filters.gestorId && (
+          <Badge variant="secondary" className="gap-1 text-xs">
+            Gestor: {filters.gestorId}
+            <X className="h-3 w-3 cursor-pointer" onClick={() => clearFilter('gestorId')} />
+          </Badge>
+        )}
         <Button variant="ghost" size="sm" onClick={clearAllFilters} className="h-6 text-xs">
           Limpar todos
         </Button>
@@ -363,92 +378,91 @@ export default function TimeV2Operational() {
           <div className="flex items-center gap-2">
             <div className="h-1 w-6 bg-secondary rounded-full" />
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Horas Extras
+              Horas Extras - Aprovações
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Stacked Bar Chart */}
-            <Card className="border-0 shadow-md">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Horas Extras por Status</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={horasExtrasPorStatus}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="periodo" stroke="hsl(var(--muted-foreground))" fontSize={10} />
-                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} />
-                    <RechartsTooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "6px", fontSize: "11px" }} />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} />
-                    <Bar 
-                      dataKey="pendente" 
-                      stackId="a" 
-                      fill={COLORS.warning} 
-                      name="Pendente" 
-                      cursor="pointer"
-                      onClick={() => setFilters(prev => ({ ...prev, status: prev.status === 'Pendente' ? undefined : 'Pendente' }))}
-                    >
-                      {horasExtrasPorStatus.map((_, index) => (
-                        <Cell key={index} opacity={filters.status && filters.status !== 'Pendente' ? 0.3 : 1} />
-                      ))}
-                    </Bar>
-                    <Bar 
-                      dataKey="aprovada" 
-                      stackId="a" 
-                      fill={COLORS.success} 
-                      name="Aprovada"
-                      cursor="pointer"
-                      onClick={() => setFilters(prev => ({ ...prev, status: prev.status === 'Aprovada' ? undefined : 'Aprovada' }))}
-                    >
-                      {horasExtrasPorStatus.map((_, index) => (
-                        <Cell key={index} opacity={filters.status && filters.status !== 'Aprovada' ? 0.3 : 1} />
-                      ))}
-                    </Bar>
-                    <Bar 
-                      dataKey="reprovada" 
-                      stackId="a" 
-                      fill={COLORS.destructive} 
-                      name="Reprovada" 
-                      radius={[4, 4, 0, 0]}
-                      cursor="pointer"
-                      onClick={() => setFilters(prev => ({ ...prev, status: prev.status === 'Reprovada' ? undefined : 'Reprovada' }))}
-                    >
-                      {horasExtrasPorStatus.map((_, index) => (
-                        <Cell key={index} opacity={filters.status && filters.status !== 'Reprovada' ? 0.3 : 1} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+          {/* Widget 1 - Solicitações de HE por Status (Stacked Bar) */}
+          <Card className="border-0 shadow-md">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">Solicitações de HE por Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={180}>
+                <BarChart data={horasExtrasPorStatus}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="periodo" stroke="hsl(var(--muted-foreground))" fontSize={10} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} />
+                  <RechartsTooltip contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "6px", fontSize: "11px" }} />
+                  <Legend wrapperStyle={{ fontSize: '10px' }} />
+                  <Bar 
+                    dataKey="pendente" 
+                    stackId="a" 
+                    fill={COLORS.warning} 
+                    name="Pendentes" 
+                    cursor="pointer"
+                    onClick={() => setFilters(prev => ({ ...prev, status: prev.status === 'Pendente' ? undefined : 'Pendente' }))}
+                  >
+                    {horasExtrasPorStatus.map((_, index) => (
+                      <Cell key={index} opacity={filters.status && filters.status !== 'Pendente' ? 0.3 : 1} />
+                    ))}
+                  </Bar>
+                  <Bar 
+                    dataKey="aprovada" 
+                    stackId="a" 
+                    fill={COLORS.success} 
+                    name="Aprovadas"
+                    cursor="pointer"
+                    onClick={() => setFilters(prev => ({ ...prev, status: prev.status === 'Aprovada' ? undefined : 'Aprovada' }))}
+                  >
+                    {horasExtrasPorStatus.map((_, index) => (
+                      <Cell key={index} opacity={filters.status && filters.status !== 'Aprovada' ? 0.3 : 1} />
+                    ))}
+                  </Bar>
+                  <Bar 
+                    dataKey="reprovada" 
+                    stackId="a" 
+                    fill={COLORS.destructive} 
+                    name="Reprovadas" 
+                    radius={[4, 4, 0, 0]}
+                    cursor="pointer"
+                    onClick={() => setFilters(prev => ({ ...prev, status: prev.status === 'Reprovada' ? undefined : 'Reprovada' }))}
+                  >
+                    {horasExtrasPorStatus.map((_, index) => (
+                      <Cell key={index} opacity={filters.status && filters.status !== 'Reprovada' ? 0.3 : 1} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
 
-            {/* Ranking de Horas Extras */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Widget 2 - Ranking de Gestores com HE Pendentes */}
             <Card className="border-0 shadow-md">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-semibold">Top 10 - Horas Extras</CardTitle>
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-semibold">Gestores com HE Pendentes</CardTitle>
+                  <Badge variant="outline" className="text-[10px]">Prioridade</Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={filteredRankingHE.slice(0, 10)} layout="vertical">
+                  <BarChart data={rankingGestoresPendentes} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={10} />
-                    <YAxis dataKey="colaborador" type="category" stroke="hsl(var(--muted-foreground))" fontSize={9} width={90} />
+                    <YAxis dataKey="gestor" type="category" stroke="hsl(var(--muted-foreground))" fontSize={9} width={100} />
                     <RechartsTooltip
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
                             <div className="bg-popover border border-border rounded-md p-2 shadow-lg">
-                              <p className="font-semibold text-xs">{data.colaborador}</p>
-                              <p className="text-xs">{data.horasExtras}h ({data.percentual}%)</p>
-                              <div className="mt-1">
-                                <span className="text-[10px] text-muted-foreground">Tendência:</span>
-                                <MiniSparkline data={data.historico} color={COLORS.chart1} />
-                              </div>
+                              <p className="font-semibold text-xs">{data.gestor}</p>
+                              <p className="text-xs text-warning">{data.horasPendentes}h pendentes</p>
+                              <p className="text-xs text-muted-foreground">{data.qtdSolicitacoes} solicitações</p>
+                              <p className="text-[10px] text-muted-foreground">Área: {data.area}</p>
+                              <p className="text-[10px] text-muted-foreground">Média espera: {data.diasMedio} dias</p>
                             </div>
                           );
                         }
@@ -456,19 +470,98 @@ export default function TimeV2Operational() {
                       }}
                     />
                     <Bar 
-                      dataKey="horasExtras" 
-                      fill={COLORS.chart1} 
+                      dataKey="horasPendentes" 
+                      fill={COLORS.warning} 
                       radius={[0, 4, 4, 0]} 
+                      cursor="pointer"
+                      onClick={(data) => {
+                        if (data && data.gestor) {
+                          setFilters(prev => ({ 
+                            ...prev, 
+                            gestorId: prev.gestorId === data.gestor ? undefined : data.gestor 
+                          }));
+                        }
+                      }}
                     >
-                      {filteredRankingHE.slice(0, 10).map((entry) => (
+                      {rankingGestoresPendentes.map((entry) => (
                         <Cell 
-                          key={entry.id} 
-                          fill={COLORS.chart1}
+                          key={entry.gestor} 
+                          fill={COLORS.warning}
+                          opacity={filters.gestorId && filters.gestorId !== entry.gestor ? 0.3 : 1}
                         />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+                {filters.gestorId && (
+                  <div className="mt-2 flex justify-end">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 text-xs gap-1"
+                      onClick={() => setDetailModal({ type: 'gestorPendentes', data: rankingGestoresPendentes.find(g => g.gestor === filters.gestorId) })}
+                    >
+                      <Eye className="h-3 w-3" /> Ver solicitações pendentes
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Widget 3 - Donut Chart Aprovadas vs Reprovadas */}
+            <Card className="border-0 shadow-md">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold">Decisões no Período</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-center">
+                  <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                      <Pie
+                        data={aprovacaoVsReprovacao}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={75}
+                        paddingAngle={3}
+                        dataKey="value"
+                        cursor="pointer"
+                        onClick={(data) => {
+                          if (data && data.name) {
+                            const status = data.name === 'Aprovadas' ? 'Aprovada' : 'Reprovada';
+                            setFilters(prev => ({ 
+                              ...prev, 
+                              status: prev.status === status ? undefined : status 
+                            }));
+                          }
+                        }}
+                      >
+                        <Cell 
+                          fill={COLORS.success} 
+                          opacity={filters.status && filters.status !== 'Aprovada' ? 0.3 : 1}
+                        />
+                        <Cell 
+                          fill={COLORS.destructive} 
+                          opacity={filters.status && filters.status !== 'Reprovada' ? 0.3 : 1}
+                        />
+                      </Pie>
+                      <RechartsTooltip 
+                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "6px", fontSize: "11px" }}
+                        formatter={(value: number, name: string) => [`${value.toLocaleString('pt-BR')}h`, name]}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex justify-center gap-6 mt-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-success" />
+                    <span className="text-xs">Aprovadas: {solicitacoesHEPorStatus.aprovadas.toLocaleString('pt-BR')}h</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-destructive" />
+                    <span className="text-xs">Reprovadas: {solicitacoesHEPorStatus.reprovadas}h</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
