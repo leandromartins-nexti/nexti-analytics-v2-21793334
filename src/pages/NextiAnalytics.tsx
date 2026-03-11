@@ -4,8 +4,6 @@ import devicesHero from "@/assets/devices-hero.png";
 const NextiAnalytics = () => {
   return (
     <div className="flex-1 overflow-auto bg-white min-h-screen flex flex-col">
-      {/* Top gray bar */}
-      <div className="h-10 bg-gray-100 border-b border-gray-200" />
 
       {/* Breadcrumb */}
       <header className="border-b border-gray-200 px-8 py-3">
