@@ -369,7 +369,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
 const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-9 gap-4">
+      <div className="grid grid-cols-8 gap-4">
         <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Inconsistências Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
