@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./pages/DashboardLayout";
 import NextiAnalytics from "./pages/NextiAnalytics";
 import StrategyPrime from "./pages/StrategyPrime";
+import OperacionalPrime from "./pages/OperacionalPrime";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
