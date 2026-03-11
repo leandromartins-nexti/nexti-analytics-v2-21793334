@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ChevronRight, Filter, Settings, Eraser, TrendingUp, Lightbulb, RefreshCw } from "lucide-react";
+import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, Cell, LabelList
+  PieChart, Pie, Cell
 } from "recharts";
 
 // Mock data
