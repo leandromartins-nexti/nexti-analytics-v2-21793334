@@ -30,21 +30,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route element={<DashboardLayout />}>
-            <Route path="/" element={<Prime />} />
-            <Route path="/prime" element={<Prime />} />
-            <Route path="/haas" element={<Haas />} />
-            <Route path="/haas/smart" element={<HaasSmart />} />
-            <Route path="/haas/terminal" element={<HaasTerminal />} />
-            <Route path="/rh-digital" element={<RhDigital />} />
-            <Route path="/plus" element={<Plus />} />
-            <Route path="/time" element={<Time />} />
-            <Route path="/time-v2" element={<TimeV2 />} />
-            <Route path="/control" element={<Control />} />
-            <Route path="/management/overview" element={<ManagementOverview />} />
-            <Route path="/management/inconsistencies" element={<ManagementInconsistencies />} />
-            <Route path="/management/time-bank" element={<ManagementTimeBank />} />
-            <Route path="/management/compliance" element={<ManagementCompliance />} />
-            <Route path="/management/time-v2" element={<TimeV2Operational />} />
+            <Route path="/" element={<NotFound />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
