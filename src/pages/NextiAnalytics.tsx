@@ -1,10 +1,12 @@
-import { Settings, Users } from "lucide-react";
-import { ChevronRight } from "lucide-react";
-import devicesMockup from "@/assets/devices-mockup.png";
+import { Settings, Users, ChevronRight } from "lucide-react";
+import devicesHero from "@/assets/devices-hero.png";
 
 const NextiAnalytics = () => {
   return (
-    <div className="flex-1 overflow-auto bg-white min-h-screen">
+    <div className="flex-1 overflow-auto bg-white min-h-screen flex flex-col">
+      {/* Top gray bar */}
+      <div className="h-10 bg-gray-100 border-b border-gray-200" />
+
       {/* Breadcrumb */}
       <header className="border-b border-gray-200 px-8 py-3">
         <div className="flex items-center gap-2 text-sm">
@@ -16,25 +18,29 @@ const NextiAnalytics = () => {
         </div>
       </header>
 
-      <main className="flex flex-col items-center px-8 pt-10 pb-16">
+      <main className="flex flex-col items-center px-8 pt-12 pb-8 flex-1">
         {/* Hero Image */}
         <div className="mb-10">
           <img
-            src={devicesMockup}
+            src={devicesHero}
             alt="Analytics Dashboard Preview"
-            className="w-[500px] h-auto"
+            className="w-[480px] h-auto"
           />
         </div>
 
         {/* Buttons */}
         <div className="flex gap-6 mb-10">
-          <button className="flex items-center gap-3 bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-lg px-12 py-4 text-base transition-colors min-w-[230px] justify-center shadow-sm">
-            <Users className="w-5 h-5" />
-            Strategy
+          <button className="flex items-center bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-lg text-base transition-colors min-w-[240px] h-14 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-center h-full px-4 bg-[rgba(0,0,0,0.1)]">
+              <Users className="w-5 h-5" />
+            </div>
+            <span className="flex-1 text-center pr-4">Strategy</span>
           </button>
-          <button className="flex items-center gap-3 bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-lg px-12 py-4 text-base transition-colors min-w-[230px] justify-center shadow-sm">
-            <Settings className="w-5 h-5" />
-            Operacional
+          <button className="flex items-center bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-lg text-base transition-colors min-w-[240px] h-14 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-center h-full px-4 bg-[rgba(0,0,0,0.1)]">
+              <Settings className="w-5 h-5" />
+            </div>
+            <span className="flex-1 text-center pr-4">Operacional</span>
           </button>
         </div>
 
@@ -44,11 +50,14 @@ const NextiAnalytics = () => {
           <span className="text-gray-800">Dashboard</span>
         </h2>
 
+        {/* Spacer to push arrows down */}
+        <div className="flex-1" />
+
         {/* Decorative arrows */}
-        <div className="self-start mt-20 ml-4 flex gap-0.5">
-          <span className="text-[#FF5722] text-xl">▶</span>
-          <span className="text-[#FF5722] text-xl">▶</span>
-          <span className="text-[#FF5722] text-xl">▶</span>
+        <div className="self-start ml-4 mb-4 flex gap-0.5">
+          <span className="text-[#FF5722]" style={{ fontSize: "26px" }}>▶</span>
+          <span className="text-[#FF5722]" style={{ fontSize: "26px" }}>▶</span>
+          <span className="text-[#FF5722]" style={{ fontSize: "26px" }}>▶</span>
         </div>
       </main>
     </div>
