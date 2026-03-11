@@ -454,7 +454,7 @@ interface KPICardProps {
 }
 
 const KPICard = ({ title, value, valueColor, metaLabel, metaTarget, yoyValue, yoyColor, yoyIcon }: KPICardProps) => (
-  <div className="bg-white rounded-lg border border-gray-200 p-4 h-[140px] flex flex-col justify-between">
+  <div className="bg-white rounded-lg border border-gray-200 p-4 w-[520px] h-[320px] flex flex-col justify-between shrink-0">
     <p className="text-xs text-gray-500 font-medium text-center">{title}</p>
     <p className={`text-3xl font-bold text-center ${valueColor}`}>{value}</p>
     <div>
