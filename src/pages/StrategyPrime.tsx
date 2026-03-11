@@ -131,7 +131,7 @@ const StrategyPrime = () => {
 
       {/* KPI Cards */}
       <div className="px-6 py-4">
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="grid grid-cols-5 gap-4">
           <KPICard
             title="Qualidade da Marcação"
             value="57,5%"
@@ -271,9 +271,9 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
   <div className="flex gap-4">
     {/* Left content */}
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-8 gap-4">
+      <div className="grid grid-cols-9 gap-4">
         {/* Top 10 Pior Qualidade */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 10 Pior Qualidade de Marcação</h3>
           <p className="text-xs text-gray-400 mb-4">por Entidade</p>
           <table className="w-full text-sm">
@@ -297,7 +297,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </table>
         </div>
         {/* Evolução da Qualidade */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800 mb-4">Evolução da Qualidade das Marcações</h3>
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -319,9 +319,9 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-8 gap-4">
+      <div className="grid grid-cols-9 gap-4">
         {/* % Total de Marcações */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Total de Marcações</h3>
           <p className="text-xs text-gray-400 mb-4">por Tipo</p>
           <div className="space-y-4">
@@ -337,7 +337,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </div>
         </div>
         {/* Total de Colaboradores por Coletor */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Total de Colaboradores</h3>
           <p className="text-xs text-gray-400 mb-4">por Coletor</p>
           <div className="space-y-3">
@@ -369,20 +369,20 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
 const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-8 gap-4">
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+      <div className="grid grid-cols-9 gap-4">
+        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Inconsistências Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
         </div>
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
         </div>
       </div>
-      <div className="grid grid-cols-8 gap-4">
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+      <div className="grid grid-cols-9 gap-4">
+        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Inconsistências Reincidentes</h3>
           <p className="text-xs text-gray-400 mb-4">por Colaborador</p>
           <div className="space-y-2">
@@ -397,7 +397,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
             ))}
           </div>
         </div>
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5 h-[320px]">
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Origem de Solicitações dos Ajustes de Ponto</h3>
           <div className="flex items-center gap-4 mt-1 mb-2">
             <div className="flex items-center gap-1.5">
@@ -454,7 +454,7 @@ interface KPICardProps {
 }
 
 const KPICard = ({ title, value, valueColor, metaLabel, metaTarget, yoyValue, yoyColor, yoyIcon }: KPICardProps) => (
-  <div className="bg-white rounded-lg border border-gray-200 p-4 w-[520px] h-[320px] flex flex-col justify-between shrink-0">
+  <div className="bg-white rounded-lg border border-gray-200 p-4 h-[140px] flex flex-col justify-between">
     <p className="text-xs text-gray-500 font-medium text-center">{title}</p>
     <p className={`text-3xl font-bold text-center ${valueColor}`}>{value}</p>
     <div>
