@@ -24,8 +24,6 @@ export function DashboardSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const location = useLocation();
-  const [analyticsOpen, setAnalyticsOpen] = useState(true);
-  const [managementOpen, setManagementOpen] = useState(false);
   const [rhDigitalOpen, setRhDigitalOpen] = useState(false);
   const [nextiControlOpen, setNextiControlOpen] = useState(false);
   const [nextiControl2Open, setNextiControl2Open] = useState(false);
