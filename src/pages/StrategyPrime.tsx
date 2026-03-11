@@ -94,6 +94,39 @@ const tempoMedioTratativa = [
   { mes: "Out", valor: 3357.5 }, { mes: "Nov", valor: 3357.5 }, { mes: "Dez", valor: 3357.5 },
 ];
 
+// Eficiência mock data
+const piorTempoMedioOperadores = [
+  { operador: "552", cargo: "VIGILANTE", tempoMedio: 30 },
+  { operador: "799", cargo: "VIGILANTE", tempoMedio: 29 },
+  { operador: "4358", cargo: "VIGILANTE", tempoMedio: 27 },
+  { operador: "762", cargo: "VIGILANTE", tempoMedio: 27 },
+  { operador: "7370", cargo: "MONITOR DE ACESSO", tempoMedio: 26 },
+  { operador: "4465", cargo: "VIGILANTE", tempoMedio: 25 },
+  { operador: "609", cargo: "VIGILANTE", tempoMedio: 21 },
+];
+
+const top10TratativaOperadores = [
+  { operador: "552", cargo: "VIGILANTE", tratativas: 30 },
+  { operador: "799", cargo: "VIGILANTE", tratativas: 29 },
+  { operador: "4358", cargo: "VIGILANTE", tratativas: 27 },
+  { operador: "762", cargo: "VIGILANTE", tratativas: 27 },
+  { operador: "7370", cargo: "MONITOR DE ACESSO", tratativas: 26 },
+  { operador: "4465", cargo: "VIGILANTE", tratativas: 25 },
+  { operador: "609", cargo: "VIGILANTE", tratativas: 21 },
+];
+
+const tempoMedioMovimentacoes = [
+  { mes: "Jan", valor: 9100 }, { mes: "Fev", valor: 9100 }, { mes: "Mar", valor: 9100 },
+  { mes: "Abr", valor: 9100 }, { mes: "Mai", valor: 9100 }, { mes: "Jun", valor: 9100 },
+  { mes: "Jul", valor: 9100 }, { mes: "Ago", valor: 9100 }, { mes: "Set", valor: 9100 },
+  { mes: "Out", valor: 9100 }, { mes: "Nov", valor: 9100 }, { mes: "Dez", valor: 9100 },
+];
+
+const evolucaoMarcacoesManuais = [
+  { mes: "Jun", valor: 31.6 },
+  { mes: "Out", valor: 22.0 },
+];
+
 const tabs = [
   "Registro de Ponto",
   "Operacional",
