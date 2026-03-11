@@ -476,6 +476,102 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
   </div>
 );
 
+// Solicitações Content
+const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
+  <div className="flex gap-4">
+    <div className="flex-1 space-y-4">
+      <div className="grid grid-cols-9 gap-4">
+        {/* Solicitações de Justificativa de Ponto */}
+        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">Solicitações de Justificativa de Ponto</h3>
+          <div className="flex items-center gap-4 mt-1 mb-2">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-[#FF8A65] inline-block" />
+              <span className="text-[10px] text-gray-500">Em Aberto: 7.261</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-[#F5A623] inline-block" />
+              <span className="text-[10px] text-gray-500">Ajustadas: 811.112</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-[#E91E63] inline-block" />
+              <span className="text-[10px] text-gray-500">Canceladas: 181.627</span>
+            </div>
+          </div>
+          <div className="h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={solicitacoesJustificativa} barGap={2} barSize={8}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
+                <YAxis hide />
+                <Tooltip />
+                <Bar dataKey="emAberto" fill="#FF8A65" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="ajustadas" fill="#F5A623" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="canceladas" fill="#E91E63" radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        {/* % Solicitações por Tipo */}
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Ponto por Tipo</h3>
+          <p className="text-xs text-gray-400 mb-4">por Código</p>
+          <div className="h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={solicitacoesPorTipo} layout="vertical" barSize={16}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                <XAxis type="number" domain={[0, 35]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} tickFormatter={(v) => `${v}%`} />
+                <YAxis type="category" dataKey="tipo" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#666" }} width={45} />
+                <Tooltip formatter={(value: number) => `${value}%`} />
+                <Bar dataKey="pct" fill="#FF5722" radius={[0, 4, 4, 0]}>
+                  <LabelList dataKey="pct" position="right" fontSize={10} fill="#666" formatter={(v: number) => `${v}%`} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-9 gap-4">
+        {/* % Solicitações Tratadas por Período */}
+        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Pontos Tratadas</h3>
+          <p className="text-xs text-gray-400 mb-4">por Período</p>
+          <div className="h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={solicitacoesTratadas}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
+                <YAxis domain={[98, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} tickFormatter={(v) => `${v}%`} />
+                <Tooltip formatter={(value: number) => `${value}%`} />
+                <Line type="monotone" dataKey="valor" stroke="#FF5722" strokeWidth={2} dot={{ r: 3, fill: "#FF5722" }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        {/* Tempo Médio Tratativa */}
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">% Tempo Médio Tratativa de Solicitações</h3>
+          <p className="text-xs text-gray-400 mb-4">por Período</p>
+          <div className="h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={tempoMedioTratativa}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
+                <YAxis domain={[0, 4000]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
+                <Tooltip formatter={(value: number) => value.toLocaleString("pt-BR")} />
+                <Line type="monotone" dataKey="valor" stroke="#FF5722" strokeWidth={2} dot={{ r: 3, fill: "#FF5722" }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="w-[280px] shrink-0">
+      <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+    </div>
+  </div>
+);
+
 // Placeholder for tabs not yet built
 const PlaceholderContent = ({ title }: { title: string }) => (
   <div className="flex items-center justify-center h-64 bg-white rounded-lg border border-gray-200">
