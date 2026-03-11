@@ -52,13 +52,15 @@ export function DashboardSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="flex-1 overflow-y-auto bg-[#3d4449]">
-        {/* Dashboard */}
+        {/* Nexti Analytics */}
         <SidebarGroup className="px-3 py-2">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
-                <BarChart3 className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
-                {!isCollapsed && <span className="font-normal text-[15px]">Dashboard</span>}
+              <SidebarMenuButton asChild className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <NavLink to="/nexti-analytics">
+                  <BarChart3 className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
+                  {!isCollapsed && <span className="font-normal text-[15px]">Nexti Analytics</span>}
+                </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
