@@ -52,7 +52,7 @@ const NextiAnalytics = () => {
         <div className="flex-1" />
 
         {/* Decorative arrows */}
-        <div className="self-start ml-4 mb-4 flex gap-0.5">
+        <div className="self-start ml-4 mb-8 flex gap-0.5">
           <span className="text-[#FF5722]" style={{ fontSize: "26px" }}>▶</span>
           <span className="text-[#FF5722]" style={{ fontSize: "26px" }}>▶</span>
           <span className="text-[#FF5722]" style={{ fontSize: "26px" }}>▶</span>
