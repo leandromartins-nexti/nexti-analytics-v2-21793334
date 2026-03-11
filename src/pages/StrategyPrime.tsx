@@ -131,7 +131,7 @@ const StrategyPrime = () => {
 
       {/* KPI Cards */}
       <div className="px-6 py-4">
-        <div className="grid grid-cols-5 gap-4">
+        <div className="flex gap-4 overflow-x-auto pb-2">
           <KPICard
             title="Qualidade da Marcação"
             value="57,5%"
