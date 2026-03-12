@@ -532,7 +532,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Inconsistências x Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">Volume por Período</p>
-          <div className="h-[200px]">
+          <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={evolucaoInconsistenciasTratadas} barGap={2} barSize={14}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
