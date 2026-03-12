@@ -6,7 +6,7 @@ import { ImprovementPin } from "@/components/improvements/ImprovementPin";
 import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, BarChart, Bar, LabelList
+  PieChart, Pie, Cell, BarChart, Bar, LabelList, Legend
 } from "recharts";
 
 // Mock data
