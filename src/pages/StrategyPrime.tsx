@@ -449,7 +449,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </table>
         </div>
         {/* Evolução da Qualidade */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800 mb-4">Evolução da Qualidade das Marcações</h3>
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
