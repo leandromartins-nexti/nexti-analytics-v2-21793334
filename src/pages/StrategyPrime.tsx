@@ -781,7 +781,7 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </div>
         </div>
         {/* Top 10 Quantidade de Tratativa de Marcações */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 10 Quantidade de Tratativa de Marcações</h3>
           <p className="text-xs text-gray-400 mb-4">por Operador</p>
           <table className="w-full text-sm">
