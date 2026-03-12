@@ -85,10 +85,16 @@ export function ImprovementProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const editItem = (itemId: string, title: string, description: string) => {
+    setItems((prev) =>
+      prev.map((item) => (item.id === itemId ? { ...item, title, description } : item))
+    );
+  };
+
   const togglePins = () => setShowPins((v) => !v);
 
   return (
-    <ImprovementContext.Provider value={{ items, addComment, setStatus, showPins, togglePins }}>
+    <ImprovementContext.Provider value={{ items, addComment, setStatus, editItem, showPins, togglePins }}>
       {children}
     </ImprovementContext.Provider>
   );
