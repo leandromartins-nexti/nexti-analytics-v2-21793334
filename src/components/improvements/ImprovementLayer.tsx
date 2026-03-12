@@ -84,7 +84,7 @@ export function ImprovementLayer({ children, screenId }: ImprovementLayerProps) 
   };
 
   const floatingPins = items.filter(
-    (item) => item.position && item.position.route === location.pathname
+    (item) => item.position && item.position.route === currentRoute
   );
 
   return (
