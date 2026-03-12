@@ -641,6 +641,48 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
   </div>
 );
 
+// Ajustes Content
+const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
+  <div className="flex gap-4">
+    <div className="flex-1 space-y-4">
+      <div className="grid grid-cols-9 gap-4">
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">% Origem de Solicitações dos Ajustes de Ponto</h3>
+          <div className="flex items-center gap-4 mt-1 mb-2">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-[#FF5722] inline-block" />
+              <span className="text-[10px] text-gray-500">% Total Ajustadas</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-[#F5A623] inline-block" />
+              <span className="text-[10px] text-gray-500">% Ajustes Origem Solicitações</span>
+            </div>
+          </div>
+          <div className="h-[220px] flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={origemSolicitacoes} cx="50%" cy="50%" innerRadius={70} outerRadius={95} dataKey="value" startAngle={90} endAngle={-270}>
+                  {origemSolicitacoes.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex justify-around text-xs text-gray-500 mt-1">
+            <span>100%</span>
+            <span>0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="w-[280px] shrink-0">
+      <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+    </div>
+  </div>
+);
+
 // Solicitações Content
 const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
