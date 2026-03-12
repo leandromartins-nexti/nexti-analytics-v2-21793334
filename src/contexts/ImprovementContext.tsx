@@ -33,6 +33,7 @@ interface ImprovementContextType {
   setStatus: (itemId: string, status: ImprovementStatus) => void;
   editItem: (itemId: string, title: string, description: string) => void;
   removeItem: (itemId: string) => void;
+  updatePosition: (itemId: string, x: number, y: number) => void;
   showPins: boolean;
   togglePins: () => void;
 }
