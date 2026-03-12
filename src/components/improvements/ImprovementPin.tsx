@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useImprovement, ImprovementStatus } from "@/contexts/ImprovementContext";
-import { MessageSquareMore, CheckCircle2, XCircle, Send } from "lucide-react";
+import { MessageSquareMore, CheckCircle2, XCircle, Send, Pencil, Save, X } from "lucide-react";
 
 const statusColors: Record<ImprovementStatus, { bg: string; text: string }> = {
   pending: { bg: "bg-amber-400", text: "text-white" },
@@ -21,9 +21,12 @@ interface ImprovementPinProps {
 }
 
 export function ImprovementPin({ itemId, className = "", onDragEnd }: ImprovementPinProps) {
-  const { items, addComment, setStatus, showPins } = useImprovement();
+  const { items, addComment, setStatus, editItem, showPins } = useImprovement();
   const [open, setOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
   const dragRef = useRef<{ startX: number; startY: number; dragging: boolean }>({ startX: 0, startY: 0, dragging: false });
 
   const item = items.find((i) => i.id === itemId);
@@ -82,20 +85,67 @@ export function ImprovementPin({ itemId, className = "", onDragEnd }: Improvemen
                   <MessageSquareMore className="w-4 h-4 text-[#FF5722]" />
                   Comentário
                 </h4>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                  item.status === "pending" ? "bg-amber-100 text-amber-700" :
-                  item.status === "resolved" ? "bg-emerald-100 text-emerald-700" :
-                  "bg-gray-100 text-gray-600"
-                }`}>
-                  {statusLabels[item.status]}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  {!editing && (
+                    <button
+                      onClick={() => { setEditing(true); setEditTitle(item.title); setEditDescription(item.description); }}
+                      className="text-gray-400 hover:text-[#FF5722] transition-colors p-0.5 rounded"
+                      title="Editar"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                    item.status === "pending" ? "bg-amber-100 text-amber-700" :
+                    item.status === "resolved" ? "bg-emerald-100 text-emerald-700" :
+                    "bg-gray-100 text-gray-600"
+                  }`}>
+                    {statusLabels[item.status]}
+                  </span>
+                </div>
               </div>
-              <p className="text-xs text-gray-500 mt-0.5">{item.title}</p>
+              {editing ? (
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="mt-1 w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300"
+                  placeholder="Título..."
+                />
+              ) : (
+                <p className="text-xs text-gray-500 mt-0.5">{item.title}</p>
+              )}
             </div>
 
             {/* Description */}
             <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-xs text-gray-600 whitespace-pre-line leading-relaxed">{item.description}</p>
+              {editing ? (
+                <div className="space-y-2">
+                  <textarea
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300 resize-none"
+                    rows={3}
+                    placeholder="Descrição..."
+                  />
+                  <div className="flex items-center gap-1.5 justify-end">
+                    <button
+                      onClick={() => setEditing(false)}
+                      className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-md text-gray-500 hover:bg-gray-100 transition-colors"
+                    >
+                      <X className="w-3 h-3" /> Cancelar
+                    </button>
+                    <button
+                      onClick={() => { editItem(item.id, editTitle.trim(), editDescription.trim()); setEditing(false); }}
+                      className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-md bg-[#FF5722] text-white hover:bg-[#E64A19] transition-colors"
+                    >
+                      <Save className="w-3 h-3" /> Salvar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-600 whitespace-pre-line leading-relaxed">{item.description}</p>
+              )}
             </div>
 
             {/* Status actions */}
