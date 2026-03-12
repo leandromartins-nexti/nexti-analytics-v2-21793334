@@ -564,9 +564,29 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
     <div className="flex-1 space-y-4">
       <div className="grid grid-cols-9 gap-4">
         <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">% Inconsistências Tratadas</h3>
-          <p className="text-xs text-gray-400 mb-4">por Período</p>
-          <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 % Inconsistências Tratadas</h3>
+          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <div className="max-h-[400px] overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-right py-2 text-gray-500 font-medium">▲ %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topInconsistenciasTratadas.map((item) => (
+                  <tr key={item.pos} className="border-b border-gray-50">
+                    <td className="py-2 text-gray-700">
+                      <span className="text-gray-400 mr-2">{item.pos}</span>
+                      {item.empresa}
+                    </td>
+                    <td className="py-2 text-right text-gray-600">{item.pct}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
