@@ -77,7 +77,7 @@ export function ImprovementLayer({ children, screenId }: ImprovementLayerProps) 
       position: {
         x: xPct,
         y: form.y,
-        route: location.pathname,
+        route: currentRoute,
       },
     });
     setForm({ visible: false, x: 0, y: 0, scrollY: 0 });
