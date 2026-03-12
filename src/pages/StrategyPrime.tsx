@@ -200,7 +200,7 @@ const tabs = [
   "Ausências e Coberturas",
 ];
 
-const subNavItems = ["Visão Geral", "Inconsistências", "Solicitações", "Eficiência"];
+const subNavItems = ["Visão Geral", "Inconsistências", "Solicitações", "Ajustes", "Eficiência"];
 
 const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço"];
 
