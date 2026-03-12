@@ -507,10 +507,10 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
         {/* Evolução Colaboradores por Coletor - Stacked Bar */}
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-bold text-sm text-gray-800">Evolução Colaboradores por Coletor</h3>
+            <h3 className="font-bold text-sm text-gray-800">Evolução Marcações por Coletor</h3>
             <ImprovementPin itemId="evolucao-colaboradores-coletor-substituir" />
           </div>
-          <p className="text-xs text-gray-400 mb-4">Quantidade mensal por tipo de coletor</p>
+          <p className="text-xs text-gray-400 mb-4">Quantidade mensal de marcações por tipo de coletor</p>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={evolucaoColaboradoresPorColetor}>
