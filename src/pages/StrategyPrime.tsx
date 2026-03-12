@@ -824,7 +824,7 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </div>
         </div>
         {/* Evolução das Marcações Inseridas Manualmente */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Evolução das Marcações Inseridas Manualmente</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
