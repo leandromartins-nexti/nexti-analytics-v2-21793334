@@ -182,7 +182,8 @@ const StrategyPrime = () => {
 
   return (
     <ImprovementProvider>
-    <div className="flex-1 overflow-auto bg-gray-50 min-h-screen flex flex-col">
+    <ImprovementLayer>
+    <div className="bg-gray-50 min-h-screen flex flex-col">
       {/* Breadcrumb */}
       <header className="border-b border-gray-200 px-6 py-3 bg-gray-100">
         <div className="flex items-center gap-2 text-sm">
