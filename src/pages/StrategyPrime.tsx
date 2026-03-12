@@ -176,8 +176,8 @@ const top10TratativaOperadores = [
 ];
 
 const evolucaoInconsistenciasTratadas = [
-  { mes: "Jan", valor: 45.2 }, { mes: "Fev", valor: 48.7 }, { mes: "Mar", valor: 52.1 },
-  { mes: "Abr", valor: 50.8 }, { mes: "Mai", valor: 55.3 }, { mes: "Jun", valor: 58.9 },
+  { mes: "Jan", total: 320, tratadas: 144 }, { mes: "Fev", total: 298, tratadas: 145 }, { mes: "Mar", total: 345, tratadas: 180 },
+  { mes: "Abr", total: 310, tratadas: 157 }, { mes: "Mai", total: 330, tratadas: 182 }, { mes: "Jun", total: 305, tratadas: 180 },
   { mes: "Jul", valor: 61.4 }, { mes: "Ago", valor: 63.2 }, { mes: "Set", valor: 60.7 },
   { mes: "Out", valor: 65.1 }, { mes: "Nov", valor: 68.5 }, { mes: "Dez", valor: 72.3 },
 ];
