@@ -22,6 +22,7 @@ interface ImprovementContextType {
   items: ImprovementItem[];
   addComment: (itemId: string, text: string) => void;
   setStatus: (itemId: string, status: ImprovementStatus) => void;
+  editItem: (itemId: string, title: string, description: string) => void;
   showPins: boolean;
   togglePins: () => void;
 }
