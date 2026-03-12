@@ -55,19 +55,19 @@ const colaboradoresPorColetor = [
   { coletor: "MOBILE", valor: 115, cor: "#FF5722" },
 ];
 
-const evolucaoColaboradoresPorColetor = [
-  { mes: "Jan", SYSTEM: 5800, TERMINAL: 5200, MOBILE: 90 },
-  { mes: "Fev", SYSTEM: 5900, TERMINAL: 5300, MOBILE: 95 },
-  { mes: "Mar", SYSTEM: 6000, TERMINAL: 5500, MOBILE: 98 },
-  { mes: "Abr", SYSTEM: 6100, TERMINAL: 5600, MOBILE: 100 },
-  { mes: "Mai", SYSTEM: 6200, TERMINAL: 5700, MOBILE: 102 },
-  { mes: "Jun", SYSTEM: 6300, TERMINAL: 5800, MOBILE: 105 },
-  { mes: "Jul", SYSTEM: 6400, TERMINAL: 5900, MOBILE: 108 },
-  { mes: "Ago", SYSTEM: 6500, TERMINAL: 6000, MOBILE: 110 },
-  { mes: "Set", SYSTEM: 6600, TERMINAL: 6050, MOBILE: 112 },
-  { mes: "Out", SYSTEM: 6749, TERMINAL: 6170, MOBILE: 115 },
-  { mes: "Nov", SYSTEM: 6700, TERMINAL: 6100, MOBILE: 113 },
-  { mes: "Dez", SYSTEM: 6650, TERMINAL: 6080, MOBILE: 111 },
+const evolucaoMarcacoesPorColetor = [
+  { mes: "Jan", SYSTEM: 52.3, TERMINAL: 46.9, MOBILE: 0.8 },
+  { mes: "Fev", SYSTEM: 52.2, TERMINAL: 46.9, MOBILE: 0.9 },
+  { mes: "Mar", SYSTEM: 51.8, TERMINAL: 47.4, MOBILE: 0.8 },
+  { mes: "Abr", SYSTEM: 51.7, TERMINAL: 47.5, MOBILE: 0.8 },
+  { mes: "Mai", SYSTEM: 51.6, TERMINAL: 47.5, MOBILE: 0.9 },
+  { mes: "Jun", SYSTEM: 51.6, TERMINAL: 47.5, MOBILE: 0.9 },
+  { mes: "Jul", SYSTEM: 51.5, TERMINAL: 47.5, MOBILE: 1.0 },
+  { mes: "Ago", SYSTEM: 51.5, TERMINAL: 47.6, MOBILE: 0.9 },
+  { mes: "Set", SYSTEM: 51.7, TERMINAL: 47.4, MOBILE: 0.9 },
+  { mes: "Out", SYSTEM: 51.8, TERMINAL: 47.3, MOBILE: 0.9 },
+  { mes: "Nov", SYSTEM: 52.0, TERMINAL: 47.1, MOBILE: 0.9 },
+  { mes: "Dez", SYSTEM: 51.9, TERMINAL: 47.3, MOBILE: 0.8 },
 ];
 
 const inconsistenciasReincidentes = [
@@ -507,17 +507,17 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
         {/* Evolução Colaboradores por Coletor - Stacked Bar */}
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-bold text-sm text-gray-800">Evolução Marcações por Coletor</h3>
+            <h3 className="font-bold text-sm text-gray-800">Evolução % Marcações por Coletor</h3>
             <ImprovementPin itemId="evolucao-colaboradores-coletor-substituir" />
           </div>
-          <p className="text-xs text-gray-400 mb-4">Quantidade mensal de marcações por tipo de coletor</p>
+          <p className="text-xs text-gray-400 mb-4">Percentual mensal de marcações por tipo de coletor</p>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={evolucaoColaboradoresPorColetor}>
+              <BarChart data={evolucaoMarcacoesPorColetor}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} />
-                <Tooltip contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px", fontSize: "12px" }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                <Tooltip contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px", fontSize: "12px" }} formatter={(value: number) => `${value.toFixed(1)}%`} />
                 <Legend wrapperStyle={{ fontSize: "11px" }} />
                 <Bar dataKey="SYSTEM" stackId="a" fill="#FF5722" name="System" radius={[0, 0, 0, 0]} />
                 <Bar dataKey="TERMINAL" stackId="a" fill="#FF9800" name="Terminal" radius={[0, 0, 0, 0]} />
