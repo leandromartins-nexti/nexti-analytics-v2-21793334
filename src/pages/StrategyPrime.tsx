@@ -726,7 +726,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
           </div>
         </div>
         {/* Tempo Médio Tratativa */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Tempo Médio Tratativa de Solicitações</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
