@@ -660,7 +660,6 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Solicitações de Justificativa de Ponto</h3>
-          <h3 className="font-bold text-sm text-gray-800">Solicitações de Justificativa de Ponto</h3>
           <div className="flex items-center gap-4 mt-1 mb-2">
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-[#FF8A65] inline-block" />
@@ -710,7 +709,6 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Pontos Tratadas</h3>
           <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Pontos Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
