@@ -425,7 +425,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
     <div className="flex-1 space-y-4">
       <div className="grid grid-cols-2 gap-4">
         {/* Top 10 Pior Qualidade */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 10 Pior Qualidade de Marcação</h3>
           <p className="text-xs text-gray-400 mb-4">por Entidade</p>
           <table className="w-full text-sm">
