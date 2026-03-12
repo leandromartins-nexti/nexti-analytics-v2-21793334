@@ -82,6 +82,29 @@ const inconsistenciasReincidentes = [
   { colaborador: "ANALISTA DE SISTEM...", pct: 100 },
 ];
 
+const topInconsistenciasTratadas = [
+  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", pct: "12,3%" },
+  { pos: 2, empresa: "ORSEGUPS MONITORAMENTO", pct: "15,8%" },
+  { pos: 3, empresa: "OBJETIVA", pct: "18,2%" },
+  { pos: 4, empresa: "PROSERV", pct: "22,5%" },
+  { pos: 5, empresa: "Victória da Paz", pct: "25,1%" },
+  { pos: 6, empresa: "PROFISER", pct: "28,7%" },
+  { pos: 7, empresa: "Rio Oregon", pct: "31,4%" },
+  { pos: 8, empresa: "SEGURPRO", pct: "35,9%" },
+  { pos: 9, empresa: "GOCIL", pct: "38,2%" },
+  { pos: 10, empresa: "SERVIAN", pct: "41,6%" },
+  { pos: 11, empresa: "PROTEGE", pct: "44,3%" },
+  { pos: 12, empresa: "HAGANÁ", pct: "47,8%" },
+  { pos: 13, empresa: "GRABER", pct: "50,1%" },
+  { pos: 14, empresa: "PREMIUM", pct: "53,5%" },
+  { pos: 15, empresa: "FORTE", pct: "56,9%" },
+  { pos: 16, empresa: "CONTINENTAL", pct: "60,2%" },
+  { pos: 17, empresa: "NORDESTE SEG.", pct: "63,7%" },
+  { pos: 18, empresa: "ASERP", pct: "67,4%" },
+  { pos: 19, empresa: "ALIANÇA", pct: "70,8%" },
+  { pos: 20, empresa: "KEEP SAFE", pct: "74,1%" },
+];
+
 const origemSolicitacoes = [
   { name: "% Total Ajustadas", value: 100, color: "#F5A623" },
   { name: "% Ajustes Origem Solicitações", value: 0, color: "#E8E8E8" },
@@ -541,9 +564,29 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
     <div className="flex-1 space-y-4">
       <div className="grid grid-cols-9 gap-4">
         <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">% Inconsistências Tratadas</h3>
-          <p className="text-xs text-gray-400 mb-4">por Período</p>
-          <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 % Inconsistências Tratadas</h3>
+          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <div className="max-h-[400px] overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-right py-2 text-gray-500 font-medium">▲ %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topInconsistenciasTratadas.map((item) => (
+                  <tr key={item.pos} className="border-b border-gray-50">
+                    <td className="py-2 text-gray-700">
+                      <span className="text-gray-400 mr-2">{item.pos}</span>
+                      {item.empresa}
+                    </td>
+                    <td className="py-2 text-right text-gray-600">{item.pct}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
