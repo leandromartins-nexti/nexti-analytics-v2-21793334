@@ -18,9 +18,15 @@ interface FormState {
   scrollY: number;
 }
 
-export function ImprovementLayer({ children }: { children: ReactNode }) {
+interface ImprovementLayerProps {
+  children: ReactNode;
+  screenId?: string;
+}
+
+export function ImprovementLayer({ children, screenId }: ImprovementLayerProps) {
   const { items, addItem, showPins } = useImprovement();
   const location = useLocation();
+  const currentRoute = screenId ? `${location.pathname}#${screenId}` : location.pathname;
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({
