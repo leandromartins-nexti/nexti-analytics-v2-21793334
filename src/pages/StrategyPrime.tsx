@@ -150,6 +150,7 @@ const StrategyPrime = () => {
   const [activeFilter, setActiveFilter] = useState("Empresa");
 
   return (
+    <ImprovementProvider>
     <div className="flex-1 overflow-auto bg-gray-50 min-h-screen flex flex-col">
       {/* Breadcrumb */}
       <header className="border-b border-gray-200 px-6 py-3 bg-gray-100">
