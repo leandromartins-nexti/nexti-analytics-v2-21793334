@@ -423,9 +423,9 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
   <div className="flex gap-4">
     {/* Left content */}
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-9 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {/* Top 10 Pior Qualidade */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 10 Pior Qualidade de Marcação</h3>
           <p className="text-xs text-gray-400 mb-4">por Entidade</p>
           <table className="w-full text-sm">
@@ -449,7 +449,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </table>
         </div>
         {/* Evolução da Qualidade */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800 mb-4">Evolução da Qualidade das Marcações</h3>
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -528,11 +528,11 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
 const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-9 gap-4">
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Inconsistências x Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">Volume por Período</p>
-          <div className="h-[200px]">
+          <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={evolucaoInconsistenciasTratadas} barGap={2} barSize={14}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -546,7 +546,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 20 pior % Inconsistências Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Entidade</p>
           <div className="max-h-[252px] overflow-y-auto">
@@ -572,11 +572,11 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-9 gap-4">
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Inconsistências Reincidentes</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
-          <div className="h-[200px]">
+          <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={evolucaoInconsistenciasReincidentes}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -588,10 +588,10 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
-          <div className="h-[200px]">
+          <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={tempoMedioTratativaInconsistencias}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -615,8 +615,8 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
 const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-9 gap-4">
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Origem de Solicitações dos Ajustes de Ponto</h3>
           <div className="flex items-center gap-4 mt-1 mb-2">
             <div className="flex items-center gap-1.5">
@@ -657,9 +657,9 @@ const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
 const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-9 gap-4">
-        {/* Solicitações de Justificativa de Ponto */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">Solicitações de Justificativa de Ponto</h3>
           <h3 className="font-bold text-sm text-gray-800">Solicitações de Justificativa de Ponto</h3>
           <div className="flex items-center gap-4 mt-1 mb-2">
             <div className="flex items-center gap-1.5">
@@ -690,7 +690,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
           </div>
         </div>
         {/* % Solicitações por Tipo */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Ponto por Tipo</h3>
           <p className="text-xs text-gray-400 mb-4">por Código</p>
           <div className="h-[220px]">
@@ -708,9 +708,9 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-9 gap-4">
-        {/* % Solicitações Tratadas por Período */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Pontos Tratadas</h3>
           <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Pontos Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
@@ -726,7 +726,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
           </div>
         </div>
         {/* Tempo Médio Tratativa */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Tempo Médio Tratativa de Solicitações</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
@@ -753,9 +753,9 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
 const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
-      <div className="grid grid-cols-9 gap-4">
-        {/* Pior Tempo Médio de Tratativa de Marcações */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">Pior Tempo Médio de Tratativa de Marcações</h3>
           <h3 className="font-bold text-sm text-gray-800">Pior Tempo Médio de Tratativa de Marcações</h3>
           <p className="text-xs text-gray-400 mb-4">por Operador</p>
           <table className="w-full text-sm">
@@ -781,7 +781,7 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </div>
         </div>
         {/* Top 10 Quantidade de Tratativa de Marcações */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 10 Quantidade de Tratativa de Marcações</h3>
           <p className="text-xs text-gray-400 mb-4">por Operador</p>
           <table className="w-full text-sm">
@@ -804,9 +804,9 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </table>
         </div>
       </div>
-      <div className="grid grid-cols-9 gap-4">
-        {/* Tempo Médio de Tratativa de Movimentações */}
-        <div className="col-span-4 bg-white rounded-lg border border-gray-200 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">Tempo Médio de Tratativa de Movimentações</h3>
           <h3 className="font-bold text-sm text-gray-800">Tempo Médio de Tratativa de Movimentações</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
@@ -824,7 +824,7 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
           </div>
         </div>
         {/* Evolução das Marcações Inseridas Manualmente */}
-        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Evolução das Marcações Inseridas Manualmente</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
