@@ -330,6 +330,7 @@ const StrategyPrime = () => {
         {activeSubNav === "Eficiência" && <EficienciaContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
       </div>
     </div>
+    </ImprovementLayer>
     </ImprovementProvider>
   );
 };
