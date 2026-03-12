@@ -173,6 +173,13 @@ const top10TratativaOperadores = [
   { operador: "609", cargo: "VIGILANTE", tratativas: 21 },
 ];
 
+const evolucaoInconsistenciasTratadas = [
+  { mes: "Jan", valor: 45.2 }, { mes: "Fev", valor: 48.7 }, { mes: "Mar", valor: 52.1 },
+  { mes: "Abr", valor: 50.8 }, { mes: "Mai", valor: 55.3 }, { mes: "Jun", valor: 58.9 },
+  { mes: "Jul", valor: 61.4 }, { mes: "Ago", valor: 63.2 }, { mes: "Set", valor: 60.7 },
+  { mes: "Out", valor: 65.1 }, { mes: "Nov", valor: 68.5 }, { mes: "Dez", valor: 72.3 },
+];
+
 const tempoMedioMovimentacoes = [
   { mes: "Jan", valor: 9100 }, { mes: "Fev", valor: 9100 }, { mes: "Mar", valor: 9100 },
   { mes: "Abr", valor: 9100 }, { mes: "Mai", valor: 9100 }, { mes: "Jun", valor: 9100 },
@@ -193,7 +200,7 @@ const tabs = [
   "Ausências e Coberturas",
 ];
 
-const subNavItems = ["Visão Geral", "Inconsistências", "Solicitações", "Eficiência"];
+const subNavItems = ["Visão Geral", "Inconsistências", "Solicitações", "Ajustes", "Eficiência"];
 
 const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço"];
 
@@ -350,6 +357,7 @@ const StrategyPrime = () => {
         {activeSubNav === "Visão Geral" && <VisaoGeralContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Inconsistências" && <InconsistenciasContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Solicitações" && <SolicitacoesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
+        {activeSubNav === "Ajustes" && <AjustesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Eficiência" && <EficienciaContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
       </div>
     </div>
@@ -589,9 +597,19 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
           </div>
         </div>
         <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
+          <h3 className="font-bold text-sm text-gray-800">Evolução % Inconsistências Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
-          <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
+          <div className="h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={evolucaoInconsistenciasTratadas}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px", fontSize: "12px" }} />
+                <Line type="monotone" dataKey="valor" stroke="#FF5722" strokeWidth={2} dot={{ fill: "#FF5722", r: 3 }} name="% Tratadas" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-9 gap-4">
@@ -610,6 +628,24 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
             ))}
           </div>
         </div>
+        <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-4">por Período</p>
+          <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
+        </div>
+      </div>
+    </div>
+    <div className="w-[280px] shrink-0">
+      <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+    </div>
+  </div>
+);
+
+// Ajustes Content
+const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
+  <div className="flex gap-4">
+    <div className="flex-1 space-y-4">
+      <div className="grid grid-cols-9 gap-4">
         <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">% Origem de Solicitações dos Ajustes de Ponto</h3>
           <div className="flex items-center gap-4 mt-1 mb-2">
