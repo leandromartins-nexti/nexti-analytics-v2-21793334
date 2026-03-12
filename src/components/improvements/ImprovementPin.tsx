@@ -21,9 +21,12 @@ interface ImprovementPinProps {
 }
 
 export function ImprovementPin({ itemId, className = "", onDragEnd }: ImprovementPinProps) {
-  const { items, addComment, setStatus, showPins } = useImprovement();
+  const { items, addComment, setStatus, editItem, showPins } = useImprovement();
   const [open, setOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
   const dragRef = useRef<{ startX: number; startY: number; dragging: boolean }>({ startX: 0, startY: 0, dragging: false });
 
   const item = items.find((i) => i.id === itemId);
