@@ -173,6 +173,13 @@ const top10TratativaOperadores = [
   { operador: "609", cargo: "VIGILANTE", tratativas: 21 },
 ];
 
+const evolucaoInconsistenciasTratadas = [
+  { mes: "Jan", valor: 45.2 }, { mes: "Fev", valor: 48.7 }, { mes: "Mar", valor: 52.1 },
+  { mes: "Abr", valor: 50.8 }, { mes: "Mai", valor: 55.3 }, { mes: "Jun", valor: 58.9 },
+  { mes: "Jul", valor: 61.4 }, { mes: "Ago", valor: 63.2 }, { mes: "Set", valor: 60.7 },
+  { mes: "Out", valor: 65.1 }, { mes: "Nov", valor: 68.5 }, { mes: "Dez", valor: 72.3 },
+];
+
 const tempoMedioMovimentacoes = [
   { mes: "Jan", valor: 9100 }, { mes: "Fev", valor: 9100 }, { mes: "Mar", valor: 9100 },
   { mes: "Abr", valor: 9100 }, { mes: "Mai", valor: 9100 }, { mes: "Jun", valor: 9100 },
