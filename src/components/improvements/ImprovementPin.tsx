@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useImprovement, ImprovementStatus } from "@/contexts/ImprovementContext";
-import { MessageSquareMore, CheckCircle2, XCircle, Send } from "lucide-react";
+import { MessageSquareMore, CheckCircle2, XCircle, Send, Pencil, Save, X } from "lucide-react";
 
 const statusColors: Record<ImprovementStatus, { bg: string; text: string }> = {
   pending: { bg: "bg-amber-400", text: "text-white" },
