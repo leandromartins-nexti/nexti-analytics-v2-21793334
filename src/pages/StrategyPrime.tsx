@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw } from "lucide-react";
+import { ImprovementProvider } from "@/contexts/ImprovementContext";
+import { ImprovementPin } from "@/components/improvements/ImprovementPin";
+import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, LabelList
