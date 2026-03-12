@@ -597,9 +597,19 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
           </div>
         </div>
         <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
+          <h3 className="font-bold text-sm text-gray-800">Evolução % Inconsistências Tratadas</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
-          <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
+          <div className="h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={evolucaoInconsistenciasTratadas}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#999" }} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px", fontSize: "12px" }} />
+                <Line type="monotone" dataKey="valor" stroke="#FF5722" strokeWidth={2} dot={{ fill: "#FF5722", r: 3 }} name="% Tratadas" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-9 gap-4">
@@ -619,33 +629,9 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
           </div>
         </div>
         <div className="col-span-5 bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">% Origem de Solicitações dos Ajustes de Ponto</h3>
-          <div className="flex items-center gap-4 mt-1 mb-2">
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-[#FF5722] inline-block" />
-              <span className="text-[10px] text-gray-500">% Total Ajustadas</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-[#F5A623] inline-block" />
-              <span className="text-[10px] text-gray-500">% Ajustes Origem Solicitações</span>
-            </div>
-          </div>
-          <div className="h-[220px] flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={origemSolicitacoes} cx="50%" cy="50%" innerRadius={70} outerRadius={95} dataKey="value" startAngle={90} endAngle={-270}>
-                  {origemSolicitacoes.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex justify-around text-xs text-gray-500 mt-1">
-            <span>100%</span>
-            <span>0%</span>
-          </div>
+          <h3 className="font-bold text-sm text-gray-800">Tempo Médio Tratativa de Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-4">por Período</p>
+          <div className="h-[200px] flex items-center justify-center text-gray-300 text-sm">Sem dados no período</div>
         </div>
       </div>
     </div>
