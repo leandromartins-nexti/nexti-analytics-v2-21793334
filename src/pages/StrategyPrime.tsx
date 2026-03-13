@@ -497,10 +497,9 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
             </table>
           </div>
         </div>
-        {/* Evolução da Qualidade */}
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col" style={{ height: '320px' }}>
           <h3 className="font-bold text-sm text-gray-800 mb-4">Evolução da Qualidade das Marcações</h3>
-          <div className="h-[220px]">
+          <div className="flex-1">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={qualidadeEvolucao}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
