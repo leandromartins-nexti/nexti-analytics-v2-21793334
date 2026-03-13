@@ -217,13 +217,13 @@ const tempoMedioTratativa = [
 
 // Eficiência mock data
 const piorTempoMedioOperadores = [
-  { operador: "552", cargo: "VIGILANTE", tempoMedio: 30 },
-  { operador: "799", cargo: "VIGILANTE", tempoMedio: 29 },
-  { operador: "4358", cargo: "VIGILANTE", tempoMedio: 27 },
-  { operador: "762", cargo: "VIGILANTE", tempoMedio: 27 },
-  { operador: "7370", cargo: "MONITOR DE ACESSO", tempoMedio: 26 },
-  { operador: "4465", cargo: "VIGILANTE", tempoMedio: 25 },
-  { operador: "609", cargo: "VIGILANTE", tempoMedio: 21 },
+  { operador: "Carlos Mendes", tempoMedio: 30 },
+  { operador: "Ana Rodrigues", tempoMedio: 29 },
+  { operador: "Felipe Santos", tempoMedio: 27 },
+  { operador: "Juliana Costa", tempoMedio: 27 },
+  { operador: "Ricardo Almeida", tempoMedio: 26 },
+  { operador: "Patrícia Lima", tempoMedio: 25 },
+  { operador: "Eduardo Ferreira", tempoMedio: 21 },
 ];
 
 const top10TratativaOperadores = [
