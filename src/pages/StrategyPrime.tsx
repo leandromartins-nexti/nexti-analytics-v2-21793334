@@ -699,22 +699,30 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
             </ResponsiveContainer>
           </div>
         </div>
-        {/* % Solicitações por Tipo */}
+        {/* Top 20 pior % Solicitações Tratadas */}
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Ponto por Tipo</h3>
-          <p className="text-xs text-gray-400 mb-4">por Código</p>
-          <div className="h-[220px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={solicitacoesPorTipo} layout="vertical" barSize={16}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                <XAxis type="number" domain={[0, 35]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} tickFormatter={(v) => `${v}%`} />
-                <YAxis type="category" dataKey="tipo" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#666" }} width={45} />
-                <Tooltip formatter={(value: number) => `${value}%`} />
-                <Bar dataKey="pct" fill="#FF5722" radius={[0, 4, 4, 0]}>
-                  <LabelList dataKey="pct" position="right" fontSize={10} fill="#666" formatter={(v: number) => `${v}%`} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 pior % Solicitações Tratadas</h3>
+          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <div className="max-h-[252px] overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-right py-2 text-gray-500 font-medium">▲ %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topSolicitacoesTratadas.map((item) => (
+                  <tr key={item.pos} className="border-b border-gray-50">
+                    <td className="py-2 text-gray-700">
+                      <span className="text-gray-400 mr-2">{item.pos}</span>
+                      {item.empresa}
+                    </td>
+                    <td className="py-2 text-right text-gray-600">{item.pct}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
