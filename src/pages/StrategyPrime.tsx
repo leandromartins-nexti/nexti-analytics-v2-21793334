@@ -292,8 +292,10 @@ const tempoMedioMovimentacoes = [
 ];
 
 const evolucaoMarcacoesManuais = [
-  { mes: "Jun", valor: 31.6 },
-  { mes: "Out", valor: 22.0 },
+  { mes: "Jan", valor: 35.2 }, { mes: "Fev", valor: 33.8 }, { mes: "Mar", valor: 34.5 },
+  { mes: "Abr", valor: 32.1 }, { mes: "Mai", valor: 30.9 }, { mes: "Jun", valor: 31.6 },
+  { mes: "Jul", valor: 28.4 }, { mes: "Ago", valor: 26.7 }, { mes: "Set", valor: 24.3 },
+  { mes: "Out", valor: 22.0 }, { mes: "Nov", valor: 20.5 }, { mes: "Dez", valor: 19.8 },
 ];
 
 const tabs = [
