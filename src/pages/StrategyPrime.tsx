@@ -227,13 +227,13 @@ const piorTempoMedioOperadores = [
 ];
 
 const top10TratativaOperadores = [
-  { operador: "552", cargo: "VIGILANTE", tratativas: 30 },
-  { operador: "799", cargo: "VIGILANTE", tratativas: 29 },
-  { operador: "4358", cargo: "VIGILANTE", tratativas: 27 },
-  { operador: "762", cargo: "VIGILANTE", tratativas: 27 },
-  { operador: "7370", cargo: "MONITOR DE ACESSO", tratativas: 26 },
-  { operador: "4465", cargo: "VIGILANTE", tratativas: 25 },
-  { operador: "609", cargo: "VIGILANTE", tratativas: 21 },
+  { operador: "Marcos Silva", tratativas: 30 },
+  { operador: "Luciana Pereira", tratativas: 29 },
+  { operador: "Bruno Oliveira", tratativas: 27 },
+  { operador: "Camila Souza", tratativas: 27 },
+  { operador: "Thiago Martins", tratativas: 26 },
+  { operador: "Renata Barbosa", tratativas: 25 },
+  { operador: "Diego Nascimento", tratativas: 21 },
 ];
 
 const evolucaoInconsistenciasTratadas = [
@@ -999,7 +999,8 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
     <div className="flex-1 space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">Tempo Médio de Tratativa de Inconsistência por Operador</h3>
+          <h3 className="font-bold text-sm text-gray-800">Tempo Médio de Tratativa de Inconsistência</h3>
+          <p className="text-xs text-gray-400 mb-4">por Operador</p>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
@@ -1017,15 +1018,13 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
             </tbody>
           </table>
         </div>
-        {/* Top 10 Quantidade de Tratativa de Marcações */}
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">Top 10 Quantidade de Tratativa de Marcações</h3>
+          <h3 className="font-bold text-sm text-gray-800">Quantidade de Tratativa de Marcações</h3>
           <p className="text-xs text-gray-400 mb-4">por Operador</p>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
                 <th className="text-left py-2 text-gray-500 font-medium">Operador</th>
-                <th className="text-left py-2 text-gray-500 font-medium">Cargo</th>
                 <th className="text-right py-2 text-gray-500 font-medium">Tratativas</th>
               </tr>
             </thead>
@@ -1033,7 +1032,6 @@ const EficienciaContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
               {top10TratativaOperadores.map((item, idx) => (
                 <tr key={idx} className="border-b border-gray-50">
                   <td className="py-2 text-gray-700">{item.operador}</td>
-                  <td className="py-2 text-gray-500 text-xs">{item.cargo}</td>
                   <td className="py-2 text-right text-gray-600">{item.tratativas}</td>
                 </tr>
               ))}
