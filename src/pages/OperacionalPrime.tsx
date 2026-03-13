@@ -679,6 +679,8 @@ const QualidadeContent = ({ activeFilter, setActiveFilter }: { activeFilter: str
 
     <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
   </div>
+    </ImprovementLayer>
+    </ImprovementProvider>
 );
 
 export default OperacionalPrime;
