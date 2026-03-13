@@ -155,6 +155,13 @@ const top20JustificativasPonto = [
   { pos: 20, empresa: "KEEP SAFE", qtd: 720 },
 ];
 
+const evolucaoReincidentesJustificativas = [
+  { mes: "Jan", valor: 18.5 }, { mes: "Fev", valor: 19.2 }, { mes: "Mar", valor: 17.8 },
+  { mes: "Abr", valor: 20.1 }, { mes: "Mai", valor: 21.3 }, { mes: "Jun", valor: 19.7 },
+  { mes: "Jul", valor: 22.4 }, { mes: "Ago", valor: 21.8 }, { mes: "Set", valor: 20.5 },
+  { mes: "Out", valor: 23.1 }, { mes: "Nov", valor: 22.6 }, { mes: "Dez", valor: 21.9 },
+];
+
 // Solicitações mock data
 const solicitacoesJustificativa = [
   { mes: "Jan", emAberto: 580, ajustadas: 67500, canceladas: 15100 },
