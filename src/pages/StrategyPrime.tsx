@@ -227,13 +227,13 @@ const piorTempoMedioOperadores = [
 ];
 
 const top10TratativaOperadores = [
-  { operador: "552", cargo: "VIGILANTE", tratativas: 30 },
-  { operador: "799", cargo: "VIGILANTE", tratativas: 29 },
-  { operador: "4358", cargo: "VIGILANTE", tratativas: 27 },
-  { operador: "762", cargo: "VIGILANTE", tratativas: 27 },
-  { operador: "7370", cargo: "MONITOR DE ACESSO", tratativas: 26 },
-  { operador: "4465", cargo: "VIGILANTE", tratativas: 25 },
-  { operador: "609", cargo: "VIGILANTE", tratativas: 21 },
+  { operador: "Marcos Silva", tratativas: 30 },
+  { operador: "Luciana Pereira", tratativas: 29 },
+  { operador: "Bruno Oliveira", tratativas: 27 },
+  { operador: "Camila Souza", tratativas: 27 },
+  { operador: "Thiago Martins", tratativas: 26 },
+  { operador: "Renata Barbosa", tratativas: 25 },
+  { operador: "Diego Nascimento", tratativas: 21 },
 ];
 
 const evolucaoInconsistenciasTratadas = [
