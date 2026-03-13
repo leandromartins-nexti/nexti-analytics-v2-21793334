@@ -151,11 +151,11 @@ const topSolicitacoesTratadas = [
   { pos: 20, empresa: "KEEP SAFE", pct: "75,9%" },
 ];
 
-const solicitacoesTratadas = [
-  { mes: "Jan", valor: 99.3 }, { mes: "Fev", valor: 99.3 }, { mes: "Mar", valor: 99.3 },
-  { mes: "Abr", valor: 99.3 }, { mes: "Mai", valor: 99.3 }, { mes: "Jun", valor: 99.3 },
-  { mes: "Jul", valor: 99.3 }, { mes: "Ago", valor: 99.3 }, { mes: "Set", valor: 99.3 },
-  { mes: "Out", valor: 99.3 }, { mes: "Nov", valor: 99.3 }, { mes: "Dez", valor: 99.3 },
+const solicitacoesReincidentes = [
+  { mes: "Jan", valor: 12.5 }, { mes: "Fev", valor: 14.2 }, { mes: "Mar", valor: 11.8 },
+  { mes: "Abr", valor: 13.1 }, { mes: "Mai", valor: 15.7 }, { mes: "Jun", valor: 10.9 },
+  { mes: "Jul", valor: 16.3 }, { mes: "Ago", valor: 14.8 }, { mes: "Set", valor: 12.1 },
+  { mes: "Out", valor: 13.6 }, { mes: "Nov", valor: 11.4 }, { mes: "Dez", valor: 15.2 },
 ];
 
 const tempoMedioTratativa = [
@@ -728,14 +728,14 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">% Solicitações de Justificativa de Pontos Tratadas</h3>
+          <h3 className="font-bold text-sm text-gray-800">% Solicitações Reincidentes</h3>
           <p className="text-xs text-gray-400 mb-4">por Período</p>
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={solicitacoesTratadas}>
+              <LineChart data={solicitacoesReincidentes}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
-                <YAxis domain={[98, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} tickFormatter={(v) => `${v}%`} />
+                <YAxis domain={[0, 20]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} tickFormatter={(v) => `${v}%`} />
                 <Tooltip formatter={(value: number) => `${value}%`} />
                 <Line type="monotone" dataKey="valor" stroke="#FF5722" strokeWidth={2} dot={{ r: 3, fill: "#FF5722" }} />
               </LineChart>
