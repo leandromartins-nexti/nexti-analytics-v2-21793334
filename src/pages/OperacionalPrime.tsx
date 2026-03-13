@@ -177,6 +177,8 @@ const OperacionalPrime = () => {
         {activeSubNav === "Qualidade" && <QualidadeContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
       </div>
     </div>
+    </ImprovementLayer>
+    </ImprovementProvider>
   );
 };
 
