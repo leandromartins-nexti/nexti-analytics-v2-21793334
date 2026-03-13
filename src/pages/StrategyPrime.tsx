@@ -125,6 +125,36 @@ const origemSolicitacoes = [
   { name: "% Ajustes Origem Solicitações", value: 0, color: "#E8E8E8" },
 ];
 
+const evolucaoJustificativasPonto = [
+  { mes: "Jan", valor: 12500 }, { mes: "Fev", valor: 13200 }, { mes: "Mar", valor: 11800 },
+  { mes: "Abr", valor: 14100 }, { mes: "Mai", valor: 13700 }, { mes: "Jun", valor: 15200 },
+  { mes: "Jul", valor: 14800 }, { mes: "Ago", valor: 16100 }, { mes: "Set", valor: 15500 },
+  { mes: "Out", valor: 14300 }, { mes: "Nov", valor: 15800 }, { mes: "Dez", valor: 16500 },
+];
+
+const top20JustificativasPonto = [
+  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", qtd: 4250 },
+  { pos: 2, empresa: "VERZANI & SANDRINI", qtd: 3890 },
+  { pos: 3, empresa: "ORBENK", qtd: 3520 },
+  { pos: 4, empresa: "PROFISER", qtd: 3180 },
+  { pos: 5, empresa: "OBJETIVA", qtd: 2950 },
+  { pos: 6, empresa: "PROSERV", qtd: 2780 },
+  { pos: 7, empresa: "GUARDIÃO SEG", qtd: 2610 },
+  { pos: 8, empresa: "SEGURPRO", qtd: 2440 },
+  { pos: 9, empresa: "GOCIL", qtd: 2280 },
+  { pos: 10, empresa: "HAGANÁ", qtd: 2150 },
+  { pos: 11, empresa: "GRABER", qtd: 1980 },
+  { pos: 12, empresa: "FORTESEG", qtd: 1820 },
+  { pos: 13, empresa: "PROTEGE", qtd: 1690 },
+  { pos: 14, empresa: "ORCALI", qtd: 1540 },
+  { pos: 15, empresa: "CONSERVO", qtd: 1380 },
+  { pos: 16, empresa: "AFORT", qtd: 1250 },
+  { pos: 17, empresa: "LIDERANÇA", qtd: 1120 },
+  { pos: 18, empresa: "Rio Oregon", qtd: 980 },
+  { pos: 19, empresa: "Victória da Paz", qtd: 850 },
+  { pos: 20, empresa: "KEEP SAFE", qtd: 720 },
+];
+
 // Solicitações mock data
 const solicitacoesJustificativa = [
   { mes: "Jan", emAberto: 580, ajustadas: 67500, canceladas: 15100 },
@@ -759,6 +789,50 @@ const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
                 />
               </LineChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+      {/* Row 2: Evolução da Quantidade de Justificativas + Top 20 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-bold text-sm text-gray-800">Evolução da Quantidade de Justificativas de Ponto</h3>
+          <p className="text-xs text-gray-400 mb-4">por Período</p>
+          <div className="h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={evolucaoJustificativasPonto}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} tickFormatter={(v) => `${(v / 1000).toFixed(1)} Mil`} />
+                <Tooltip formatter={(value: number) => value.toLocaleString("pt-BR")} />
+                <Line type="monotone" dataKey="valor" stroke="#FF5722" strokeWidth={2} dot={{ r: 4, fill: "#FF5722" }}
+                  label={{ position: "top", fontSize: 10, fill: "#333", formatter: (v: number) => `${(v / 1000).toFixed(1)} Mil` }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col" style={{ height: 320 }}>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 Entidades com Justificativas de Ponto</h3>
+          <p className="text-xs text-gray-400 mb-2">por Volume</p>
+          <div className="overflow-y-auto flex-1">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-left py-2 text-gray-500 font-medium">#</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">Entidade</th>
+                  <th className="text-right py-2 text-gray-500 font-medium">Qtd</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20JustificativasPonto.map((item) => (
+                  <tr key={item.pos} className="border-b border-gray-50">
+                    <td className="py-1.5 text-gray-400 text-xs">{item.pos}</td>
+                    <td className="py-1.5 text-gray-700 text-xs">{item.empresa}</td>
+                    <td className="py-1.5 text-right text-gray-600 text-xs font-medium">{item.qtd.toLocaleString("pt-BR")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
