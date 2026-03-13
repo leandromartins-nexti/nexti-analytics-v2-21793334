@@ -121,10 +121,8 @@ const topInconsistenciasTratadas = [
 ];
 
 const origemJustificativas = [
-  { name: "Solicitação", value: 68, color: "#FF5722" },
-  { name: "Importação", value: 15, color: "#F5A623" },
-  { name: "Ajuste Manual", value: 12, color: "#42A5F5" },
-  { name: "Outras Fontes", value: 5, color: "#E8E8E8" },
+  { name: "Solicitação de Justificativa de Ponto", value: 68, color: "#FF5722" },
+  { name: "Outras Fontes", value: 32, color: "#E8E8E8" },
 ];
 
 const evolucaoJustificativasPonto = [
@@ -306,7 +304,7 @@ const tabs = [
   "Ausências e Coberturas",
 ];
 
-const subNavItems = ["Visão Geral", "Inconsistências", "Solicitações", "Ajustes", "Eficiência"];
+const subNavItems = ["Visão Geral", "Inconsistências", "Solicitações", "Justificativa", "Eficiência"];
 
 const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço"];
 
@@ -463,7 +461,7 @@ const StrategyPrime = () => {
         {activeSubNav === "Visão Geral" && <VisaoGeralContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Inconsistências" && <InconsistenciasContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Solicitações" && <SolicitacoesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
-        {activeSubNav === "Ajustes" && <AjustesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
+        {activeSubNav === "Justificativa" && <AjustesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Eficiência" && <EficienciaContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
       </div>
     </div>
