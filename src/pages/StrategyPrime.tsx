@@ -121,10 +121,8 @@ const topInconsistenciasTratadas = [
 ];
 
 const origemJustificativas = [
-  { name: "Solicitação", value: 68, color: "#FF5722" },
-  { name: "Importação", value: 15, color: "#F5A623" },
-  { name: "Ajuste Manual", value: 12, color: "#42A5F5" },
-  { name: "Outras Fontes", value: 5, color: "#E8E8E8" },
+  { name: "Solicitação de Justificativa de Ponto", value: 68, color: "#FF5722" },
+  { name: "Outras Fontes", value: 32, color: "#E8E8E8" },
 ];
 
 const evolucaoJustificativasPonto = [
