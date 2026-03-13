@@ -125,6 +125,36 @@ const origemSolicitacoes = [
   { name: "% Ajustes Origem Solicitações", value: 0, color: "#E8E8E8" },
 ];
 
+const evolucaoJustificativasPonto = [
+  { mes: "Jan", valor: 12500 }, { mes: "Fev", valor: 13200 }, { mes: "Mar", valor: 11800 },
+  { mes: "Abr", valor: 14100 }, { mes: "Mai", valor: 13700 }, { mes: "Jun", valor: 15200 },
+  { mes: "Jul", valor: 14800 }, { mes: "Ago", valor: 16100 }, { mes: "Set", valor: 15500 },
+  { mes: "Out", valor: 14300 }, { mes: "Nov", valor: 15800 }, { mes: "Dez", valor: 16500 },
+];
+
+const top20JustificativasPonto = [
+  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", qtd: 4250 },
+  { pos: 2, empresa: "VERZANI & SANDRINI", qtd: 3890 },
+  { pos: 3, empresa: "ORBENK", qtd: 3520 },
+  { pos: 4, empresa: "PROFISER", qtd: 3180 },
+  { pos: 5, empresa: "OBJETIVA", qtd: 2950 },
+  { pos: 6, empresa: "PROSERV", qtd: 2780 },
+  { pos: 7, empresa: "GUARDIÃO SEG", qtd: 2610 },
+  { pos: 8, empresa: "SEGURPRO", qtd: 2440 },
+  { pos: 9, empresa: "GOCIL", qtd: 2280 },
+  { pos: 10, empresa: "HAGANÁ", qtd: 2150 },
+  { pos: 11, empresa: "GRABER", qtd: 1980 },
+  { pos: 12, empresa: "FORTESEG", qtd: 1820 },
+  { pos: 13, empresa: "PROTEGE", qtd: 1690 },
+  { pos: 14, empresa: "ORCALI", qtd: 1540 },
+  { pos: 15, empresa: "CONSERVO", qtd: 1380 },
+  { pos: 16, empresa: "AFORT", qtd: 1250 },
+  { pos: 17, empresa: "LIDERANÇA", qtd: 1120 },
+  { pos: 18, empresa: "Rio Oregon", qtd: 980 },
+  { pos: 19, empresa: "Victória da Paz", qtd: 850 },
+  { pos: 20, empresa: "KEEP SAFE", qtd: 720 },
+];
+
 // Solicitações mock data
 const solicitacoesJustificativa = [
   { mes: "Jan", emAberto: 580, ajustadas: 67500, canceladas: 15100 },
