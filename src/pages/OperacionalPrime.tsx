@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ImprovementProvider } from "@/contexts/ImprovementContext";
+import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
 import { ImprovementLayer } from "@/components/improvements/ImprovementLayer";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList,
@@ -118,6 +119,7 @@ const OperacionalPrime = () => {
               <Filter className="w-4 h-4" />
               Filtros
             </button>
+            <ImprovementCenter />
           </div>
         </div>
       </div>
