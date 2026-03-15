@@ -141,7 +141,7 @@ const colaboradoresSemTemplateList = [
   { colaborador: "Ana Souza", template: "Facial", inconsistencias: 195 },
   { colaborador: "Pedro Lima", template: "Digital", inconsistencias: 182 },
   { colaborador: "Fernanda Costa", template: "Facial", inconsistencias: 167 },
-  { colaborador: "Ricardo Alves", template: "Proximidade", inconsistencias: 154 },
+  { colaborador: "Ricardo Alves", template: "Digital", inconsistencias: 154 },
   { colaborador: "Juliana Pereira", template: "Facial", inconsistencias: 143 },
   { colaborador: "Bruno Ferreira", template: "Digital", inconsistencias: 131 },
   { colaborador: "Camila Rodrigues", template: "Facial", inconsistencias: 120 },
