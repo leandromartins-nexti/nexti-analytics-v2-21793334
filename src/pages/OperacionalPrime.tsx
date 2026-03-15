@@ -80,6 +80,52 @@ const tiposInconsistencias = [
   { tipo: "CANCELED", pct: 1 },
 ];
 
+const top20EntidadesInconsistencias = [
+  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 18420 },
+  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 15380 },
+  { entidade: "SAFEMED Filial 0006", total: 12750 },
+  { entidade: "GOCIL VIGILANCIA", total: 11200 },
+  { entidade: "CONSTRUPOPP", total: 9840 },
+  { entidade: "GOCIL SERVICOS", total: 8650 },
+  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 7920 },
+  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 7100 },
+  { entidade: "CARIOCA CALCADOS LTDA", total: 6540 },
+  { entidade: "LOJAS RENNER S.A.", total: 5980 },
+  { entidade: "SHOPPING MUELLER", total: 5420 },
+  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 4870 },
+  { entidade: "HOSPITAL SÃO LUCAS", total: 4350 },
+  { entidade: "UNIVERSIDADE FEDERAL", total: 3920 },
+  { entidade: "BANCO DO BRASIL", total: 3480 },
+  { entidade: "SUPERMERCADO ANGELONI", total: 3100 },
+  { entidade: "TRIBUNAL DE JUSTIÇA", total: 2750 },
+  { entidade: "PREFEITURA MUNICIPAL", total: 2380 },
+  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 2010 },
+  { entidade: "PARQUE INDUSTRIAL SUL", total: 1640 },
+];
+
+const top20EntidadesSolicitacoes = [
+  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 4820 },
+  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 4350 },
+  { entidade: "GOCIL VIGILANCIA", total: 3680 },
+  { entidade: "SAFEMED Filial 0006", total: 3210 },
+  { entidade: "CONSTRUPOPP", total: 2890 },
+  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 2540 },
+  { entidade: "GOCIL SERVICOS", total: 2180 },
+  { entidade: "LOJAS RENNER S.A.", total: 1950 },
+  { entidade: "CARIOCA CALCADOS LTDA", total: 1720 },
+  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 1530 },
+  { entidade: "SHOPPING MUELLER", total: 1380 },
+  { entidade: "HOSPITAL SÃO LUCAS", total: 1210 },
+  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 1050 },
+  { entidade: "UNIVERSIDADE FEDERAL", total: 920 },
+  { entidade: "BANCO DO BRASIL", total: 810 },
+  { entidade: "SUPERMERCADO ANGELONI", total: 720 },
+  { entidade: "TRIBUNAL DE JUSTIÇA", total: 640 },
+  { entidade: "PREFEITURA MUNICIPAL", total: 550 },
+  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 480 },
+  { entidade: "PARQUE INDUSTRIAL SUL", total: 390 },
+];
+
 const motivoAjustes = [
   { motivo: "Esquecimento", pct: 42 },
   { motivo: "Falha Sistema", pct: 28 },
@@ -307,7 +353,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
     <div className="flex-1 space-y-4">
       {/* Row 1: Aging */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-1">Aging de Inconsistências em Aberto</h3>
+        <h3 className="font-semibold text-sm text-gray-800 mb-1">Aging de Justificativas em Aberto</h3>
         <p className="text-xs text-gray-400 mb-4">Por faixa de dias pendentes</p>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -360,6 +406,63 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
                 <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Row 3: Top 20 Entidades */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <div className="flex items-center justify-between mb-0.5">
+            <h3 className="font-semibold text-sm text-gray-800">Top 20 Entidades com Mais Inconsistências</h3>
+          </div>
+          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <div className="max-h-[252px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesInconsistencias.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <div className="flex items-center justify-between mb-0.5">
+            <h3 className="font-semibold text-sm text-gray-800">Top 20 Entidades com Mais Solicitações</h3>
+          </div>
+          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <div className="max-h-[252px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesSolicitacoes.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
