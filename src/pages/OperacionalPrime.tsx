@@ -164,7 +164,7 @@ const tabs = [
   "Engajamento e Retenção", "Ausências e Coberturas",
 ];
 
-const subNavItems = ["Backlog", "Análise de Padrões", "Solicitações", "Inconsistências", "Qualidade"];
+const subNavItems = ["Backlog", "Análise de Padrões", "Solicitações", "Inconsistências"];
 const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço", "Área", "Filtro de Mesa", "Colaborador"];
 
 // ── Helpers ────────────────────────────────────────────────
@@ -291,7 +291,7 @@ const OperacionalPrime = () => {
         {activeSubNav === "Análise de Padrões" && <AnalisePadroesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Solicitações" && <SolicitacoesContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         {activeSubNav === "Inconsistências" && <InconsistenciasContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
-        {activeSubNav === "Qualidade" && <QualidadeContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
+        
       </div>
     </div>
     </ImprovementLayer>
@@ -905,8 +905,6 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
   </div>
 );
 
-// ── Mock data – Qualidade ──────────────────────────────────
-
 const top20PiorQualidade = [
   { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", pct: 100.0 },
   { entidade: "CARIOCA CALCADOS LTDA", pct: 100.0 },
@@ -952,86 +950,5 @@ const top20EscalaInconsistenciasSolicitacoes = [
   { escala: "10:00-19:00 5x2", inconsistencias: 27, solicitacoes: 9 },
   { escala: "06:00-15:00 6x1", inconsistencias: 24, solicitacoes: 8 },
 ];
-
-const top10ReincidenciaColaborador = [
-  { colaborador: "1000", pct: 100.0 },
-  { colaborador: "1001", pct: 100.0 },
-  { colaborador: "1003", pct: 100.0 },
-  { colaborador: "1008", pct: 100.0 },
-  { colaborador: "1015", pct: 100.0 },
-  { colaborador: "1017", pct: 100.0 },
-  { colaborador: "1019", pct: 100.0 },
-];
-
-const colaboradoresSemTemplate = [
-  { colaborador: "7079", semTemplate: "Facial", inconsistencias: 300 },
-  { colaborador: "7212", semTemplate: "Facial", inconsistencias: 253 },
-  { colaborador: "2240", semTemplate: "Facial", inconsistencias: 237 },
-  { colaborador: "1428", semTemplate: "Facial", inconsistencias: 221 },
-  { colaborador: "7271", semTemplate: "Facial", inconsistencias: 215 },
-  { colaborador: "967", semTemplate: "Facial", inconsistencias: 198 },
-  { colaborador: "8188", semTemplate: "Facial", inconsistencias: 184 },
-];
-
-// ── Qualidade Content ──────────────────────────────────────
-
-const QualidadeContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
-  <div className="flex gap-4">
-    <div className="flex-1 grid grid-cols-2 gap-4">
-      {/* Top 10 Reincidência de Inconsistências */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <div className="flex items-center justify-between mb-0.5">
-          <h3 className="font-semibold text-sm text-gray-800">Top 10 Reincidência de Inconsistências</h3>
-          <span className="text-xs border border-[#FF5722] text-[#FF5722] rounded-full px-3 py-1 font-medium">Posto</span>
-        </div>
-        <p className="text-xs text-gray-400 mb-3">por Colaborador</p>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-100">
-              <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-              <th className="text-xs text-gray-400 font-medium text-left pb-2">Colaborador</th>
-              <th className="text-xs text-gray-400 font-medium text-right pb-2">%</th>
-            </tr>
-          </thead>
-          <tbody>
-            {top10ReincidenciaColaborador.map((item, idx) => (
-              <tr key={idx} className="border-b border-gray-50">
-                <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
-                <td className="text-xs text-gray-700 py-2">{item.colaborador}</td>
-                <td className="text-xs font-semibold text-gray-800 text-right py-2">{item.pct.toFixed(1)}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Colaboradores sem Template */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Colaboradores sem Template</h3>
-        <p className="text-xs text-gray-400 mb-3">Inconsistências sem Template</p>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-100">
-              <th className="text-xs text-gray-400 font-medium text-left pb-2">Colaborador</th>
-              <th className="text-xs text-gray-400 font-medium text-left pb-2">Sem Template</th>
-              <th className="text-xs text-gray-400 font-medium text-right pb-2">Inconsistências</th>
-            </tr>
-          </thead>
-          <tbody>
-            {colaboradoresSemTemplate.map((item, idx) => (
-              <tr key={idx} className="border-b border-gray-50">
-                <td className="text-xs text-gray-700 py-2">{item.colaborador}</td>
-                <td className="text-xs text-gray-700 py-2">{item.semTemplate}</td>
-                <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.inconsistencias)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
-  </div>
-);
 
 export default OperacionalPrime;
