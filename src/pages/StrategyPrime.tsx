@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw, X } from "lucide-react";
 import { ImprovementProvider } from "@/contexts/ImprovementContext";
+import { FilterPanel } from "@/components/layout/FilterPanel";
 import { ImprovementPin } from "@/components/improvements/ImprovementPin";
 import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
 import { ImprovementLayer } from "@/components/improvements/ImprovementLayer";
@@ -277,6 +278,7 @@ const StrategyPrime = () => {
   const [activeSubNav, setActiveSubNav] = useState("Visão Geral");
   const [activeFilter, setActiveFilter] = useState("Empresa");
   const [selectedEntity, setSelectedEntity] = useState<string | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const kpis = useMemo(() => computeKPIs(selectedEntity), [selectedEntity]);
 
@@ -326,7 +328,8 @@ const StrategyPrime = () => {
             >
               Operacional
             </button>
-            <button className="border border-gray-300 text-gray-600 px-4 py-2 rounded text-sm font-medium flex items-center gap-2">
+            <button className="border border-gray-300 text-gray-600 px-4 py-2 rounded text-sm font-medium flex items-center gap-2"
+              onClick={() => setFilterOpen(true)}>
               <Filter className="w-4 h-4" />
               Filtros
             </button>
@@ -449,6 +452,7 @@ const StrategyPrime = () => {
         {activeSubNav === "Justificativa" && <AjustesContent activeFilter={activeFilter} setActiveFilter={handleFilterChange} selectedEntity={selectedEntity} setSelectedEntity={setSelectedEntity} />}
         {activeSubNav === "Eficiência" && <EficienciaContent activeFilter={activeFilter} setActiveFilter={handleFilterChange} selectedEntity={selectedEntity} setSelectedEntity={setSelectedEntity} />}
       </div>
+      <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
     </div>
     </ImprovementLayer>
     </ImprovementProvider>

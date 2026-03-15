@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ImprovementProvider } from "@/contexts/ImprovementContext";
+import { FilterPanel } from "@/components/layout/FilterPanel";
 import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
 import { ImprovementLayer } from "@/components/improvements/ImprovementLayer";
 import {
@@ -251,6 +252,7 @@ const OperacionalPrime = () => {
   const [activeTab, setActiveTab] = useState("Registro de Ponto");
   const [activeSubNav, setActiveSubNav] = useState("Backlog");
   const [activeFilter, setActiveFilter] = useState("Empresa");
+  const [filterOpen, setFilterOpen] = useState(false);
 
   return (
     <ImprovementProvider>
@@ -292,7 +294,8 @@ const OperacionalPrime = () => {
             >
               Strategy
             </button>
-            <button className="border border-gray-300 text-gray-600 px-4 py-2 rounded text-sm font-medium flex items-center gap-2">
+            <button className="border border-gray-300 text-gray-600 px-4 py-2 rounded text-sm font-medium flex items-center gap-2"
+              onClick={() => setFilterOpen(true)}>
               <Filter className="w-4 h-4" />
               Filtros
             </button>
@@ -357,6 +360,7 @@ const OperacionalPrime = () => {
         {activeSubNav === "Inconsistências" && <InconsistenciasContent activeFilter={activeFilter} setActiveFilter={setActiveFilter} />}
         
       </div>
+      <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
     </div>
     </ImprovementLayer>
     </ImprovementProvider>
