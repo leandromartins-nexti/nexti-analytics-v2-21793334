@@ -95,97 +95,82 @@ const evolucaoInconsistenciasMensal = [
   { mes: "Dez", emAberto: 400, tratadas: 5150, canceladas: 920 },
 ];
 
-const top20EntidadesInconsistenciasTab = [
-  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 18420 },
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 15380 },
-  { entidade: "SAFEMED Filial 0006", total: 12750 },
-  { entidade: "GOCIL VIGILANCIA", total: 11200 },
-  { entidade: "CONSTRUPOPP", total: 9840 },
-  { entidade: "GOCIL SERVICOS", total: 8650 },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 7920 },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 7100 },
-  { entidade: "CARIOCA CALCADOS LTDA", total: 6540 },
-  { entidade: "LOJAS RENNER S.A.", total: 5980 },
-  { entidade: "SHOPPING MUELLER", total: 5420 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 4870 },
-  { entidade: "HOSPITAL SÃO LUCAS", total: 4350 },
-  { entidade: "UNIVERSIDADE FEDERAL", total: 3920 },
-  { entidade: "BANCO DO BRASIL", total: 3480 },
-  { entidade: "SUPERMERCADO ANGELONI", total: 3100 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", total: 2750 },
-  { entidade: "PREFEITURA MUNICIPAL", total: 2380 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 2100 },
-  { entidade: "PARQUE INDUSTRIAL SUL", total: 1850 },
-];
+// ── Entity names per filter ─────────────────────────────────
 
-const top20EntidadesReincidentesInconsistencias = [
-  { entidade: "EBS2 TRADE E GESTAO LTDA", ocorrencias: 12, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", ocorrencias: 11, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "GOCIL VIGILANCIA", ocorrencias: 10, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "SAFEMED Filial 0006", ocorrencias: 9, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "CONSTRUPOPP", ocorrencias: 9, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "GOCIL SERVICOS", ocorrencias: 8, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", ocorrencias: 8, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", ocorrencias: 7, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "CARIOCA CALCADOS LTDA", ocorrencias: 7, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "LOJAS RENNER S.A.", ocorrencias: 6, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "SHOPPING MUELLER", ocorrencias: 6, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", ocorrencias: 5, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "HOSPITAL SÃO LUCAS", ocorrencias: 5, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "UNIVERSIDADE FEDERAL", ocorrencias: 5, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "BANCO DO BRASIL", ocorrencias: 4, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "SUPERMERCADO ANGELONI", ocorrencias: 4, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "TRIBUNAL DE JUSTIÇA", ocorrencias: 3, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "PREFEITURA MUNICIPAL", ocorrencias: 3, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", ocorrencias: 3, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "PARQUE INDUSTRIAL SUL", ocorrencias: 2, ultimaOcorrencia: "Mar/2026" },
-];
+const entidadesPorFiltro: Record<string, string[]> = {
+  "Empresa": [
+    "EBS2 TRADE E GESTAO LTDA", "WORKS CONSTRUCAO E SERVICOS", "SAFEMED Filial 0006", "GOCIL VIGILANCIA",
+    "CONSTRUPOPP", "GOCIL SERVICOS", "TELOS CONSULTORIA EMPRESARIAL LTDA", "ANCORA BADOTTI PARTICIPACOES LTDA",
+    "CARIOCA CALCADOS LTDA", "LOJAS RENNER S.A.", "SHOPPING MUELLER", "CONDOMÍNIO EDIFÍCIO AURORA",
+    "HOSPITAL SÃO LUCAS", "UNIVERSIDADE FEDERAL", "BANCO DO BRASIL", "SUPERMERCADO ANGELONI",
+    "TRIBUNAL DE JUSTIÇA", "PREFEITURA MUNICIPAL", "CENTRO EMPRESARIAL ALPHA", "PARQUE INDUSTRIAL SUL",
+  ],
+  "Unidade de Negócio": [
+    "UN Sudeste", "UN Sul", "UN Nordeste", "UN Centro-Oeste", "UN Norte",
+    "UN São Paulo Capital", "UN Interior SP", "UN Litoral", "UN Minas Gerais", "UN Rio de Janeiro",
+    "UN Paraná", "UN Santa Catarina", "UN Rio Grande do Sul", "UN Bahia", "UN Pernambuco",
+    "UN Goiás", "UN Distrito Federal", "UN Ceará", "UN Pará", "UN Amazonas",
+  ],
+  "Cliente": [
+    "Carrefour Brasil", "Magazine Luiza", "Grupo Pão de Açúcar", "Raia Drogasil", "Natura &Co",
+    "Ambev S.A.", "JBS S.A.", "BRF S.A.", "Localiza Hertz", "TOTVS S.A.",
+    "Rede D'Or São Luiz", "Hapvida NotreDame", "Votorantim Cimentos", "Gerdau S.A.", "Suzano S.A.",
+    "Klabin S.A.", "WEG S.A.", "Embraer S.A.", "CPFL Energia", "Energisa S.A.",
+  ],
+  "Posto": [
+    "Posto Central 001", "Posto Matriz 002", "Posto Filial Norte 003", "Posto Filial Sul 004", "Posto Leste 005",
+    "Posto Oeste 006", "Posto Shopping Center 007", "Posto Hospital 008", "Posto Universidade 009", "Posto Aeroporto 010",
+    "Posto Rodoviária 011", "Posto Indústria 012", "Posto Condomínio 013", "Posto Escola 014", "Posto Fórum 015",
+    "Posto Estádio 016", "Posto Porto 017", "Posto Refinaria 018", "Posto Datacenter 019", "Posto Logístico 020",
+  ],
+  "Tipo de Serviço": [
+    "Vigilância Patrimonial", "Portaria e Controle de Acesso", "Monitoramento Eletrônico", "Escolta Armada",
+    "Segurança Pessoal", "Brigada de Incêndio", "Limpeza e Conservação", "Facilities Management",
+    "Recepção Corporativa", "Manutenção Predial", "Jardinagem", "Controle de Pragas",
+    "Segurança Eletrônica", "CFTV", "Alarme Monitorado", "Rastreamento Veicular",
+    "Consultoria de Segurança", "Treinamento", "Gestão de Terceiros", "Apoio Operacional",
+  ],
+  "Área": [
+    "Área Administrativa", "Área Industrial", "Área Comercial", "Área Logística", "Área TI",
+    "Área Financeira", "Área RH", "Área Jurídica", "Área Marketing", "Área Operações",
+    "Área Produção", "Área Qualidade", "Área Manutenção", "Área Segurança", "Área Saúde",
+    "Área Meio Ambiente", "Área Engenharia", "Área P&D", "Área Supply Chain", "Área Compras",
+  ],
+  "Filtro de Mesa": [
+    "Mesa SP Capital", "Mesa RJ Capital", "Mesa BH", "Mesa Curitiba", "Mesa Porto Alegre",
+    "Mesa Florianópolis", "Mesa Salvador", "Mesa Recife", "Mesa Fortaleza", "Mesa Brasília",
+    "Mesa Goiânia", "Mesa Manaus", "Mesa Belém", "Mesa Campinas", "Mesa Santos",
+    "Mesa Ribeirão Preto", "Mesa Sorocaba", "Mesa São José dos Campos", "Mesa Londrina", "Mesa Maringá",
+  ],
+  "Colaborador": [
+    "João Silva (1001)", "Maria Santos (1002)", "Carlos Oliveira (1003)", "Ana Souza (1004)", "Pedro Lima (1005)",
+    "Fernanda Costa (1006)", "Ricardo Alves (1007)", "Juliana Pereira (1008)", "Bruno Ferreira (1009)", "Camila Rodrigues (1010)",
+    "Diego Martins (1011)", "Patrícia Nascimento (1012)", "Rafael Barbosa (1013)", "Luciana Gomes (1014)", "Thiago Ribeiro (1015)",
+    "Amanda Carvalho (1016)", "Marcos Teixeira (1017)", "Beatriz Moura (1018)", "Felipe Araújo (1019)", "Daniela Pinto (1020)",
+  ],
+};
 
-const top20EntidadesInconsistencias = [
-  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 18420 },
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 15380 },
-  { entidade: "SAFEMED Filial 0006", total: 12750 },
-  { entidade: "GOCIL VIGILANCIA", total: 11200 },
-  { entidade: "CONSTRUPOPP", total: 9840 },
-  { entidade: "GOCIL SERVICOS", total: 8650 },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 7920 },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 7100 },
-  { entidade: "CARIOCA CALCADOS LTDA", total: 6540 },
-  { entidade: "LOJAS RENNER S.A.", total: 5980 },
-  { entidade: "SHOPPING MUELLER", total: 5420 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 4870 },
-  { entidade: "HOSPITAL SÃO LUCAS", total: 4350 },
-  { entidade: "UNIVERSIDADE FEDERAL", total: 3920 },
-  { entidade: "BANCO DO BRASIL", total: 3480 },
-  { entidade: "SUPERMERCADO ANGELONI", total: 3100 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", total: 2750 },
-  { entidade: "PREFEITURA MUNICIPAL", total: 2380 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 2010 },
-  { entidade: "PARQUE INDUSTRIAL SUL", total: 1640 },
-];
+const getEntidadesForFilter = (filter: string) => entidadesPorFiltro[filter] || entidadesPorFiltro["Empresa"];
 
-const top20EntidadesSolicitacoes = [
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 4820 },
-  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 4350 },
-  { entidade: "GOCIL VIGILANCIA", total: 3680 },
-  { entidade: "SAFEMED Filial 0006", total: 3210 },
-  { entidade: "CONSTRUPOPP", total: 2890 },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 2540 },
-  { entidade: "GOCIL SERVICOS", total: 2180 },
-  { entidade: "LOJAS RENNER S.A.", total: 1950 },
-  { entidade: "CARIOCA CALCADOS LTDA", total: 1720 },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 1530 },
-  { entidade: "SHOPPING MUELLER", total: 1380 },
-  { entidade: "HOSPITAL SÃO LUCAS", total: 1210 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 1050 },
-  { entidade: "UNIVERSIDADE FEDERAL", total: 920 },
-  { entidade: "BANCO DO BRASIL", total: 810 },
-  { entidade: "SUPERMERCADO ANGELONI", total: 720 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", total: 640 },
-  { entidade: "PREFEITURA MUNICIPAL", total: 550 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 480 },
-  { entidade: "PARQUE INDUSTRIAL SUL", total: 390 },
-];
+// Helper to build ranking data dynamically
+const buildTop20Totais = (filter: string, baseTotals: number[]) =>
+  getEntidadesForFilter(filter).map((entidade, i) => ({ entidade, total: baseTotals[i] }));
+
+const buildTop20Reincidentes = (filter: string, baseOcorrencias: number[], meses: string[]) =>
+  getEntidadesForFilter(filter).map((entidade, i) => ({ entidade, ocorrencias: baseOcorrencias[i], ultimaOcorrencia: meses[i % meses.length] }));
+
+const buildTop20Qualidade = (filter: string, basePcts: number[]) =>
+  getEntidadesForFilter(filter).map((entidade, i) => ({ entidade, pct: basePcts[i] }));
+
+// Base values (numeric only, reused across filters)
+const baseInconsistenciasTabTotais = [18420, 15380, 12750, 11200, 9840, 8650, 7920, 7100, 6540, 5980, 5420, 4870, 4350, 3920, 3480, 3100, 2750, 2380, 2100, 1850];
+const baseInconsistenciasReincOcorrencias = [12, 11, 10, 9, 9, 8, 8, 7, 7, 6, 6, 5, 5, 5, 4, 4, 3, 3, 3, 2];
+const baseInconsistenciasBacklogTotais = [18420, 15380, 12750, 11200, 9840, 8650, 7920, 7100, 6540, 5980, 5420, 4870, 4350, 3920, 3480, 3100, 2750, 2380, 2010, 1640];
+const baseSolicitacoesBacklogTotais = [4820, 4350, 3680, 3210, 2890, 2540, 2180, 1950, 1720, 1530, 1380, 1210, 1050, 920, 810, 720, 640, 550, 480, 390];
+const baseSolicitacoesJustTotais = [1820, 1650, 1480, 1310, 1190, 1040, 980, 850, 720, 630, 580, 510, 450, 390, 340, 290, 250, 210, 180, 150];
+const baseSolicitacoesReincOcorrencias = [14, 12, 11, 10, 9, 9, 8, 8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 3, 2];
+const baseQualidadePcts = [100.0, 100.0, 100.0, 98.5, 97.2, 96.8, 95.3, 94.7, 93.1, 92.4, 91.8, 90.5, 89.2, 88.6, 87.1, 86.4, 85.7, 84.3, 83.9, 82.5];
+const baseMeses = ["Mar/2026", "Mar/2026", "Fev/2026", "Mar/2026", "Jan/2026", "Mar/2026", "Fev/2026", "Mar/2026", "Fev/2026", "Mar/2026", "Jan/2026", "Mar/2026", "Fev/2026", "Jan/2026", "Mar/2026", "Fev/2026", "Mar/2026", "Fev/2026", "Jan/2026", "Fev/2026"];
 
 const motivoAjustes = [
   { motivo: "Esquecimento", pct: 42 },
@@ -505,7 +490,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
                 </tr>
               </thead>
               <tbody>
-                {top20EntidadesInconsistencias.map((item, idx) => (
+                {buildTop20Totais(activeFilter, baseInconsistenciasBacklogTotais).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
@@ -532,7 +517,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
                 </tr>
               </thead>
               <tbody>
-                {top20EntidadesSolicitacoes.map((item, idx) => (
+                {buildTop20Totais(activeFilter, baseSolicitacoesBacklogTotais).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
@@ -671,7 +656,7 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
                 </tr>
               </thead>
               <tbody>
-                {top20PiorQualidade.map((item, idx) => (
+                {buildTop20Qualidade(activeFilter, baseQualidadePcts).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
@@ -719,52 +704,6 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
 );
 
 // ── Mock data – Solicitações ───────────────────────────────
-
-const top20EntidadesSolicitacoesJustificativa = [
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 1820 },
-  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 1650 },
-  { entidade: "GOCIL VIGILANCIA", total: 1480 },
-  { entidade: "SAFEMED Filial 0006", total: 1310 },
-  { entidade: "CONSTRUPOPP", total: 1190 },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 1040 },
-  { entidade: "GOCIL SERVICOS", total: 980 },
-  { entidade: "LOJAS RENNER S.A.", total: 850 },
-  { entidade: "CARIOCA CALCADOS LTDA", total: 720 },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 630 },
-  { entidade: "SHOPPING MUELLER", total: 580 },
-  { entidade: "HOSPITAL SÃO LUCAS", total: 510 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 450 },
-  { entidade: "UNIVERSIDADE FEDERAL", total: 390 },
-  { entidade: "BANCO DO BRASIL", total: 340 },
-  { entidade: "SUPERMERCADO ANGELONI", total: 290 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", total: 250 },
-  { entidade: "PREFEITURA MUNICIPAL", total: 210 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 180 },
-  { entidade: "PARQUE INDUSTRIAL SUL", total: 150 },
-];
-
-const entidadesReincidentes = [
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", ocorrencias: 14, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "EBS2 TRADE E GESTAO LTDA", ocorrencias: 12, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "GOCIL VIGILANCIA", ocorrencias: 11, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "CONSTRUPOPP", ocorrencias: 10, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "SAFEMED Filial 0006", ocorrencias: 9, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", ocorrencias: 9, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "GOCIL SERVICOS", ocorrencias: 8, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "LOJAS RENNER S.A.", ocorrencias: 8, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "CARIOCA CALCADOS LTDA", ocorrencias: 7, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", ocorrencias: 7, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "SHOPPING MUELLER", ocorrencias: 6, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "HOSPITAL SÃO LUCAS", ocorrencias: 6, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", ocorrencias: 5, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "UNIVERSIDADE FEDERAL", ocorrencias: 5, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "BANCO DO BRASIL", ocorrencias: 4, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "SUPERMERCADO ANGELONI", ocorrencias: 4, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "TRIBUNAL DE JUSTIÇA", ocorrencias: 3, ultimaOcorrencia: "Fev/2026" },
-  { entidade: "PREFEITURA MUNICIPAL", ocorrencias: 3, ultimaOcorrencia: "Mar/2026" },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", ocorrencias: 3, ultimaOcorrencia: "Jan/2026" },
-  { entidade: "PARQUE INDUSTRIAL SUL", ocorrencias: 2, ultimaOcorrencia: "Fev/2026" },
-];
 
 const motivosJustificativa = [
   { motivo: "Esquecimento de Marcação", pct: 44.7 },
@@ -881,7 +820,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
                 </tr>
               </thead>
               <tbody>
-                {top20EntidadesSolicitacoesJustificativa.map((item, idx) => (
+                {buildTop20Totais(activeFilter, baseSolicitacoesJustTotais).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
@@ -906,7 +845,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
                 </tr>
               </thead>
               <tbody>
-                {entidadesReincidentes.map((item, idx) => (
+                {buildTop20Reincidentes(activeFilter, baseSolicitacoesReincOcorrencias, baseMeses).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
@@ -1002,7 +941,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
                 </tr>
               </thead>
               <tbody>
-                {top20EntidadesInconsistenciasTab.map((item, idx) => (
+                {buildTop20Totais(activeFilter, baseInconsistenciasTabTotais).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
@@ -1027,7 +966,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
                 </tr>
               </thead>
               <tbody>
-                {top20EntidadesReincidentesInconsistencias.map((item, idx) => (
+                {buildTop20Reincidentes(activeFilter, baseInconsistenciasReincOcorrencias, baseMeses).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
@@ -1045,28 +984,6 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
   </div>
 );
 
-const top20PiorQualidade = [
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", pct: 100.0 },
-  { entidade: "CARIOCA CALCADOS LTDA", pct: 100.0 },
-  { entidade: "EBS2 TRADE E GESTAO LTDA", pct: 100.0 },
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", pct: 98.5 },
-  { entidade: "LOJAS RENNER S.A.", pct: 97.2 },
-  { entidade: "SHOPPING MUELLER", pct: 96.8 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", pct: 95.3 },
-  { entidade: "HOSPITAL SÃO LUCAS", pct: 94.7 },
-  { entidade: "UNIVERSIDADE FEDERAL", pct: 93.1 },
-  { entidade: "BANCO DO BRASIL", pct: 92.4 },
-  { entidade: "SUPERMERCADO ANGELONI", pct: 91.8 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", pct: 90.5 },
-  { entidade: "PREFEITURA MUNICIPAL", pct: 89.2 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", pct: 88.6 },
-  { entidade: "PARQUE INDUSTRIAL SUL", pct: 87.1 },
-  { entidade: "CONDOMÍNIO RESIDENCIAL VERDE", pct: 86.4 },
-  { entidade: "ESCOLA ESTADUAL DOM PEDRO", pct: 85.7 },
-  { entidade: "ATACADÃO DISTRIBUIÇÃO", pct: 84.3 },
-  { entidade: "FARMÁCIA RAIA", pct: 83.9 },
-  { entidade: "CLÍNICA SÃO RAFAEL", pct: 82.5 },
-];
 
 const top20EscalaInconsistenciasSolicitacoes = [
   { escala: "07:00-19:00 12x36 (MO)", inconsistencias: 157, solicitacoes: 83 },
