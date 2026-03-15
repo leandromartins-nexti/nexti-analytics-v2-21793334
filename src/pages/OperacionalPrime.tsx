@@ -353,7 +353,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
     <div className="flex-1 space-y-4">
       {/* Row 1: Aging */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-1">Aging de Inconsistências em Aberto</h3>
+        <h3 className="font-semibold text-sm text-gray-800 mb-1">Aging de Justificativas em Aberto</h3>
         <p className="text-xs text-gray-400 mb-4">Por faixa de dias pendentes</p>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
