@@ -336,8 +336,19 @@ const OperacionalPrime = () => {
           <span className="bg-orange-50 text-[#FF5722] border border-[#FF5722] rounded-full px-3 py-1 text-xs font-medium">
             Período: jan/2017 - dez/2017
           </span>
+          {selectedEntity && (
+            <span className="bg-orange-50 text-[#FF5722] border border-[#FF5722] rounded-full px-3 py-1 text-xs font-medium flex items-center gap-1.5">
+              {activeFilter}: {selectedEntity}
+              <button onClick={() => setSelectedEntity(null)} className="hover:text-red-600">
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
         </div>
-        <button className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
+        <button
+          onClick={() => setSelectedEntity(null)}
+          className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline"
+        >
           <Eraser className="w-4 h-4" />
           Limpar Filtros
         </button>
