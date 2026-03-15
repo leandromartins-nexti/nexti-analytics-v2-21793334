@@ -80,7 +80,53 @@ const tiposInconsistencias = [
   { tipo: "CANCELED", pct: 1 },
 ];
 
-const motivoAjustes = [
+const top20EntidadesInconsistencias = [
+  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 18420 },
+  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 15380 },
+  { entidade: "SAFEMED Filial 0006", total: 12750 },
+  { entidade: "GOCIL VIGILANCIA", total: 11200 },
+  { entidade: "CONSTRUPOPP", total: 9840 },
+  { entidade: "GOCIL SERVICOS", total: 8650 },
+  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 7920 },
+  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 7100 },
+  { entidade: "CARIOCA CALCADOS LTDA", total: 6540 },
+  { entidade: "LOJAS RENNER S.A.", total: 5980 },
+  { entidade: "SHOPPING MUELLER", total: 5420 },
+  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 4870 },
+  { entidade: "HOSPITAL SÃO LUCAS", total: 4350 },
+  { entidade: "UNIVERSIDADE FEDERAL", total: 3920 },
+  { entidade: "BANCO DO BRASIL", total: 3480 },
+  { entidade: "SUPERMERCADO ANGELONI", total: 3100 },
+  { entidade: "TRIBUNAL DE JUSTIÇA", total: 2750 },
+  { entidade: "PREFEITURA MUNICIPAL", total: 2380 },
+  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 2010 },
+  { entidade: "PARQUE INDUSTRIAL SUL", total: 1640 },
+];
+
+const top20EntidadesSolicitacoes = [
+  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 4820 },
+  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 4350 },
+  { entidade: "GOCIL VIGILANCIA", total: 3680 },
+  { entidade: "SAFEMED Filial 0006", total: 3210 },
+  { entidade: "CONSTRUPOPP", total: 2890 },
+  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 2540 },
+  { entidade: "GOCIL SERVICOS", total: 2180 },
+  { entidade: "LOJAS RENNER S.A.", total: 1950 },
+  { entidade: "CARIOCA CALCADOS LTDA", total: 1720 },
+  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 1530 },
+  { entidade: "SHOPPING MUELLER", total: 1380 },
+  { entidade: "HOSPITAL SÃO LUCAS", total: 1210 },
+  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 1050 },
+  { entidade: "UNIVERSIDADE FEDERAL", total: 920 },
+  { entidade: "BANCO DO BRASIL", total: 810 },
+  { entidade: "SUPERMERCADO ANGELONI", total: 720 },
+  { entidade: "TRIBUNAL DE JUSTIÇA", total: 640 },
+  { entidade: "PREFEITURA MUNICIPAL", total: 550 },
+  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 480 },
+  { entidade: "PARQUE INDUSTRIAL SUL", total: 390 },
+];
+
+
   { motivo: "Esquecimento", pct: 42 },
   { motivo: "Falha Sistema", pct: 28 },
   { motivo: "Troca Turno", pct: 15 },
