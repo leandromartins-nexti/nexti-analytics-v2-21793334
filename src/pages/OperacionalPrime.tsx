@@ -473,7 +473,7 @@ const SidePanel = ({ activeFilter, setActiveFilter }: { activeFilter: string; se
 
 // ── Backlog Content ────────────────────────────────────────
 
-const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
+const BacklogContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: { activeFilter: string; setActiveFilter: (v: string) => void; selectedEntity: string | null; setSelectedEntity: (v: string | null) => void }) => (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
       {/* Row 1: Aging + Colaboradores sem Template */}
