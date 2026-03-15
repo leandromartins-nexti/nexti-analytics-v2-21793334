@@ -142,7 +142,7 @@ const tabs = [
 ];
 
 const subNavItems = ["Backlog", "Análise de Padrões", "Solicitações", "Qualidade"];
-const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço"];
+const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço", "Área", "Filtro de Mesa", "Colaborador"];
 
 // ── Helpers ────────────────────────────────────────────────
 
