@@ -804,7 +804,7 @@ const AjustesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSele
   const reincJustData = variarSerieSimples(evolucaoReincidentesJustificativas, "valor", selectedEntity);
   const marcManuaisData = variarSerieSimples(evolucaoMarcacoesManuais, "valor", selectedEntity);
 
-    if (data?.activeLabel) {
+  const handleDotClick = (data: any) => {
       setSelectedMes(prev => prev === data.activeLabel ? null : data.activeLabel);
     }
   };
