@@ -148,3 +148,5 @@ const NextiAnalytics = () => {
     </div>
   );
 };
+
+export default NextiAnalytics;
