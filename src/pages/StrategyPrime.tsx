@@ -10,14 +10,8 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, LabelList, Legend
 } from "recharts";
 
+
 // Mock data
-const qualidadeEvolucao = [
-  { mes: "Jun", valor: 56 },
-  { mes: "Jul", valor: 14 },
-  { mes: "Ago", valor: 70 },
-  { mes: "Set", valor: 88 },
-  { mes: "Out", valor: 70 },
-];
 
 // ── Entity names per filter ─────────────────────────────────
 const strategyEntidadesPorFiltro: Record<string, string[]> = {
