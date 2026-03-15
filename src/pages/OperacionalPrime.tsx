@@ -428,6 +428,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
             </div>
           </div>
         </div>
+      </div>
 
       {/* Row 3: Tipos + Motivos */}
       <div className="grid grid-cols-2 gap-4">
