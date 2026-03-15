@@ -252,6 +252,7 @@ const OperacionalPrime = () => {
   const [activeTab, setActiveTab] = useState("Registro de Ponto");
   const [activeSubNav, setActiveSubNav] = useState("Backlog");
   const [activeFilter, setActiveFilter] = useState("Empresa");
+  const [filterOpen, setFilterOpen] = useState(false);
 
   return (
     <ImprovementProvider>
