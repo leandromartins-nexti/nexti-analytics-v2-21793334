@@ -1049,7 +1049,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter, selectedEntity, se
           <p className="text-xs text-gray-400 mb-2">Clique em um mês para filtrar</p>
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={solicitacoesJustificativa} barGap={2} barSize={8} onClick={handleBarClick} style={{ cursor: "pointer" }}>
+              <BarChart data={solJustData} barGap={2} barSize={8} onClick={handleBarClick} style={{ cursor: "pointer" }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
                 <YAxis hide />
