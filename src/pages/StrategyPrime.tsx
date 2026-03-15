@@ -452,6 +452,7 @@ const StrategyPrime = () => {
         {activeSubNav === "Justificativa" && <AjustesContent activeFilter={activeFilter} setActiveFilter={handleFilterChange} selectedEntity={selectedEntity} setSelectedEntity={setSelectedEntity} />}
         {activeSubNav === "Eficiência" && <EficienciaContent activeFilter={activeFilter} setActiveFilter={handleFilterChange} selectedEntity={selectedEntity} setSelectedEntity={setSelectedEntity} />}
       </div>
+      <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
     </div>
     </ImprovementLayer>
     </ImprovementProvider>
