@@ -245,6 +245,20 @@ const getHeatColor = (v: number) => {
   return "#CB181D";
 };
 
+// ── Entity hash for cross-filter variation ─────────────────
+const entityHash = (name: string) => name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+
+const computeOperacionalKPIs = (entity: string | null) => {
+  const base = { inc: 282873, sol: 7261, semTemplate: 1842 };
+  if (!entity) return base;
+  const h = entityHash(entity);
+  return {
+    inc: Math.round(base.inc * (0.02 + (h % 15) * 0.008)),
+    sol: Math.round(base.sol * (0.03 + (h % 12) * 0.01)),
+    semTemplate: Math.round(base.semTemplate * (0.01 + (h % 10) * 0.012)),
+  };
+};
+
 // ── Page ───────────────────────────────────────────────────
 
 const OperacionalPrime = () => {
@@ -253,6 +267,14 @@ const OperacionalPrime = () => {
   const [activeSubNav, setActiveSubNav] = useState("Backlog");
   const [activeFilter, setActiveFilter] = useState("Empresa");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState<string | null>(null);
+
+  const kpis = useMemo(() => computeOperacionalKPIs(selectedEntity), [selectedEntity]);
+
+  const handleFilterChange = (f: string) => {
+    setActiveFilter(f);
+    setSelectedEntity(null);
+  };
 
   return (
     <ImprovementProvider>
