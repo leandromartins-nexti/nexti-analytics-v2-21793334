@@ -858,7 +858,7 @@ const AjustesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSele
           </div>
           <div className="h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={evolucaoJustificativasPonto} margin={{ top: 20, right: 20, bottom: 5, left: 5 }} onClick={handleDotClick} style={{ cursor: "pointer" }}>
+              <LineChart data={justPontoData} margin={{ top: 20, right: 20, bottom: 5, left: 5 }} onClick={handleDotClick} style={{ cursor: "pointer" }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
                 <YAxis hide />
