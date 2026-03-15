@@ -278,6 +278,7 @@ const StrategyPrime = () => {
   const [activeSubNav, setActiveSubNav] = useState("Visão Geral");
   const [activeFilter, setActiveFilter] = useState("Empresa");
   const [selectedEntity, setSelectedEntity] = useState<string | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const kpis = useMemo(() => computeKPIs(selectedEntity), [selectedEntity]);
 
