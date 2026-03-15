@@ -660,7 +660,7 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
           <div className="flex items-center justify-between mb-0.5">
             <h3 className="font-semibold text-sm text-gray-800">Top 20 Pior Qualidade de Marcação</h3>
           </div>
-          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-3">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
