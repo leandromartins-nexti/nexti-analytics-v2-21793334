@@ -134,27 +134,27 @@ const motivoAjustes = [
   { motivo: "Outros", pct: 5 },
 ];
 
-const top20ColaboradoresSemTemplate = [
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 245 },
-  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 198 },
-  { entidade: "GOCIL VIGILANCIA", total: 172 },
-  { entidade: "SAFEMED Filial 0006", total: 156 },
-  { entidade: "CONSTRUPOPP", total: 134 },
-  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 118 },
-  { entidade: "GOCIL SERVICOS", total: 105 },
-  { entidade: "LOJAS RENNER S.A.", total: 92 },
-  { entidade: "CARIOCA CALCADOS LTDA", total: 84 },
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 76 },
-  { entidade: "SHOPPING MUELLER", total: 68 },
-  { entidade: "HOSPITAL SÃO LUCAS", total: 61 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 54 },
-  { entidade: "UNIVERSIDADE FEDERAL", total: 47 },
-  { entidade: "BANCO DO BRASIL", total: 41 },
-  { entidade: "SUPERMERCADO ANGELONI", total: 35 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", total: 29 },
-  { entidade: "PREFEITURA MUNICIPAL", total: 23 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 18 },
-  { entidade: "PARQUE INDUSTRIAL SUL", total: 12 },
+const colaboradoresSemTemplateList = [
+  { colaborador: "João Silva", template: "Facial", inconsistencias: 300 },
+  { colaborador: "Maria Santos", template: "Facial", inconsistencias: 253 },
+  { colaborador: "Carlos Oliveira", template: "Digital", inconsistencias: 228 },
+  { colaborador: "Ana Souza", template: "Facial", inconsistencias: 195 },
+  { colaborador: "Pedro Lima", template: "Digital", inconsistencias: 182 },
+  { colaborador: "Fernanda Costa", template: "Facial", inconsistencias: 167 },
+  { colaborador: "Ricardo Alves", template: "Proximidade", inconsistencias: 154 },
+  { colaborador: "Juliana Pereira", template: "Facial", inconsistencias: 143 },
+  { colaborador: "Bruno Ferreira", template: "Digital", inconsistencias: 131 },
+  { colaborador: "Camila Rodrigues", template: "Facial", inconsistencias: 120 },
+  { colaborador: "Diego Martins", template: "Digital", inconsistencias: 108 },
+  { colaborador: "Patrícia Nascimento", template: "Facial", inconsistencias: 97 },
+  { colaborador: "Rafael Barbosa", template: "Proximidade", inconsistencias: 89 },
+  { colaborador: "Luciana Gomes", template: "Facial", inconsistencias: 78 },
+  { colaborador: "Thiago Ribeiro", template: "Digital", inconsistencias: 65 },
+  { colaborador: "Amanda Carvalho", template: "Facial", inconsistencias: 54 },
+  { colaborador: "Marcos Teixeira", template: "Digital", inconsistencias: 42 },
+  { colaborador: "Beatriz Moura", template: "Proximidade", inconsistencias: 38 },
+  { colaborador: "Felipe Araújo", template: "Facial", inconsistencias: 27 },
+  { colaborador: "Daniela Pinto", template: "Digital", inconsistencias: 19 },
 ];
 
 // ── Constants ──────────────────────────────────────────────
@@ -404,22 +404,22 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
 
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Colaboradores sem Template</h3>
-          <p className="text-xs text-gray-400 mb-3">Top 20 entidades com mais colaboradores sem template</p>
+          <p className="text-xs text-gray-400 mb-3">Lista de colaboradores sem template cadastrado</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
-                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Colaboradores</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Colaborador</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Template</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Inconsistências</th>
                 </tr>
               </thead>
               <tbody>
-                {top20ColaboradoresSemTemplate.map((item, idx) => (
-                  <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
-                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
-                    <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
-                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                {colaboradoresSemTemplateList.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50">
+                    <td className="text-xs text-gray-700 py-2">{item.colaborador}</td>
+                    <td className="text-xs text-gray-500 py-2">{item.template}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.inconsistencias)}</td>
                   </tr>
                 ))}
               </tbody>
