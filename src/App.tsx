@@ -7,6 +7,7 @@ import DashboardLayout from "./pages/DashboardLayout";
 import NextiAnalytics from "./pages/NextiAnalytics";
 import StrategyPrime from "./pages/StrategyPrime";
 import OperacionalPrime from "./pages/OperacionalPrime";
+import Executive from "./pages/Executive";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
