@@ -979,8 +979,10 @@ const AjustesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSele
 // Solicitações Content
 const SolicitacoesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: ContentProps) => {
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
+  const solJustData = variarSerieMulti(solicitacoesJustificativa, ["emAberto", "ajustadas", "canceladas"], selectedEntity);
+  const solReincData = variarSerieSimples(solicitacoesReincidentes, "valor", selectedEntity);
+  const tempoSolData = variarSerieSimples(tempoMedioTratativa, "valor", selectedEntity);
 
-  const handleBarClick = (data: any) => {
     if (data?.activeLabel) {
       setSelectedMes(prev => prev === data.activeLabel ? null : data.activeLabel);
     }
