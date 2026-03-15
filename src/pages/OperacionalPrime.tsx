@@ -95,7 +95,7 @@ const tabs = [
   "Engajamento e Retenção", "Ausências e Coberturas",
 ];
 
-const subNavItems = ["Backlog", "Solicitações", "Qualidade"];
+const subNavItems = ["Backlog", "Análise de Padrões", "Solicitações", "Qualidade"];
 const filterOptions = ["Empresa", "Unidade de Negócio", "Cliente", "Posto", "Tipo de Serviço"];
 
 // ── Helpers ────────────────────────────────────────────────
