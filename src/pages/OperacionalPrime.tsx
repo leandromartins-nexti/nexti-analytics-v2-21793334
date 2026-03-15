@@ -297,32 +297,20 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
       {/* Row 1: Evolução do Backlog - full width */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="font-semibold text-sm text-gray-800 mb-1">Evolução do Backlog</h3>
-        <p className="text-xs text-gray-400 mb-4">Inconsistências e Solicitações em Aberto</p>
+        <p className="text-xs text-gray-400 mb-4">Inconsistências e Solicitações de Ajuste de Ponto por Dia</p>
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={evolucaoBacklog}>
+            <BarChart data={evolucaoBacklogDiario} barGap={2} barSize={8}>
               <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" />
-              <XAxis dataKey="mes" tick={{ fontSize: 11 }} stroke="#9CA3AF" />
-              <YAxis
-                tick={{ fontSize: 11 }}
-                stroke="#9CA3AF"
-                tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)} Mil` : v}
-              />
+              <XAxis dataKey="dia" tick={{ fontSize: 10 }} stroke="#9CA3AF" />
+              <YAxis tick={{ fontSize: 11 }} stroke="#9CA3AF" />
               <Tooltip
-                formatter={(v: number) => [formatNumber(v), "Total"]}
                 contentStyle={{ borderRadius: 8, border: "1px solid #E5E7EB", fontSize: 12 }}
+                formatter={(v: number) => formatNumber(v)}
               />
-              <Bar dataKey="valor" radius={[4, 4, 0, 0]}>
-                {evolucaoBacklog.map((entry, i) => (
-                  <rect key={i} fill={entry.valor > 50000 ? "#FF5722" : "#FDB813"} />
-                ))}
-                <LabelList
-                  dataKey="valor"
-                  position="top"
-                  formatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(0)} Mil` : v}
-                  style={{ fontSize: 10, fill: "#6B7280" }}
-                />
-              </Bar>
+              <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
+              <Bar dataKey="inconsistencias" fill="#FF5722" radius={[2, 2, 0, 0]} name="Inconsistências" />
+              <Bar dataKey="solicitacoes" fill="#FDB813" radius={[2, 2, 0, 0]} name="Solicitações de Ajuste" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -333,26 +321,32 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
         {/* Aging de Inconsistências em Aberto */}
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-semibold text-sm text-gray-800 mb-1">Aging de Inconsistências em Aberto</h3>
-          <p className="text-xs text-gray-400 mb-4">Quantidade por faixa de dias pendentes</p>
+          <p className="text-xs text-gray-400 mb-4">Inconsistências e Solicitações por faixa de dias pendentes</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={agingInconsistencias} barSize={40}>
+              <BarChart data={agingInconsistencias} barGap={4} barSize={20}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
                 <XAxis dataKey="faixa" tick={{ fontSize: 10 }} stroke="#9CA3AF" />
                 <YAxis tick={{ fontSize: 11 }} stroke="#9CA3AF" tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v} />
                 <Tooltip
-                  formatter={(v: number) => [formatNumber(v), "Inconsistências"]}
                   contentStyle={{ borderRadius: 8, border: "1px solid #E5E7EB", fontSize: 12 }}
+                  formatter={(v: number) => formatNumber(v)}
                 />
-                <Bar dataKey="quantidade" radius={[4, 4, 0, 0]}>
-                  {agingInconsistencias.map((entry, i) => (
-                    <rect key={i} fill={entry.cor} />
-                  ))}
+                <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
+                <Bar dataKey="inconsistencias" fill="#FF5722" radius={[4, 4, 0, 0]} name="Inconsistências">
                   <LabelList
-                    dataKey="quantidade"
+                    dataKey="inconsistencias"
                     position="top"
                     formatter={(v: number) => formatNumber(v)}
-                    style={{ fontSize: 10, fill: "#374151", fontWeight: 600 }}
+                    style={{ fontSize: 9, fill: "#374151", fontWeight: 600 }}
+                  />
+                </Bar>
+                <Bar dataKey="solicitacoes" fill="#FDB813" radius={[4, 4, 0, 0]} name="Solicitações">
+                  <LabelList
+                    dataKey="solicitacoes"
+                    position="top"
+                    formatter={(v: number) => formatNumber(v)}
+                    style={{ fontSize: 9, fill: "#374151", fontWeight: 600 }}
                   />
                 </Bar>
               </BarChart>
