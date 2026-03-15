@@ -811,7 +811,7 @@ const evolucaoSolicitacoesMensal = [
 
 // ── Solicitações Content ───────────────────────────────────
 
-const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => {
+const SolicitacoesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: { activeFilter: string; setActiveFilter: (v: string) => void; selectedEntity: string | null; setSelectedEntity: (v: string | null) => void }) => {
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
 
   const mesIdx = selectedMes ? mesesLabels.indexOf(selectedMes) : -1;
