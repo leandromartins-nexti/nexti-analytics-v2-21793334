@@ -409,6 +409,63 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
           </div>
         </div>
       </div>
+
+      {/* Row 3: Top 20 Entidades */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <div className="flex items-center justify-between mb-0.5">
+            <h3 className="font-semibold text-sm text-gray-800">Top 20 Entidades com Mais Inconsistências</h3>
+          </div>
+          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <div className="max-h-[252px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesInconsistencias.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <div className="flex items-center justify-between mb-0.5">
+            <h3 className="font-semibold text-sm text-gray-800">Top 20 Entidades com Mais Solicitações</h3>
+          </div>
+          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <div className="max-h-[252px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesSolicitacoes.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 
     <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
