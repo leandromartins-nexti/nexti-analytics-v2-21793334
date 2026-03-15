@@ -575,7 +575,7 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 10 Inconsistências por Escala</h3>
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Inconsistências e Solicitações por Escala</h3>
           <p className="text-xs text-gray-400 mb-3">por Escala</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full">
@@ -584,14 +584,18 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
                   <th className="text-xs text-gray-400 font-medium text-left pb-2">Escala</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Inconsistências</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Solicitações</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
                 </tr>
               </thead>
               <tbody>
-                {top10InconsistenciasPorEscala.map((item, idx) => (
+                {top20EscalaInconsistenciasSolicitacoes.map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2">{item.escala}</td>
                     <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.inconsistencias)}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.solicitacoes)}</td>
+                    <td className="text-xs font-semibold text-[#FF5722] text-right py-2">{formatNumber(item.inconsistencias + item.solicitacoes)}</td>
                   </tr>
                 ))}
               </tbody>
