@@ -666,7 +666,7 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">%</th>
                 </tr>
               </thead>
