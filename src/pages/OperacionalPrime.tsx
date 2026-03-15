@@ -651,103 +651,78 @@ const evolucaoSolicitacoesMensal = [
 
 const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
-    <div className="flex-1 grid grid-cols-2 gap-4">
-      {/* % Motivos de Justificativa de Ponto */}
+    <div className="flex-1 space-y-4">
+      {/* Evolução Mensal por Status - Barra Empilhada (primeiro) */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">% Motivos de Justificativa de Ponto</h3>
-        <p className="text-xs text-gray-400 mb-4">por Status</p>
-        <div className="space-y-2.5">
-          {motivosJustificativa.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-8 shrink-0 text-right">{item.codigo}</span>
-              <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                <div
-                  className="h-full rounded"
-                  style={{
-                    width: `${(item.pct / 44.7) * 100}%`,
-                    backgroundColor: "#FF5722",
-                  }}
-                />
-              </div>
-              <span className="text-xs font-semibold text-gray-700 w-12 text-right">{item.pct}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Solicitações em Aberto por Entidade */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Solicitações em Aberto</h3>
-        <p className="text-xs text-gray-400 mb-4">por Entidade</p>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-100">
-              <th className="text-xs text-gray-400 font-medium text-left pb-2">Empresa</th>
-              <th className="text-xs text-gray-400 font-medium text-right pb-2">Em Aberto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {solicitacoesAbertoPorEntidade.map((item) => (
-              <tr key={item.empresa} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
-                <td className="text-xs text-gray-700 py-2">{item.empresa}</td>
-                <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.emAberto)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Status das Solicitações */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Status das Solicitações</h3>
-        <p className="text-xs text-gray-400 mb-4">1 - Em aberto, 2 - Ajustadas, 3 - Canceladas</p>
-        <div className="flex items-end justify-center gap-8 h-48">
-          {statusSolicitacoes.map((item) => (
-            <div key={item.status} className="flex flex-col items-center gap-1">
-              <span className="text-xs font-semibold text-gray-700">{item.pct}%</span>
-              <div
-                className="w-16 rounded-t"
-                style={{
-                  height: `${Math.max((item.pct / 81.1) * 140, 8)}px`,
-                  backgroundColor: item.cor,
-                }}
-              />
-              <span className="text-xs text-gray-500 mt-1">{item.status}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Evolução das Solicitações em Aberto */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-4">Evolução das Solicitações em Aberto</h3>
-        <div className="h-48">
+        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Evolução das Solicitações por Status</h3>
+        <p className="text-xs text-gray-400 mb-4">Volume mensal por status</p>
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={evolucaoSolicitacoesAberto}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" />
+            <BarChart data={evolucaoSolicitacoesMensal} barSize={28}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
               <XAxis dataKey="mes" tick={{ fontSize: 11 }} stroke="#9CA3AF" />
-              <YAxis
-                tick={{ fontSize: 11 }}
-                stroke="#9CA3AF"
-                tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)} Mil` : v}
-              />
+              <YAxis tick={{ fontSize: 11 }} stroke="#9CA3AF" tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v} />
               <Tooltip
-                formatter={(v: number) => [formatNumber(v), "Em Aberto"]}
                 contentStyle={{ borderRadius: 8, border: "1px solid #E5E7EB", fontSize: 12 }}
+                formatter={(v: number, name: string) => [formatNumber(v), name]}
               />
-              <Bar dataKey="valor" fill="#FF5722" radius={[4, 4, 0, 0]}>
-                <LabelList
-                  dataKey="valor"
-                  position="top"
-                  formatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)} Mil` : v}
-                  style={{ fontSize: 9, fill: "#6B7280" }}
-                />
-              </Bar>
+              <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
+              <Bar dataKey="ajustadas" stackId="a" fill="#FDB813" name="Ajustadas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="canceladas" stackId="a" fill="#9CA3AF" name="Canceladas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="emAberto" stackId="a" fill="#FF5722" name="Em Aberto" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
+      {/* Row 2: Motivos + Tratativa */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* % Motivos de Abertura de Justificativa de Ponto */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">% Motivos de Abertura de Justificativa</h3>
+          <p className="text-xs text-gray-400 mb-4">Motivo de abertura das solicitações</p>
+          <div className="space-y-2.5">
+            {motivosJustificativa.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-40 shrink-0 truncate" title={item.motivo}>{item.motivo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div
+                    className="h-full rounded"
+                    style={{
+                      width: `${(item.pct / 44.7) * 100}%`,
+                      backgroundColor: "#FF5722",
+                    }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-12 text-right">{item.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* % Motivo de Tratativa */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">% Motivo de Tratativa</h3>
+          <p className="text-xs text-gray-400 mb-4">Tratativa das solicitações de justificativa</p>
+          <div className="space-y-2.5">
+            {motivosTratativa.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-40 shrink-0 truncate" title={item.motivo}>{item.motivo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div
+                    className="h-full rounded"
+                    style={{
+                      width: `${(item.pct / 38.2) * 100}%`,
+                      backgroundColor: "#FDB813",
+                    }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-12 text-right">{item.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
 
     <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
