@@ -800,8 +800,10 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter, selectedEntity,
 // Ajustes Content
 const AjustesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: ContentProps) => {
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
+  const justPontoData = variarSerieSimples(evolucaoJustificativasPonto, "valor", selectedEntity);
+  const reincJustData = variarSerieSimples(evolucaoReincidentesJustificativas, "valor", selectedEntity);
+  const marcManuaisData = variarSerieSimples(evolucaoMarcacoesManuais, "valor", selectedEntity);
 
-  const handleDotClick = (data: any) => {
     if (data?.activeLabel) {
       setSelectedMes(prev => prev === data.activeLabel ? null : data.activeLabel);
     }
