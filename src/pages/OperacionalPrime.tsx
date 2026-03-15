@@ -492,15 +492,15 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-0.5">
-            <h3 className="font-semibold text-sm text-gray-800">Top 20 Entidades com Mais Inconsistências em Aberto</h3>
+            <h3 className="font-semibold text-sm text-gray-800">Top 20 com Mais Inconsistências em Aberto</h3>
           </div>
-          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-3">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
                 </tr>
               </thead>
@@ -519,15 +519,15 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
 
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-0.5">
-            <h3 className="font-semibold text-sm text-gray-800">Top 20 Entidades com Mais Solicitações em Aberto</h3>
+            <h3 className="font-semibold text-sm text-gray-800">Top 20 com Mais Solicitações em Aberto</h3>
           </div>
-          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-3">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
                 </tr>
               </thead>
@@ -660,13 +660,13 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
           <div className="flex items-center justify-between mb-0.5">
             <h3 className="font-semibold text-sm text-gray-800">Top 20 Pior Qualidade de Marcação</h3>
           </div>
-          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-3">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">%</th>
                 </tr>
               </thead>
@@ -869,14 +869,14 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
       {/* Row 3: Top 20 + Reincidentes */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades com mais Solicitações</h3>
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 com mais Solicitações</h3>
           <p className="text-xs text-gray-400 mb-3">Solicitações de justificativa de ponto</p>
           <div className="max-h-[320px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
                 </tr>
               </thead>
@@ -894,14 +894,14 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades Reincidentes</h3>
-          <p className="text-xs text-gray-400 mb-3">Entidades com solicitações recorrentes</p>
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Reincidentes</h3>
+          <p className="text-xs text-gray-400 mb-3">{activeFilter} com solicitações recorrentes</p>
           <div className="max-h-[320px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Ocorrências</th>
                 </tr>
               </thead>
@@ -990,14 +990,14 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
       {/* Row 3: Top 20 Entidades + Top 20 Reincidentes */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades com mais Inconsistências</h3>
-          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 com mais Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-3">por {activeFilter}</p>
           <div className="max-h-[320px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
                 </tr>
               </thead>
@@ -1015,14 +1015,14 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades Reincidentes</h3>
-          <p className="text-xs text-gray-400 mb-3">Entidades com inconsistências recorrentes</p>
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Reincidentes</h3>
+          <p className="text-xs text-gray-400 mb-3">{activeFilter} com inconsistências recorrentes</p>
           <div className="max-h-[320px] overflow-y-auto">
             <table className="w-full">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
-                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">{activeFilter}</th>
                   <th className="text-xs text-gray-400 font-medium text-right pb-2">Ocorrências</th>
                 </tr>
               </thead>
