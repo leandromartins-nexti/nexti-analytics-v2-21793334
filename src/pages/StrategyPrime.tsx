@@ -683,7 +683,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter, selectedEntity,
                 <Tooltip contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px", fontSize: "12px" }} />
                 <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
                 <Bar dataKey="total" fill="#BDBDBD" radius={[2, 2, 0, 0]} name="Total Inconsistências">
-                  {evolucaoInconsistenciasTratadas.map((entry) => (
+                  {incTratadasData.map((entry) => (
                     <Cell key={entry.mes} opacity={!selectedMes || entry.mes === selectedMes ? 1 : 0.3} />
                   ))}
                 </Bar>
