@@ -806,6 +806,7 @@ const AjustesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSele
   const marcManuaisData = variarSerieSimples(evolucaoMarcacoesManuais, "valor", selectedEntity);
 
   const handleDotClick = (data: any) => {
+    if (data?.activeLabel) {
       setSelectedMes(prev => prev === data.activeLabel ? null : data.activeLabel);
     }
   };
