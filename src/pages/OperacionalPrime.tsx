@@ -928,36 +928,115 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
 
 const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
-    <div className="flex-1 grid grid-cols-2 gap-4">
-      {/* % Tipos de Inconsistências */}
+    <div className="flex-1 space-y-4">
+      {/* Row 1: Evolução Mensal por Status - Largura total */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-4">% Tipos de Inconsistências</h3>
-        <div className="space-y-3">
-          {tiposInconsistencias.map((item) => (
-            <div key={item.tipo} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-32 shrink-0 text-right">{item.tipo}</span>
-              <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                <div className="h-full rounded" style={{ width: `${Math.min((item.pct / 135) * 100, 100)}%`, backgroundColor: "#FF5722" }} />
-              </div>
-              <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
-            </div>
-          ))}
+        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Evolução das Inconsistências por Status</h3>
+        <p className="text-xs text-gray-400 mb-4">Volume mensal por status</p>
+        <div className="h-[220px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={evolucaoInconsistenciasMensal} barSize={28}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
+              <XAxis dataKey="mes" tick={{ fontSize: 11 }} stroke="#9CA3AF" />
+              <YAxis tick={{ fontSize: 11 }} stroke="#9CA3AF" tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v} />
+              <Tooltip
+                contentStyle={{ borderRadius: 8, border: "1px solid #E5E7EB", fontSize: 12 }}
+                formatter={(v: number, name: string) => [formatNumber(v), name]}
+              />
+              <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
+              <Bar dataKey="tratadas" stackId="a" fill="#FDB813" name="Tratadas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="canceladas" stackId="a" fill="#9CA3AF" name="Canceladas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="emAberto" stackId="a" fill="#FF5722" name="Em Aberto" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
-      {/* % Motivo de Ajustes de Inconsistências */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-4">% Motivo de Ajustes de Inconsistências</h3>
-        <div className="space-y-3">
-          {motivoAjustes.map((item) => (
-            <div key={item.motivo} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-28 shrink-0 text-right">{item.motivo}</span>
-              <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                <div className="h-full rounded" style={{ width: `${(item.pct / 42) * 100}%`, background: `linear-gradient(90deg, #FF5722, #FDB813)` }} />
+      {/* Row 2: Tipos + Motivo de Ajustes */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* % Tipos de Inconsistências */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-4">% Tipos de Inconsistências</h3>
+          <div className="space-y-3">
+            {tiposInconsistencias.map((item) => (
+              <div key={item.tipo} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-40 shrink-0 text-right">{item.tipo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div className="h-full rounded" style={{ width: `${Math.min((item.pct / 76) * 100, 100)}%`, backgroundColor: "#FF5722" }} />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
               </div>
-              <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* % Motivo de Ajustes de Inconsistências */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-4">% Motivo de Ajustes de Inconsistências</h3>
+          <div className="space-y-3">
+            {motivoAjustes.map((item) => (
+              <div key={item.motivo} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-28 shrink-0 text-right">{item.motivo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div className="h-full rounded" style={{ width: `${(item.pct / 42) * 100}%`, background: `linear-gradient(90deg, #FF5722, #FDB813)` }} />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Row 3: Top 20 Entidades + Top 20 Reincidentes */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades com mais Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <div className="max-h-[320px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesInconsistenciasTab.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades Reincidentes</h3>
+          <p className="text-xs text-gray-400 mb-3">Entidades com inconsistências recorrentes</p>
+          <div className="max-h-[320px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Ocorrências</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesReincidentesInconsistencias.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{item.ocorrencias}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
