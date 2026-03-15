@@ -428,19 +428,17 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
             </div>
           </div>
         </div>
-      </div>
+
+      {/* Row 3: Tipos + Motivos */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-4">% Tipos de Inconsistências</h3>
           <div className="space-y-3">
             {tiposInconsistencias.map((item) => (
               <div key={item.tipo} className="flex items-center gap-3">
                 <span className="text-xs text-gray-500 w-32 shrink-0 text-right">{item.tipo}</span>
                 <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                  <div
-                    className="h-full rounded"
-                    style={{
-                      width: `${Math.min((item.pct / 135) * 100, 100)}%`,
-                      backgroundColor: "#FF5722",
-                    }}
-                  />
+                  <div className="h-full rounded" style={{ width: `${Math.min((item.pct / 135) * 100, 100)}%`, backgroundColor: "#FF5722" }} />
                 </div>
                 <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
               </div>
@@ -448,7 +446,6 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
           </div>
         </div>
 
-        {/* % Motivo de Ajustes de Inconsistências */}
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-semibold text-sm text-gray-800 mb-4">% Motivo de Ajustes de Inconsistências</h3>
           <div className="space-y-3">
@@ -456,13 +453,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
               <div key={item.motivo} className="flex items-center gap-3">
                 <span className="text-xs text-gray-500 w-28 shrink-0 text-right">{item.motivo}</span>
                 <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                  <div
-                    className="h-full rounded"
-                    style={{
-                      width: `${(item.pct / 42) * 100}%`,
-                      background: `linear-gradient(90deg, #FF5722, #FDB813)`,
-                    }}
-                  />
+                  <div className="h-full rounded" style={{ width: `${(item.pct / 42) * 100}%`, background: `linear-gradient(90deg, #FF5722, #FDB813)` }} />
                 </div>
                 <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
               </div>
