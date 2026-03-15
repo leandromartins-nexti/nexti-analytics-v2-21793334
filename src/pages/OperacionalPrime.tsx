@@ -611,141 +611,118 @@ const AnalisePadroesContent = ({ activeFilter, setActiveFilter }: { activeFilter
 // ── Mock data – Solicitações ───────────────────────────────
 
 const motivosJustificativa = [
-  { codigo: "12", pct: 44.7 },
-  { codigo: "10", pct: 12.5 },
-  { codigo: "18", pct: 9.5 },
-  { codigo: "17", pct: 9.1 },
-  { codigo: "13", pct: 7.0 },
-  { codigo: "191", pct: 5.0 },
-  { codigo: "16", pct: 3.8 },
-  { codigo: "16", pct: 3.6 },
-  { codigo: "15", pct: 2.5 },
+  { motivo: "Esquecimento de Marcação", pct: 44.7 },
+  { motivo: "Falha no Equipamento", pct: 12.5 },
+  { motivo: "Troca de Turno", pct: 9.5 },
+  { motivo: "Hora Extra Não Prevista", pct: 9.1 },
+  { motivo: "Atraso Justificado", pct: 7.0 },
+  { motivo: "Saída Antecipada", pct: 5.0 },
+  { motivo: "Erro de Digitação", pct: 3.8 },
+  { motivo: "Falta de Energia", pct: 3.6 },
+  { motivo: "Outros", pct: 2.5 },
 ];
 
-const solicitacoesAbertoPorEntidade = [
-  { empresa: "EBS2 TRADE E GESTAO LTDA", emAberto: 1648 },
-  { empresa: "WORKS CONSTRUCAO E SERVICOS", emAberto: 1423 },
-  { empresa: "SAFEMED Filial 0006", emAberto: 800 },
-  { empresa: "GOCIL VIGILANCIA", emAberto: 614 },
-  { empresa: "CONSTRUPOPP", emAberto: 558 },
-  { empresa: "GOCIL SERVICOS", emAberto: 447 },
-  { empresa: "TELOS CONSULTORIA EMPRESARIAL LTDA", emAberto: 433 },
+const motivosTratativa = [
+  { motivo: "Ajuste Manual pelo Gestor", pct: 38.2 },
+  { motivo: "Aprovação Automática", pct: 22.5 },
+  { motivo: "Análise de Documentação", pct: 14.8 },
+  { motivo: "Validação com Supervisor", pct: 10.3 },
+  { motivo: "Cancelamento por Duplicidade", pct: 6.1 },
+  { motivo: "Rejeição por Prazo", pct: 4.5 },
+  { motivo: "Outros", pct: 3.6 },
 ];
 
-const statusSolicitacoes = [
-  { status: 1, label: "Em aberto", pct: 0.7, cor: "#FF5722" },
-  { status: 2, label: "Ajustadas", pct: 81.1, cor: "#FDB813" },
-  { status: 3, label: "Canceladas", pct: 18.2, cor: "#FF5722" },
-];
-
-const evolucaoSolicitacoesAberto = [
-  { mes: "Jan", valor: 7300 }, { mes: "Fev", valor: 7300 }, { mes: "Mar", valor: 7300 },
-  { mes: "Abr", valor: 7300 }, { mes: "Mai", valor: 7300 }, { mes: "Jun", valor: 7300 },
-  { mes: "Jul", valor: 7300 }, { mes: "Ago", valor: 7300 }, { mes: "Set", valor: 7300 },
-  { mes: "Out", valor: 7300 }, { mes: "Nov", valor: 7300 }, { mes: "Dez", valor: 7300 },
+const evolucaoSolicitacoesMensal = [
+  { mes: "Jan", emAberto: 520, ajustadas: 5920, canceladas: 1330 },
+  { mes: "Fev", emAberto: 480, ajustadas: 6100, canceladas: 1280 },
+  { mes: "Mar", emAberto: 610, ajustadas: 5750, canceladas: 1410 },
+  { mes: "Abr", emAberto: 390, ajustadas: 6340, canceladas: 1190 },
+  { mes: "Mai", emAberto: 550, ajustadas: 5880, canceladas: 1350 },
+  { mes: "Jun", emAberto: 470, ajustadas: 6200, canceladas: 1260 },
+  { mes: "Jul", emAberto: 430, ajustadas: 6450, canceladas: 1150 },
+  { mes: "Ago", emAberto: 680, ajustadas: 5600, canceladas: 1480 },
+  { mes: "Set", emAberto: 510, ajustadas: 6050, canceladas: 1300 },
+  { mes: "Out", emAberto: 440, ajustadas: 6280, canceladas: 1220 },
+  { mes: "Nov", emAberto: 560, ajustadas: 5950, canceladas: 1370 },
+  { mes: "Dez", emAberto: 490, ajustadas: 6150, canceladas: 1290 },
 ];
 
 // ── Solicitações Content ───────────────────────────────────
 
 const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
-    <div className="flex-1 grid grid-cols-2 gap-4">
-      {/* % Motivos de Justificativa de Ponto */}
+    <div className="flex-1 space-y-4">
+      {/* Evolução Mensal por Status - Barra Empilhada (primeiro) */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">% Motivos de Justificativa de Ponto</h3>
-        <p className="text-xs text-gray-400 mb-4">por Status</p>
-        <div className="space-y-2.5">
-          {motivosJustificativa.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-8 shrink-0 text-right">{item.codigo}</span>
-              <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                <div
-                  className="h-full rounded"
-                  style={{
-                    width: `${(item.pct / 44.7) * 100}%`,
-                    backgroundColor: "#FF5722",
-                  }}
-                />
-              </div>
-              <span className="text-xs font-semibold text-gray-700 w-12 text-right">{item.pct}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Solicitações em Aberto por Entidade */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Solicitações em Aberto</h3>
-        <p className="text-xs text-gray-400 mb-4">por Entidade</p>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-100">
-              <th className="text-xs text-gray-400 font-medium text-left pb-2">Empresa</th>
-              <th className="text-xs text-gray-400 font-medium text-right pb-2">Em Aberto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {solicitacoesAbertoPorEntidade.map((item) => (
-              <tr key={item.empresa} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
-                <td className="text-xs text-gray-700 py-2">{item.empresa}</td>
-                <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.emAberto)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Status das Solicitações */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Status das Solicitações</h3>
-        <p className="text-xs text-gray-400 mb-4">1 - Em aberto, 2 - Ajustadas, 3 - Canceladas</p>
-        <div className="flex items-end justify-center gap-8 h-48">
-          {statusSolicitacoes.map((item) => (
-            <div key={item.status} className="flex flex-col items-center gap-1">
-              <span className="text-xs font-semibold text-gray-700">{item.pct}%</span>
-              <div
-                className="w-16 rounded-t"
-                style={{
-                  height: `${Math.max((item.pct / 81.1) * 140, 8)}px`,
-                  backgroundColor: item.cor,
-                }}
-              />
-              <span className="text-xs text-gray-500 mt-1">{item.status}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Evolução das Solicitações em Aberto */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-4">Evolução das Solicitações em Aberto</h3>
-        <div className="h-48">
+        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Evolução das Solicitações por Status</h3>
+        <p className="text-xs text-gray-400 mb-4">Volume mensal por status</p>
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={evolucaoSolicitacoesAberto}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" />
+            <BarChart data={evolucaoSolicitacoesMensal} barSize={28}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
               <XAxis dataKey="mes" tick={{ fontSize: 11 }} stroke="#9CA3AF" />
-              <YAxis
-                tick={{ fontSize: 11 }}
-                stroke="#9CA3AF"
-                tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)} Mil` : v}
-              />
+              <YAxis tick={{ fontSize: 11 }} stroke="#9CA3AF" tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v} />
               <Tooltip
-                formatter={(v: number) => [formatNumber(v), "Em Aberto"]}
                 contentStyle={{ borderRadius: 8, border: "1px solid #E5E7EB", fontSize: 12 }}
+                formatter={(v: number, name: string) => [formatNumber(v), name]}
               />
-              <Bar dataKey="valor" fill="#FF5722" radius={[4, 4, 0, 0]}>
-                <LabelList
-                  dataKey="valor"
-                  position="top"
-                  formatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)} Mil` : v}
-                  style={{ fontSize: 9, fill: "#6B7280" }}
-                />
-              </Bar>
+              <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
+              <Bar dataKey="ajustadas" stackId="a" fill="#FDB813" name="Ajustadas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="canceladas" stackId="a" fill="#9CA3AF" name="Canceladas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="emAberto" stackId="a" fill="#FF5722" name="Em Aberto" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
+      {/* Row 2: Motivos + Tratativa */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* % Motivos de Abertura de Justificativa de Ponto */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">% Motivos de Abertura de Justificativa</h3>
+          <p className="text-xs text-gray-400 mb-4">Motivo de abertura das solicitações</p>
+          <div className="space-y-2.5">
+            {motivosJustificativa.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-40 shrink-0 truncate" title={item.motivo}>{item.motivo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div
+                    className="h-full rounded"
+                    style={{
+                      width: `${(item.pct / 44.7) * 100}%`,
+                      backgroundColor: "#FF5722",
+                    }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-12 text-right">{item.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* % Motivo de Tratativa */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">% Motivo de Tratativa</h3>
+          <p className="text-xs text-gray-400 mb-4">Tratativa das solicitações de justificativa</p>
+          <div className="space-y-2.5">
+            {motivosTratativa.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-40 shrink-0 truncate" title={item.motivo}>{item.motivo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div
+                    className="h-full rounded"
+                    style={{
+                      width: `${(item.pct / 38.2) * 100}%`,
+                      backgroundColor: "#FDB813",
+                    }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-12 text-right">{item.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
 
     <SidePanel activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
