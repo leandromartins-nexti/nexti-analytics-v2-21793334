@@ -490,7 +490,7 @@ const BacklogContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
                 </tr>
               </thead>
               <tbody>
-                {top20EntidadesInconsistencias.map((item, idx) => (
+                {buildTop20Totais(activeFilter, baseInconsistenciasBacklogTotais).map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
                     <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
                     <td className="text-xs text-gray-700 py-2">{item.entidade}</td>
