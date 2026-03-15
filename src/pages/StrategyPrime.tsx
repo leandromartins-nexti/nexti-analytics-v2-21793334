@@ -596,7 +596,7 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
 );
 
 // Inconsistências Content
-const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => {
+const InconsistenciasContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: ContentProps) => {
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
 
   const handleBarClick = (data: any) => {
