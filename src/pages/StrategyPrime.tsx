@@ -10,36 +10,75 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, LabelList, Legend
 } from "recharts";
 
-// Mock data
-const qualidadeEvolucao = [
-  { mes: "Jun", valor: 56 },
-  { mes: "Jul", valor: 14 },
-  { mes: "Ago", valor: 70 },
-  { mes: "Set", valor: 88 },
-  { mes: "Out", valor: 70 },
-];
 
-const topPiorQualidade = [
-  { pos: 1, empresa: "Victória da Paz", pct: "0,3%" },
-  { pos: 2, empresa: "PROFISER", pct: "1,7%" },
-  { pos: 3, empresa: "Rio Oregon", pct: "6,8%" },
-  { pos: 4, empresa: "ORSEGUPS MONITORAMENTO", pct: "39,2%" },
-  { pos: 5, empresa: "ORSEGUPS SEGURANÇA", pct: "52,5%" },
-  { pos: 6, empresa: "OBJETIVA", pct: "52,8%" },
-  { pos: 7, empresa: "PROSERV", pct: "54,6%" },
-  { pos: 8, empresa: "GUARDIÃO SEG", pct: "56,1%" },
-  { pos: 9, empresa: "VERZANI & SANDRINI", pct: "58,3%" },
-  { pos: 10, empresa: "ORBENK", pct: "60,2%" },
-  { pos: 11, empresa: "SEGURPRO", pct: "61,5%" },
-  { pos: 12, empresa: "GOCIL", pct: "63,0%" },
-  { pos: 13, empresa: "HAGANÁ", pct: "64,8%" },
-  { pos: 14, empresa: "GRABER", pct: "66,1%" },
-  { pos: 15, empresa: "FORTESEG", pct: "67,9%" },
-  { pos: 16, empresa: "PROTEGE", pct: "69,4%" },
-  { pos: 17, empresa: "ORCALI", pct: "71,2%" },
-  { pos: 18, empresa: "CONSERVO", pct: "72,8%" },
-  { pos: 19, empresa: "AFORT", pct: "74,3%" },
-  { pos: 20, empresa: "LIDERANÇA", pct: "75,6%" },
+// Mock data
+
+// ── Entity names per filter ─────────────────────────────────
+const strategyEntidadesPorFiltro: Record<string, string[]> = {
+  "Empresa": [
+    "Victória da Paz", "PROFISER", "Rio Oregon", "ORSEGUPS MONITORAMENTO", "ORSEGUPS SEGURANÇA",
+    "OBJETIVA", "PROSERV", "GUARDIÃO SEG", "VERZANI & SANDRINI", "ORBENK",
+    "SEGURPRO", "GOCIL", "HAGANÁ", "GRABER", "FORTESEG",
+    "PROTEGE", "ORCALI", "CONSERVO", "AFORT", "LIDERANÇA",
+  ],
+  "Unidade de Negócio": [
+    "UN Sudeste", "UN Sul", "UN Nordeste", "UN Centro-Oeste", "UN Norte",
+    "UN São Paulo Capital", "UN Interior SP", "UN Litoral", "UN Minas Gerais", "UN Rio de Janeiro",
+    "UN Paraná", "UN Santa Catarina", "UN Rio Grande do Sul", "UN Bahia", "UN Pernambuco",
+    "UN Goiás", "UN Distrito Federal", "UN Ceará", "UN Pará", "UN Amazonas",
+  ],
+  "Cliente": [
+    "Carrefour Brasil", "Magazine Luiza", "Grupo Pão de Açúcar", "Raia Drogasil", "Natura &Co",
+    "Ambev S.A.", "JBS S.A.", "BRF S.A.", "Localiza Hertz", "TOTVS S.A.",
+    "Rede D'Or São Luiz", "Hapvida NotreDame", "Votorantim Cimentos", "Gerdau S.A.", "Suzano S.A.",
+    "Klabin S.A.", "WEG S.A.", "Embraer S.A.", "CPFL Energia", "Energisa S.A.",
+  ],
+  "Posto": [
+    "Posto Central 001", "Posto Matriz 002", "Posto Filial Norte 003", "Posto Filial Sul 004", "Posto Leste 005",
+    "Posto Oeste 006", "Posto Shopping Center 007", "Posto Hospital 008", "Posto Universidade 009", "Posto Aeroporto 010",
+    "Posto Rodoviária 011", "Posto Indústria 012", "Posto Condomínio 013", "Posto Escola 014", "Posto Fórum 015",
+    "Posto Estádio 016", "Posto Porto 017", "Posto Refinaria 018", "Posto Datacenter 019", "Posto Logístico 020",
+  ],
+  "Tipo de Serviço": [
+    "Vigilância Patrimonial", "Portaria e Controle de Acesso", "Monitoramento Eletrônico", "Escolta Armada",
+    "Segurança Pessoal", "Brigada de Incêndio", "Limpeza e Conservação", "Facilities Management",
+    "Recepção Corporativa", "Manutenção Predial", "Jardinagem", "Controle de Pragas",
+    "Segurança Eletrônica", "CFTV", "Alarme Monitorado", "Rastreamento Veicular",
+    "Consultoria de Segurança", "Treinamento", "Gestão de Terceiros", "Apoio Operacional",
+  ],
+  "Área": [
+    "Área Administrativa", "Área Industrial", "Área Comercial", "Área Logística", "Área TI",
+    "Área Financeira", "Área RH", "Área Jurídica", "Área Marketing", "Área Operações",
+    "Área Produção", "Área Qualidade", "Área Manutenção", "Área Segurança", "Área Saúde",
+    "Área Meio Ambiente", "Área Engenharia", "Área P&D", "Área Supply Chain", "Área Compras",
+  ],
+  "Filtro de Mesa": [
+    "Mesa SP Capital", "Mesa RJ Capital", "Mesa BH", "Mesa Curitiba", "Mesa Porto Alegre",
+    "Mesa Florianópolis", "Mesa Salvador", "Mesa Recife", "Mesa Fortaleza", "Mesa Brasília",
+    "Mesa Goiânia", "Mesa Manaus", "Mesa Belém", "Mesa Campinas", "Mesa Santos",
+    "Mesa Ribeirão Preto", "Mesa Sorocaba", "Mesa São José dos Campos", "Mesa Londrina", "Mesa Maringá",
+  ],
+};
+
+const getStrategyEntities = (filter: string) => strategyEntidadesPorFiltro[filter] || strategyEntidadesPorFiltro["Empresa"];
+
+const buildStrategyRankingPct = (filter: string, basePcts: string[]) =>
+  getStrategyEntities(filter).map((empresa, i) => ({ pos: i + 1, empresa, pct: basePcts[i] }));
+
+const buildStrategyRankingQtd = (filter: string, baseQtds: number[]) =>
+  getStrategyEntities(filter).map((empresa, i) => ({ pos: i + 1, empresa, qtd: baseQtds[i] }));
+
+// Base numeric values extracted from original data
+const basePiorQualidadePcts = ["0,3%", "1,7%", "6,8%", "39,2%", "52,5%", "52,8%", "54,6%", "56,1%", "58,3%", "60,2%", "61,5%", "63,0%", "64,8%", "66,1%", "67,9%", "69,4%", "71,2%", "72,8%", "74,3%", "75,6%"];
+const baseIncTratadasPcts = ["12,3%", "15,8%", "18,2%", "22,5%", "25,1%", "28,7%", "31,4%", "35,9%", "38,2%", "41,6%", "44,3%", "47,8%", "50,1%", "53,5%", "56,9%", "60,2%", "63,7%", "67,4%", "70,8%", "74,1%"];
+const baseSolTratadasPcts = ["8,1%", "12,4%", "15,7%", "19,3%", "22,8%", "26,1%", "29,5%", "33,2%", "36,8%", "40,3%", "43,9%", "47,2%", "50,6%", "54,1%", "57,8%", "61,4%", "65,0%", "68,7%", "72,3%", "75,9%"];
+const baseMaisIncQtds = [1245, 1102, 987, 876, 823, 754, 698, 645, 612, 578, 534, 498, 467, 423, 389, 356, 312, 287, 254, 221];
+const baseMaisSolQtds = [2345, 2102, 1987, 1876, 1723, 1654, 1598, 1445, 1312, 1278, 1134, 1098, 967, 923, 889, 756, 712, 687, 654, 621];
+const baseJustPontoQtds = [4250, 3890, 3520, 3180, 2950, 2780, 2610, 2440, 2280, 2150, 1980, 1820, 1690, 1540, 1380, 1250, 1120, 980, 850, 720];
+
+const qualidadeEvolucao = [
+  { mes: "Jun", valor: 56 }, { mes: "Jul", valor: 14 }, { mes: "Ago", valor: 70 },
+  { mes: "Set", valor: 88 }, { mes: "Out", valor: 70 },
 ];
 
 const marcacoesPorTipo = [
@@ -48,18 +87,12 @@ const marcacoesPorTipo = [
 ];
 
 const evolucaoMarcacoesPorTipo = [
-  { mes: "Jan", INVALID_TIME: 52, NOT_REGISTERED: 48 },
-  { mes: "Fev", INVALID_TIME: 55, NOT_REGISTERED: 45 },
-  { mes: "Mar", INVALID_TIME: 50, NOT_REGISTERED: 50 },
-  { mes: "Abr", INVALID_TIME: 58, NOT_REGISTERED: 42 },
-  { mes: "Mai", INVALID_TIME: 53, NOT_REGISTERED: 47 },
-  { mes: "Jun", INVALID_TIME: 60, NOT_REGISTERED: 40 },
-  { mes: "Jul", INVALID_TIME: 57, NOT_REGISTERED: 43 },
-  { mes: "Ago", INVALID_TIME: 62, NOT_REGISTERED: 38 },
-  { mes: "Set", INVALID_TIME: 55, NOT_REGISTERED: 45 },
-  { mes: "Out", INVALID_TIME: 59, NOT_REGISTERED: 41 },
-  { mes: "Nov", INVALID_TIME: 61, NOT_REGISTERED: 39 },
-  { mes: "Dez", INVALID_TIME: 56, NOT_REGISTERED: 44 },
+  { mes: "Jan", INVALID_TIME: 52, NOT_REGISTERED: 48 }, { mes: "Fev", INVALID_TIME: 55, NOT_REGISTERED: 45 },
+  { mes: "Mar", INVALID_TIME: 50, NOT_REGISTERED: 50 }, { mes: "Abr", INVALID_TIME: 58, NOT_REGISTERED: 42 },
+  { mes: "Mai", INVALID_TIME: 53, NOT_REGISTERED: 47 }, { mes: "Jun", INVALID_TIME: 60, NOT_REGISTERED: 40 },
+  { mes: "Jul", INVALID_TIME: 57, NOT_REGISTERED: 43 }, { mes: "Ago", INVALID_TIME: 62, NOT_REGISTERED: 38 },
+  { mes: "Set", INVALID_TIME: 55, NOT_REGISTERED: 45 }, { mes: "Out", INVALID_TIME: 59, NOT_REGISTERED: 41 },
+  { mes: "Nov", INVALID_TIME: 61, NOT_REGISTERED: 39 }, { mes: "Dez", INVALID_TIME: 56, NOT_REGISTERED: 44 },
 ];
 
 const colaboradoresPorColetor = [
@@ -69,18 +102,12 @@ const colaboradoresPorColetor = [
 ];
 
 const evolucaoMarcacoesPorColetor = [
-  { mes: "Jan", SYSTEM: 52.3, TERMINAL: 46.9, MOBILE: 0.8 },
-  { mes: "Fev", SYSTEM: 52.2, TERMINAL: 46.9, MOBILE: 0.9 },
-  { mes: "Mar", SYSTEM: 51.8, TERMINAL: 47.4, MOBILE: 0.8 },
-  { mes: "Abr", SYSTEM: 51.7, TERMINAL: 47.5, MOBILE: 0.8 },
-  { mes: "Mai", SYSTEM: 51.6, TERMINAL: 47.5, MOBILE: 0.9 },
-  { mes: "Jun", SYSTEM: 51.6, TERMINAL: 47.5, MOBILE: 0.9 },
-  { mes: "Jul", SYSTEM: 51.5, TERMINAL: 47.5, MOBILE: 1.0 },
-  { mes: "Ago", SYSTEM: 51.5, TERMINAL: 47.6, MOBILE: 0.9 },
-  { mes: "Set", SYSTEM: 51.7, TERMINAL: 47.4, MOBILE: 0.9 },
-  { mes: "Out", SYSTEM: 51.8, TERMINAL: 47.3, MOBILE: 0.9 },
-  { mes: "Nov", SYSTEM: 52.0, TERMINAL: 47.1, MOBILE: 0.9 },
-  { mes: "Dez", SYSTEM: 51.9, TERMINAL: 47.3, MOBILE: 0.8 },
+  { mes: "Jan", SYSTEM: 52.3, TERMINAL: 46.9, MOBILE: 0.8 }, { mes: "Fev", SYSTEM: 52.2, TERMINAL: 46.9, MOBILE: 0.9 },
+  { mes: "Mar", SYSTEM: 51.8, TERMINAL: 47.4, MOBILE: 0.8 }, { mes: "Abr", SYSTEM: 51.7, TERMINAL: 47.5, MOBILE: 0.8 },
+  { mes: "Mai", SYSTEM: 51.6, TERMINAL: 47.5, MOBILE: 0.9 }, { mes: "Jun", SYSTEM: 51.6, TERMINAL: 47.5, MOBILE: 0.9 },
+  { mes: "Jul", SYSTEM: 51.5, TERMINAL: 47.5, MOBILE: 1.0 }, { mes: "Ago", SYSTEM: 51.5, TERMINAL: 47.6, MOBILE: 0.9 },
+  { mes: "Set", SYSTEM: 51.7, TERMINAL: 47.4, MOBILE: 0.9 }, { mes: "Out", SYSTEM: 51.8, TERMINAL: 47.3, MOBILE: 0.9 },
+  { mes: "Nov", SYSTEM: 51.9, TERMINAL: 47.2, MOBILE: 0.9 }, { mes: "Dez", SYSTEM: 52.0, TERMINAL: 47.1, MOBILE: 0.9 },
 ];
 
 const evolucaoInconsistenciasReincidentes = [
@@ -97,29 +124,6 @@ const tempoMedioTratativaInconsistencias = [
   { mes: "Out", valor: 9.2 }, { mes: "Nov", valor: 8.4 }, { mes: "Dez", valor: 7.9 },
 ];
 
-const topInconsistenciasTratadas = [
-  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", pct: "12,3%" },
-  { pos: 2, empresa: "ORSEGUPS MONITORAMENTO", pct: "15,8%" },
-  { pos: 3, empresa: "OBJETIVA", pct: "18,2%" },
-  { pos: 4, empresa: "PROSERV", pct: "22,5%" },
-  { pos: 5, empresa: "Victória da Paz", pct: "25,1%" },
-  { pos: 6, empresa: "PROFISER", pct: "28,7%" },
-  { pos: 7, empresa: "Rio Oregon", pct: "31,4%" },
-  { pos: 8, empresa: "SEGURPRO", pct: "35,9%" },
-  { pos: 9, empresa: "GOCIL", pct: "38,2%" },
-  { pos: 10, empresa: "SERVIAN", pct: "41,6%" },
-  { pos: 11, empresa: "PROTEGE", pct: "44,3%" },
-  { pos: 12, empresa: "HAGANÁ", pct: "47,8%" },
-  { pos: 13, empresa: "GRABER", pct: "50,1%" },
-  { pos: 14, empresa: "PREMIUM", pct: "53,5%" },
-  { pos: 15, empresa: "FORTE", pct: "56,9%" },
-  { pos: 16, empresa: "CONTINENTAL", pct: "60,2%" },
-  { pos: 17, empresa: "NORDESTE SEG.", pct: "63,7%" },
-  { pos: 18, empresa: "ASERP", pct: "67,4%" },
-  { pos: 19, empresa: "ALIANÇA", pct: "70,8%" },
-  { pos: 20, empresa: "KEEP SAFE", pct: "74,1%" },
-];
-
 const origemJustificativas = [
   { name: "Solicitação de Justificativa de Ponto", value: 68, color: "#FF5722" },
   { name: "Outras Fontes", value: 32, color: "#E8E8E8" },
@@ -132,29 +136,6 @@ const evolucaoJustificativasPonto = [
   { mes: "Out", valor: 14300 }, { mes: "Nov", valor: 15800 }, { mes: "Dez", valor: 16500 },
 ];
 
-const top20JustificativasPonto = [
-  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", qtd: 4250 },
-  { pos: 2, empresa: "VERZANI & SANDRINI", qtd: 3890 },
-  { pos: 3, empresa: "ORBENK", qtd: 3520 },
-  { pos: 4, empresa: "PROFISER", qtd: 3180 },
-  { pos: 5, empresa: "OBJETIVA", qtd: 2950 },
-  { pos: 6, empresa: "PROSERV", qtd: 2780 },
-  { pos: 7, empresa: "GUARDIÃO SEG", qtd: 2610 },
-  { pos: 8, empresa: "SEGURPRO", qtd: 2440 },
-  { pos: 9, empresa: "GOCIL", qtd: 2280 },
-  { pos: 10, empresa: "HAGANÁ", qtd: 2150 },
-  { pos: 11, empresa: "GRABER", qtd: 1980 },
-  { pos: 12, empresa: "FORTESEG", qtd: 1820 },
-  { pos: 13, empresa: "PROTEGE", qtd: 1690 },
-  { pos: 14, empresa: "ORCALI", qtd: 1540 },
-  { pos: 15, empresa: "CONSERVO", qtd: 1380 },
-  { pos: 16, empresa: "AFORT", qtd: 1250 },
-  { pos: 17, empresa: "LIDERANÇA", qtd: 1120 },
-  { pos: 18, empresa: "Rio Oregon", qtd: 980 },
-  { pos: 19, empresa: "Victória da Paz", qtd: 850 },
-  { pos: 20, empresa: "KEEP SAFE", qtd: 720 },
-];
-
 const evolucaoReincidentesJustificativas = [
   { mes: "Jan", valor: 18.5 }, { mes: "Fev", valor: 19.2 }, { mes: "Mar", valor: 17.8 },
   { mes: "Abr", valor: 20.1 }, { mes: "Mai", valor: 21.3 }, { mes: "Jun", valor: 19.7 },
@@ -162,7 +143,6 @@ const evolucaoReincidentesJustificativas = [
   { mes: "Out", valor: 23.1 }, { mes: "Nov", valor: 22.6 }, { mes: "Dez", valor: 21.9 },
 ];
 
-// Solicitações mock data
 const solicitacoesJustificativa = [
   { mes: "Jan", emAberto: 580, ajustadas: 67500, canceladas: 15100 },
   { mes: "Fev", emAberto: 620, ajustadas: 68200, canceladas: 15300 },
@@ -176,29 +156,6 @@ const solicitacoesJustificativa = [
   { mes: "Out", emAberto: 560, ajustadas: 68300, canceladas: 15200 },
   { mes: "Nov", emAberto: 610, ajustadas: 67700, canceladas: 15100 },
   { mes: "Dez", emAberto: 700, ajustadas: 67400, canceladas: 14700 },
-];
-
-const topSolicitacoesTratadas = [
-  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", pct: "8,1%" },
-  { pos: 2, empresa: "ORSEGUPS MONITORAMENTO", pct: "12,4%" },
-  { pos: 3, empresa: "OBJETIVA", pct: "15,7%" },
-  { pos: 4, empresa: "PROSERV", pct: "19,3%" },
-  { pos: 5, empresa: "Victória da Paz", pct: "22,8%" },
-  { pos: 6, empresa: "PROFISER", pct: "26,1%" },
-  { pos: 7, empresa: "Rio Oregon", pct: "29,5%" },
-  { pos: 8, empresa: "SEGURPRO", pct: "33,2%" },
-  { pos: 9, empresa: "GOCIL", pct: "36,8%" },
-  { pos: 10, empresa: "SERVIAN", pct: "40,3%" },
-  { pos: 11, empresa: "PROTEGE", pct: "43,9%" },
-  { pos: 12, empresa: "HAGANÁ", pct: "47,2%" },
-  { pos: 13, empresa: "GRABER", pct: "50,6%" },
-  { pos: 14, empresa: "PREMIUM", pct: "54,1%" },
-  { pos: 15, empresa: "FORTE", pct: "57,8%" },
-  { pos: 16, empresa: "CONTINENTAL", pct: "61,4%" },
-  { pos: 17, empresa: "NORDESTE SEG.", pct: "65,0%" },
-  { pos: 18, empresa: "ASERP", pct: "68,7%" },
-  { pos: 19, empresa: "ALIANÇA", pct: "72,3%" },
-  { pos: 20, empresa: "KEEP SAFE", pct: "75,9%" },
 ];
 
 const solicitacoesReincidentes = [
@@ -215,24 +172,17 @@ const tempoMedioTratativa = [
   { mes: "Out", valor: 3420 }, { mes: "Nov", valor: 2910 }, { mes: "Dez", valor: 3180 },
 ];
 
-// Eficiência mock data
 const piorTempoMedioOperadores = [
-  { operador: "Carlos Mendes", tempoMedio: 30 },
-  { operador: "Ana Rodrigues", tempoMedio: 29 },
-  { operador: "Felipe Santos", tempoMedio: 27 },
-  { operador: "Juliana Costa", tempoMedio: 27 },
-  { operador: "Ricardo Almeida", tempoMedio: 26 },
-  { operador: "Patrícia Lima", tempoMedio: 25 },
+  { operador: "Carlos Mendes", tempoMedio: 30 }, { operador: "Ana Rodrigues", tempoMedio: 29 },
+  { operador: "Felipe Santos", tempoMedio: 27 }, { operador: "Juliana Costa", tempoMedio: 27 },
+  { operador: "Ricardo Almeida", tempoMedio: 26 }, { operador: "Patrícia Lima", tempoMedio: 25 },
   { operador: "Eduardo Ferreira", tempoMedio: 21 },
 ];
 
 const top10TratativaOperadores = [
-  { operador: "Marcos Silva", tratativas: 30 },
-  { operador: "Luciana Pereira", tratativas: 29 },
-  { operador: "Bruno Oliveira", tratativas: 27 },
-  { operador: "Camila Souza", tratativas: 27 },
-  { operador: "Thiago Martins", tratativas: 26 },
-  { operador: "Renata Barbosa", tratativas: 25 },
+  { operador: "Marcos Silva", tratativas: 30 }, { operador: "Luciana Pereira", tratativas: 29 },
+  { operador: "Bruno Oliveira", tratativas: 27 }, { operador: "Camila Souza", tratativas: 27 },
+  { operador: "Thiago Martins", tratativas: 26 }, { operador: "Renata Barbosa", tratativas: 25 },
   { operador: "Diego Nascimento", tratativas: 21 },
 ];
 
@@ -241,52 +191,6 @@ const evolucaoInconsistenciasTratadas = [
   { mes: "Abr", total: 310, tratadas: 157 }, { mes: "Mai", total: 330, tratadas: 182 }, { mes: "Jun", total: 305, tratadas: 180 },
   { mes: "Jul", total: 289, tratadas: 178 }, { mes: "Ago", total: 312, tratadas: 197 }, { mes: "Set", total: 278, tratadas: 169 },
   { mes: "Out", total: 335, tratadas: 218 }, { mes: "Nov", total: 342, tratadas: 234 }, { mes: "Dez", total: 318, tratadas: 230 },
-];
-
-const topMaisInconsistencias = [
-  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", qtd: 1245 },
-  { pos: 2, empresa: "OBJETIVA", qtd: 1102 },
-  { pos: 3, empresa: "ORSEGUPS MONITORAMENTO", qtd: 987 },
-  { pos: 4, empresa: "PROSERV", qtd: 876 },
-  { pos: 5, empresa: "SEGURPRO", qtd: 823 },
-  { pos: 6, empresa: "Victória da Paz", qtd: 754 },
-  { pos: 7, empresa: "PROFISER", qtd: 698 },
-  { pos: 8, empresa: "Rio Oregon", qtd: 645 },
-  { pos: 9, empresa: "GOCIL", qtd: 612 },
-  { pos: 10, empresa: "SERVIAN", qtd: 578 },
-  { pos: 11, empresa: "PROTEGE", qtd: 534 },
-  { pos: 12, empresa: "HAGANÁ", qtd: 498 },
-  { pos: 13, empresa: "GRABER", qtd: 467 },
-  { pos: 14, empresa: "PREMIUM", qtd: 423 },
-  { pos: 15, empresa: "FORTE", qtd: 389 },
-  { pos: 16, empresa: "CONTINENTAL", qtd: 356 },
-  { pos: 17, empresa: "NORDESTE SEG.", qtd: 312 },
-  { pos: 18, empresa: "ASERP", qtd: 287 },
-  { pos: 19, empresa: "ALIANÇA", qtd: 254 },
-  { pos: 20, empresa: "KEEP SAFE", qtd: 221 },
-];
-
-const topMaisSolicitacoes = [
-  { pos: 1, empresa: "ORSEGUPS SEGURANÇA", qtd: 2345 },
-  { pos: 2, empresa: "OBJETIVA", qtd: 2102 },
-  { pos: 3, empresa: "ORSEGUPS MONITORAMENTO", qtd: 1987 },
-  { pos: 4, empresa: "PROSERV", qtd: 1876 },
-  { pos: 5, empresa: "SEGURPRO", qtd: 1723 },
-  { pos: 6, empresa: "Victória da Paz", qtd: 1654 },
-  { pos: 7, empresa: "PROFISER", qtd: 1598 },
-  { pos: 8, empresa: "Rio Oregon", qtd: 1445 },
-  { pos: 9, empresa: "GOCIL", qtd: 1312 },
-  { pos: 10, empresa: "SERVIAN", qtd: 1278 },
-  { pos: 11, empresa: "PROTEGE", qtd: 1134 },
-  { pos: 12, empresa: "HAGANÁ", qtd: 1098 },
-  { pos: 13, empresa: "GRABER", qtd: 967 },
-  { pos: 14, empresa: "PREMIUM", qtd: 923 },
-  { pos: 15, empresa: "FORTE", qtd: 889 },
-  { pos: 16, empresa: "CONTINENTAL", qtd: 756 },
-  { pos: 17, empresa: "NORDESTE SEG.", qtd: 712 },
-  { pos: 18, empresa: "ASERP", qtd: 687 },
-  { pos: 19, empresa: "ALIANÇA", qtd: 654 },
-  { pos: 20, empresa: "KEEP SAFE", qtd: 621 },
 ];
 
 const tempoMedioMovimentacoes = [
@@ -536,17 +440,17 @@ const VisaoGeralContent = ({ activeFilter, setActiveFilter }: { activeFilter: st
         {/* Top 10 Pior Qualidade */}
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col" style={{ height: '320px' }}>
           <h3 className="font-bold text-sm text-gray-800">Top 20 Pior Qualidade de Marcação</h3>
-          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-4">por {activeFilter}</p>
           <div className="overflow-y-auto flex-1">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 {activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">▲ %</th>
                 </tr>
               </thead>
               <tbody>
-                {topPiorQualidade.map((item) => (
+                {buildStrategyRankingPct(activeFilter, basePiorQualidadePcts).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-2 text-gray-700">
                       <span className="text-gray-400 mr-2">{item.pos}</span>
@@ -659,18 +563,18 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
       {/* Row 2: Top 20 mais inconsistências + Top 20 pior % tratadas */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">Top 20 Entidades com Mais Inconsistências</h3>
-          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 com Mais Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-4">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 {activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">Qtd</th>
                 </tr>
               </thead>
               <tbody>
-                {topMaisInconsistencias.map((item) => (
+                {buildStrategyRankingQtd(activeFilter, baseMaisIncQtds).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-2 text-gray-700">
                       <span className="text-gray-400 mr-2">{item.pos}</span>
@@ -685,17 +589,17 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="font-bold text-sm text-gray-800">Top 20 pior % Inconsistências Tratadas</h3>
-          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-4">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 {activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">▲ %</th>
                 </tr>
               </thead>
               <tbody>
-                {topInconsistenciasTratadas.map((item) => (
+                {buildStrategyRankingPct(activeFilter, baseIncTratadasPcts).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-2 text-gray-700">
                       <span className="text-gray-400 mr-2">{item.pos}</span>
@@ -797,19 +701,19 @@ const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: strin
           </div>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col" style={{ height: 320 }}>
-          <h3 className="font-bold text-sm text-gray-800">Top 20 Entidades com Justificativas de Ponto</h3>
-          <p className="text-xs text-gray-400 mb-2">por Volume</p>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 com Justificativas de Ponto</h3>
+          <p className="text-xs text-gray-400 mb-2">por {activeFilter}</p>
           <div className="overflow-y-auto flex-1">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
                   <th className="text-left py-2 text-gray-500 font-medium">#</th>
-                  <th className="text-left py-2 text-gray-500 font-medium">Entidade</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">{activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">Qtd</th>
                 </tr>
               </thead>
               <tbody>
-                {top20JustificativasPonto.map((item) => (
+                {buildStrategyRankingQtd(activeFilter, baseJustPontoQtds).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-1.5 text-gray-400 text-xs">{item.pos}</td>
                     <td className="py-1.5 text-gray-700 text-xs">{item.empresa}</td>
@@ -903,18 +807,18 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
       {/* Row 2: Top 20 Mais Solicitações + Top 20 pior % Tratadas */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col" style={{ height: 320 }}>
-          <h3 className="font-bold text-sm text-gray-800">Top 20 Entidades com Mais Solicitações</h3>
-          <p className="text-xs text-gray-400 mb-2">por Entidade</p>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 com Mais Solicitações</h3>
+          <p className="text-xs text-gray-400 mb-2">por {activeFilter}</p>
           <div className="overflow-y-auto flex-1">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 {activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">▲ Qtd</th>
                 </tr>
               </thead>
               <tbody>
-                {topMaisSolicitacoes.map((item) => (
+                {buildStrategyRankingQtd(activeFilter, baseMaisSolQtds).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-2 text-gray-700">
                       <span className="text-gray-400 mr-2">{item.pos}</span>
@@ -929,17 +833,17 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col" style={{ height: 320 }}>
           <h3 className="font-bold text-sm text-gray-800">Top 20 pior % Solicitações Tratadas</h3>
-          <p className="text-xs text-gray-400 mb-2">por Entidade</p>
+          <p className="text-xs text-gray-400 mb-2">por {activeFilter}</p>
           <div className="overflow-y-auto flex-1">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 {activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">▲ %</th>
                 </tr>
               </thead>
               <tbody>
-                {topSolicitacoesTratadas.map((item) => (
+                {buildStrategyRankingPct(activeFilter, baseSolTratadasPcts).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-2 text-gray-700">
                       <span className="text-gray-400 mr-2">{item.pos}</span>
