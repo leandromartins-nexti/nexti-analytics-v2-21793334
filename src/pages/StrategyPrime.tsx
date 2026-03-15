@@ -10,6 +10,24 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, LabelList, Legend,
 } from "recharts";
 
+// Helper to vary chart data based on selected entity
+const entityHash = (name: string) => name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+
+const variarSerieSimples = <T extends Record<string, any>>(data: T[], key: string, entity: string | null): T[] => {
+  if (!entity) return data;
+  const h = entityHash(entity);
+  return data.map((d, i) => ({ ...d, [key]: +(d[key] * (0.6 + ((h + i) % 7) * 0.12)).toFixed(1) }));
+};
+
+const variarSerieMulti = <T extends Record<string, any>>(data: T[], keys: string[], entity: string | null): T[] => {
+  if (!entity) return data;
+  const h = entityHash(entity);
+  return data.map((d, i) => {
+    const varied: any = { ...d };
+    keys.forEach((k, ki) => { varied[k] = +(d[k] * (0.5 + ((h + i + ki) % 8) * 0.13)).toFixed(1); });
+    return varied;
+  });
+};
 
 // Mock data
 
