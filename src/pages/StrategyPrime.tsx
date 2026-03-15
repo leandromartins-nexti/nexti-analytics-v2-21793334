@@ -627,6 +627,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter, selectedEntity,
   const tempoIncData = variarSerieSimples(tempoMedioTratativaInconsistencias, "valor", selectedEntity);
 
   const handleBarClick = (data: any) => {
+    if (data?.activeLabel) {
       setSelectedMes(prev => prev === data.activeLabel ? null : data.activeLabel);
     }
   };
