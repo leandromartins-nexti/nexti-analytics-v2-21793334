@@ -770,7 +770,7 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter, selectedEntity,
 };
 
 // Ajustes Content
-const AjustesContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => {
+const AjustesContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: ContentProps) => {
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
 
   const handleDotClick = (data: any) => {
