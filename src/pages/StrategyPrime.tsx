@@ -563,18 +563,18 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
       {/* Row 2: Top 20 mais inconsistências + Top 20 pior % tratadas */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 className="font-bold text-sm text-gray-800">Top 20 Entidades com Mais Inconsistências</h3>
-          <p className="text-xs text-gray-400 mb-4">por Entidade</p>
+          <h3 className="font-bold text-sm text-gray-800">Top 20 com Mais Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-4">por {activeFilter}</p>
           <div className="max-h-[252px] overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-2 text-gray-500 font-medium">👤 Empresa</th>
+                  <th className="text-left py-2 text-gray-500 font-medium">👤 {activeFilter}</th>
                   <th className="text-right py-2 text-gray-500 font-medium">Qtd</th>
                 </tr>
               </thead>
               <tbody>
-                {topMaisInconsistencias.map((item) => (
+                {buildStrategyRankingQtd(activeFilter, baseMaisIncQtds).map((item) => (
                   <tr key={item.pos} className="border-b border-gray-50">
                     <td className="py-2 text-gray-700">
                       <span className="text-gray-400 mr-2">{item.pos}</span>
