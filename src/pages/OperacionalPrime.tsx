@@ -126,7 +126,7 @@ const top20EntidadesSolicitacoes = [
   { entidade: "PARQUE INDUSTRIAL SUL", total: 390 },
 ];
 
-
+const motivoAjustes = [
   { motivo: "Esquecimento", pct: 42 },
   { motivo: "Falha Sistema", pct: 28 },
   { motivo: "Troca Turno", pct: 15 },
