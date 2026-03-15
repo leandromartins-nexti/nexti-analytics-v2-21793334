@@ -1134,7 +1134,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter, selectedEntity, se
             <p className="text-xs text-gray-400 mb-4">por Período</p>
             <div className="h-[220px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={solicitacoesReincidentes}>
+                <LineChart data={solReincData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#999" }} />
                   <YAxis hide domain={[0, 20]} />
