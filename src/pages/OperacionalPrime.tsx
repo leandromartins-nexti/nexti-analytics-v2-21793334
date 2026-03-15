@@ -72,12 +72,73 @@ const heatmapSolicitacoes = [
 ];
 
 const tiposInconsistencias = [
-  { tipo: "REGISTERED", pct: 135 },
-  { tipo: "NOT_REGISTERED", pct: 76 },
-  { tipo: "INVALID_TIME", pct: 24 },
-  { tipo: "DUPLICATE", pct: 3 },
-  { tipo: "ADJUSTED", pct: 1 },
-  { tipo: "CANCELED", pct: 1 },
+  { tipo: "Esquecimento", pct: 76 },
+  { tipo: "Horário Inválido", pct: 24 },
+  { tipo: "Duplicada", pct: 3 },
+  { tipo: "Ajustada", pct: 1 },
+  { tipo: "Terminal Não Autorizado", pct: 8 },
+  { tipo: "Fora de Perímetro", pct: 5 },
+];
+
+const evolucaoInconsistenciasMensal = [
+  { mes: "Jan", emAberto: 420, tratadas: 4850, canceladas: 980 },
+  { mes: "Fev", emAberto: 380, tratadas: 5120, canceladas: 910 },
+  { mes: "Mar", emAberto: 510, tratadas: 4680, canceladas: 1050 },
+  { mes: "Abr", emAberto: 350, tratadas: 5340, canceladas: 870 },
+  { mes: "Mai", emAberto: 460, tratadas: 4920, canceladas: 1020 },
+  { mes: "Jun", emAberto: 390, tratadas: 5200, canceladas: 940 },
+  { mes: "Jul", emAberto: 340, tratadas: 5450, canceladas: 860 },
+  { mes: "Ago", emAberto: 580, tratadas: 4600, canceladas: 1130 },
+  { mes: "Set", emAberto: 410, tratadas: 5050, canceladas: 970 },
+  { mes: "Out", emAberto: 370, tratadas: 5280, canceladas: 900 },
+  { mes: "Nov", emAberto: 490, tratadas: 4780, canceladas: 1060 },
+  { mes: "Dez", emAberto: 400, tratadas: 5150, canceladas: 920 },
+];
+
+const top20EntidadesInconsistenciasTab = [
+  { entidade: "EBS2 TRADE E GESTAO LTDA", total: 18420 },
+  { entidade: "WORKS CONSTRUCAO E SERVICOS", total: 15380 },
+  { entidade: "SAFEMED Filial 0006", total: 12750 },
+  { entidade: "GOCIL VIGILANCIA", total: 11200 },
+  { entidade: "CONSTRUPOPP", total: 9840 },
+  { entidade: "GOCIL SERVICOS", total: 8650 },
+  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", total: 7920 },
+  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", total: 7100 },
+  { entidade: "CARIOCA CALCADOS LTDA", total: 6540 },
+  { entidade: "LOJAS RENNER S.A.", total: 5980 },
+  { entidade: "SHOPPING MUELLER", total: 5420 },
+  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", total: 4870 },
+  { entidade: "HOSPITAL SÃO LUCAS", total: 4350 },
+  { entidade: "UNIVERSIDADE FEDERAL", total: 3920 },
+  { entidade: "BANCO DO BRASIL", total: 3480 },
+  { entidade: "SUPERMERCADO ANGELONI", total: 3100 },
+  { entidade: "TRIBUNAL DE JUSTIÇA", total: 2750 },
+  { entidade: "PREFEITURA MUNICIPAL", total: 2380 },
+  { entidade: "CENTRO EMPRESARIAL ALPHA", total: 2100 },
+  { entidade: "PARQUE INDUSTRIAL SUL", total: 1850 },
+];
+
+const top20EntidadesReincidentesInconsistencias = [
+  { entidade: "EBS2 TRADE E GESTAO LTDA", ocorrencias: 12, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "WORKS CONSTRUCAO E SERVICOS", ocorrencias: 11, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "GOCIL VIGILANCIA", ocorrencias: 10, ultimaOcorrencia: "Fev/2026" },
+  { entidade: "SAFEMED Filial 0006", ocorrencias: 9, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "CONSTRUPOPP", ocorrencias: 9, ultimaOcorrencia: "Jan/2026" },
+  { entidade: "GOCIL SERVICOS", ocorrencias: 8, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "TELOS CONSULTORIA EMPRESARIAL LTDA", ocorrencias: 8, ultimaOcorrencia: "Fev/2026" },
+  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", ocorrencias: 7, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "CARIOCA CALCADOS LTDA", ocorrencias: 7, ultimaOcorrencia: "Fev/2026" },
+  { entidade: "LOJAS RENNER S.A.", ocorrencias: 6, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "SHOPPING MUELLER", ocorrencias: 6, ultimaOcorrencia: "Jan/2026" },
+  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", ocorrencias: 5, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "HOSPITAL SÃO LUCAS", ocorrencias: 5, ultimaOcorrencia: "Fev/2026" },
+  { entidade: "UNIVERSIDADE FEDERAL", ocorrencias: 5, ultimaOcorrencia: "Jan/2026" },
+  { entidade: "BANCO DO BRASIL", ocorrencias: 4, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "SUPERMERCADO ANGELONI", ocorrencias: 4, ultimaOcorrencia: "Fev/2026" },
+  { entidade: "TRIBUNAL DE JUSTIÇA", ocorrencias: 3, ultimaOcorrencia: "Mar/2026" },
+  { entidade: "PREFEITURA MUNICIPAL", ocorrencias: 3, ultimaOcorrencia: "Fev/2026" },
+  { entidade: "CENTRO EMPRESARIAL ALPHA", ocorrencias: 3, ultimaOcorrencia: "Jan/2026" },
+  { entidade: "PARQUE INDUSTRIAL SUL", ocorrencias: 2, ultimaOcorrencia: "Mar/2026" },
 ];
 
 const top20EntidadesInconsistencias = [
@@ -867,36 +928,115 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter }: { activeFilter: 
 
 const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilter: string; setActiveFilter: (v: string) => void }) => (
   <div className="flex gap-4">
-    <div className="flex-1 grid grid-cols-2 gap-4">
-      {/* % Tipos de Inconsistências */}
+    <div className="flex-1 space-y-4">
+      {/* Row 1: Evolução Mensal por Status - Largura total */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-4">% Tipos de Inconsistências</h3>
-        <div className="space-y-3">
-          {tiposInconsistencias.map((item) => (
-            <div key={item.tipo} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-32 shrink-0 text-right">{item.tipo}</span>
-              <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                <div className="h-full rounded" style={{ width: `${Math.min((item.pct / 135) * 100, 100)}%`, backgroundColor: "#FF5722" }} />
-              </div>
-              <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
-            </div>
-          ))}
+        <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Evolução das Inconsistências por Status</h3>
+        <p className="text-xs text-gray-400 mb-4">Volume mensal por status</p>
+        <div className="h-[220px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={evolucaoInconsistenciasMensal} barSize={28}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
+              <XAxis dataKey="mes" tick={{ fontSize: 11 }} stroke="#9CA3AF" />
+              <YAxis tick={{ fontSize: 11 }} stroke="#9CA3AF" tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v} />
+              <Tooltip
+                contentStyle={{ borderRadius: 8, border: "1px solid #E5E7EB", fontSize: 12 }}
+                formatter={(v: number, name: string) => [formatNumber(v), name]}
+              />
+              <Legend iconSize={8} wrapperStyle={{ fontSize: "11px" }} />
+              <Bar dataKey="tratadas" stackId="a" fill="#FDB813" name="Tratadas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="canceladas" stackId="a" fill="#9CA3AF" name="Canceladas" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="emAberto" stackId="a" fill="#FF5722" name="Em Aberto" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
-      {/* % Motivo de Ajustes de Inconsistências */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h3 className="font-semibold text-sm text-gray-800 mb-4">% Motivo de Ajustes de Inconsistências</h3>
-        <div className="space-y-3">
-          {motivoAjustes.map((item) => (
-            <div key={item.motivo} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-28 shrink-0 text-right">{item.motivo}</span>
-              <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
-                <div className="h-full rounded" style={{ width: `${(item.pct / 42) * 100}%`, background: `linear-gradient(90deg, #FF5722, #FDB813)` }} />
+      {/* Row 2: Tipos + Motivo de Ajustes */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* % Tipos de Inconsistências */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-4">% Tipos de Inconsistências</h3>
+          <div className="space-y-3">
+            {tiposInconsistencias.map((item) => (
+              <div key={item.tipo} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-40 shrink-0 text-right">{item.tipo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div className="h-full rounded" style={{ width: `${Math.min((item.pct / 76) * 100, 100)}%`, backgroundColor: "#FF5722" }} />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
               </div>
-              <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* % Motivo de Ajustes de Inconsistências */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-4">% Motivo de Ajustes de Inconsistências</h3>
+          <div className="space-y-3">
+            {motivoAjustes.map((item) => (
+              <div key={item.motivo} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 w-28 shrink-0 text-right">{item.motivo}</span>
+                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                  <div className="h-full rounded" style={{ width: `${(item.pct / 42) * 100}%`, background: `linear-gradient(90deg, #FF5722, #FDB813)` }} />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 w-10">{item.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Row 3: Top 20 Entidades + Top 20 Reincidentes */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades com mais Inconsistências</h3>
+          <p className="text-xs text-gray-400 mb-3">por Entidade</p>
+          <div className="max-h-[320px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesInconsistenciasTab.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{formatNumber(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="font-semibold text-sm text-gray-800 mb-0.5">Top 20 Entidades Reincidentes</h3>
+          <p className="text-xs text-gray-400 mb-3">Entidades com inconsistências recorrentes</p>
+          <div className="max-h-[320px] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b border-gray-100">
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2 w-6">#</th>
+                  <th className="text-xs text-gray-400 font-medium text-left pb-2">Entidade</th>
+                  <th className="text-xs text-gray-400 font-medium text-right pb-2">Ocorrências</th>
+                </tr>
+              </thead>
+              <tbody>
+                {top20EntidadesReincidentesInconsistencias.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-50">
+                    <td className="text-xs text-gray-500 py-2">{idx + 1}</td>
+                    <td className="text-xs text-gray-700 py-2 pr-4">{item.entidade}</td>
+                    <td className="text-xs font-semibold text-gray-800 text-right py-2">{item.ocorrencias}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
