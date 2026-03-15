@@ -984,28 +984,6 @@ const InconsistenciasContent = ({ activeFilter, setActiveFilter }: { activeFilte
   </div>
 );
 
-const top20PiorQualidade = [
-  { entidade: "ANCORA BADOTTI PARTICIPACOES LTDA", pct: 100.0 },
-  { entidade: "CARIOCA CALCADOS LTDA", pct: 100.0 },
-  { entidade: "EBS2 TRADE E GESTAO LTDA", pct: 100.0 },
-  { entidade: "WORKS CONSTRUCAO E SERVICOS", pct: 98.5 },
-  { entidade: "LOJAS RENNER S.A.", pct: 97.2 },
-  { entidade: "SHOPPING MUELLER", pct: 96.8 },
-  { entidade: "CONDOMÍNIO EDIFÍCIO AURORA", pct: 95.3 },
-  { entidade: "HOSPITAL SÃO LUCAS", pct: 94.7 },
-  { entidade: "UNIVERSIDADE FEDERAL", pct: 93.1 },
-  { entidade: "BANCO DO BRASIL", pct: 92.4 },
-  { entidade: "SUPERMERCADO ANGELONI", pct: 91.8 },
-  { entidade: "TRIBUNAL DE JUSTIÇA", pct: 90.5 },
-  { entidade: "PREFEITURA MUNICIPAL", pct: 89.2 },
-  { entidade: "CENTRO EMPRESARIAL ALPHA", pct: 88.6 },
-  { entidade: "PARQUE INDUSTRIAL SUL", pct: 87.1 },
-  { entidade: "CONDOMÍNIO RESIDENCIAL VERDE", pct: 86.4 },
-  { entidade: "ESCOLA ESTADUAL DOM PEDRO", pct: 85.7 },
-  { entidade: "ATACADÃO DISTRIBUIÇÃO", pct: 84.3 },
-  { entidade: "FARMÁCIA RAIA", pct: 83.9 },
-  { entidade: "CLÍNICA SÃO RAFAEL", pct: 82.5 },
-];
 
 const top20EscalaInconsistenciasSolicitacoes = [
   { escala: "07:00-19:00 12x36 (MO)", inconsistencias: 157, solicitacoes: 83 },
