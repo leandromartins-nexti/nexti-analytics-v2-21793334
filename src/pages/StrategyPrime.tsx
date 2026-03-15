@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw } from "lucide-react";
+import { ChevronRight, Filter, Settings, Eraser, Lightbulb, RefreshCw, X } from "lucide-react";
 import { ImprovementProvider } from "@/contexts/ImprovementContext";
 import { ImprovementPin } from "@/components/improvements/ImprovementPin";
 import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
