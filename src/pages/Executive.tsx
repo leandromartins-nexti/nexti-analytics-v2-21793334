@@ -299,7 +299,7 @@ export default function Executive() {
       </ImprovementLayer>
 
       {/* Improvement Center Sidebar */}
-      <ImprovementCenter open={showCenter} onClose={() => setShowCenter(false)} screenId="Executive" />
+      <ImprovementCenter />
 
       {/* Filter Panel */}
       <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
