@@ -248,6 +248,7 @@ export default function Executive() {
         </button>
       </div>
 
+      <ImprovementLayer screenId="Executive">
       {/* KPI Cards Row */}
       <div className="px-6 py-4">
         <div className="grid grid-cols-4 gap-4">
