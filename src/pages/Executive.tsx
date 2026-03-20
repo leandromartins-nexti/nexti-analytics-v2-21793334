@@ -299,8 +299,6 @@ export default function Executive() {
 
       </ImprovementLayer>
 
-      {/* Improvement Center Sidebar */}
-      <ImprovementCenter />
 
       {/* Filter Panel */}
       <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
