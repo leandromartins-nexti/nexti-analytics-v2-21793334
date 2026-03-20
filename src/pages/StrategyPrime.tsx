@@ -1199,6 +1199,7 @@ const SolicitacoesContent = ({ activeFilter, setActiveFilter, selectedEntity, se
 // Eficiência Content
 const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setSelectedEntity }: ContentProps) => {
   const [selectedMotivo, setSelectedMotivo] = useState<string | null>(null);
+  const [selectedOperador, setSelectedOperador] = useState<string | null>(null);
 
   // Cross-filter: vary operator data based on selected motivo
   const filteredTempoMedio = selectedMotivo
@@ -1215,6 +1216,21 @@ const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
       }))
     : top10TratativaOperadores;
 
+  // Cross-filter: vary motivos based on selected operador
+  const filteredMotivos = selectedOperador
+    ? top10MotivosJustificativa.map((m, i) => ({
+        ...m,
+        quantidade: Math.round(m.quantidade * (0.4 + ((selectedOperador.length + i) % 7) * 0.12)),
+      }))
+    : top10MotivosJustificativa;
+
+  const activeFilter2 = selectedMotivo || selectedOperador;
+
+  const clearAll = () => {
+    setSelectedMotivo(null);
+    setSelectedOperador(null);
+  };
+
   return (
   <div className="flex gap-4">
     <div className="flex-1 space-y-4">
@@ -1230,12 +1246,20 @@ const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
               </tr>
             </thead>
             <tbody>
-              {filteredTempoMedio.map((item, idx) => (
-                <tr key={idx} className="border-b border-gray-50">
+              {filteredTempoMedio.map((item, idx) => {
+                const isSelected = selectedOperador === item.operador;
+                return (
+                <tr
+                  key={idx}
+                  className={`border-b border-gray-50 cursor-pointer transition-colors ${
+                    isSelected ? "bg-orange-50 border-l-2 border-l-[#FF5722]" : selectedOperador ? "opacity-50 hover:opacity-80" : "hover:bg-gray-50"
+                  }`}
+                  onClick={() => { setSelectedOperador(isSelected ? null : item.operador); setSelectedMotivo(null); }}
+                >
                   <td className="py-2 text-gray-700">{item.operador}</td>
                   <td className="py-2 text-right text-gray-600">{item.tempoMedio}</td>
                 </tr>
-              ))}
+              );})}
             </tbody>
           </table>
         </div>
@@ -1250,12 +1274,20 @@ const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
               </tr>
             </thead>
             <tbody>
-              {filteredTratativas.map((item, idx) => (
-                <tr key={idx} className="border-b border-gray-50">
+              {filteredTratativas.map((item, idx) => {
+                const isSelected = selectedOperador === item.operador;
+                return (
+                <tr
+                  key={idx}
+                  className={`border-b border-gray-50 cursor-pointer transition-colors ${
+                    isSelected ? "bg-orange-50 border-l-2 border-l-[#FF5722]" : selectedOperador ? "opacity-50 hover:opacity-80" : "hover:bg-gray-50"
+                  }`}
+                  onClick={() => { setSelectedOperador(isSelected ? null : item.operador); setSelectedMotivo(null); }}
+                >
                   <td className="py-2 text-gray-700">{item.operador}</td>
                   <td className="py-2 text-right text-gray-600">{item.tratativas}</td>
                 </tr>
-              ))}
+              );})}
             </tbody>
           </table>
         </div>
@@ -1266,11 +1298,11 @@ const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
         <div className="flex items-center justify-between mb-1">
           <div>
             <h3 className="font-bold text-sm text-gray-800">Top 10 Motivos de Justificativa</h3>
-            <p className="text-xs text-gray-400">Ranking dos principais motivos registrados</p>
+            <p className="text-xs text-gray-400">Ranking dos principais motivos registrados {selectedOperador && <span className="text-[#FF5722]">• filtrado por: {selectedOperador}</span>}</p>
           </div>
-          {selectedMotivo && (
+          {activeFilter2 && (
             <button
-              onClick={() => setSelectedMotivo(null)}
+              onClick={clearAll}
               className="text-xs text-[#FF5722] hover:underline flex items-center gap-1"
             >
               <Eraser className="w-3 h-3" /> Limpar
@@ -1287,8 +1319,8 @@ const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
             </tr>
           </thead>
           <tbody>
-            {top10MotivosJustificativa.map((item, idx) => {
-              const total = top10MotivosJustificativa.reduce((s, m) => s + m.quantidade, 0);
+            {filteredMotivos.map((item, idx) => {
+              const total = filteredMotivos.reduce((s, m) => s + m.quantidade, 0);
               const pct = ((item.quantidade / total) * 100).toFixed(1);
               const isSelected = selectedMotivo === item.motivo;
               return (
@@ -1297,7 +1329,7 @@ const EficienciaContent = ({ activeFilter, setActiveFilter, selectedEntity, setS
                   className={`border-b border-gray-50 cursor-pointer transition-colors ${
                     isSelected ? "bg-orange-50 border-l-2 border-l-[#FF5722]" : selectedMotivo ? "opacity-50 hover:opacity-80" : "hover:bg-gray-50"
                   }`}
-                  onClick={() => setSelectedMotivo(isSelected ? null : item.motivo)}
+                  onClick={() => { setSelectedMotivo(isSelected ? null : item.motivo); setSelectedOperador(null); }}
                 >
                   <td className="py-2 text-gray-400 text-xs">{idx + 1}</td>
                   <td className="py-2 text-gray-700">{item.motivo}</td>
