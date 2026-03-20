@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight, Filter, Eraser, AlertTriangle, FileText, Wrench, DollarSign, Clock, Users } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { FilterPanel } from "@/components/layout/FilterPanel";
+import { ImprovementProvider } from "@/contexts/ImprovementContext";
+import { ImprovementLayer } from "@/components/improvements/ImprovementLayer";
+import { ImprovementCenter } from "@/components/improvements/ImprovementCenter";
 
 /* ── Mock data ── */
 const meses = ["Jul", "Ago", "Set", "Out", "Nov", "Dez", "Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
@@ -178,6 +181,7 @@ export default function Executive() {
   const tabs = ["Prime"];
 
   return (
+    <ImprovementProvider>
     <div className="bg-gray-50 min-h-screen flex flex-col">
       {/* Breadcrumb */}
       <header className="border-b border-gray-200 px-6 py-3 bg-gray-100">
@@ -236,6 +240,7 @@ export default function Executive() {
         </button>
       </div>
 
+      <ImprovementLayer screenId="Executive">
       {/* KPI Cards Row */}
       <div className="px-6 py-4">
         <div className="grid grid-cols-4 gap-4">
@@ -291,8 +296,14 @@ export default function Executive() {
         </div>
       </div>
 
+      </ImprovementLayer>
+
+      {/* Improvement Center Sidebar */}
+      <ImprovementCenter />
+
       {/* Filter Panel */}
       <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
     </div>
+    </ImprovementProvider>
   );
 }
