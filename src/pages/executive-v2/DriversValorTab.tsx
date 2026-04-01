@@ -75,8 +75,8 @@ export default function DriversValorTab() {
                 const pesoROI = ownership.ownershipTotal > 0 ? (d.ganhoBruto / ownership.ownershipTotal).toFixed(1) : "0";
                 const isExpanded = expandedId === d.id;
                 return (
-                  <>
-                    <tr key={d.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : d.id)}>
+                  <React.Fragment key={d.id}>
+                    <tr className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : d.id)}>
                       <td className="py-2 px-2">{isExpanded ? <ChevronUp className="w-3 h-3 text-gray-400" /> : <ChevronDown className="w-3 h-3 text-gray-400" />}</td>
                       <td className="py-2 px-2 font-medium text-gray-700">{d.nome}</td>
                       <td className="py-2 px-2 text-gray-500">{d.moduloNexti}</td>
