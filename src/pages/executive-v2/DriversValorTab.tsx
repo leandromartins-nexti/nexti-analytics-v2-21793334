@@ -136,7 +136,7 @@ export default function DriversValorTab() {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </tbody>
