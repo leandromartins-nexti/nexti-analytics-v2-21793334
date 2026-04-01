@@ -66,6 +66,20 @@ export function DashboardSidebar() {
           </SidebarMenu>
         </SidebarGroup>
 
+        {/* Executive V2 – ROI Realizado */}
+        <SidebarGroup className="px-3 py-1">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <NavLink to="/executive-v2">
+                  <DollarSign className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
+                  {!isCollapsed && <span className="font-normal text-[15px]">Executive V2</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
 
 
         {/* Mesa de Operações */}
