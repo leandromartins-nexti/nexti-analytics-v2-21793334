@@ -1,4 +1,4 @@
-import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown, Star, Smartphone, Users, PlusCircle, Timer, Shield, TrendingUp, AlertTriangle } from "lucide-react";
+import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown, Star, Smartphone, Users, PlusCircle, Timer, Shield, TrendingUp, AlertTriangle, DollarSign } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -60,6 +60,20 @@ export function DashboardSidebar() {
                 <NavLink to="/nexti-analytics">
                   <BarChart3 className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
                   {!isCollapsed && <span className="font-normal text-[15px]">Nexti Analytics</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Executive V2 – ROI Realizado */}
+        <SidebarGroup className="px-3 py-1">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <NavLink to="/executive-v2">
+                  <DollarSign className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
+                  {!isCollapsed && <span className="font-normal text-[15px]">Executive V2</span>}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
