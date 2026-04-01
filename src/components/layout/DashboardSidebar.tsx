@@ -1,4 +1,4 @@
-import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown, Star, Smartphone, Users, PlusCircle, Timer, Shield, TrendingUp, AlertTriangle } from "lucide-react";
+import { BarChart3, Car, Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, ChevronDown, Star, Smartphone, Users, PlusCircle, Timer, Shield, TrendingUp, AlertTriangle, DollarSign } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
