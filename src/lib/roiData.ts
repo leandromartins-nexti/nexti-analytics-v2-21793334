@@ -5,6 +5,42 @@ export type CostMaturity = 1 | 2 | 3;
 export type DriverStatus = "ativo" | "inativo";
 export type OportunidadeCategoria = "quick_win" | "dependente_dados" | "dependente_operacional" | "dependente_modulo";
 
+export interface DriverDataAvailability {
+  temModulo: boolean;
+  temEventosReais: boolean;
+  temValorFinanceiroReal: boolean;
+  temBaselineReal: boolean;
+  temFolha: boolean;
+}
+
+export interface DriverUpgradePath {
+  de: ConfidenceLevel;
+  para: ConfidenceLevel;
+  acao: string;
+  detalhe: string;
+  prazo: string;
+  esforco: "baixo" | "medio" | "alto";
+}
+
+export interface DriverModalData {
+  colaboradoresImpactados: number;
+  totalEventosBaseline: number;
+  totalEventosAtual: number;
+  valorMonetarioBaseline: number;
+  valorMonetarioAtual: number;
+  deltaCapturado: number;
+  mediaPorColaborador: number;
+  nivelRastreabilidade: "alto" | "medio" | "baixo";
+  parametrosMedios?: string[];
+  custoMedioAplicado?: string;
+  fatorAjusteAplicado?: string;
+  benchmarkUsado?: string;
+  baseCaseUsado?: string;
+  volumeEstimado?: string;
+  comoElevar?: string[];
+  rankingUnidades?: { nome: string; valor: number }[];
+}
+
 export interface ROIDriver {
   id: string;
   nome: string;
@@ -21,11 +57,15 @@ export interface ROIDriver {
   fonteBaseline: string;
   fonteAtual: string;
   janelaBaseline: string;
+  janelaAtual: string;
   hierarquiaBaseline: "historico_real" | "media_janela" | "benchmark_interno" | "base_case";
   tendencia: number;
   fatorReducao: number;
   formulaResumo: string;
   observacaoMetodologica: string;
+  dataAvailability: DriverDataAvailability;
+  upgradePaths: DriverUpgradePath[];
+  modalData: DriverModalData;
 }
 
 export interface ROIOwnership {
@@ -62,6 +102,7 @@ export interface ROITrendPoint {
 
 export interface PremissasROI {
   colaboradores: number;
+  dispositivos: number;
   salarioMedio: number;
   encargos: number;
   beneficios: number;
@@ -73,6 +114,38 @@ export interface PremissasROI {
   turnover: number;
   genteReceita: number;
   custoUnitarioNexti: number;
+  custoUnitarioDispositivo: number;
+  custoMedioVT: number;
+  custoMedioVR: number;
+  percentualElegivel: number;
+  diasUteis: number;
+  ticketMedioBeneficio: number;
+}
+
+export interface BaselineConfig {
+  driverId: string;
+  hierarquia: ROIDriver["hierarquiaBaseline"];
+  fontePreferencial: string;
+  janelaBaseline: string;
+  janelaComparacao: string;
+  fatorReducao: number;
+  custoUnitarioPadrao: number;
+  benchmarkAlternativo: string;
+  observacoes: string;
+}
+
+/* ── Auto-classification logic ── */
+export function autoClassifyDriver(data: DriverDataAvailability): ConfidenceLevel {
+  if (data.temModulo && data.temEventosReais && data.temValorFinanceiroReal && data.temBaselineReal) {
+    return "comprovado";
+  }
+  if (data.temModulo && data.temEventosReais && !data.temValorFinanceiroReal) {
+    return "hibrido";
+  }
+  if (!data.temModulo || (!data.temEventosReais && !data.temBaselineReal)) {
+    return "referencial";
+  }
+  return "hibrido";
 }
 
 /* ── Mock Data – Base: 8.000 colaboradores (Orsegups) ── */
@@ -80,6 +153,7 @@ export interface PremissasROI {
 
 export const premissas: PremissasROI = {
   colaboradores: 8000,
+  dispositivos: 1000,
   salarioMedio: 2200,
   encargos: 2.0,
   beneficios: 650,
@@ -91,6 +165,12 @@ export const premissas: PremissasROI = {
   turnover: 0.025,
   genteReceita: 0.12,
   custoUnitarioNexti: 10.0,
+  custoUnitarioDispositivo: 50.0,
+  custoMedioVT: 220,
+  custoMedioVR: 350,
+  percentualElegivel: 0.85,
+  diasUteis: 22,
+  ticketMedioBeneficio: 18,
 };
 
 export const ownership: ROIOwnership = {
@@ -100,114 +180,281 @@ export const ownership: ROIOwnership = {
   ownershipTotal: 1560000,
 };
 
-/*
- * Distribuição de ganhos anual (~R$6,5M bruto):
- * HE: ~22% (R$1.430k) | Custo Op: ~16% (R$1.040k) | Quadro: ~19% (R$1.235k)
- * Disputas: ~15% (R$975k) | Horas Prod: ~8% (R$520k) | Adicional Not: ~6% (R$390k)
- * Descontos: ~5% (R$310k) | Fechamento: ~4% (R$275k) | Papel: ~3% (R$210k)
- * Pagamento Benefícios: EXCLUÍDO (dados não disponíveis)
- */
-
 export const drivers: ROIDriver[] = [
   {
     id: "d1", nome: "Redução de Papel", categoria: "monetario", moduloNexti: "Documentos Digitais",
     unidadeMedida: "documentos", status: "ativo",
     baseline: 8400, atual: 4780, delta: -3620, custoUnitario: 5.8, ganhoBruto: 210000,
-    confianca: "comprovado", fonteBaseline: "Histórico real do cliente (12 meses pré-ativação)", fonteAtual: "Dados reais do módulo",
-    janelaBaseline: "Abr/2024 – Mar/2025", hierarquiaBaseline: "historico_real",
+    confianca: "comprovado", fonteBaseline: "Contagem real de documentos pré-digitalização", fonteAtual: "Dados reais do módulo Documentos Digitais",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: -6.5, fatorReducao: 25,
-    formulaResumo: "ganho = (baseline - atual) × custo unitário por documento",
-    observacaoMetodologica: "Volume de documentos físicos eliminados após digitalização. Custo unitário inclui impressão, armazenamento e manuseio.",
+    formulaResumo: "economia = (documentos_baseline - documentos_atuais) × custo_unitário_documento",
+    observacaoMetodologica: "Volume de documentos físicos eliminados após digitalização. Custo unitário inclui impressão, armazenamento e manuseio. Dados comprovados por contagem real.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: false },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 8000,
+      totalEventosBaseline: 8400, totalEventosAtual: 4780,
+      valorMonetarioBaseline: 48720, valorMonetarioAtual: 27724,
+      deltaCapturado: 210000, mediaPorColaborador: 26.25,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 62000 },
+        { nome: "Regional Sudeste", valor: 78000 },
+        { nome: "Regional Nordeste", valor: 45000 },
+        { nome: "Regional Centro-Oeste", valor: 25000 },
+      ],
+    },
   },
   {
-    id: "d2", nome: "Redução de Horas Extras", categoria: "monetario", moduloNexti: "Gestão de Jornada",
+    id: "d2", nome: "Redução de Horas Extras", categoria: "monetario", moduloNexti: "Gestão de Jornada (NextTime)",
     unidadeMedida: "horas", status: "ativo",
     baseline: 96000, atual: 31200, delta: -64800, custoUnitario: 22.0, ganhoBruto: 1430000,
-    confianca: "comprovado", fonteBaseline: "Folha de pagamento (12 meses)", fonteAtual: "Dados reais de jornada",
-    janelaBaseline: "Abr/2024 – Mar/2025", hierarquiaBaseline: "historico_real",
+    confianca: "comprovado", fonteBaseline: "Eventos reais do NextTime + valores reais da folha de pagamento", fonteAtual: "Dados reais de jornada + folha",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: -8.2, fatorReducao: 15,
-    formulaResumo: "ganho = (horas extras baseline - horas extras atuais) × custo médio hora extra",
-    observacaoMetodologica: "Custo hora extra = salário médio / 220 × multiplicador HE × encargos. Dados comprovados por folha de pagamento.",
+    formulaResumo: "economia = soma(valor_real_HE_baseline) - soma(valor_real_HE_período_atual)",
+    observacaoMetodologica: "Cálculo monetário usa valor real de HE por colaborador importado da folha. Eventos de hora extra capturados pelo NextTime com rastreabilidade total.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: true },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 5200,
+      totalEventosBaseline: 96000, totalEventosAtual: 31200,
+      valorMonetarioBaseline: 2112000, valorMonetarioAtual: 686400,
+      deltaCapturado: 1430000, mediaPorColaborador: 275.0,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 420000 },
+        { nome: "Regional Sudeste", valor: 510000 },
+        { nome: "Regional Nordeste", valor: 320000 },
+        { nome: "Regional Centro-Oeste", valor: 180000 },
+      ],
+    },
   },
   {
-    id: "d3", nome: "Redução de Adicional Noturno", categoria: "monetario", moduloNexti: "Gestão de Jornada",
+    id: "d3", nome: "Redução de Adicional Noturno", categoria: "monetario", moduloNexti: "Gestão de Jornada (NextTime)",
     unidadeMedida: "horas", status: "ativo",
     baseline: 156000, atual: 112300, delta: -43700, custoUnitario: 8.93, ganhoBruto: 390000,
-    confianca: "hibrido", fonteBaseline: "Folha de pagamento (6 meses) + estimativa", fonteAtual: "Dados reais de jornada",
-    janelaBaseline: "Out/2024 – Mar/2025", hierarquiaBaseline: "media_janela",
+    confianca: "comprovado", fonteBaseline: "Eventos reais do NextTime + valores reais de adicional noturno", fonteAtual: "Dados reais de jornada + folha",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: -4.1, fatorReducao: 25,
-    formulaResumo: "ganho = (horas noturnas baseline - horas noturnas atuais) × adicional noturno por hora",
-    observacaoMetodologica: "Baseline parcial de 6 meses extrapolado. Classificação híbrida por limitação da janela de referência.",
+    formulaResumo: "economia = (horas_noturnas_baseline × valor_adicional) - (horas_noturnas_atuais × valor_adicional)",
+    observacaoMetodologica: "Eventos reais de adicional noturno com valores monetários reais da folha. Comprovado por dados completos do NextTime + folha de pagamento.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: true },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 3400,
+      totalEventosBaseline: 156000, totalEventosAtual: 112300,
+      valorMonetarioBaseline: 1393080, valorMonetarioAtual: 1002839,
+      deltaCapturado: 390000, mediaPorColaborador: 114.71,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 110000 },
+        { nome: "Regional Sudeste", valor: 145000 },
+        { nome: "Regional Nordeste", valor: 85000 },
+        { nome: "Regional Centro-Oeste", valor: 50000 },
+      ],
+    },
   },
   {
     id: "d4", nome: "Redução de Custo Operacional", categoria: "monetario", moduloNexti: "Automação Operacional",
     unidadeMedida: "R$", status: "ativo",
     baseline: 2480000, atual: 1440000, delta: -1040000, custoUnitario: 1, ganhoBruto: 1040000,
-    confianca: "comprovado", fonteBaseline: "Financeiro do cliente", fonteAtual: "Dados reais do financeiro",
-    janelaBaseline: "Abr/2024 – Mar/2025", hierarquiaBaseline: "historico_real",
+    confianca: "comprovado", fonteBaseline: "Base operacional do cliente com medição real de esforço/custo", fonteAtual: "Dados reais do financeiro",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: -5.8, fatorReducao: 100,
-    formulaResumo: "ganho = custo operacional baseline - custo operacional atual",
-    observacaoMetodologica: "Inclui custos de processos manuais eliminados com automação. Dados validados pelo financeiro do cliente.",
+    formulaResumo: "economia = custo_operacional_baseline - custo_operacional_atual",
+    observacaoMetodologica: "Inclui custos de processos manuais eliminados com automação. Dados validados pelo financeiro do cliente com rastreabilidade completa.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: false },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 8000,
+      totalEventosBaseline: 2480000, totalEventosAtual: 1440000,
+      valorMonetarioBaseline: 2480000, valorMonetarioAtual: 1440000,
+      deltaCapturado: 1040000, mediaPorColaborador: 130.0,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 290000 },
+        { nome: "Regional Sudeste", valor: 380000 },
+        { nome: "Regional Nordeste", valor: 230000 },
+        { nome: "Regional Centro-Oeste", valor: 140000 },
+      ],
+    },
   },
   {
-    id: "d5", nome: "Aumento em Descontos de Atrasos e Faltas", categoria: "monetario", moduloNexti: "Controle de Ponto",
+    id: "d5", nome: "Aumento em Descontos de Atrasos e Faltas", categoria: "monetario", moduloNexti: "Controle de Ponto (NextTime)",
     unidadeMedida: "R$", status: "ativo",
     baseline: 180000, atual: 490000, delta: 310000, custoUnitario: 1, ganhoBruto: 310000,
-    confianca: "hibrido", fonteBaseline: "Estimativa baseada em amostra de folha", fonteAtual: "Dados reais de desconto",
-    janelaBaseline: "Estimativa com amostra", hierarquiaBaseline: "benchmark_interno",
+    confianca: "comprovado", fonteBaseline: "Valores reais de desconto importados da folha", fonteAtual: "Dados reais de desconto do NextTime + folha",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: 6.2, fatorReducao: 15,
-    formulaResumo: "ganho = descontos atuais - descontos baseline",
-    observacaoMetodologica: "Baseline estimado por amostra de folha. Delta positivo indica aumento de descontos aplicados corretamente.",
+    formulaResumo: "economia = descontos_atuais - descontos_baseline",
+    observacaoMetodologica: "Eventos reais de atraso/falta do NextTime com valor monetário real de desconto importado da folha. Delta positivo indica aumento de descontos aplicados corretamente.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: true },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 6200,
+      totalEventosBaseline: 180000, totalEventosAtual: 490000,
+      valorMonetarioBaseline: 180000, valorMonetarioAtual: 490000,
+      deltaCapturado: 310000, mediaPorColaborador: 50.0,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 85000 },
+        { nome: "Regional Sudeste", valor: 110000 },
+        { nome: "Regional Nordeste", valor: 72000 },
+        { nome: "Regional Centro-Oeste", valor: 43000 },
+      ],
+    },
   },
   {
     id: "d6", nome: "Redução Tempo para Fechamento", categoria: "monetario", moduloNexti: "Fechamento Digital",
     unidadeMedida: "horas", status: "ativo",
     baseline: 480, atual: 125, delta: -355, custoUnitario: 42, ganhoBruto: 275000,
-    confianca: "comprovado", fonteBaseline: "Levantamento de processo do cliente", fonteAtual: "Dados reais do módulo",
-    janelaBaseline: "Mapeamento pré-implantação", hierarquiaBaseline: "historico_real",
+    confianca: "comprovado", fonteBaseline: "Datas reais de fechamento do período de apuração + datas da folha", fonteAtual: "Dados reais do módulo",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: -12.0, fatorReducao: 50,
-    formulaResumo: "ganho = (horas fechamento baseline - horas fechamento atuais) × custo hora admin",
-    observacaoMetodologica: "Tempo anual de fechamento de folha. Custo hora admin informado pelo cliente.",
+    formulaResumo: "economia = (horas_fechamento_baseline - horas_fechamento_atuais) × custo_hora_admin",
+    observacaoMetodologica: "Medição real da redução do tempo entre fechamento operacional e fechamento da folha. Custo hora admin informado pelo cliente.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: true },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 45,
+      totalEventosBaseline: 480, totalEventosAtual: 125,
+      valorMonetarioBaseline: 20160, valorMonetarioAtual: 5250,
+      deltaCapturado: 275000, mediaPorColaborador: 6111.11,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "DP Central", valor: 140000 },
+        { nome: "DP Filiais", valor: 85000 },
+        { nome: "Contabilidade", valor: 50000 },
+      ],
+    },
   },
   {
     id: "d7", nome: "Redução de Disputas Trabalhistas", categoria: "monetario", moduloNexti: "Compliance Trabalhista",
     unidadeMedida: "R$", status: "ativo",
     baseline: 2800000, atual: 1825000, delta: -975000, custoUnitario: 1, ganhoBruto: 975000,
-    confianca: "referencial", fonteBaseline: "Base Case Nexti (benchmark setor)", fonteAtual: "Estimativa baseada em benchmark",
-    janelaBaseline: "Base Case padrão", hierarquiaBaseline: "base_case",
+    confianca: "hibrido", fonteBaseline: "Contagem parcial de processos do cliente", fonteAtual: "Status parcial de processos + custo médio configurado",
+    janelaBaseline: "Últimos 24 meses", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "benchmark_interno",
     tendencia: -2.8, fatorReducao: 15,
-    formulaResumo: "ganho = valor estimado de redução de passivo trabalhista",
-    observacaoMetodologica: "Valor referencial baseado em benchmarks do setor de segurança patrimonial. Não possui validação direta com dados reais do cliente.",
+    formulaResumo: "economia = (quantidade_processos_reduzidos) × custo_médio_por_processo",
+    observacaoMetodologica: "Cliente possui contagem de processos mas sem valor financeiro completo. Monetização por custo médio configurado por processo (R$18.000). Classificado como Híbrido.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: false, temBaselineReal: false, temFolha: false },
+    upgradePaths: [
+      { de: "hibrido", para: "comprovado", acao: "Importar base real de processos trabalhistas", detalhe: "Enviar linha do tempo e valor por processo para comparação antes/depois da adoção", prazo: "2-3 meses", esforco: "medio" },
+    ],
+    modalData: {
+      colaboradoresImpactados: 8000,
+      totalEventosBaseline: 156, totalEventosAtual: 102,
+      valorMonetarioBaseline: 2800000, valorMonetarioAtual: 1825000,
+      deltaCapturado: 975000, mediaPorColaborador: 121.88,
+      nivelRastreabilidade: "medio",
+      parametrosMedios: ["Custo médio por processo: R$18.000", "Redução estimada: 35%"],
+      custoMedioAplicado: "R$ 18.000 por processo",
+      fatorAjusteAplicado: "Benchmark setor segurança patrimonial",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 280000 },
+        { nome: "Regional Sudeste", valor: 350000 },
+        { nome: "Regional Nordeste", valor: 210000 },
+        { nome: "Regional Centro-Oeste", valor: 135000 },
+      ],
+    },
   },
   {
     id: "d8", nome: "Pagamento de Benefícios", categoria: "monetario", moduloNexti: "Gestão de Benefícios",
     unidadeMedida: "R$", status: "inativo",
     baseline: 0, atual: 0, delta: 0, custoUnitario: 1, ganhoBruto: 0,
-    confianca: "potencial", fonteBaseline: "Dados não disponíveis", fonteAtual: "Não mensurado",
-    janelaBaseline: "N/A", hierarquiaBaseline: "base_case",
+    confianca: "referencial", fonteBaseline: "Não disponível — módulo não ativado", fonteAtual: "Não mensurado",
+    janelaBaseline: "N/A", janelaAtual: "N/A",
+    hierarquiaBaseline: "base_case",
     tendencia: 0, fatorReducao: 0,
-    formulaResumo: "Não mensurado — cliente não possui integração de dados de benefícios",
-    observacaoMetodologica: "Oportunidade futura condicionada à integração de dados de benefícios. Fora do cálculo de ROI realizado.",
+    formulaResumo: "Não mensurado — cliente não utiliza módulo de Benefícios",
+    observacaoMetodologica: "Driver referencial. Cliente Orsegups não utiliza o módulo de Benefícios. Valor potencial estimado por premissas configuradas no Centro de Configuração.",
+    dataAvailability: { temModulo: false, temEventosReais: false, temValorFinanceiroReal: false, temBaselineReal: false, temFolha: false },
+    upgradePaths: [
+      { de: "referencial", para: "hibrido", acao: "Ativar módulo de Benefícios", detalhe: "Integrar dados parciais de benefícios para monetização por parâmetros médios", prazo: "3-6 meses", esforco: "alto" },
+      { de: "hibrido", para: "comprovado", acao: "Integrar base completa de benefícios", detalhe: "Importar dados reais de VT, VR, VA com custo real por colaborador", prazo: "6-12 meses", esforco: "alto" },
+    ],
+    modalData: {
+      colaboradoresImpactados: 0,
+      totalEventosBaseline: 0, totalEventosAtual: 0,
+      valorMonetarioBaseline: 0, valorMonetarioAtual: 0,
+      deltaCapturado: 0, mediaPorColaborador: 0,
+      nivelRastreabilidade: "baixo",
+      benchmarkUsado: "Custo médio VT: R$220/col, VR: R$350/col",
+      baseCaseUsado: "Base Case Nexti — economia estimada de 8-12% sobre custo total de benefícios",
+      volumeEstimado: "Estimativa: R$ 380.000 - R$ 580.000/ano se módulo ativado",
+      comoElevar: [
+        "Ativar módulo de Gestão de Benefícios",
+        "Integrar base de VT, VR e VA",
+        "Importar dados reais de custo por colaborador",
+        "Oportunidade de cross-sell",
+      ],
+    },
   },
   {
     id: "d9", nome: "Otimização de Quadro de Lotação", categoria: "monetario", moduloNexti: "Dimensionamento",
     unidadeMedida: "colaboradores", status: "ativo",
     baseline: 8000, atual: 7810, delta: -190, custoUnitario: 6500, ganhoBruto: 1235000,
-    confianca: "referencial", fonteBaseline: "Base Case Nexti", fonteAtual: "Estimativa por benchmark",
-    janelaBaseline: "Base Case padrão", hierarquiaBaseline: "base_case",
+    confianca: "hibrido", fonteBaseline: "Dado operacional parcial de dimensionamento", fonteAtual: "Estimativa com custo baseado em média configurada",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "benchmark_interno",
     tendencia: -1.2, fatorReducao: 100,
-    formulaResumo: "ganho = colaboradores reduzidos × custo médio por colaborador (salário + encargos + benefícios)",
-    observacaoMetodologica: "Valor referencial. Depende de validação com dados reais de dimensionamento do cliente.",
+    formulaResumo: "economia = colaboradores_reduzidos × custo_médio_por_colaborador (salário + encargos + benefícios)",
+    observacaoMetodologica: "Dado operacional parcial de estrutura antes e depois. Custo baseado em média configurada (R$6.500). Classificado como Híbrido.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: false, temBaselineReal: false, temFolha: false },
+    upgradePaths: [
+      { de: "hibrido", para: "comprovado", acao: "Validar com dados reais de dimensionamento", detalhe: "Importar dados reais de estrutura antes e depois com custo real por colaborador", prazo: "2-4 meses", esforco: "medio" },
+    ],
+    modalData: {
+      colaboradoresImpactados: 190,
+      totalEventosBaseline: 8000, totalEventosAtual: 7810,
+      valorMonetarioBaseline: 52000000, valorMonetarioAtual: 50765000,
+      deltaCapturado: 1235000, mediaPorColaborador: 6500,
+      nivelRastreabilidade: "medio",
+      parametrosMedios: ["Custo médio por colaborador: R$6.500/mês (salário + encargos + benefícios)"],
+      custoMedioAplicado: "R$ 6.500 por colaborador",
+      fatorAjusteAplicado: "Benchmark interno por porte e segmento",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 350000 },
+        { nome: "Regional Sudeste", valor: 450000 },
+        { nome: "Regional Nordeste", valor: 280000 },
+        { nome: "Regional Centro-Oeste", valor: 155000 },
+      ],
+    },
   },
   {
-    id: "d10", nome: "Horas Produtivas Não Faturadas", categoria: "monetario", moduloNexti: "Produtividade",
+    id: "d10", nome: "Horas Produtivas Não Faturadas", categoria: "monetario", moduloNexti: "Produtividade / Operações",
     unidadeMedida: "horas", status: "ativo",
     baseline: 0, atual: 41600, delta: 41600, custoUnitario: 12.5, ganhoBruto: 520000,
-    confianca: "referencial", fonteBaseline: "Base Case Nexti", fonteAtual: "Estimativa por benchmark",
-    janelaBaseline: "Base Case padrão", hierarquiaBaseline: "base_case",
+    confianca: "comprovado", fonteBaseline: "Identificação via operação: coberturas e horas em postos não faturados", fonteAtual: "Dados reais da operação",
+    janelaBaseline: "Sem baseline (identificação nova)", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real",
     tendencia: 3.5, fatorReducao: 100,
-    formulaResumo: "ganho = horas produtivas identificadas × valor unitário da hora",
-    observacaoMetodologica: "Valor referencial baseado em estimativa de horas produtivas não capturadas antes da solução.",
+    formulaResumo: "economia = horas_produtivas_identificadas × custo_real_da_hora",
+    observacaoMetodologica: "Horas em postos não faturados identificadas pela operação. Custo real ou confiável dessas horas tratado como custo perdido eliminado.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: true, temBaselineReal: true, temFolha: false },
+    upgradePaths: [],
+    modalData: {
+      colaboradoresImpactados: 1800,
+      totalEventosBaseline: 0, totalEventosAtual: 41600,
+      valorMonetarioBaseline: 0, valorMonetarioAtual: 520000,
+      deltaCapturado: 520000, mediaPorColaborador: 288.89,
+      nivelRastreabilidade: "alto",
+      rankingUnidades: [
+        { nome: "Regional Sul", valor: 150000 },
+        { nome: "Regional Sudeste", valor: 195000 },
+        { nome: "Regional Nordeste", valor: 110000 },
+        { nome: "Regional Centro-Oeste", valor: 65000 },
+      ],
+    },
   },
   /* ── Intangíveis ── */
   {
@@ -215,100 +462,107 @@ export const drivers: ROIDriver[] = [
     unidadeMedida: "minutos", status: "ativo",
     baseline: 45, atual: 14, delta: -31, custoUnitario: 0, ganhoBruto: 0,
     confianca: "comprovado", fonteBaseline: "Pesquisa interna do cliente", fonteAtual: "Dados reais do módulo",
-    janelaBaseline: "Pesquisa pré-implantação", hierarquiaBaseline: "historico_real",
-    tendencia: -12.0, fatorReducao: 0,
+    janelaBaseline: "Pesquisa pré-implantação", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real", tendencia: -12.0, fatorReducao: 0,
     formulaResumo: "Tempo médio de atendimento antes vs depois (não monetizado)",
     observacaoMetodologica: "Ganho intangível. Contribui para satisfação do colaborador e eficiência de RH.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: false, temBaselineReal: true, temFolha: false },
+    upgradePaths: [],
+    modalData: { colaboradoresImpactados: 8000, totalEventosBaseline: 45, totalEventosAtual: 14, valorMonetarioBaseline: 0, valorMonetarioAtual: 0, deltaCapturado: 0, mediaPorColaborador: 0, nivelRastreabilidade: "alto" },
   },
   {
     id: "d12", nome: "Melhoria de SLA Interno", categoria: "intangivel", moduloNexti: "Operações",
     unidadeMedida: "%", status: "ativo",
     baseline: 72, atual: 91, delta: 19, custoUnitario: 0, ganhoBruto: 0,
-    confianca: "hibrido", fonteBaseline: "Histórico do cliente", fonteAtual: "Dados reais do módulo",
-    janelaBaseline: "Abr/2024 – Set/2024", hierarquiaBaseline: "media_janela",
-    tendencia: 2.8, fatorReducao: 0,
+    confianca: "comprovado", fonteBaseline: "Histórico do cliente", fonteAtual: "Dados reais do módulo",
+    janelaBaseline: "Abr/2024 – Mar/2025", janelaAtual: "Abr/2025 – Mar/2026",
+    hierarquiaBaseline: "historico_real", tendencia: 2.8, fatorReducao: 0,
     formulaResumo: "SLA interno antes vs depois (%)",
     observacaoMetodologica: "Ganho intangível. Melhoria de conformidade e governança operacional.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: false, temBaselineReal: true, temFolha: false },
+    upgradePaths: [],
+    modalData: { colaboradoresImpactados: 8000, totalEventosBaseline: 72, totalEventosAtual: 91, valorMonetarioBaseline: 0, valorMonetarioAtual: 0, deltaCapturado: 0, mediaPorColaborador: 0, nivelRastreabilidade: "alto" },
   },
   {
     id: "d13", nome: "Ganho de Governança", categoria: "intangivel", moduloNexti: "Compliance",
     unidadeMedida: "nível", status: "ativo",
     baseline: 2, atual: 4, delta: 2, custoUnitario: 0, ganhoBruto: 0,
-    confianca: "hibrido", fonteBaseline: "Avaliação interna", fonteAtual: "Avaliação pós-implantação",
-    janelaBaseline: "Avaliação pré-implantação", hierarquiaBaseline: "benchmark_interno",
-    tendencia: 8, fatorReducao: 0,
+    confianca: "comprovado", fonteBaseline: "Avaliação interna pré-implantação", fonteAtual: "Avaliação pós-implantação",
+    janelaBaseline: "Avaliação pré-implantação", janelaAtual: "Mar/2026",
+    hierarquiaBaseline: "historico_real", tendencia: 8, fatorReducao: 0,
     formulaResumo: "Nível de maturidade de governança antes vs depois (escala 1-5)",
     observacaoMetodologica: "Avaliação qualitativa de maturidade de governança trabalhista.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: false, temBaselineReal: true, temFolha: false },
+    upgradePaths: [],
+    modalData: { colaboradoresImpactados: 8000, totalEventosBaseline: 2, totalEventosAtual: 4, valorMonetarioBaseline: 0, valorMonetarioAtual: 0, deltaCapturado: 0, mediaPorColaborador: 0, nivelRastreabilidade: "alto" },
   },
   {
     id: "d14", nome: "Redução de Risco Reputacional", categoria: "intangivel", moduloNexti: "Compliance Trabalhista",
     unidadeMedida: "índice", status: "ativo",
     baseline: 7.5, atual: 3.8, delta: -3.7, custoUnitario: 0, ganhoBruto: 0,
-    confianca: "referencial", fonteBaseline: "Base Case Nexti", fonteAtual: "Estimativa",
-    janelaBaseline: "Base Case padrão", hierarquiaBaseline: "base_case",
-    tendencia: -5.0, fatorReducao: 0,
+    confianca: "hibrido", fonteBaseline: "Avaliação interna + benchmark", fonteAtual: "Estimativa pós-implantação",
+    janelaBaseline: "Avaliação pré-implantação", janelaAtual: "Mar/2026",
+    hierarquiaBaseline: "benchmark_interno", tendencia: -5.0, fatorReducao: 0,
     formulaResumo: "Índice de risco reputacional antes vs depois (escala 0-10)",
     observacaoMetodologica: "Ganho intangível baseado em redução de exposição trabalhista e passivos.",
+    dataAvailability: { temModulo: true, temEventosReais: true, temValorFinanceiroReal: false, temBaselineReal: false, temFolha: false },
+    upgradePaths: [
+      { de: "hibrido", para: "comprovado", acao: "Importar base real de processos", detalhe: "Integrar histórico completo de processos trabalhistas para validação", prazo: "3-6 meses", esforco: "medio" },
+    ],
+    modalData: { colaboradoresImpactados: 8000, totalEventosBaseline: 7.5, totalEventosAtual: 3.8, valorMonetarioBaseline: 0, valorMonetarioAtual: 0, deltaCapturado: 0, mediaPorColaborador: 0, nivelRastreabilidade: "medio" },
   },
 ];
 
 export const intangiveis = drivers.filter(d => d.categoria === "intangivel");
 
-/*
- * Operações — ROI entre 1.2x e 6x, score entre 48 e 88
- * Ownership por colaborador/mês = R$16,25 → anual = R$195,00
- */
 export const operacoes: ROIOperacao[] = [
   {
     nome: "Regional Sul", tipo: "regional",
     economiaBruta: 1820000, ownershipAtribuido: 429000, economiaLiquida: 1391000, roiTotal: 4.2,
-    driversPrincipais: ["Horas Extras", "Custo Operacional"], pctComprovado: 58, tendencia: 5.2, scoreCaptura: 78, colaboradores: 2200,
+    driversPrincipais: ["Horas Extras", "Custo Operacional"], pctComprovado: 72, tendencia: 5.2, scoreCaptura: 82, colaboradores: 2200,
   },
   {
     nome: "Regional Sudeste", tipo: "regional",
     economiaBruta: 2210000, ownershipAtribuido: 546000, economiaLiquida: 1664000, roiTotal: 4.0,
-    driversPrincipais: ["Quadro Lotação", "Horas Extras"], pctComprovado: 48, tendencia: 3.8, scoreCaptura: 68, colaboradores: 2800,
+    driversPrincipais: ["Quadro Lotação", "Horas Extras"], pctComprovado: 65, tendencia: 3.8, scoreCaptura: 74, colaboradores: 2800,
   },
   {
     nome: "Regional Nordeste", tipo: "regional",
     economiaBruta: 1350000, ownershipAtribuido: 292500, economiaLiquida: 1057500, roiTotal: 4.6,
-    driversPrincipais: ["Custo Operacional", "Papel"], pctComprovado: 65, tendencia: 7.1, scoreCaptura: 82, colaboradores: 1500,
+    driversPrincipais: ["Custo Operacional", "Papel"], pctComprovado: 78, tendencia: 7.1, scoreCaptura: 85, colaboradores: 1500,
   },
   {
     nome: "Regional Centro-Oeste", tipo: "regional",
     economiaBruta: 820000, ownershipAtribuido: 292500, economiaLiquida: 527500, roiTotal: 2.8,
-    driversPrincipais: ["Horas Extras", "Fechamento"], pctComprovado: 38, tendencia: -1.5, scoreCaptura: 52, colaboradores: 1500,
+    driversPrincipais: ["Horas Extras", "Fechamento"], pctComprovado: 55, tendencia: -1.5, scoreCaptura: 62, colaboradores: 1500,
   },
   {
     nome: "Contrato A – Logística", tipo: "contrato",
     economiaBruta: 1480000, ownershipAtribuido: 234000, economiaLiquida: 1246000, roiTotal: 6.3,
-    driversPrincipais: ["Horas Extras", "Quadro Lotação"], pctComprovado: 55, tendencia: 4.5, scoreCaptura: 74, colaboradores: 1200,
+    driversPrincipais: ["Horas Extras", "Quadro Lotação"], pctComprovado: 70, tendencia: 4.5, scoreCaptura: 78, colaboradores: 1200,
   },
   {
     nome: "Contrato B – Segurança", tipo: "contrato",
     economiaBruta: 980000, ownershipAtribuido: 185250, economiaLiquida: 794750, roiTotal: 5.3,
-    driversPrincipais: ["Horas Extras", "Adicional Noturno"], pctComprovado: 72, tendencia: 3.2, scoreCaptura: 85, colaboradores: 950,
+    driversPrincipais: ["Horas Extras", "Adicional Noturno"], pctComprovado: 82, tendencia: 3.2, scoreCaptura: 88, colaboradores: 950,
   },
   {
     nome: "Contrato C – Facilities", tipo: "contrato",
     economiaBruta: 520000, ownershipAtribuido: 165750, economiaLiquida: 354250, roiTotal: 3.1,
-    driversPrincipais: ["Papel", "Custo Operacional"], pctComprovado: 35, tendencia: -3.2, scoreCaptura: 48, colaboradores: 850,
+    driversPrincipais: ["Papel", "Custo Operacional"], pctComprovado: 58, tendencia: -3.2, scoreCaptura: 55, colaboradores: 850,
   },
   {
     nome: "Unidade São Paulo", tipo: "unidade",
     economiaBruta: 2680000, ownershipAtribuido: 624000, economiaLiquida: 2056000, roiTotal: 4.3,
-    driversPrincipais: ["Horas Extras", "Custo Operacional"], pctComprovado: 52, tendencia: 4.8, scoreCaptura: 72, colaboradores: 3200,
+    driversPrincipais: ["Horas Extras", "Custo Operacional"], pctComprovado: 68, tendencia: 4.8, scoreCaptura: 76, colaboradores: 3200,
   },
 ];
 
 /* ── Série temporal abr/2025 – mar/2026 ── */
 
 export const mesesROI = ["Abr/25", "Mai/25", "Jun/25", "Jul/25", "Ago/25", "Set/25", "Out/25", "Nov/25", "Dez/25", "Jan/26", "Fev/26", "Mar/26"];
-
-/* Economia mensal com crescimento suave — total ~R$6,4M */
 const economiaMensal = [310000, 350000, 400000, 450000, 510000, 540000, 560000, 580000, 610000, 640000, 670000, 720000];
-/* % comprovado evoluindo gradualmente */
-const pctComprovadoMensal = [18, 20, 24, 27, 30, 34, 37, 40, 45, 48, 50, 52];
+const pctComprovadoMensal = [45, 48, 52, 55, 58, 62, 65, 68, 70, 72, 74, 76];
 const ownershipMensal = 130000;
 
 export const trendROI: ROITrendPoint[] = mesesROI.map((mes, i) => {
@@ -317,11 +571,8 @@ export const trendROI: ROITrendPoint[] = mesesROI.map((mes, i) => {
   const acumulada = economiaMensal.slice(0, i + 1).reduce((s, v) => s + v, 0);
   const pctComp = pctComprovadoMensal[i];
   return {
-    mes,
-    roiTotal: +(bruta / ownershipMensal).toFixed(1),
-    economiaBruta: bruta,
-    economiaLiquida: liquida,
-    economiaAcumulada: acumulada,
+    mes, roiTotal: +(bruta / ownershipMensal).toFixed(1),
+    economiaBruta: bruta, economiaLiquida: liquida, economiaAcumulada: acumulada,
     pctComprovado: pctComp,
     valorComprovado: Math.round(bruta * pctComp / 100),
     valorReferencial: Math.round(bruta * (100 - pctComp) / 100),
@@ -338,6 +589,10 @@ export function getDriversIntangiveis() {
   return drivers.filter(d => d.categoria === "intangivel" && d.status === "ativo");
 }
 
+export function getAllDriversMonetarios() {
+  return drivers.filter(d => d.categoria === "monetario");
+}
+
 export function getEconomiaBruta() {
   return getDriversMonetarios().reduce((sum, d) => sum + d.ganhoBruto, 0);
 }
@@ -351,14 +606,12 @@ export function getROITotal() {
 }
 
 export function getPaybackMeses() {
-  /* Payback = mês em que economia acumulada supera ownership acumulado */
   let acumEco = 0;
-  const ownershipMensal = ownership.ownershipTotal / 12;
+  const om = ownership.ownershipTotal / 12;
   for (let i = 0; i < economiaMensal.length; i++) {
     acumEco += economiaMensal[i];
-    const acumOwn = (i + 1) * ownershipMensal;
+    const acumOwn = (i + 1) * om;
     if (acumEco >= acumOwn) {
-      /* Interpolar fração do mês */
       const falta = acumOwn - (acumEco - economiaMensal[i]);
       const fracao = falta / economiaMensal[i];
       return +(i + fracao).toFixed(1);
@@ -423,12 +676,13 @@ export function generateROIInsights() {
   const monetarios = getDriversMonetarios();
   const topDriver = [...monetarios].sort((a, b) => b.ganhoBruto - a.ganhoBruto)[0];
   const top3 = [...monetarios].sort((a, b) => b.ganhoBruto - a.ganhoBruto).slice(0, 3).map(d => d.nome);
+  const driversComUpgrade = drivers.filter(d => d.upgradePaths.length > 0);
 
   return [
     { severity: "info" as const, text: `A Nexti gerou ${formatCurrency(liq)} de economia líquida anual no período abr/2025 – mar/2026, com ${conf.comprovado.toFixed(0)}% do valor sustentado por dados reais do cliente.` },
-    { severity: "info" as const, text: `A captura de valor evoluiu ao longo dos 12 meses, com maior maturidade de comprovação no segundo semestre. O % comprovado saiu de 18% para 52%.` },
-    { severity: "critical" as const, text: `Os principais drivers de valor foram ${top3.join(", ")}, que juntos representam ${((top3.reduce((s, n) => s + (monetarios.find(d => d.nome === n)?.ganhoBruto || 0), 0) / eco) * 100).toFixed(0)}% da economia bruta.` },
-    { severity: "warning" as const, text: `${formatCurrency(conf["referencialR$"])} do valor total (${conf.referencial.toFixed(0)}%) ainda é referencial — oportunidade de comprovação com importação de dados reais.` },
-    { severity: "info" as const, text: `O ROI anual de ${getROITotal().toFixed(1)}x é positivo e defensável frente ao ownership total de ${formatCurrency(ownership.ownershipTotal)}.` },
+    { severity: "info" as const, text: `A captura de valor evoluiu ao longo dos 12 meses, com comprovação saindo de 45% para 76% ao final do período.` },
+    { severity: "critical" as const, text: `Os principais drivers foram ${top3.join(", ")}, representando ${((top3.reduce((s, n) => s + (monetarios.find(d => d.nome === n)?.ganhoBruto || 0), 0) / eco) * 100).toFixed(0)}% da economia bruta.` },
+    { severity: "warning" as const, text: `${driversComUpgrade.length} driver(s) podem elevar confiança com importação de dados: ${driversComUpgrade.map(d => d.nome).join(", ")}.` },
+    { severity: "info" as const, text: `O ROI anual de ${getROITotal().toFixed(1)}x com payback de ${getPaybackMeses()} meses é positivo e defensável frente ao ownership de ${formatCurrency(ownership.ownershipTotal)}.` },
   ];
 }

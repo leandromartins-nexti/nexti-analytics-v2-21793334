@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, ZAxis, Cell } from "recharts";
-import { ChevronDown, ChevronUp, Info } from "lucide-react";
+import { Info, ExternalLink } from "lucide-react";
 import {
   drivers, getDriversMonetarios, getDriversIntangiveis, getEconomiaBruta,
-  formatCurrency, formatNumber, confidenceBadge, ownership, hierarquiaBaselineLabel,
+  formatCurrency, formatNumber, confidenceBadge, ownership, ROIDriver,
 } from "@/lib/roiData";
+import DriverDetailModal from "@/components/executive-v2/DriverDetailModal";
 
 export default function DriversValorTab() {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedDriver, setSelectedDriver] = useState<ROIDriver | null>(null);
   const monetarios = getDriversMonetarios();
   const intangiveis = getDriversIntangiveis();
   const ecoBruta = getEconomiaBruta();
@@ -15,7 +16,6 @@ export default function DriversValorTab() {
   const hibridos = monetarios.filter(d => d.confianca === "hibrido").length;
   const referenciais = monetarios.filter(d => d.confianca === "referencial").length;
   const topDriver = [...monetarios].sort((a, b) => b.ganhoBruto - a.ganhoBruto)[0];
-  const worstTrend = [...monetarios].sort((a, b) => a.tendencia - b.tendencia)[0];
 
   const paretoData = [...monetarios].sort((a, b) => b.ganhoBruto - a.ganhoBruto)
     .map(d => ({
@@ -50,20 +50,20 @@ export default function DriversValorTab() {
         ))}
       </div>
 
-      {/* Drivers Table */}
+      {/* Drivers Table — click opens modal */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-gray-800">Tabela de Drivers Monetários</h3>
           <div className="flex items-center gap-1 text-[10px] text-gray-400">
-            <Info className="w-3 h-3" />
-            <span>Clique em um driver para ver detalhes do cálculo</span>
+            <ExternalLink className="w-3 h-3" />
+            <span>Clique em um driver para abrir o detalhe completo</span>
           </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-gray-200">
-                {["", "Driver", "Módulo", "Baseline", "Atual", "Delta", "Custo Unit.", "Contribuição", "% do Total", "Peso no ROI", "Confiança", "Tendência"].map(h => (
+                {["Driver", "Módulo", "Baseline", "Atual", "Contribuição", "% do Total", "Peso no ROI", "Confiança", "Tendência"].map(h => (
                   <th key={h} className="text-left py-2 px-2 text-gray-500 font-medium uppercase text-[10px]">{h}</th>
                 ))}
               </tr>
@@ -73,70 +73,22 @@ export default function DriversValorTab() {
                 const badge = confidenceBadge(d.confianca);
                 const pctEco = ecoBruta > 0 ? (d.ganhoBruto / ecoBruta * 100).toFixed(1) : "0";
                 const pesoROI = ownership.ownershipTotal > 0 ? (d.ganhoBruto / ownership.ownershipTotal).toFixed(1) : "0";
-                const isExpanded = expandedId === d.id;
                 return (
-                  <React.Fragment key={d.id}>
-                    <tr className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : d.id)}>
-                      <td className="py-2 px-2">{isExpanded ? <ChevronUp className="w-3 h-3 text-gray-400" /> : <ChevronDown className="w-3 h-3 text-gray-400" />}</td>
-                      <td className="py-2 px-2 font-medium text-gray-700">{d.nome}</td>
-                      <td className="py-2 px-2 text-gray-500">{d.moduloNexti}</td>
-                      <td className="py-2 px-2">{formatNumber(d.baseline)}</td>
-                      <td className="py-2 px-2">{formatNumber(d.atual)}</td>
-                      <td className={`py-2 px-2 font-medium ${d.delta < 0 ? "text-green-600" : d.delta > 0 ? (["d5", "d10"].includes(d.id) ? "text-green-600" : "text-red-500") : "text-gray-500"}`}>{formatNumber(d.delta)}</td>
-                      <td className="py-2 px-2">{formatCurrency(d.custoUnitario)}</td>
-                      <td className={`py-2 px-2 font-bold ${d.ganhoBruto >= 0 ? "text-green-600" : "text-red-500"}`}>{formatCurrency(d.ganhoBruto)}</td>
-                      <td className="py-2 px-2">{pctEco}%</td>
-                      <td className="py-2 px-2">{pesoROI}x</td>
-                      <td className="py-2 px-2">
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${badge.bg} ${badge.color} border ${badge.border}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} /> {badge.label}
-                        </span>
-                      </td>
-                      <td className={`py-2 px-2 font-medium ${d.tendencia < 0 ? "text-green-600" : d.tendencia > 0 ? "text-red-500" : "text-gray-500"}`}>{d.tendencia > 0 ? "+" : ""}{d.tendencia}%</td>
-                    </tr>
-                    {isExpanded && (
-                      <tr key={`${d.id}-detail`}>
-                        <td colSpan={12} className="bg-gray-50 px-6 py-4">
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
-                            <div>
-                              <span className="text-gray-400 uppercase text-[10px] font-medium">Fonte do Baseline</span>
-                              <p className="font-medium text-gray-700 mt-0.5">{d.fonteBaseline}</p>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 uppercase text-[10px] font-medium">Hierarquia do Baseline</span>
-                              <p className="font-medium text-gray-700 mt-0.5">{hierarquiaBaselineLabel(d.hierarquiaBaseline)}</p>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 uppercase text-[10px] font-medium">Janela do Baseline</span>
-                              <p className="font-medium text-gray-700 mt-0.5">{d.janelaBaseline}</p>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 uppercase text-[10px] font-medium">Fonte Atual</span>
-                              <p className="font-medium text-gray-700 mt-0.5">{d.fonteAtual}</p>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 uppercase text-[10px] font-medium">Unidade de Medida</span>
-                              <p className="font-medium text-gray-700 mt-0.5">{d.unidadeMedida}</p>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 uppercase text-[10px] font-medium">Fator de Redução</span>
-                              <p className="font-medium text-gray-700 mt-0.5">{d.fatorReducao}%</p>
-                            </div>
-                          </div>
-                          <div className="mt-3 p-3 bg-white rounded border border-gray-200">
-                            <span className="text-gray-400 uppercase text-[10px] font-medium">Fórmula do Cálculo</span>
-                            <p className="font-mono text-xs text-[#FF5722] mt-1">{d.formulaResumo}</p>
-                          </div>
-                          {d.observacaoMetodologica && (
-                            <div className="mt-2 p-3 bg-blue-50 rounded border border-blue-200">
-                              <span className="text-blue-400 uppercase text-[10px] font-medium">Observação Metodológica</span>
-                              <p className="text-xs text-gray-600 mt-1">{d.observacaoMetodologica}</p>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
+                  <tr key={d.id} className="border-b border-gray-100 hover:bg-orange-50/50 cursor-pointer transition-colors" onClick={() => setSelectedDriver(d)}>
+                    <td className="py-2.5 px-2 font-medium text-gray-700">{d.nome}</td>
+                    <td className="py-2.5 px-2 text-gray-500">{d.moduloNexti}</td>
+                    <td className="py-2.5 px-2">{formatNumber(d.baseline)}</td>
+                    <td className="py-2.5 px-2">{formatNumber(d.atual)}</td>
+                    <td className={`py-2.5 px-2 font-bold text-green-600`}>{formatCurrency(d.ganhoBruto)}</td>
+                    <td className="py-2.5 px-2">{pctEco}%</td>
+                    <td className="py-2.5 px-2">{pesoROI}x</td>
+                    <td className="py-2.5 px-2">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${badge.bg} ${badge.color} border ${badge.border}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} /> {badge.label}
+                      </span>
+                    </td>
+                    <td className={`py-2.5 px-2 font-medium ${d.tendencia < 0 ? "text-green-600" : d.tendencia > 0 ? "text-red-500" : "text-gray-500"}`}>{d.tendencia > 0 ? "+" : ""}{d.tendencia}%</td>
+                  </tr>
                 );
               })}
             </tbody>
@@ -148,12 +100,12 @@ export default function DriversValorTab() {
       {intangiveis.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-800 mb-1">🌟 Ganhos Intangíveis</h3>
-          <p className="text-[10px] text-gray-400 mb-3">Valores qualitativos que não compõem o ROI monetário, mas demonstram valor complementar da solução</p>
+          <p className="text-[10px] text-gray-400 mb-3">Valores qualitativos que não compõem o ROI monetário, mas demonstram valor complementar</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {intangiveis.map(d => {
               const badge = confidenceBadge(d.confianca);
               return (
-                <div key={d.id} className="border border-gray-100 rounded-lg p-3">
+                <div key={d.id} className="border border-gray-100 rounded-lg p-3 hover:bg-orange-50/30 cursor-pointer transition-colors" onClick={() => setSelectedDriver(d)}>
                   <div className="flex items-center justify-between mb-2">
                     <div>
                       <p className="text-xs font-medium text-gray-700">{d.nome}</p>
@@ -165,9 +117,7 @@ export default function DriversValorTab() {
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-bold text-gray-700">{formatNumber(d.baseline)} → {formatNumber(d.atual)} <span className="text-[10px] text-gray-400">{d.unidadeMedida}</span></p>
-                    <p className={`text-xs font-medium ${d.delta > 0 ? "text-green-600" : d.delta < 0 ? "text-green-600" : "text-gray-500"}`}>
-                      Δ {d.delta > 0 ? "+" : ""}{formatNumber(d.delta)}
-                    </p>
+                    <p className="text-xs font-medium text-green-600">Δ {d.delta > 0 ? "+" : ""}{formatNumber(d.delta)}</p>
                   </div>
                 </div>
               );
@@ -220,6 +170,8 @@ export default function DriversValorTab() {
           </div>
         </div>
       </div>
+
+      <DriverDetailModal driver={selectedDriver} open={!!selectedDriver} onClose={() => setSelectedDriver(null)} />
     </div>
   );
 }
