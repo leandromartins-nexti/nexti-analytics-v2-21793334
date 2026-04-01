@@ -11,14 +11,16 @@ import RoiOperacaoTab from "./executive-v2/RoiOperacaoTab";
 import EvolucaoTab from "./executive-v2/EvolucaoTab";
 import OportunidadesTab from "./executive-v2/OportunidadesTab";
 import MetodologiaTab from "./executive-v2/MetodologiaTab";
+import RetornoInvestimentoTab from "./executive-v2/RetornoInvestimentoTab";
 
 const tabs = [
   { id: "resumo", label: "Resumo Executivo" },
   { id: "drivers", label: "Drivers de Valor" },
-  { id: "operacao", label: "ROI por Operação" },
+  { id: "operacao", label: "Valor por Operação" },
   { id: "evolucao", label: "Evolução" },
   { id: "oportunidades", label: "Oportunidades" },
   { id: "metodologia", label: "Metodologia" },
+  { id: "retorno", label: "Retorno do Investimento" },
 ];
 
 export default function ExecutiveV2() {
@@ -34,6 +36,7 @@ export default function ExecutiveV2() {
       case "evolucao": return <EvolucaoTab />;
       case "oportunidades": return <OportunidadesTab />;
       case "metodologia": return <MetodologiaTab />;
+      case "retorno": return <RetornoInvestimentoTab />;
       default: return <ResumoExecutivoTab />;
     }
   };
