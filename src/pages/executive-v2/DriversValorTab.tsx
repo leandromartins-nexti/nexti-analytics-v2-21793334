@@ -1,0 +1,165 @@
+import { useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, ZAxis, Cell, LineChart, Line, Legend } from "recharts";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  drivers, getDriversMonetarios, getDriversIntangiveis, getEconomiaBruta,
+  formatCurrency, formatNumber, confidenceBadge, ownership,
+} from "@/lib/roiData";
+
+export default function DriversValorTab() {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const monetarios = getDriversMonetarios();
+  const intangiveis = getDriversIntangiveis();
+  const ecoBruta = getEconomiaBruta();
+  const comprovados = monetarios.filter(d => d.confianca === "comprovado").length;
+  const topDriver = [...monetarios].sort((a, b) => b.ganhoBruto - a.ganhoBruto)[0];
+  const worstTrend = [...monetarios].sort((a, b) => a.tendencia - b.tendencia)[0];
+
+  const paretoData = [...monetarios].sort((a, b) => b.ganhoBruto - a.ganhoBruto)
+    .map(d => ({ name: d.nome.length > 18 ? d.nome.slice(0, 16) + "…" : d.nome, value: d.ganhoBruto }));
+
+  const scatterData = monetarios.map(d => ({
+    name: d.nome,
+    x: d.confianca === "comprovado" ? 3 : d.confianca === "hibrido" ? 2 : 1,
+    y: d.ganhoBruto,
+    z: Math.abs(d.tendencia) * 10 + 100,
+  }));
+
+  return (
+    <div className="space-y-6">
+      {/* Big Numbers */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { label: "Drivers Ativos", value: `${monetarios.length}`, color: "text-gray-700" },
+          { label: "Drivers Comprovados", value: `${comprovados}`, color: "text-green-600" },
+          { label: "Driver Líder", value: topDriver?.nome || "—", sub: topDriver ? formatCurrency(topDriver.ganhoBruto) : "", color: "text-[#FF5722]" },
+          { label: "Maior Piora (Tendência)", value: worstTrend?.nome || "—", sub: `${worstTrend?.tendencia.toFixed(1)}%`, color: "text-red-500" },
+        ].map((kpi, i) => (
+          <div key={i} className="bg-white rounded-lg border border-gray-200 p-4 text-center">
+            <p className="text-[10px] text-gray-500 font-medium uppercase">{kpi.label}</p>
+            <p className={`text-lg font-bold mt-1 ${kpi.color} truncate`}>{kpi.value}</p>
+            {kpi.sub && <p className="text-xs text-gray-400 mt-0.5">{kpi.sub}</p>}
+          </div>
+        ))}
+      </div>
+
+      {/* Drivers Table */}
+      <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-800 mb-4">Tabela de Drivers Monetários</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-gray-200">
+                {["", "Driver", "Módulo", "Baseline", "Atual", "Delta", "Custo Unit.", "Ganho", "% Economia", "Contrib. ROI", "Confiança", "Tendência"].map(h => (
+                  <th key={h} className="text-left py-2 px-2 text-gray-500 font-medium uppercase text-[10px]">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {monetarios.map(d => {
+                const badge = confidenceBadge(d.confianca);
+                const pctEco = ecoBruta > 0 ? (d.ganhoBruto / ecoBruta * 100).toFixed(1) : "0";
+                const contribROI = ownership.ownershipTotal > 0 ? (d.ganhoBruto / ownership.ownershipTotal).toFixed(1) : "0";
+                const isExpanded = expandedId === d.id;
+                return (
+                  <>
+                    <tr key={d.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : d.id)}>
+                      <td className="py-2 px-2">{isExpanded ? <ChevronUp className="w-3 h-3 text-gray-400" /> : <ChevronDown className="w-3 h-3 text-gray-400" />}</td>
+                      <td className="py-2 px-2 font-medium text-gray-700">{d.nome}</td>
+                      <td className="py-2 px-2 text-gray-500">{d.moduloNexti}</td>
+                      <td className="py-2 px-2">{formatNumber(d.baseline)}</td>
+                      <td className="py-2 px-2">{formatNumber(d.atual)}</td>
+                      <td className={`py-2 px-2 font-medium ${d.delta < 0 ? "text-green-600" : d.delta > 0 ? (d.id === "d5" || d.id === "d10" ? "text-green-600" : "text-red-500") : "text-gray-500"}`}>{formatNumber(d.delta)}</td>
+                      <td className="py-2 px-2">{formatCurrency(d.custoUnitario)}</td>
+                      <td className={`py-2 px-2 font-bold ${d.ganhoBruto >= 0 ? "text-green-600" : "text-red-500"}`}>{formatCurrency(d.ganhoBruto)}</td>
+                      <td className="py-2 px-2">{pctEco}%</td>
+                      <td className="py-2 px-2">{contribROI}x</td>
+                      <td className="py-2 px-2">
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${badge.bg} ${badge.color} border ${badge.border}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} /> {badge.label}
+                        </span>
+                      </td>
+                      <td className={`py-2 px-2 font-medium ${d.tendencia < 0 ? "text-green-600" : d.tendencia > 0 ? "text-red-500" : "text-gray-500"}`}>{d.tendencia > 0 ? "+" : ""}{d.tendencia}%</td>
+                    </tr>
+                    {isExpanded && (
+                      <tr key={`${d.id}-detail`}>
+                        <td colSpan={12} className="bg-gray-50 px-6 py-3">
+                          <div className="grid grid-cols-3 gap-4 text-xs">
+                            <div><span className="text-gray-500">Fonte Baseline:</span> <span className="font-medium">{d.fonteBaseline}</span></div>
+                            <div><span className="text-gray-500">Fonte Atual:</span> <span className="font-medium">{d.fonteAtual}</span></div>
+                            <div><span className="text-gray-500">Unidade:</span> <span className="font-medium">{d.unidadeMedida}</span></div>
+                            <div><span className="text-gray-500">Fator de Redução:</span> <span className="font-medium">{d.fatorReducao}%</span></div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Intangíveis */}
+      {intangiveis.length > 0 && (
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-800 mb-3">🌟 Ganhos Intangíveis <span className="text-[10px] text-gray-400 font-normal">(não compõem ROI monetário)</span></h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {intangiveis.map(d => {
+              const badge = confidenceBadge(d.confianca);
+              return (
+                <div key={d.id} className="border border-gray-100 rounded-lg p-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-gray-700">{d.nome}</p>
+                    <p className="text-[10px] text-gray-400">{d.moduloNexti}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-gray-700">{formatNumber(d.baseline)} → {formatNumber(d.atual)} <span className="text-[10px] text-gray-400">{d.unidadeMedida}</span></p>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${badge.bg} ${badge.color}`}>{badge.label}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-800 mb-3">Pareto de Drivers por Ganho</h3>
+          <div className="h-[260px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={paretoData} layout="vertical" margin={{ left: 10, right: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" tickFormatter={(v) => `R$ ${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 10 }} />
+                <YAxis type="category" dataKey="name" width={130} tick={{ fontSize: 10 }} />
+                <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                <Bar dataKey="value" fill="#FF5722" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-800 mb-3">Confiança vs Valor Financeiro</h3>
+          <div className="h-[260px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" dataKey="x" domain={[0, 4]} tick={{ fontSize: 10 }} tickFormatter={(v) => v === 1 ? "Ref." : v === 2 ? "Híbrido" : v === 3 ? "Comprov." : ""} name="Confiança" />
+                <YAxis type="number" dataKey="y" tickFormatter={(v) => `R$ ${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 10 }} name="Ganho" />
+                <ZAxis type="number" dataKey="z" range={[60, 400]} />
+                <Tooltip formatter={(v: number, name: string) => name === "Ganho" ? formatCurrency(v) : v} />
+                <Scatter data={scatterData} fill="#FF5722">
+                  {scatterData.map((_, i) => <Cell key={i} fill={i % 3 === 0 ? "#FF5722" : i % 3 === 1 ? "#22c55e" : "#eab308"} />)}
+                </Scatter>
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
