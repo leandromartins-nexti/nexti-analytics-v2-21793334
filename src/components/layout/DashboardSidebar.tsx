@@ -66,7 +66,7 @@ export function DashboardSidebar() {
           </SidebarMenu>
         </SidebarGroup>
 
-        {/* Executive V2 – ROI Realizado */}
+        {/* Executive V2 */}
         <SidebarGroup className="px-3 py-1">
           <SidebarMenu>
             <SidebarMenuItem>
@@ -74,6 +74,20 @@ export function DashboardSidebar() {
                 <NavLink to="/executive-v2">
                   <DollarSign className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
                   {!isCollapsed && <span className="font-normal text-[15px]">Executive V2</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Analytics V3 */}
+        <SidebarGroup className="px-3 py-1">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className={cn("text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3", isCollapsed && "justify-center")}>
+                <NavLink to="/analytics-v3">
+                  <TrendingUp className={cn("w-5 h-5", !isCollapsed && "mr-3")} />
+                  {!isCollapsed && <span className="font-normal text-[15px]">Analytics V3</span>}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

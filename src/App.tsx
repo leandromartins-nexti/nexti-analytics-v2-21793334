@@ -9,7 +9,9 @@ import StrategyPrime from "./pages/StrategyPrime";
 import OperacionalPrime from "./pages/OperacionalPrime";
 import Executive from "./pages/Executive";
 import ExecutiveV2 from "./pages/ExecutiveV2";
+import AnalyticsV3 from "./pages/AnalyticsV3";
 import ROIConfig from "./pages/ROIConfig";
+import ROIConfigV3 from "./pages/ROIConfigV3";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,7 +30,9 @@ const App = () => (
             <Route path="/operacional-prime" element={<OperacionalPrime />} />
             <Route path="/executive" element={<Executive />} />
             <Route path="/executive-v2" element={<ExecutiveV2 />} />
+            <Route path="/analytics-v3" element={<AnalyticsV3 />} />
             <Route path="/roi-config" element={<ROIConfig />} />
+            <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
