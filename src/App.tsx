@@ -30,7 +30,9 @@ const App = () => (
             <Route path="/operacional-prime" element={<OperacionalPrime />} />
             <Route path="/executive" element={<Executive />} />
             <Route path="/executive-v2" element={<ExecutiveV2 />} />
+            <Route path="/analytics-v3" element={<AnalyticsV3 />} />
             <Route path="/roi-config" element={<ROIConfig />} />
+            <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
