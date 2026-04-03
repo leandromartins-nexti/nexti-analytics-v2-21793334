@@ -47,6 +47,7 @@ export default function ROIConfigV3() {
           {activeSection === "custos" && <CustosConfig />}
           {activeSection === "baseline" && <BaselineConfig />}
           {activeSection === "drivers" && <DriversConfig />}
+          {activeSection === "pesos" && <PesosConfiancaConfig />}
         </div>
       </div>
     </div>
