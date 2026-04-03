@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, Save } from "lucide-react";
-import { configV3 } from "@/lib/analyticsV3Data";
+import { configV3, pesosConfiancaV3, driversV3 } from "@/lib/analyticsV3Data";
 
 const sections = [
   { id: "empresa", label: "Empresa" },
