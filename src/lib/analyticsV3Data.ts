@@ -527,7 +527,6 @@ export const ownershipV3 = {
 
 // ====== EVOLUÇÃO MENSAL CONSOLIDADA ======
 export function getEvolucaoConsolidada() {
-  // Realistic monthly values with seasonal variation
   const valoresMensais = [
     380000, 420000, 465000, 510000, 485000, 540000,
     620000, 580000, 650000, 710000, 690000, 780000
@@ -543,7 +542,6 @@ export function getEvolucaoConsolidada() {
     const hibrido = Math.round(valorCapturado * (0.38 - i * 0.01));
     const referencial = valorCapturado - comprovado - hibrido;
     const pctComprovado = Math.round((comprovado / valorCapturado) * 100);
-    const meta = Math.round(420000 + i * 35000);
 
     return {
       mes,
@@ -555,27 +553,66 @@ export function getEvolucaoConsolidada() {
       hibrido,
       referencial,
       pctComprovado,
-      meta,
     };
   });
+}
+
+// ====== EVOLUÇÃO POR DRIVER (para gráfico empilhado) ======
+export function getEvolucaoEmpilhada() {
+  const monetarios = driversV3.filter(d => d.categoria === "monetario" && d.ativo);
+  
+  return mesesPeriodo.map((mes, i) => {
+    const entry: Record<string, number | string> = { mes };
+    let total = 0;
+    monetarios.forEach(d => {
+      const val = d.evolucaoMensal[i]?.valor ?? 0;
+      entry[d.id] = val;
+      total += val;
+    });
+    entry.total = total;
+    return entry;
+  });
+}
+
+export function getMediaPeriodo() {
+  const data = getEvolucaoEmpilhada();
+  const totais = data.map(d => (d.total as number) || 0);
+  return Math.round(totais.reduce((s, v) => s + v, 0) / totais.length);
+}
+
+// ====== DRIVER COLORS ======
+export const driverColors: Record<string, string> = {
+  he: "#3b82f6",
+  an: "#8b5cf6",
+  desc: "#f97316",
+  rhd: "#06b6d4",
+  fech: "#ec4899",
+  disp: "#ef4444",
+  quad: "#22c55e",
+  hpnf: "#eab308",
+  benef: "#6b7280",
+};
+
+// ====== DRIVER NAME MAP ======
+export function getDriverName(id: string): string {
+  const d = driversV3.find(d => d.id === id);
+  return d?.nome ?? id;
 }
 
 // ====== INSIGHTS AUTOMÁTICOS ======
 export function generateV3Insights(): string[] {
   const kpis = getV3KPIs();
+  const topDriver = driversV3.filter(d => d.categoria === "monetario" && d.ativo).sort((a, b) => b.valorMonetizado - a.valorMonetizado)[0];
+  const nivelConfianca = getNivelConfianca();
   const insights: string[] = [];
   
-  insights.push(`A operação capturou ${formatCurrencyV3(kpis.valorCapturado)} no período, com ${kpis.pctComprovado}% comprovado por dados reais.`);
-  insights.push(`Custo evitado de ${formatCurrencyV3(kpis.custoEvitado)} concentrado em redução de horas extras e otimização de quadro.`);
-  insights.push(`Perda evitada de ${formatCurrencyV3(kpis.perdaEvitada)} com destaque para redução de disputas trabalhistas e recuperação de descontos.`);
-  
-  const piorRegional = coberturaRiscoV3.porEstrutura.find(e => e.tendencia === "down");
-  if (piorRegional) {
-    insights.push(`A ${piorRegional.nome} apresenta tendência de piora no score de cobertura (${piorRegional.score} pontos) e merece atenção.`);
-  }
-  
-  insights.push(`O % de valor comprovado evoluiu de 45% para ${kpis.pctComprovado}% ao longo do período, indicando maturidade crescente dos dados.`);
-  insights.push(`A taxa de absenteísmo global está em ${absenteismoV3.taxaGlobal}%, com ${absenteismoV3.pctNaoPlanejadas}% de ausências não planejadas.`);
+  insights.push(`A operação gerou ${formatCurrencyV3(kpis.valorCapturado)} no período, com maior contribuição vinda de ${topDriver.nome}.`);
+  insights.push(`A Regional SP apresentou a melhor evolução operacional no período, com melhor combinação entre qualidade do ponto, movimentações e estabilidade.`);
+  insights.push(`A Regional BA concentra o maior risco atual, com aumento de faltas não justificadas e maior pressão operacional.`);
+  insights.push(`A série temporal mostra crescimento consistente da economia gerada ao longo das competências analisadas.`);
+  insights.push(`O nível de confiança da economia gerada permanece em ${nivelConfianca}%, sustentado por maior participação de drivers com base robusta.`);
+  insights.push(`A combinação entre absenteísmo e movimentações indica maior necessidade de atuação da liderança em determinadas regionais.`);
+  insights.push(`O comportamento das competências recentes mostra maior estabilidade operacional em comparação ao início da série.`);
   
   return insights;
 }
