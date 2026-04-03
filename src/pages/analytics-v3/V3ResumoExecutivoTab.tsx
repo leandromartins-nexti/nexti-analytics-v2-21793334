@@ -162,14 +162,13 @@ export default function V3ResumoExecutivoTab() {
 // ====== Speedometer Gauge Component ======
 function SpeedometerGauge({ value }: { value: number }) {
   const clampedValue = Math.max(0, Math.min(100, value));
-  // Arc from -135deg to +135deg (270deg total)
   const startAngle = -135;
   const totalAngle = 270;
   const valueAngle = startAngle + (clampedValue / 100) * totalAngle;
 
-  const r = 54;
-  const cx = 64;
-  const cy = 64;
+  const r = 62;
+  const cx = 72;
+  const cy = 72;
 
   function polarToCartesian(angle: number) {
     const rad = (angle * Math.PI) / 180;
@@ -185,13 +184,13 @@ function SpeedometerGauge({ value }: { value: number }) {
   const color = clampedValue >= 90 ? "#16a34a" : clampedValue >= 75 ? "#22c55e" : clampedValue >= 60 ? "#eab308" : "#ef4444";
 
   return (
-    <svg width="128" height="90" viewBox="0 0 128 90">
+    <svg width="144" height="105" viewBox="0 0 144 105">
       {/* Background arc */}
       <path
         d={`M ${bgStart.x} ${bgStart.y} A ${r} ${r} 0 ${largeArcBg} 1 ${bgEnd.x} ${bgEnd.y}`}
         fill="none"
-        stroke="#e5e7eb"
-        strokeWidth="10"
+        stroke="hsl(var(--muted))"
+        strokeWidth="12"
         strokeLinecap="round"
       />
       {/* Value arc */}
@@ -200,12 +199,12 @@ function SpeedometerGauge({ value }: { value: number }) {
           d={`M ${bgStart.x} ${bgStart.y} A ${r} ${r} 0 ${largeArcVal} 1 ${valEnd.x} ${valEnd.y}`}
           fill="none"
           stroke={color}
-          strokeWidth="10"
+          strokeWidth="12"
           strokeLinecap="round"
         />
       )}
       {/* Value text */}
-      <text x={cx} y={cy + 4} textAnchor="middle" className="text-2xl font-bold" fill={color} fontSize="28" fontWeight="700">
+      <text x={cx} y={cy + 6} textAnchor="middle" fill={color} fontSize="34" fontWeight="800">
         {clampedValue}
       </text>
     </svg>
