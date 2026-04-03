@@ -240,9 +240,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Convocações concluídas com assinatura no RH Digital",
     janelaComparacao: "Volume mensal de convocações assinadas",
     observacoes: "Custo presencial equivalente configurado mas não validado pelo cliente. Híbrido.",
-    evolucaoMensal: mesesPeriodo.map((mes, i) => ({
-      mes, baseline: 0, atual: 280 + i * 40, delta: 280 + i * 40, valor: (280 + i * 40) * 150
-    })),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(0, "melhora", 1.0, 630000),
     porOperacao: gerarOperacoes("RH Digital"),
     upgradePaths: [
       { de: "hibrido", para: "comprovado", acao: "Validar custos presenciais com o cliente", impacto: "+R$ 0 (melhora confiança)" }
