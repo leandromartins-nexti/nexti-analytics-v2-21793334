@@ -1,6 +1,7 @@
-import { TrendingUp, ShieldAlert, Lightbulb, Info, Gauge, Trophy, Target, AlertTriangle } from "lucide-react";
-import { getV3KPIs, formatCurrencyV3, generateV3Insights, driversV3, getNivelConfianca, getScoreOperacional, getScoreFaixa, coberturaRiscoV3, absenteismoV3 } from "@/lib/analyticsV3Data";
+import { TrendingUp, ShieldAlert, Lightbulb, Info, Trophy, Target, AlertTriangle, CheckCircle2, TrendingDown } from "lucide-react";
+import { getV3KPIs, formatCurrencyV3, generateV3Insights, driversV3, getNivelConfianca, getScoreOperacional, getScoreFaixa, coberturaRiscoV3, absenteismoV3, getEvolucaoConsolidada } from "@/lib/analyticsV3Data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 
 export default function V3ResumoExecutivoTab() {
   const kpis = getV3KPIs();
@@ -9,14 +10,18 @@ export default function V3ResumoExecutivoTab() {
   const scoreOp = getScoreOperacional();
   const scoreFaixa = getScoreFaixa(scoreOp);
   const topDriver = driversV3.filter(d => d.categoria === "monetario" && d.ativo).sort((a, b) => b.valorMonetizado - a.valorMonetizado)[0];
+  const evolucao = getEvolucaoConsolidada();
+
+  const insightIcons = [CheckCircle2, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, TrendingDown];
+  const insightColors = ["text-green-600", "text-primary", "text-amber-600", "text-red-500", "text-green-600", "text-amber-600"];
+  const insightBgs = ["bg-green-50 border-green-200", "bg-primary/5 border-primary/20", "bg-amber-50 border-amber-200", "bg-red-50 border-red-200", "bg-green-50 border-green-200", "bg-amber-50 border-amber-200"];
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Hero: Economia + Score lado a lado */}
-        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden" data-section="hero">
+        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border">
-            {/* Economia Gerada */}
             <div className="p-8">
               <div className="flex items-center gap-2 mb-5">
                 <TrendingUp className="w-5 h-5 text-primary" />
@@ -30,8 +35,6 @@ export default function V3ResumoExecutivoTab() {
               </div>
               <p className="text-xs text-muted-foreground/60 mt-3">Soma de todos os drivers monetizados ativos no período</p>
             </div>
-
-            {/* Score Operacional */}
             <div className="p-8 flex flex-col items-center justify-center">
               <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-5 flex items-center gap-1.5">
                 Score Operacional
@@ -53,103 +56,114 @@ export default function V3ResumoExecutivoTab() {
 
         {/* 4 KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Nível de Confiança */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-gray-500 flex items-center gap-1">
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
                 Nível de Confiança
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs text-xs">
-                    Indicador que representa a confiabilidade da economia gerada, considerando a composição entre drivers comprovados, híbridos e referenciais e os pesos definidos na configuração.
-                  </TooltipContent>
+                  <TooltipTrigger asChild><Info className="w-3 h-3 text-muted-foreground/50 cursor-help" /></TooltipTrigger>
+                  <TooltipContent className="max-w-xs text-xs">Confiabilidade da economia gerada, considerando drivers comprovados, híbridos e referenciais.</TooltipContent>
                 </Tooltip>
               </p>
-              <Target className="w-4 h-4 text-blue-500" />
+              <Target className="w-4 h-4 text-primary" />
             </div>
-            <p className={`text-2xl font-bold ${nivelConfianca >= 75 ? "text-green-600" : nivelConfianca >= 50 ? "text-yellow-600" : "text-red-600"}`}>{nivelConfianca}%</p>
-            <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2">
-              <div className="h-1.5 rounded-full transition-all" style={{ width: `${nivelConfianca}%`, backgroundColor: nivelConfianca >= 75 ? "#16a34a" : nivelConfianca >= 50 ? "#eab308" : "#ef4444" }} />
+            <p className={`text-2xl font-bold ${nivelConfianca >= 75 ? "text-green-600" : nivelConfianca >= 50 ? "text-amber-600" : "text-red-600"}`}>{nivelConfianca}%</p>
+            <div className="w-full bg-muted rounded-full h-1.5 mt-2">
+              <div className="h-1.5 rounded-full transition-all" style={{ width: `${nivelConfianca}%`, backgroundColor: nivelConfianca >= 75 ? "hsl(142,71%,45%)" : nivelConfianca >= 50 ? "hsl(45,93%,47%)" : "hsl(0,84%,60%)" }} />
             </div>
           </div>
-
-          {/* Principal Alavanca */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-gray-500">Principal Alavanca</p>
+              <p className="text-xs text-muted-foreground">Principal Alavanca</p>
               <Trophy className="w-4 h-4 text-amber-500" />
             </div>
-            <p className="text-sm font-bold text-gray-900 leading-tight">{topDriver.nome}</p>
-            <p className="text-xs text-gray-400 mt-1">{formatCurrencyV3(topDriver.valorMonetizado)} · {topDriver.participacao}%</p>
+            <p className="text-sm font-bold text-foreground leading-tight">{topDriver.nome}</p>
+            <p className="text-xs text-muted-foreground mt-1">{formatCurrencyV3(topDriver.valorMonetizado)} · {topDriver.participacao}%</p>
           </div>
-
-          {/* Melhor Operação */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-gray-500">Melhor Operação</p>
+              <p className="text-xs text-muted-foreground">Melhor Operação</p>
               <TrendingUp className="w-4 h-4 text-green-500" />
             </div>
-            <p className="text-lg font-bold text-gray-900">{kpis.melhorOperacao}</p>
-            <p className="text-xs text-gray-400 mt-1">Score 88 · Tendência de alta</p>
+            <p className="text-lg font-bold text-foreground">{kpis.melhorOperacao}</p>
+            <p className="text-xs text-muted-foreground mt-1">Score 88 · Tendência de alta</p>
           </div>
-
-          {/* Maior Risco */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-gray-500">Maior Risco</p>
+              <p className="text-xs text-muted-foreground">Maior Risco</p>
               <ShieldAlert className="w-4 h-4 text-red-500" />
             </div>
-            <p className="text-lg font-bold text-gray-900">{kpis.maiorRisco}</p>
-            <p className="text-xs text-gray-400 mt-1">Score 64 · Absenteísmo {absenteismoV3.porEstrutura.find(e => e.nome === "Regional BA")?.taxa}%</p>
+            <p className="text-lg font-bold text-foreground">{kpis.maiorRisco}</p>
+            <p className="text-xs text-muted-foreground mt-1">Score 64 · Absenteísmo {absenteismoV3.porEstrutura.find(e => e.nome === "Regional BA")?.taxa}%</p>
           </div>
         </div>
 
-        {/* Destaques */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="w-5 h-5 text-green-600" />
-              <h3 className="font-semibold text-gray-800">Principal Alavanca</h3>
-            </div>
-            <p className="text-lg font-bold text-gray-900">{topDriver.nome}</p>
-            <p className="text-sm text-gray-500 mt-1">
-              {formatCurrencyV3(topDriver.valorMonetizado)} · {topDriver.participacao}% da economia · {topDriver.confianca === "comprovado" ? "Dados reais" : topDriver.confianca === "hibrido" ? "Dados parciais" : "Benchmark"}
-            </p>
-            <p className="text-xs text-gray-400 mt-2">
-              Delta operacional: {topDriver.deltaOperacional > 0 ? "+" : ""}{topDriver.deltaOperacional}% vs competência anterior
-            </p>
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <ShieldAlert className="w-5 h-5 text-red-500" />
-              <h3 className="font-semibold text-gray-800">Principal Preocupação</h3>
-            </div>
-            <p className="text-lg font-bold text-gray-900">Regional BA</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Score de cobertura: 58 · Absenteísmo: {absenteismoV3.porEstrutura.find(e => e.nome === "Regional BA")?.taxa}% · Tendência de piora
-            </p>
-            <p className="text-xs text-gray-400 mt-2">
-              Maior taxa de absenteísmo e menor score de eficiência operacional
-            </p>
-          </div>
-        </div>
-
-        {/* Insights */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Lightbulb className="w-5 h-5 text-[#FF5722]" />
-            <h3 className="font-semibold text-gray-800">Insights da Operação</h3>
-          </div>
-          <div className="space-y-3">
-            {insights.map((insight, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#FF5722] mt-2 shrink-0" />
-                <p className="text-sm text-gray-600">{insight}</p>
+        {/* Evolução + Insights lado a lado */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+          {/* Evolução mensal - 3 colunas */}
+          <div className="lg:col-span-3 bg-card rounded-xl border border-border p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-semibold text-foreground text-sm">Evolução da Economia</h3>
+                <p className="text-xs text-muted-foreground">Valor capturado mês a mês no período</p>
               </div>
-            ))}
+            </div>
+            <ResponsiveContainer width="100%" height={250}>
+              <AreaChart data={evolucao}>
+                <defs>
+                  <linearGradient id="economiaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="mes" fontSize={11} tick={{ fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                <YAxis hide />
+                <RechartsTooltip
+                  content={({ active, payload, label }) => {
+                    if (!active || !payload?.length) return null;
+                    return (
+                      <div className="bg-card border border-border rounded-lg shadow-lg p-3 text-xs">
+                        <p className="font-semibold text-foreground mb-1">{label}</p>
+                        <p className="text-muted-foreground">Economia: <span className="font-bold text-foreground">{formatCurrencyV3(payload[0].value as number)}</span></p>
+                      </div>
+                    );
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="valorCapturado"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={2.5}
+                  fill="url(#economiaGrad)"
+                  dot={false}
+                  activeDot={{ r: 5, fill: "hsl(var(--primary))", strokeWidth: 2, stroke: "hsl(var(--card))" }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Insights - 2 colunas */}
+          <div className="lg:col-span-2 bg-card rounded-xl border border-border p-5 flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="p-1.5 rounded-lg bg-primary/10">
+                <Lightbulb className="w-4 h-4 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground text-sm">Insights da Operação</h3>
+            </div>
+            <div className="space-y-2.5 flex-1 overflow-y-auto">
+              {insights.map((insight, i) => {
+                const Icon = insightIcons[i % insightIcons.length];
+                const colorClass = insightColors[i % insightColors.length];
+                const bgClass = insightBgs[i % insightBgs.length];
+                return (
+                  <div key={i} className={`flex items-start gap-2.5 rounded-lg border p-3 ${bgClass}`}>
+                    <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${colorClass}`} />
+                    <p className="text-xs text-foreground/80 leading-relaxed">{insight}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
