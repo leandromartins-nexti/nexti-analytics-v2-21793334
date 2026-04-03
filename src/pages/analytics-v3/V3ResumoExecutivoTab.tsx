@@ -122,9 +122,9 @@ export default function V3ResumoExecutivoTab() {
                 <RechartsTooltip
                   content={({ active, payload, label }) => {
                     if (!active || !payload?.length) return null;
-                    const valor = payload.find(p => p.dataKey === "valorCapturado")?.value as number;
-                    const meta = payload.find(p => p.dataKey === "meta")?.value as number;
-                    const acum = payload.find(p => p.dataKey === "acumulado")?.value as number;
+                    const valor = (payload.find(p => p.dataKey === "valorCapturado")?.value as number) ?? 0;
+                    const meta = (payload.find(p => p.dataKey === "meta")?.value as number) ?? 0;
+                    const acum = (payload.find(p => p.dataKey === "acumulado")?.value as number) ?? 0;
                     const diff = valor && meta ? ((valor - meta) / meta * 100).toFixed(1) : null;
                     return (
                       <div className="bg-card border border-border rounded-xl shadow-xl p-3.5 text-xs min-w-[180px]">
