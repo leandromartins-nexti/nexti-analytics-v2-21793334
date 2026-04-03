@@ -93,7 +93,7 @@ export default function V3DriversValorTab() {
     );
   };
 
-  const handleBarClick = (data: any, _index: number, e: any) => {
+  const handleBarClick = (data: any) => {
     // Find which driver segment was clicked via activeTooltipIndex
     // Fallback: use the largest driver
     if (data?.activePayload?.length) {
