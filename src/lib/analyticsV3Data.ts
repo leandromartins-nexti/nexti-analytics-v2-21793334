@@ -192,7 +192,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais do NextTime",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Valores reais importados da folha.",
-    evolucaoMensal: gerarEvolucaoDriver(18200, "melhora", 0.19),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(18200, "melhora", 0.19, 892000),
     porOperacao: gerarOperacoes("Adicional Noturno"),
     upgradePaths: [],
   },
