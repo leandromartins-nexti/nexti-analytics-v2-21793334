@@ -342,7 +342,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais de coberturas no NextOperacional",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Horas reais, custo real. Comprovado.",
-    evolucaoMensal: gerarEvolucaoDriver(8600, "melhora", 0.40),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(8600, "melhora", 0.40, 408000),
     porOperacao: gerarOperacoes("HPNF"),
     upgradePaths: [],
   },
