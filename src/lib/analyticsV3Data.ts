@@ -112,12 +112,21 @@ export function confiancaBadgeV3(tipo: ConfiancaTipo): { label: string; color: s
 }
 
 // ====== DRIVERS ======
-function gerarEvolucaoDriver(baselineInicial: number, tendencia: "melhora" | "piora" | "estavel", variacao: number): V3Driver["evolucaoMensal"] {
+function gerarEvolucaoDriverComTotal(baselineInicial: number, tendencia: "melhora" | "piora" | "estavel", variacao: number, totalDesejado: number): V3Driver["evolucaoMensal"] {
+  // Generate raw weights with growth curve
+  const rawWeights = mesesPeriodo.map((_, i) => {
+    if (tendencia === "melhora") return 0.4 + (i * 0.6 / 11);
+    if (tendencia === "piora") return 1.0 - (i * 0.5 / 11);
+    return 1.0;
+  });
+  const sumWeights = rawWeights.reduce((s, w) => s + w, 0);
+  
   return mesesPeriodo.map((mes, i) => {
     const fator = tendencia === "melhora" ? 1 - (i * variacao / 12) : tendencia === "piora" ? 1 + (i * variacao / 12) : 1;
     const atual = Math.round(baselineInicial * fator);
     const baseline = baselineInicial;
-    return { mes, baseline, atual, delta: atual - baseline, valor: Math.abs(atual - baseline) * 45 };
+    const valor = Math.round((rawWeights[i] / sumWeights) * totalDesejado);
+    return { mes, baseline, atual, delta: atual - baseline, valor };
   });
 }
 
@@ -153,9 +162,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais do NextTime (abr/25 - mar/26)",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Valores monetários importados da folha de pagamento. Confiança comprovada.",
-    evolucaoMensal: mesesPeriodo.map((mes, i) => ({
-      mes, baseline: 42500 - i * 200, atual: 33100 - i * 400, delta: -(9400 + i * 200), valor: (9400 + i * 200) * 12.5
-    })),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(42500, "melhora", 0.22, 1412000),
     porOperacao: [
       { nome: "Regional SP", tipo: "regional", valor: 480000, delta: -24, colaboradores: 2800 },
       { nome: "Regional RJ", tipo: "regional", valor: 340000, delta: -20, colaboradores: 1900 },
@@ -185,7 +192,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais do NextTime",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Valores reais importados da folha.",
-    evolucaoMensal: gerarEvolucaoDriver(18200, "melhora", 0.19),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(18200, "melhora", 0.19, 892000),
     porOperacao: gerarOperacoes("Adicional Noturno"),
     upgradePaths: [],
   },
@@ -209,7 +216,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais do NextTime",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Captura correta de desconto. Redução de perda por evento não tratado.",
-    evolucaoMensal: gerarEvolucaoDriver(12400, "melhora", 0.52),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(12400, "melhora", 0.52, 780000),
     porOperacao: gerarOperacoes("Descontos"),
     upgradePaths: [],
   },
@@ -233,9 +240,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Convocações concluídas com assinatura no RH Digital",
     janelaComparacao: "Volume mensal de convocações assinadas",
     observacoes: "Custo presencial equivalente configurado mas não validado pelo cliente. Híbrido.",
-    evolucaoMensal: mesesPeriodo.map((mes, i) => ({
-      mes, baseline: 0, atual: 280 + i * 40, delta: 280 + i * 40, valor: (280 + i * 40) * 150
-    })),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(0, "melhora", 1.0, 630000),
     porOperacao: gerarOperacoes("RH Digital"),
     upgradePaths: [
       { de: "hibrido", para: "comprovado", acao: "Validar custos presenciais com o cliente", impacto: "+R$ 0 (melhora confiança)" }
@@ -261,9 +266,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Data de fechamento atual no NextTime",
     janelaComparacao: "Média móvel de 3 competências",
     observacoes: "Dias reais, custo médio administrativo configurado. Híbrido.",
-    evolucaoMensal: mesesPeriodo.map((mes, i) => ({
-      mes, baseline: 12, atual: Math.max(4, 8 - Math.floor(i / 3)), delta: -(4 + Math.floor(i / 3)), valor: (4 + Math.floor(i / 3)) * 3500
-    })),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(12, "melhora", 0.58, 504000),
     porOperacao: gerarOperacoes("Fechamento"),
     upgradePaths: [
       { de: "hibrido", para: "comprovado", acao: "Importar custo real da equipe de fechamento", impacto: "Melhora confiança" }
@@ -289,9 +292,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Eventos de compliance e processos informados",
     janelaComparacao: "Acumulado 12 meses",
     observacoes: "Eventos reais de compliance, custo médio por processo configurado. Híbrido.",
-    evolucaoMensal: mesesPeriodo.map((mes, i) => ({
-      mes, baseline: Math.round(28 - i * 0.3), atual: Math.round(16 - i * 0.5), delta: -12, valor: 12 * 80000
-    })),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(28, "melhora", 0.43, 960000),
     porOperacao: gerarOperacoes("Disputas"),
     upgradePaths: [
       { de: "hibrido", para: "comprovado", acao: "Importar base real de processos trabalhistas", impacto: "+R$ 320K em valor comprovado" }
@@ -317,7 +318,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais de movimentação no NextOperacional",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Volume real e custo real. Comprovado.",
-    evolucaoMensal: gerarEvolucaoDriver(340, "melhora", 0.18),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(340, "melhora", 0.18, 720000),
     porOperacao: gerarOperacoes("Quadro"),
     upgradePaths: [],
   },
@@ -341,7 +342,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais de coberturas no NextOperacional",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Horas reais, custo real. Comprovado.",
-    evolucaoMensal: gerarEvolucaoDriver(8600, "melhora", 0.40),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(8600, "melhora", 0.40, 408000),
     porOperacao: gerarOperacoes("HPNF"),
     upgradePaths: [],
   },
@@ -366,7 +367,7 @@ export const driversV3: V3Driver[] = [
     janelaComparacao: "Estimativa anual",
     observacoes: "Cliente não utiliza módulo de Benefícios. Valor referencial apenas.",
     evolucaoMensal: mesesPeriodo.map((mes) => ({
-      mes, baseline: 0, atual: 0, delta: 0, valor: 8000
+      mes, baseline: 0, atual: 0, delta: 0, valor: Math.round(96000 / 12)
     })),
     porOperacao: gerarOperacoes("Benefícios"),
     upgradePaths: [
