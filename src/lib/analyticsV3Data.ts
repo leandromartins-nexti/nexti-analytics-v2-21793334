@@ -162,9 +162,7 @@ export const driversV3: V3Driver[] = [
     fonteAtual: "Dados reais do NextTime (abr/25 - mar/26)",
     janelaComparacao: "Competência vs competência anterior",
     observacoes: "Valores monetários importados da folha de pagamento. Confiança comprovada.",
-    evolucaoMensal: mesesPeriodo.map((mes, i) => ({
-      mes, baseline: 42500 - i * 200, atual: 33100 - i * 400, delta: -(9400 + i * 200), valor: (9400 + i * 200) * 12.5
-    })),
+    evolucaoMensal: gerarEvolucaoDriverComTotal(42500, "melhora", 0.22, 1412000),
     porOperacao: [
       { nome: "Regional SP", tipo: "regional", valor: 480000, delta: -24, colaboradores: 2800 },
       { nome: "Regional RJ", tipo: "regional", valor: 340000, delta: -20, colaboradores: 1900 },
