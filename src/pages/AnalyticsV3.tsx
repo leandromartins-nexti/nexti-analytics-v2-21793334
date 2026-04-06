@@ -45,16 +45,16 @@ export default function AnalyticsV3() {
   };
 
   return (
-    <div className="bg-muted/30 min-h-screen flex flex-col">
-      <header className="border-b border-border px-6 py-3 bg-muted/50">
+    <div className="bg-gray-50 min-h-screen flex flex-col">
+      <header className="border-b border-gray-200 px-6 py-3 bg-gray-100">
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-primary font-medium cursor-pointer hover:underline" onClick={() => navigate("/nexti-analytics")}>Home</span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-primary font-semibold">Analytics V3</span>
+          <span className="text-[#FF5722] font-medium cursor-pointer hover:underline" onClick={() => navigate("/nexti-analytics")}>Home</span>
+          <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+          <span className="text-[#FF5722] font-semibold">Analytics V3</span>
         </div>
       </header>
 
-      <div className="border-b border-border bg-card px-6">
+      <div className="border-b border-gray-200 bg-white px-6">
         <div className="flex items-center justify-between">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => (
@@ -63,8 +63,8 @@ export default function AnalyticsV3() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-3 py-3 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
                   activeTab === tab.id
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
+                    ? "border-[#FF5722] text-[#FF5722]"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {tab.label}
@@ -72,23 +72,23 @@ export default function AnalyticsV3() {
             ))}
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-muted">
+            <button onClick={() => setFilterOpen(true)} className="border border-gray-300 text-gray-600 px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-gray-50">
               <Filter className="w-4 h-4" /> Filtros
             </button>
           </div>
         </div>
       </div>
 
-      <div className="bg-card px-6 py-3 border-b border-border flex items-center justify-between">
+      <div className="bg-white px-6 py-3 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-sm">
-            <Filter className="w-4 h-4 text-primary" />
-            <span className="font-semibold text-muted-foreground">Filtros Aplicados:</span>
+            <Filter className="w-4 h-4 text-[#FF5722]" />
+            <span className="font-semibold text-gray-700">Filtros Aplicados:</span>
           </div>
-          <span className="bg-primary/10 text-primary border border-primary/20 rounded-full px-3 py-1 text-xs font-medium">Período: abr/2025 - mar/2026</span>
-          <span className="bg-primary/10 text-primary border border-primary/20 rounded-full px-3 py-1 text-xs font-medium">Cliente: Orsegups</span>
+          <span className="bg-orange-50 text-[#FF5722] border border-[#FF5722] rounded-full px-3 py-1 text-xs font-medium">Período: abr/2025 - mar/2026</span>
+          <span className="bg-orange-50 text-[#FF5722] border border-[#FF5722] rounded-full px-3 py-1 text-xs font-medium">Cliente: Orsegups</span>
         </div>
-        <button className="flex items-center gap-1.5 text-sm text-primary hover:underline">
+        <button className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
           <Eraser className="w-4 h-4" /> Limpar Filtros
         </button>
       </div>
