@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Info, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Info, TrendingUp, TrendingDown, Minus, ArrowUp } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { coberturas, bancoHoras } from "@/lib/analytics-mock-data";
+import { coberturas } from "@/lib/analytics-mock-data";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid,
-  Tooltip as RechartsTooltip, Legend, PieChart, Pie, Cell, Line, ComposedChart,
+  Tooltip as RechartsTooltip, Legend, PieChart, Pie, Cell,
 } from "recharts";
 
 function InfoTip({ text }: { text: string }) {
@@ -45,56 +45,63 @@ function KPI({ title, value, color, tip }: { title: string; value: string | numb
 
 const scoreColor = (s: number) => s >= 80 ? "text-green-600" : s >= 70 ? "text-orange-500" : "text-red-600";
 const scoreBg = (s: number) => s >= 80 ? "bg-green-50" : s >= 70 ? "bg-orange-50" : "bg-red-50";
+const scoreLabel = (s: number) => s >= 80 ? "Bom" : s >= 70 ? "Atenção" : "Crítico";
+
+const pctPlanejadaColor = (v: number) => v > 50 ? "text-green-600" : v >= 30 ? "text-orange-500" : "text-red-600";
+const pctEmergencialColor = (v: number) => v > 50 ? "text-red-600" : v >= 30 ? "text-orange-500" : "text-green-600";
+const ausCoberColor = (v: number) => v > 75 ? "text-green-600" : v >= 50 ? "text-yellow-600" : "text-red-600";
 
 export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded?: boolean }) {
   const { kpis, distribuicaoTipo, evolucao, regionais, insights } = coberturas;
 
   const content = (
     <div className="px-6 py-4 space-y-4">
-      {/* Score hero */}
-      <div className="bg-card border border-border/50 rounded-xl p-4 flex items-center gap-4">
-        <div className={`text-4xl font-bold ${scoreColor(coberturas.scoreEficiencia)}`}>{coberturas.scoreEficiencia}</div>
-        <div>
-          <p className="text-sm font-semibold">Score de Eficiência de Cobertura</p>
-          <p className={`text-xs font-medium ${scoreColor(coberturas.scoreEficiencia)}`}>{coberturas.scoreFaixa}</p>
+      {/* Hero score + KPIs in one row */}
+      <div className="flex items-stretch gap-3">
+        {/* Score compacto */}
+        <div className={`flex items-center gap-3 rounded-xl border border-border/50 px-5 py-3 ${scoreBg(coberturas.scoreEficiencia)}`}>
+          <span className={`text-4xl font-bold ${scoreColor(coberturas.scoreEficiencia)}`}>{coberturas.scoreEficiencia}</span>
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-muted-foreground">Score Cobertura</span>
+            <span className={`text-xs font-bold ${scoreColor(coberturas.scoreEficiencia)}`}>{scoreLabel(coberturas.scoreEficiencia)}</span>
+            <span className="text-[10px] text-green-600 flex items-center gap-0.5 mt-0.5">
+              <ArrowUp size={10} /> +{coberturas.scoreDiferenca} vs anterior
+            </span>
+          </div>
+        </div>
+
+        {/* 4 KPI cards */}
+        <div className="flex-1 grid grid-cols-4 gap-3">
+          <KPI title="Ausências Cobertas" value={`${kpis.ausenciasCobertas}%`} color={kpis.ausenciasCobertas >= 75 ? "text-green-600" : "text-yellow-600"} tip="Percentual das ausências no período que foram cobertas por algum tipo de reposição." />
+          <KPI title="Coberturas com HE" value={`${kpis.coberturasComHE}%`} color="text-red-600" tip="Percentual das coberturas realizadas com hora extra em vez de recursos planejados." />
+          <KPI title="Dias Posto Descoberto" value={kpis.diasPostoDescoberto} color="text-red-600" tip="Total de dias em que ao menos um posto ficou sem o efetivo completo no período." />
+          <KPI title="Tempo Médio Reposição" value={`${kpis.tempoMedioReposicao}h`} tip="Tempo médio entre o lançamento da ausência e a criação da cobertura." />
         </div>
       </div>
 
-      {/* KPI row 1 */}
-      <div className="grid grid-cols-4 gap-3">
-        <KPI title="Taxa Cobertura Efetiva" value={`${kpis.taxaCoberturaEfetiva}%`} color={kpis.taxaCoberturaEfetiva < 80 ? "text-yellow-600" : "text-green-600"} tip="Percentual de ausências que foram efetivamente cobertas" />
-        <KPI title="% Reserva Técnica" value={`${kpis.reservaTecnica}%`} tip="Percentual do efetivo alocado como reserva técnica" />
-        <KPI title="% Hora Extra" value={`${kpis.horaExtra}%`} color="text-red-600" tip="Percentual de coberturas realizadas com hora extra" />
-        <KPI title="Tempo Médio Reposição" value={`${kpis.tempoMedioReposicao}h`} tip="Tempo médio para repor um posto descoberto" />
-      </div>
-
-      {/* KPI row 2 */}
-      <div className="grid grid-cols-4 gap-3">
-        <KPI title="Horas Posto Descoberto" value={kpis.horasPostoDescoberto} color="text-red-600" tip="Total de horas em que postos ficaram sem cobertura" />
-        <KPI title="Horas Cobertas com HE" value={kpis.horasCobertoComHE} color="text-red-600" tip="Horas de cobertura realizadas via hora extra" />
-        <KPI title="Horas Cobertas Planejadas" value={kpis.horasCobertosPlanejadas} color="text-green-600" tip="Horas de cobertura realizadas de forma planejada" />
-        <KPI title="Score Eficiência" value={kpis.scoreEficiencia} tip="Índice de eficiência de cobertura de 0 a 100" />
-      </div>
-
-      {/* Charts */}
+      {/* Charts row */}
       <div className="grid grid-cols-2 gap-4">
+        {/* Donut */}
         <div className="bg-card border border-border/50 rounded-xl p-4">
-          <h4 className="text-sm font-semibold mb-2">Distribuição por Tipo de Cobertura</h4>
+          <div className="flex items-center gap-1.5 mb-2">
+            <h4 className="text-sm font-semibold">Distribuição por Tipo de Cobertura</h4>
+            <InfoTip text="Coberturas registradas com 24h ou mais de antecedência são classificadas como planejadas. Coberturas registradas com menos de 24h são consideradas emergenciais. Postos sem nenhuma cobertura são classificados como descobertos." />
+          </div>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie data={distribuicaoTipo} cx="50%" cy="50%" innerRadius={55} outerRadius={90} dataKey="value" nameKey="name" label={({ name, value }) => `${value}%`}>
                 {distribuicaoTipo.map((e, i) => <Cell key={i} fill={e.cor} />)}
               </Pie>
-              <RechartsTooltip formatter={(value: number, name: string) => {
-                const item = distribuicaoTipo.find(d => d.name === name);
-                return [`${value}% — ${item?.impacto || ''}`, name];
-              }} />
+              <RechartsTooltip formatter={(value: number, name: string) => [`${value}%`, name]} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </PieChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Area chart */}
         <div className="bg-card border border-border/50 rounded-xl p-4">
-          <h4 className="text-sm font-semibold mb-2">Evolução por Competência</h4>
+          <h4 className="text-sm font-semibold mb-0.5">Evolução por Competência</h4>
+          <p className="text-[11px] text-muted-foreground mb-2">Distribuição mensal dos tipos de cobertura</p>
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={evolucao}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -102,9 +109,9 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
               <YAxis tick={{ fontSize: 10 }} />
               <RechartsTooltip />
               <Legend />
-              <Area type="monotone" dataKey="planejada" stackId="1" fill="#00C49F" stroke="#00C49F" fillOpacity={0.6} name="Planejada" />
-              <Area type="monotone" dataKey="emergencial" stackId="1" fill="#FF8042" stroke="#FF8042" fillOpacity={0.6} name="Emergencial" />
-              <Area type="monotone" dataKey="descoberto" stackId="1" fill="#ef4444" stroke="#ef4444" fillOpacity={0.6} name="Descoberto" />
+              <Area type="monotone" dataKey="planejada" stackId="1" fill="#22c55e" stroke="#22c55e" fillOpacity={0.6} name="Planejada" />
+              <Area type="monotone" dataKey="emergencial" stackId="1" fill="#ef4444" stroke="#ef4444" fillOpacity={0.6} name="Emergencial" />
+              <Area type="monotone" dataKey="descoberta" stackId="1" fill="#9ca3af" stroke="#9ca3af" fillOpacity={0.6} name="Descoberta" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -116,10 +123,11 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
           <thead className="bg-muted/30">
             <tr>
               <th className="text-left px-4 py-2 font-semibold">Regional</th>
-              <th className="text-center px-4 py-2 font-semibold">Score</th>
-              <th className="text-right px-4 py-2 font-semibold">Horas Cobertas</th>
-              <th className="text-right px-4 py-2 font-semibold">Horas Descoberto</th>
-              <th className="text-center px-4 py-2 font-semibold">% HE</th>
+              <th className="text-right px-4 py-2 font-semibold">Coberturas</th>
+              <th className="text-center px-4 py-2 font-semibold">% Planejada</th>
+              <th className="text-center px-4 py-2 font-semibold">% Emergencial</th>
+              <th className="text-right px-4 py-2 font-semibold">Dias Descoberto</th>
+              <th className="text-center px-4 py-2 font-semibold">Ausências Cobertas %</th>
               <th className="text-center px-4 py-2 font-semibold">Tendência</th>
             </tr>
           </thead>
@@ -127,63 +135,11 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
             {regionais.map((r: any) => (
               <tr key={r.nome} className="hover:bg-muted/20">
                 <td className="px-4 py-2 font-medium">{r.nome}</td>
-                <td className="text-center px-4 py-2"><span className={`px-2 py-0.5 rounded-full text-xs font-bold ${scoreColor(r.score)} ${scoreBg(r.score)}`}>{r.score}</span></td>
-                <td className="text-right px-4 py-2">{r.horasCobertas}</td>
-                <td className="text-right px-4 py-2">{r.horasDescoberto}</td>
-                <td className="text-center px-4 py-2">{r.percentHE}%</td>
-                <td className="text-center px-4 py-2"><div className="flex justify-center"><TrendIcon t={r.tendencia} /></div></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* ══════ BANCO DE HORAS ══════ */}
-      <h3 className="text-base font-bold text-foreground pt-2">Banco de Horas</h3>
-
-      <div className="grid grid-cols-4 gap-3">
-        <KPI title="Saldo Total" value={`${bancoHoras.saldoTotal} horas`} color="text-orange-500" tip="Saldo acumulado de banco de horas — saldo crescente indica risco" />
-        <KPI title="Saldo Médio/Colaborador" value={`${bancoHoras.saldoMedioPorColab}h`} tip="Média de horas acumuladas por colaborador" />
-        <KPI title="Colab. com Saldo Crítico" value={bancoHoras.colaboradoresCriticos} color="text-red-600" tip="Colaboradores com saldo acima do limite seguro" />
-        <KPI title="Tendência" value={bancoHoras.tendencia} color="text-red-600" tip="Direção do saldo — crescimento indica risco operacional" />
-      </div>
-
-      <div className="bg-card border border-border/50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold mb-2">Saldo de Banco de Horas por Competência</h4>
-        <ResponsiveContainer width="100%" height={250}>
-          <ComposedChart data={bancoHoras.evolucao}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="competencia" tick={{ fontSize: 10 }} />
-            <YAxis tick={{ fontSize: 10 }} />
-            <RechartsTooltip />
-            <Legend />
-            <Area type="monotone" dataKey="creditos" fill="#86efac" stroke="#22c55e" fillOpacity={0.3} name="Créditos" />
-            <Area type="monotone" dataKey="debitos" fill="#fca5a5" stroke="#ef4444" fillOpacity={0.3} name="Débitos" />
-            <Line type="monotone" dataKey="saldo" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3, fill: "#3b82f6" }} name="Saldo Líquido" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
-
-      <div className="bg-card border border-border/50 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-muted/30">
-            <tr>
-              <th className="text-left px-4 py-2 font-semibold">Regional</th>
-              <th className="text-right px-4 py-2 font-semibold">Saldo</th>
-              <th className="text-right px-4 py-2 font-semibold">Créditos</th>
-              <th className="text-right px-4 py-2 font-semibold">Débitos</th>
-              <th className="text-right px-4 py-2 font-semibold">Colab. Críticos</th>
-              <th className="text-center px-4 py-2 font-semibold">Tendência</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border/40">
-            {bancoHoras.regionais.map((r: any) => (
-              <tr key={r.nome} className="hover:bg-muted/20">
-                <td className="px-4 py-2 font-medium">{r.nome}</td>
-                <td className="text-right px-4 py-2 font-semibold">{r.saldo}</td>
-                <td className="text-right px-4 py-2">{r.creditos}</td>
-                <td className="text-right px-4 py-2">{r.debitos}</td>
-                <td className="text-right px-4 py-2">{r.colabCriticos}</td>
+                <td className="text-right px-4 py-2">{r.coberturas?.toLocaleString("pt-BR")}</td>
+                <td className={`text-center px-4 py-2 font-semibold ${pctPlanejadaColor(r.pctPlanejada)}`}>{r.pctPlanejada}%</td>
+                <td className={`text-center px-4 py-2 font-semibold ${pctEmergencialColor(r.pctEmergencial)}`}>{r.pctEmergencial}%</td>
+                <td className="text-right px-4 py-2">{r.diasDescoberto}</td>
+                <td className={`text-center px-4 py-2 font-semibold ${ausCoberColor(r.ausenciasCobertas)}`}>{r.ausenciasCobertas}%</td>
                 <td className="text-center px-4 py-2"><div className="flex justify-center"><TrendIcon t={r.tendencia} /></div></td>
               </tr>
             ))}
