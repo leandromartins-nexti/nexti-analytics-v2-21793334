@@ -191,7 +191,7 @@ export default function AnalyticsResumoExecutivo() {
                 <span className="min-w-[45px] text-center">Score</span>
                 <span className="min-w-[70px]">Atual</span>
                 <span className="min-w-[65px] text-center">Variação</span>
-                <div className="flex-1 min-w-[120px] text-center">Evolução · abr/25 – mar/26</div>
+                <div className="flex-1 min-w-[120px]" />
               </div>
               <div className="divide-y divide-border/40">
               {sparklineCards.map((card) => {
