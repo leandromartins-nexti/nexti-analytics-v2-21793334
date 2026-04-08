@@ -66,6 +66,15 @@ const scoreGeral = Math.round(
 const getScoreColor = (s: number) => s >= 85 ? "text-green-600" : s >= 70 ? "text-orange-500" : s < 60 ? "text-red-600" : "text-yellow-600";
 const getScoreBg = (s: number) => s >= 85 ? "bg-green-50" : s >= 70 ? "bg-orange-50" : s < 60 ? "bg-red-50" : "bg-yellow-50";
 
+// Score-based line color: gradient from red (low) → orange → yellow → green (high)
+const getLineColor = (s: number) => {
+  if (s >= 85) return "#16a34a"; // green-600
+  if (s >= 75) return "#65a30d"; // lime-600
+  if (s >= 65) return "#ca8a04"; // yellow-600
+  if (s >= 55) return "#ea580c"; // orange-600
+  return "#dc2626"; // red-600
+};
+
 // ── Custom sparkline tooltip ────────────────────────────────
 function SparklineTooltip({ active, payload, cardData }: any) {
   if (!active || !payload?.length) return null;
