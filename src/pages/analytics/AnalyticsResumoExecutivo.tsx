@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import {
-  resumo, resumoComparativo, rankingOperacoes, sparklineData,
+  resumo, resumoComparativo, rankingOperacoes, sparklineData, dadosPorRegional,
 } from "@/lib/analytics-mock-data";
 import {
   ResponsiveContainer, LineChart, Line, Tooltip as RechartsTooltip,
@@ -129,6 +129,8 @@ function SparklineTooltip({ active, payload, cardData }: any) {
   );
 }
 
+
+
 // ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
   const navigate = useNavigate();
@@ -136,12 +138,41 @@ export default function AnalyticsResumoExecutivo() {
   const [rating, setRating] = useState<number | null>(null);
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
 
-  const scoreColor = resumo.scoreOperacional >= 85 ? "text-green-600" : resumo.scoreOperacional >= 70 ? "text-[#FF5722]" : "text-red-600";
+  const regionalData = selectedRegional ? dadosPorRegional[selectedRegional] : null;
+
+  const activeScore = regionalData?.scoreOperacional ?? resumo.scoreOperacional;
+  const activeFaixa = regionalData?.scoreFaixa ?? resumo.scoreFaixa;
+  const activeDiff = regionalData?.scoreDiferenca ?? resumoComparativo.scoreDiferenca;
+  const scoreColor = activeScore >= 85 ? "text-green-600" : activeScore >= 70 ? "text-[#FF5722]" : "text-red-600";
+
+  // Filtered sparkline data
+  const filteredSparklines = useMemo(() => {
+    if (!regionalData) return sparklineCards;
+    return sparklineCards.map((card) => {
+      const mult = regionalData.sparklineMultipliers[card.label];
+      if (!mult) return card;
+      return {
+        ...card,
+        score: mult.scoreOverride,
+        variacao: mult.variacaoOverride,
+        corVariacao: mult.corVariacaoOverride,
+        evolucao: card.evolucao.map((e) => ({
+          ...e,
+          valor: Math.round(e.valor * mult.valorMultiplier * 10) / 10,
+        })),
+      };
+    });
+  }, [selectedRegional]);
 
   const handleFeedbackSubmit = () => {
     console.log({ page: "resumo_executivo", rating, comment: feedbackComment, timestamp: Date.now() });
     setFeedbackSubmitted(true);
+  };
+
+  const handleRegionalClick = (nome: string) => {
+    setSelectedRegional(prev => prev === nome ? null : nome);
   };
 
   return (
@@ -165,13 +196,18 @@ export default function AnalyticsResumoExecutivo() {
             <span className="font-semibold text-foreground">Filtros Aplicados:</span>
           </div>
           <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium">Período: {resumo.periodo}</span>
-          
+          {selectedRegional && (
+            <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium flex items-center gap-1">
+              Regional: {selectedRegional}
+              <button onClick={() => setSelectedRegional(null)} className="ml-1 hover:text-red-600">✕</button>
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-gray-50">
             <Filter className="w-4 h-4" /> Filtros
           </button>
-          <button className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
+          <button onClick={() => setSelectedRegional(null)} className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
             <Eraser className="w-4 h-4" /> Limpar Filtros
           </button>
         </div>
@@ -191,12 +227,12 @@ export default function AnalyticsResumoExecutivo() {
                   <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Score Operacional</p>
                   <InfoTip text="Índice de saúde da operação calculado a partir de 5 indicadores: qualidade do ponto, absenteísmo, volume de horas extras, movimentações e cobertura efetiva. Pesos configuráveis em Configuração." />
                 </div>
-                <ScoreGauge score={resumo.scoreOperacional} />
-                <p className={`text-3xl font-bold leading-none -mt-1 ${scoreColor}`}>{resumo.scoreOperacional}</p>
-                <p className={`text-xs font-semibold ${scoreColor} mt-0.5`}>{resumo.scoreFaixa}</p>
+                <ScoreGauge score={activeScore} />
+                <p className={`text-3xl font-bold leading-none -mt-1 ${scoreColor}`}>{activeScore}</p>
+                <p className={`text-xs font-semibold ${scoreColor} mt-0.5`}>{activeFaixa}</p>
                 <div className="flex items-center justify-center gap-1 mt-1">
                   <TrendingUp size={12} className="text-green-500" />
-                  <span className="text-[11px] font-medium text-green-600">+{resumoComparativo.scoreDiferenca} vs anterior</span>
+                  <span className="text-[11px] font-medium text-green-600">+{activeDiff} vs anterior</span>
                 </div>
               </div>
 
@@ -229,8 +265,8 @@ export default function AnalyticsResumoExecutivo() {
                   <InfoTip text="Indicador com maior evolução positiva no período" />
                 </div>
                 <p className="text-[11px] font-medium text-muted-foreground mt-2">Principal Melhora</p>
-                <p className="text-base font-semibold mt-0.5 text-green-600 truncate">Qualidade Ponto</p>
-                <p className="text-[11px] text-muted-foreground mt-1 truncate">+4.1 pp (83.2% → 87.3%)</p>
+                <p className="text-base font-semibold mt-0.5 text-green-600 truncate">{regionalData?.melhorIndicador ?? "Qualidade Ponto"}</p>
+                <p className="text-[11px] text-muted-foreground mt-1 truncate">{regionalData?.melhorIndicadorDetalhe ?? "+4.1 pp (83.2% → 87.3%)"}</p>
               </div>
 
               {/* Principal Piora */}
@@ -240,8 +276,8 @@ export default function AnalyticsResumoExecutivo() {
                   <InfoTip text="Indicador com maior deterioração no período" />
                 </div>
                 <p className="text-[11px] font-medium text-muted-foreground mt-2">Principal Piora</p>
-                <p className="text-base font-semibold mt-0.5 text-red-600 truncate">Atrasos e Faltas</p>
-                <p className="text-[11px] text-muted-foreground mt-1 truncate">+52.4% no período</p>
+                <p className="text-base font-semibold mt-0.5 text-red-600 truncate">{regionalData?.piorIndicador ?? "Atrasos e Faltas"}</p>
+                <p className="text-[11px] text-muted-foreground mt-1 truncate">{regionalData?.piorIndicadorDetalhe ?? "+52.4% no período"}</p>
               </div>
             </div>
 
@@ -257,7 +293,7 @@ export default function AnalyticsResumoExecutivo() {
                 <div className="flex-1 min-w-[120px]" />
               </div>
               <div className="divide-y divide-border/40">
-              {sparklineCards.map((card) => {
+              {filteredSparklines.map((card) => {
                 const lastIdx = card.evolucao.length - 1;
                 return (
                   <div key={card.label} className="flex items-center gap-4 px-4 py-2.5 hover:bg-muted/30 transition-colors">
@@ -319,34 +355,51 @@ export default function AnalyticsResumoExecutivo() {
 
             {/* ═══ Linha 3: Ranking ═══ */}
             <div className="bg-card border border-border/50 rounded-xl p-4">
-              <h3 className="text-sm font-semibold mb-1">Ranking de Operações</h3>
-              <p className="text-xs text-muted-foreground mb-4">Score operacional por regional</p>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-sm font-semibold">Ranking de Operações</h3>
+                {selectedRegional && (
+                  <button onClick={() => setSelectedRegional(null)} className="text-[11px] text-[#FF5722] hover:underline flex items-center gap-1">
+                    <Eraser size={12} /> Limpar seleção
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">Score operacional por regional · clique para filtrar</p>
               <div className="space-y-3">
-                {rankingOperacoes.map((op) => (
-                  <div key={op.nome} className="flex items-center gap-4">
-                    <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-3 relative">
-                      <div
-                        className={`h-3 rounded-full ${
-                          op.score >= 85 ? "bg-green-500" :
-                          op.score >= 70 ? "bg-orange-400" :
-                          "bg-red-500"
-                        }`}
-                        style={{ width: `${op.score}%` }}
-                      />
+                {rankingOperacoes.map((op) => {
+                  const isSelected = selectedRegional === op.nome;
+                  const isDimmed = selectedRegional && !isSelected;
+                  return (
+                    <div
+                      key={op.nome}
+                      className={`flex items-center gap-4 cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all ${
+                        isSelected ? 'bg-orange-50 ring-1 ring-[#FF5722]/30' : 'hover:bg-muted/30'
+                      } ${isDimmed ? 'opacity-35' : ''}`}
+                      onClick={() => handleRegionalClick(op.nome)}
+                    >
+                      <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
+                      <div className="flex-1 bg-gray-100 rounded-full h-3 relative">
+                        <div
+                          className={`h-3 rounded-full transition-all ${
+                            op.score >= 85 ? "bg-green-500" :
+                            op.score >= 70 ? "bg-orange-400" :
+                            "bg-red-500"
+                          }`}
+                          style={{ width: `${op.score}%` }}
+                        />
+                      </div>
+                      <span className={`text-sm font-semibold min-w-[40px] text-right ${
+                        op.score >= 85 ? "text-green-600" :
+                        op.score >= 70 ? "text-orange-500" :
+                        "text-red-600"
+                      }`}>
+                        {op.score}
+                      </span>
+                      {op.tendencia === "melhorando" && <TrendingUp size={14} className="text-green-500" />}
+                      {op.tendencia === "estavel" && <Minus size={14} className="text-gray-400" />}
+                      {op.tendencia === "piorando" && <TrendingDown size={14} className="text-red-500" />}
                     </div>
-                    <span className={`text-sm font-semibold min-w-[40px] text-right ${
-                      op.score >= 85 ? "text-green-600" :
-                      op.score >= 70 ? "text-orange-500" :
-                      "text-red-600"
-                    }`}>
-                      {op.score}
-                    </span>
-                    {op.tendencia === "melhorando" && <TrendingUp size={14} className="text-green-500" />}
-                    {op.tendencia === "estavel" && <Minus size={14} className="text-gray-400" />}
-                    {op.tendencia === "piorando" && <TrendingDown size={14} className="text-red-500" />}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
