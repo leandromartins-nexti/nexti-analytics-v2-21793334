@@ -355,34 +355,51 @@ export default function AnalyticsResumoExecutivo() {
 
             {/* ═══ Linha 3: Ranking ═══ */}
             <div className="bg-card border border-border/50 rounded-xl p-4">
-              <h3 className="text-sm font-semibold mb-1">Ranking de Operações</h3>
-              <p className="text-xs text-muted-foreground mb-4">Score operacional por regional</p>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-sm font-semibold">Ranking de Operações</h3>
+                {selectedRegional && (
+                  <button onClick={() => setSelectedRegional(null)} className="text-[11px] text-[#FF5722] hover:underline flex items-center gap-1">
+                    <Eraser size={12} /> Limpar seleção
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">Score operacional por regional · clique para filtrar</p>
               <div className="space-y-3">
-                {rankingOperacoes.map((op) => (
-                  <div key={op.nome} className="flex items-center gap-4">
-                    <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-3 relative">
-                      <div
-                        className={`h-3 rounded-full ${
-                          op.score >= 85 ? "bg-green-500" :
-                          op.score >= 70 ? "bg-orange-400" :
-                          "bg-red-500"
-                        }`}
-                        style={{ width: `${op.score}%` }}
-                      />
+                {rankingOperacoes.map((op) => {
+                  const isSelected = selectedRegional === op.nome;
+                  const isDimmed = selectedRegional && !isSelected;
+                  return (
+                    <div
+                      key={op.nome}
+                      className={`flex items-center gap-4 cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all ${
+                        isSelected ? 'bg-orange-50 ring-1 ring-[#FF5722]/30' : 'hover:bg-muted/30'
+                      } ${isDimmed ? 'opacity-35' : ''}`}
+                      onClick={() => handleRegionalClick(op.nome)}
+                    >
+                      <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
+                      <div className="flex-1 bg-gray-100 rounded-full h-3 relative">
+                        <div
+                          className={`h-3 rounded-full transition-all ${
+                            op.score >= 85 ? "bg-green-500" :
+                            op.score >= 70 ? "bg-orange-400" :
+                            "bg-red-500"
+                          }`}
+                          style={{ width: `${op.score}%` }}
+                        />
+                      </div>
+                      <span className={`text-sm font-semibold min-w-[40px] text-right ${
+                        op.score >= 85 ? "text-green-600" :
+                        op.score >= 70 ? "text-orange-500" :
+                        "text-red-600"
+                      }`}>
+                        {op.score}
+                      </span>
+                      {op.tendencia === "melhorando" && <TrendingUp size={14} className="text-green-500" />}
+                      {op.tendencia === "estavel" && <Minus size={14} className="text-gray-400" />}
+                      {op.tendencia === "piorando" && <TrendingDown size={14} className="text-red-500" />}
                     </div>
-                    <span className={`text-sm font-semibold min-w-[40px] text-right ${
-                      op.score >= 85 ? "text-green-600" :
-                      op.score >= 70 ? "text-orange-500" :
-                      "text-red-600"
-                    }`}>
-                      {op.score}
-                    </span>
-                    {op.tendencia === "melhorando" && <TrendingUp size={14} className="text-green-500" />}
-                    {op.tendencia === "estavel" && <Minus size={14} className="text-gray-400" />}
-                    {op.tendencia === "piorando" && <TrendingDown size={14} className="text-red-500" />}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
