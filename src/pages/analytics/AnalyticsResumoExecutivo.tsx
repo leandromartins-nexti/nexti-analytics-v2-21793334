@@ -251,10 +251,8 @@ export default function AnalyticsResumoExecutivo() {
                       <ResponsiveContainer width="100%" height={36}>
                         <LineChart data={card.evolucao}>
                           <RechartsTooltip
-                            contentStyle={{ fontSize: 11, padding: '4px 8px', borderRadius: 8, border: '1px solid hsl(var(--border))' }}
-                            labelStyle={{ fontWeight: 600, marginBottom: 2 }}
-                            formatter={(v: number) => [card.label.includes('%') || card.label.includes('Cobertura') || card.label.includes('Qualidade') || card.label.includes('Absenteísmo') ? `${v}%` : `${v}K`, '']}
-                            labelFormatter={(label: string) => label}
+                            content={<SparklineTooltip cardData={card} />}
+                            cursor={false}
                           />
                           <Line
                             type="monotone"
