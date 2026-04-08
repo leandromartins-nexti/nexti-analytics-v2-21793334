@@ -96,7 +96,7 @@ function SparklineTooltip({ active, payload, cardData }: any) {
     <div className="bg-card border border-border rounded-lg shadow-lg px-3 py-2.5 text-xs min-w-[180px] z-[9999] relative">
       <p className="font-semibold text-foreground mb-2">{comp}</p>
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cardData.corLinha }} />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getLineColor(cardData.score) }} />
         <span className="text-muted-foreground">{cardData.label}:</span>
         <span className="font-bold text-foreground">{fmt(valor)}</span>
         <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(cardData.score)} ${getScoreBg(cardData.score)}`}>Score {cardData.score}</span>
