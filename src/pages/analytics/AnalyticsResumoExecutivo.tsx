@@ -1,15 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Filter, Eraser, TrendingUp, Shield, Zap, AlertTriangle, Info } from "lucide-react";
-import { FilterPanel } from "@/components/layout/FilterPanel";
-import { resumo, evolucaoVetores, evolucaoEconomia } from "@/lib/analytics-mock-data";
 import {
-  ResponsiveContainer, ComposedChart, BarChart, Bar, Line, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend, ReferenceLine, LabelList,
+  ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
+  AlertTriangle, ArrowDownRight, ArrowUpRight, Info, DollarSign, CheckCircle,
+} from "lucide-react";
+import { FilterPanel } from "@/components/layout/FilterPanel";
+import {
+  resumo, resumoComparativo, radarIndicadores, rankingOperacoes,
+  insightsResumo, sparklineData, disciplina,
+} from "@/lib/analytics-mock-data";
+import {
+  ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis,
+  PolarRadiusAxis, Legend, LineChart, Line,
 } from "recharts";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-// ── Gauge Component ─────────────────────────────────────────────
+// ── Gauge semicircular ──────────────────────────────────────
 function ScoreGauge({ score }: { score: number }) {
   const radius = 80;
   const stroke = 14;
@@ -17,7 +23,6 @@ function ScoreGauge({ score }: { score: number }) {
   const cy = 95;
   const circumference = Math.PI * radius;
   const progress = (score / 100) * circumference;
-
   const color = score >= 85 ? "hsl(var(--success))" : score >= 70 ? "#FF5722" : "hsl(var(--destructive))";
 
   return (
@@ -35,16 +40,7 @@ function ScoreGauge({ score }: { score: number }) {
   );
 }
 
-// ── KPI Card Wrapper ────────────────────────────────────────────
-function KpiCard({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-card border border-border/50 rounded-xl p-5">
-      {children}
-    </div>
-  );
-}
-
-// ── InfoTip ─────────────────────────────────────────────────────
+// ── InfoTip ─────────────────────────────────────────────────
 function InfoTip({ text }: { text: string }) {
   return (
     <UITooltip>
@@ -56,12 +52,38 @@ function InfoTip({ text }: { text: string }) {
   );
 }
 
-// ── Main Page ───────────────────────────────────────────────────
+// ── Hero indicators data ────────────────────────────────────
+const heroIndicators = [
+  { label: "Qualidade do Ponto", value: "87.3%", color: "text-green-600", icon: TrendingUp, iconColor: "text-green-500" },
+  { label: "Absenteísmo", value: "4.8%", color: "text-orange-500", icon: TrendingDown, iconColor: "text-green-500" },
+  { label: "Volume HE", value: "33.1K h", color: "", icon: TrendingDown, iconColor: "text-green-500" },
+  { label: "Movimentações", value: "23.0K", color: "", icon: TrendingDown, iconColor: "text-green-500" },
+  { label: "Cobertura Efetiva", value: "72%", color: "text-orange-500", icon: Minus, iconColor: "text-gray-400" },
+];
+
+// ── Sparkline cards config ──────────────────────────────────
+const sparklineCards = [
+  sparklineData.qualidadePonto,
+  sparklineData.absenteismo,
+  sparklineData.volumeHE,
+  sparklineData.movimentacoes,
+  sparklineData.coberturaEfetiva,
+];
+
+// ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [rating, setRating] = useState<number | null>(null);
+  const [feedbackComment, setFeedbackComment] = useState("");
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
   const scoreColor = resumo.scoreOperacional >= 85 ? "text-green-600" : resumo.scoreOperacional >= 70 ? "text-[#FF5722]" : "text-red-600";
+
+  const handleFeedbackSubmit = () => {
+    console.log({ page: "resumo_executivo", rating, comment: feedbackComment, timestamp: Date.now() });
+    setFeedbackSubmitted(true);
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -96,145 +118,266 @@ export default function AnalyticsResumoExecutivo() {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content: main + sidebar */}
       <div className="px-6 py-6 flex-1">
         <div className="flex gap-6">
           {/* Main content */}
           <div className="flex-1 space-y-6">
-            {/* Hero — grid 2 cols */}
-            <div className="grid grid-cols-2 gap-6">
-              {/* Economia Gerada */}
-              <div className="bg-card border border-border/50 rounded-xl p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp size={18} className="text-[#FF5722]" />
-                  <span className="text-sm font-semibold text-muted-foreground tracking-wide uppercase">Economia Gerada</span>
-                </div>
-                <p className="text-[3rem] font-bold leading-none">{resumo.economiaGerada}</p>
-                <p className="text-sm text-muted-foreground mt-3">Resultado consolidado da evolução operacional no período analisado</p>
-                <div className="flex gap-2 mt-5">
-                  <span className="bg-orange-50 text-[#FF5722] border border-orange-200 text-[11px] font-medium px-3 py-1 rounded-full">{resumo.periodo}</span>
-                  <span className="bg-gray-100 text-gray-600 text-[11px] font-medium px-3 py-1 rounded-full">{resumo.cliente}</span>
-                  <span className="bg-gray-100 text-gray-600 text-[11px] font-medium px-3 py-1 rounded-full">{resumo.colaboradores.toLocaleString()} colaboradores</span>
-                </div>
-              </div>
 
-              {/* Score Operacional */}
-              <div className="bg-card border border-border/50 rounded-xl p-8 text-center">
-                <div className="flex items-center justify-center gap-2 mb-6">
-                  <span className="text-sm font-semibold text-muted-foreground tracking-wide uppercase">Score Operacional</span>
-                  <InfoTip text="Índice de 0 a 100 que combina qualidade do ponto, absenteísmo, horas extras, movimentações e coberturas. Pesos configuráveis." />
+            {/* ═══ Bloco 1: Hero Score ═══ */}
+            <div className="bg-card border border-border/50 rounded-xl p-6">
+              <div className="flex items-center gap-8">
+                {/* LEFT: Gauge + Score */}
+                <div className="text-center min-w-[160px]">
+                  <ScoreGauge score={resumo.scoreOperacional} />
+                  <p className={`text-[3rem] font-bold leading-none ${scoreColor}`}>{resumo.scoreOperacional}</p>
+                  <p className={`text-sm font-semibold ${scoreColor} mt-1`}>{resumo.scoreFaixa}</p>
+                  <div className="flex items-center justify-center gap-1 mt-2">
+                    <TrendingUp size={14} className="text-green-500" />
+                    <span className="text-xs font-medium text-green-600">+{resumoComparativo.scoreDiferenca} vs anterior</span>
+                  </div>
                 </div>
-                <ScoreGauge score={resumo.scoreOperacional} />
-                <p className={`text-[2.8rem] font-bold leading-none ${scoreColor} -mt-2`}>{resumo.scoreOperacional}</p>
-                <p className={`text-lg font-semibold ${scoreColor} mt-2`}>{resumo.scoreFaixa}</p>
-                <p className="text-sm text-muted-foreground mt-2">Saúde geral da operação no período</p>
+
+                {/* CENTER: Description + badges */}
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-muted-foreground tracking-wide uppercase mb-2">Score Operacional</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Índice de saúde da operação calculado a partir de 5 indicadores:
+                    qualidade do ponto, absenteísmo, volume de horas extras,
+                    movimentações e cobertura efetiva.
+                  </p>
+                  <div className="flex gap-2 mt-3">
+                    <span className="bg-orange-50 text-[#FF5722] border border-orange-200 text-[11px] font-medium px-3 py-1 rounded-full">{resumo.periodo}</span>
+                    <span className="bg-gray-100 text-gray-600 text-[11px] font-medium px-3 py-1 rounded-full">{resumo.cliente}</span>
+                    <span className="bg-gray-100 text-gray-600 text-[11px] font-medium px-3 py-1 rounded-full">{resumo.colaboradores.toLocaleString()} colaboradores</span>
+                  </div>
+                </div>
+
+                {/* RIGHT: 5 core indicators */}
+                <div className="min-w-[260px] space-y-2.5 border-l border-border pl-6">
+                  {heroIndicators.map((ind) => (
+                    <div key={ind.label} className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">{ind.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-sm font-semibold ${ind.color}`}>{ind.value}</span>
+                        <ind.icon size={14} className={ind.iconColor} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* 4 KPI Cards */}
+            {/* ═══ Bloco 2: 4 KPI Cards ═══ */}
             <div className="grid grid-cols-4 gap-4">
-              <KpiCard>
+              {/* Melhor Operação */}
+              <div className="bg-card border border-border/50 rounded-xl p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="flex justify-between items-start">
-                  <Shield size={20} className="text-green-500" />
-                  <InfoTip text="% dos dados baseados em eventos operacionais reais da plataforma Nexti" />
+                  <TrendingUp size={18} className="text-green-500" />
+                  <InfoTip text="Operação com maior score operacional no período" />
                 </div>
-                <p className="text-[0.85rem] font-medium text-muted-foreground mt-3">Nível de Confiança</p>
-                <p className="text-[1.8rem] font-semibold leading-none mt-1 text-green-600">{resumo.nivelConfianca}%</p>
-                <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-                  <div className="bg-green-500 h-2 rounded-full" style={{ width: `${resumo.nivelConfianca}%` }} />
-                </div>
-              </KpiCard>
+                <p className="text-xs font-medium text-muted-foreground mt-3">Melhor Operação</p>
+                <p className="text-lg font-semibold mt-1">{resumo.melhorOperacao.nome}</p>
+                <p className="text-xs text-muted-foreground mt-1.5">Score {resumo.melhorOperacao.score} · Tendência de alta</p>
+              </div>
 
-              <KpiCard>
+              {/* Maior Risco */}
+              <div className="bg-card border border-border/50 rounded-xl p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="flex justify-between items-start">
-                  <Zap size={20} className="text-[#FF5722]" />
-                  <InfoTip text="Driver operacional com maior impacto na economia gerada do período" />
+                  <AlertTriangle size={18} className="text-red-500" />
+                  <InfoTip text="Operação com menor score e maior concentração de risco" />
                 </div>
-                <p className="text-[0.85rem] font-medium text-muted-foreground mt-3">Principal Alavanca</p>
-                <p className="text-[1.8rem] font-semibold leading-none mt-1">{resumo.principalAlavanca.nome}</p>
-                <p className="text-xs text-muted-foreground mt-2">{resumo.principalAlavanca.valor} · {resumo.principalAlavanca.participacao}</p>
-              </KpiCard>
+                <p className="text-xs font-medium text-muted-foreground mt-3">Maior Risco</p>
+                <p className="text-lg font-semibold mt-1 text-red-600">{resumo.maiorRisco.nome}</p>
+                <p className="text-xs text-muted-foreground mt-1.5">Score {resumo.maiorRisco.score} · {resumo.maiorRisco.indicador}</p>
+              </div>
 
-              <KpiCard>
+              {/* Principal Melhora */}
+              <div className="bg-card border border-border/50 rounded-xl p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="flex justify-between items-start">
-                  <TrendingUp size={20} className="text-green-500" />
-                  <InfoTip text="Regional ou área com maior score operacional no período" />
+                  <ArrowDownRight size={18} className="text-green-500" />
+                  <InfoTip text="Indicador com maior evolução positiva no período" />
                 </div>
-                <p className="text-[0.85rem] font-medium text-muted-foreground mt-3">Melhor Operação</p>
-                <p className="text-[1.8rem] font-semibold leading-none mt-1">{resumo.melhorOperacao.nome}</p>
-                <p className="text-xs text-muted-foreground mt-2">Score {resumo.melhorOperacao.score} · Tendência de alta</p>
-              </KpiCard>
+                <p className="text-xs font-medium text-muted-foreground mt-3">Principal Melhora</p>
+                <p className="text-lg font-semibold mt-1 text-green-600">Qualidade do Ponto</p>
+                <p className="text-xs text-muted-foreground mt-1.5">+4.1 pp no período (83.2% → 87.3%)</p>
+              </div>
 
-              <KpiCard>
+              {/* Principal Piora */}
+              <div className="bg-card border border-border/50 rounded-xl p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="flex justify-between items-start">
-                  <AlertTriangle size={20} className="text-red-500" />
-                  <InfoTip text="Regional ou área com menor score operacional e maior concentração de risco" />
+                  <ArrowUpRight size={18} className="text-red-500" />
+                  <InfoTip text="Indicador com maior deterioração no período" />
                 </div>
-                <p className="text-[0.85rem] font-medium text-muted-foreground mt-3">Maior Risco</p>
-                <p className="text-[1.8rem] font-semibold leading-none mt-1 text-red-600">{resumo.maiorRisco.nome}</p>
-                <p className="text-xs text-muted-foreground mt-2">Score {resumo.maiorRisco.score} · {resumo.maiorRisco.indicador}</p>
-              </KpiCard>
+                <p className="text-xs font-medium text-muted-foreground mt-3">Principal Piora</p>
+                <p className="text-lg font-semibold mt-1 text-red-600">Atrasos e Faltas</p>
+                <p className="text-xs text-muted-foreground mt-1.5">+52.4% de eventos no período</p>
+              </div>
             </div>
 
-            {/* Chart: Evolução Operacional */}
+            {/* ═══ Bloco 3: Radar + Sparklines ═══ */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Radar */}
+              <div className="bg-card border border-border/50 rounded-xl p-6">
+                <h3 className="text-sm font-semibold mb-1">Perfil da Operação</h3>
+                <p className="text-xs text-muted-foreground mb-4">Atual vs período anterior</p>
+                <ResponsiveContainer width="100%" height={250}>
+                  <RadarChart data={radarIndicadores}>
+                    <PolarGrid stroke="#e5e7eb" />
+                    <PolarAngleAxis dataKey="indicador" fontSize={11} />
+                    <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+                    <Radar name="Anterior" dataKey="anterior" stroke="#9ca3af" strokeDasharray="4 4" fill="transparent" strokeWidth={1.5} />
+                    <Radar name="Atual" dataKey="atual" stroke="#FF5722" fill="#FF5722" fillOpacity={0.15} strokeWidth={2} />
+                    <Legend verticalAlign="bottom" height={30} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* 5 Sparklines */}
+              <div className="space-y-3">
+                {sparklineCards.map((card) => (
+                  <div key={card.label} className="bg-card border border-border/50 rounded-xl p-4 flex items-center gap-4">
+                    <div className="min-w-[140px]">
+                      <p className="text-xs text-muted-foreground">{card.label}</p>
+                      <div className="flex items-baseline gap-2 mt-1">
+                        <span className="text-lg font-semibold">{card.valor}</span>
+                        <span className={`text-xs font-medium ${card.corVariacao}`}>{card.variacao}</span>
+                      </div>
+                    </div>
+                    <div className="flex-1 h-[40px]">
+                      <ResponsiveContainer width="100%" height={40}>
+                        <LineChart data={card.evolucao}>
+                          <Line type="monotone" dataKey="valor" stroke={card.corLinha} strokeWidth={1.5} dot={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ═══ Bloco 4: Ranking ═══ */}
             <div className="bg-card border border-border/50 rounded-xl p-6">
-              <h3 className="text-base font-semibold">Evolução Operacional dos Principais Vetores</h3>
-              <p className="text-sm text-muted-foreground mb-4">Disciplina, absenteísmo e movimentações por competência</p>
-              <ResponsiveContainer width="100%" height={280}>
-                <ComposedChart data={evolucaoVetores}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                  <XAxis dataKey="competencia" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis yAxisId="left" domain={[75, 95]} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v: number) => `${v}%`} />
-                  <YAxis yAxisId="right" orientation="right" domain={[0, 10]} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v: number) => `${v}%`} />
-                  <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13 }} />
-                  <Legend verticalAlign="top" height={36} />
-                  <Line yAxisId="left" type="monotone" dataKey="qualidadePonto" name="Qualidade do Ponto (%)" stroke="hsl(220, 80%, 50%)" strokeWidth={2} dot={{ r: 4 }} />
-                  <Line yAxisId="right" type="monotone" dataKey="absenteismo" name="Absenteísmo (%)" stroke="hsl(355, 78%, 56%)" strokeWidth={2} strokeDasharray="5 5" dot={{ r: 4 }} />
-                  <Line yAxisId="right" type="monotone" dataKey="pressaoOperacional" name="Pressão Operacional" stroke="hsl(44, 98%, 54%)" strokeWidth={2} strokeDasharray="2 2" dot={{ r: 4 }} />
-                  <ReferenceLine yAxisId="left" y={85.7} stroke="#9ca3af" strokeDasharray="5 5" label={{ value: "Média", position: "right", fontSize: 11, fill: "#9ca3af" }} />
-                </ComposedChart>
-              </ResponsiveContainer>
+              <h3 className="text-sm font-semibold mb-1">Ranking de Operações</h3>
+              <p className="text-xs text-muted-foreground mb-4">Score operacional por regional</p>
+              <div className="space-y-3">
+                {rankingOperacoes.map((op) => (
+                  <div key={op.nome} className="flex items-center gap-4">
+                    <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-3 relative">
+                      <div
+                        className={`h-3 rounded-full ${
+                          op.score >= 85 ? "bg-green-500" :
+                          op.score >= 70 ? "bg-orange-400" :
+                          "bg-red-500"
+                        }`}
+                        style={{ width: `${op.score}%` }}
+                      />
+                    </div>
+                    <span className={`text-sm font-semibold min-w-[40px] text-right ${
+                      op.score >= 85 ? "text-green-600" :
+                      op.score >= 70 ? "text-orange-500" :
+                      "text-red-600"
+                    }`}>
+                      {op.score}
+                    </span>
+                    {op.tendencia === "melhorando" && <TrendingUp size={14} className="text-green-500" />}
+                    {op.tendencia === "estavel" && <Minus size={14} className="text-gray-400" />}
+                    {op.tendencia === "piorando" && <TrendingDown size={14} className="text-red-500" />}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Chart: Economia por Competência */}
-            <div className="bg-card border border-border/50 rounded-xl p-6">
-              <h3 className="text-base font-semibold">Economia Gerada por Competência</h3>
-              <p className="text-sm text-muted-foreground mb-4">Valor capturado mês a mês ao longo do período</p>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={evolucaoEconomia}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                  <XAxis dataKey="competencia" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v: number) => `R$ ${(v / 1000).toFixed(0)}K`} />
-                  <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13 }} formatter={(v: number) => [`R$ ${(v / 1000).toFixed(0)}K`, 'Economia']} />
-                  <Bar dataKey="valor" fill="#FF5722" radius={[4, 4, 0, 0]}>
-                    <LabelList dataKey="valor" position="top" fontSize={10} formatter={(v: number) => `R$ ${(v / 1000).toFixed(0)}K`} />
-                  </Bar>
-                  <ReferenceLine y={resumo.economiaMedia} stroke="#9ca3af" strokeDasharray="5 5" label={{ value: "Média", position: "right", fontSize: 11, fill: "#9ca3af" }} />
-                </BarChart>
-              </ResponsiveContainer>
+            {/* ═══ Bloco 5: CTA Financeiro ═══ */}
+            <div className="bg-surface border border-border/50 rounded-xl p-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center">
+                  <DollarSign size={20} className="text-[#FF5722]" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Visão Financeira em breve</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Prepare seus parâmetros agora para que a visão em R$ já esteja pronta quando liberada.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate("/analytics/configuracao")}
+                className="bg-[#FF5722] text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition shrink-0"
+              >
+                Configurar parâmetros
+              </button>
             </div>
 
-            {/* Feedback */}
-            <div className="flex items-center justify-center gap-4 py-6 mt-4 border-t border-border">
-              <span className="text-sm text-muted-foreground">Esta visualização foi útil?</span>
-              <button className="hover:scale-125 transition-transform text-2xl" title="Muito útil">😊</button>
-              <button className="hover:scale-125 transition-transform text-2xl" title="Razoável">😐</button>
-              <button className="hover:scale-125 transition-transform text-2xl" title="Pouco útil">😕</button>
+            {/* ═══ Bloco 6: Feedback inline ═══ */}
+            <div className="border-t border-border pt-6 mt-2">
+              {!feedbackSubmitted ? (
+                <>
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="text-sm text-muted-foreground">Como você avalia esta visualização?</span>
+                    <div className="flex gap-1.5">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => setRating(n)}
+                          className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
+                            rating === n
+                              ? "bg-[#FF5722] text-white"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">Ruim → Excelente</span>
+                  </div>
+                  {rating && (
+                    <div className="mt-4 max-w-lg mx-auto">
+                      <textarea
+                        value={feedbackComment}
+                        onChange={(e) => setFeedbackComment(e.target.value)}
+                        placeholder="Quer compartilhar algo mais? (opcional)"
+                        className="w-full border border-border rounded-lg p-3 text-sm resize-none h-20 focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] outline-none"
+                      />
+                      <div className="flex justify-end mt-2">
+                        <button
+                          onClick={handleFeedbackSubmit}
+                          className="bg-[#FF5722] text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:opacity-90 transition"
+                        >
+                          Enviar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  <CheckCircle size={16} className="text-green-500" />
+                  <span className="text-sm text-green-600">Obrigado pelo feedback!</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Sidebar: Insights */}
-          <div className="w-[260px] shrink-0">
-            <div className="bg-[#FFF8E1] rounded-xl p-5 sticky top-6">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-lg">💡</span>
-                <h3 className="font-semibold text-sm">Insights da Operação</h3>
-              </div>
-              <p className="text-xs text-muted-foreground mb-4">Análise executiva do período</p>
-              <div className="space-y-2">
-                {resumo.insights.map((insight, i) => (
-                  <div key={i} className="flex gap-3 p-3 rounded-lg bg-white/70">
-                    <span className="shrink-0 mt-0.5 text-base">{insight.icone}</span>
+          {/* ═══ Sidebar: Insights ═══ */}
+          <div className="w-[280px] shrink-0">
+            <div className="bg-surface border border-border/50 rounded-xl p-5 sticky top-6">
+              <h3 className="text-sm font-semibold mb-1">Insights da Operação</h3>
+              <p className="text-xs text-muted-foreground mb-5">Análise executiva do período</p>
+              <div className="space-y-3">
+                {insightsResumo.map((insight, i) => (
+                  <div
+                    key={i}
+                    className={`pl-4 py-2 ${
+                      insight.tipo === "positivo" ? "border-l-green-500" :
+                      insight.tipo === "negativo" ? "border-l-red-500" :
+                      insight.tipo === "atencao" ? "border-l-orange-400" :
+                      "border-l-blue-400"
+                    }`}
+                    style={{ borderLeftWidth: "3px", borderLeftStyle: "solid" }}
+                  >
                     <p className="text-[13px] leading-relaxed text-gray-700">{insight.texto}</p>
                   </div>
                 ))}

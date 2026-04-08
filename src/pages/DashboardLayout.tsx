@@ -3,6 +3,7 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { PrimeFilterProvider } from "@/contexts/PrimeFilterContext";
+import { FeedbackButton } from "@/components/analytics/FeedbackButton";
 
 const DashboardLayout = () => {
   return (
@@ -19,6 +20,7 @@ const DashboardLayout = () => {
               </main>
             </div>
           </div>
+          <FeedbackButton />
         </SidebarProvider>
       </PrimeFilterProvider>
     </FilterProvider>
