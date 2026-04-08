@@ -66,6 +66,15 @@ const scoreGeral = Math.round(
 const getScoreColor = (s: number) => s >= 85 ? "text-green-600" : s >= 70 ? "text-orange-500" : s < 60 ? "text-red-600" : "text-yellow-600";
 const getScoreBg = (s: number) => s >= 85 ? "bg-green-50" : s >= 70 ? "bg-orange-50" : s < 60 ? "bg-red-50" : "bg-yellow-50";
 
+// Score-based line color: gradient from red (low) → orange → yellow → green (high)
+const getLineColor = (s: number) => {
+  if (s >= 85) return "#16a34a"; // green-600
+  if (s >= 75) return "#65a30d"; // lime-600
+  if (s >= 65) return "#ca8a04"; // yellow-600
+  if (s >= 55) return "#ea580c"; // orange-600
+  return "#dc2626"; // red-600
+};
+
 // ── Custom sparkline tooltip ────────────────────────────────
 function SparklineTooltip({ active, payload, cardData }: any) {
   if (!active || !payload?.length) return null;
@@ -87,7 +96,7 @@ function SparklineTooltip({ active, payload, cardData }: any) {
     <div className="bg-card border border-border rounded-lg shadow-lg px-3 py-2.5 text-xs min-w-[180px] z-[9999] relative">
       <p className="font-semibold text-foreground mb-2">{comp}</p>
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cardData.corLinha }} />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getLineColor(cardData.score) }} />
         <span className="text-muted-foreground">{cardData.label}:</span>
         <span className="font-bold text-foreground">{fmt(valor)}</span>
         <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(cardData.score)} ${getScoreBg(cardData.score)}`}>Score {cardData.score}</span>
@@ -252,7 +261,7 @@ export default function AnalyticsResumoExecutivo() {
                 const lastIdx = card.evolucao.length - 1;
                 return (
                   <div key={card.label} className="flex items-center gap-4 px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: card.corLinha }} />
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: getLineColor(card.score) }} />
                     <span className="text-sm font-medium text-foreground min-w-[140px]">{card.label}</span>
                     <span className={`text-xs font-bold min-w-[45px] text-center px-1.5 py-0.5 rounded ${getScoreColor(card.score)} ${getScoreBg(card.score)}`}>{card.score}</span>
                     <span className="text-sm font-semibold text-foreground min-w-[70px]">{card.valor}</span>
@@ -270,7 +279,7 @@ export default function AnalyticsResumoExecutivo() {
                           <Line
                             type="monotone"
                             dataKey="valor"
-                            stroke={card.corLinha}
+                            stroke={getLineColor(card.score)}
                             strokeWidth={2}
                             dot={(props: any) => (
                               <circle
@@ -278,13 +287,13 @@ export default function AnalyticsResumoExecutivo() {
                                 cx={props.cx}
                                 cy={props.cy}
                                 r={props.index === lastIdx ? 3.5 : 2}
-                                fill={props.index === lastIdx ? card.corLinha : 'white'}
-                                stroke={card.corLinha}
+                                fill={props.index === lastIdx ? getLineColor(card.score) : 'white'}
+                                stroke={getLineColor(card.score)}
                                 strokeWidth={props.index === lastIdx ? 1.5 : 1}
                                 className="cursor-pointer"
                               />
                             )}
-                            activeDot={{ r: 4, fill: card.corLinha, stroke: 'white', strokeWidth: 2 }}
+                            activeDot={{ r: 4, fill: getLineColor(card.score), stroke: 'white', strokeWidth: 2 }}
                           />
                         </LineChart>
                       </ResponsiveContainer>
