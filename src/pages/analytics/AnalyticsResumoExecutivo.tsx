@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import {
-  resumo, resumoComparativo, rankingOperacoes, sparklineData,
+  resumo, resumoComparativo, rankingOperacoes, sparklineData, dadosPorRegional,
 } from "@/lib/analytics-mock-data";
 import {
   ResponsiveContainer, LineChart, Line, Tooltip as RechartsTooltip,
