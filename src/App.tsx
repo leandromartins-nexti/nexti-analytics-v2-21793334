@@ -16,12 +16,12 @@ import NotFound from "./pages/NotFound";
 
 // Analytics V1 pages
 import AnalyticsResumoExecutivo from "./pages/analytics/AnalyticsResumoExecutivo";
-import AnalyticsDisciplinaOperacional from "./pages/analytics/AnalyticsDisciplinaOperacional";
-import AnalyticsCoberturasContinuidade from "./pages/analytics/AnalyticsCoberturasContinuidade";
-import AnalyticsViolacoesTrabalhistas from "./pages/analytics/AnalyticsViolacoesTrabalhistas";
-import AnalyticsOperacoesEstruturas from "./pages/analytics/AnalyticsOperacoesEstruturas";
+import AnalyticsOperacional from "./pages/analytics/AnalyticsOperacional";
+import AnalyticsFinanceiro from "./pages/analytics/AnalyticsFinanceiro";
+import AnalyticsEstrategico from "./pages/analytics/AnalyticsEstrategico";
+import AnalyticsCompliance from "./pages/analytics/AnalyticsCompliance";
+import AnalyticsInteligencia from "./pages/analytics/AnalyticsInteligencia";
 import AnalyticsConfiguracao from "./pages/analytics/AnalyticsConfiguracao";
-import AnalyticsLockedPage from "./pages/analytics/AnalyticsLockedPage";
 
 const queryClient = new QueryClient();
 
@@ -43,14 +43,14 @@ const App = () => (
             <Route path="/roi-config" element={<ROIConfig />} />
             <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
 
-            {/* Analytics V1 */}
+            {/* Analytics V1 — 2-level menu */}
             <Route path="/analytics" element={<AnalyticsResumoExecutivo />} />
-            <Route path="/analytics/disciplina-operacional" element={<AnalyticsDisciplinaOperacional />} />
-            <Route path="/analytics/coberturas-continuidade" element={<AnalyticsCoberturasContinuidade />} />
-            <Route path="/analytics/violacoes-trabalhistas" element={<AnalyticsViolacoesTrabalhistas />} />
-            <Route path="/analytics/operacoes-estruturas" element={<AnalyticsOperacoesEstruturas />} />
+            <Route path="/analytics/operacional" element={<AnalyticsOperacional />} />
+            <Route path="/analytics/financeiro" element={<AnalyticsFinanceiro />} />
+            <Route path="/analytics/estrategico" element={<AnalyticsEstrategico />} />
+            <Route path="/analytics/compliance" element={<AnalyticsCompliance />} />
+            <Route path="/analytics/inteligencia" element={<AnalyticsInteligencia />} />
             <Route path="/analytics/configuracao" element={<AnalyticsConfiguracao />} />
-            <Route path="/analytics/locked/:tabId" element={<AnalyticsLockedPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
