@@ -3,18 +3,32 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight, Filter, Eraser } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { resumo } from "@/lib/analytics-mock-data";
+import AnalyticsDisciplinaOperacional from "./AnalyticsDisciplinaOperacional";
+import AnalyticsCoberturasContinuidade from "./AnalyticsCoberturasContinuidade";
+import AnalyticsViolacoesTrabalhistas from "./AnalyticsViolacoesTrabalhistas";
+import AnalyticsOperacoesEstruturas from "./AnalyticsOperacoesEstruturas";
 
-export default function AnalyticsViolacoesTrabalhistas({ embedded }: { embedded?: boolean }) {
+const tabs = [
+  { id: "disciplina", label: "Disciplina Operacional" },
+  { id: "coberturas", label: "Coberturas e Continuidade" },
+  { id: "violacoes", label: "Violações Trabalhistas" },
+  { id: "operacoes", label: "Operações e Estruturas" },
+];
+
+export default function AnalyticsOperacional() {
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("disciplina");
 
-  const content = (
-    <div className="px-6 py-6 flex-1">
-      <p className="text-muted-foreground">Violações Trabalhistas — em construção.</p>
-    </div>
-  );
-
-  if (embedded) return content;
+  const renderTab = () => {
+    switch (activeTab) {
+      case "disciplina": return <AnalyticsDisciplinaOperacional embedded />;
+      case "coberturas": return <AnalyticsCoberturasContinuidade embedded />;
+      case "violacoes": return <AnalyticsViolacoesTrabalhistas embedded />;
+      case "operacoes": return <AnalyticsOperacoesEstruturas embedded />;
+      default: return <AnalyticsDisciplinaOperacional embedded />;
+    }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -24,11 +38,11 @@ export default function AnalyticsViolacoesTrabalhistas({ embedded }: { embedded?
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[#FF5722] font-medium cursor-pointer hover:underline" onClick={() => navigate("/analytics")}>Analytics</span>
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-muted-foreground">Operacional</span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground font-semibold">Violações Trabalhistas</span>
+          <span className="text-foreground font-semibold">Operacional</span>
         </div>
       </header>
+
+      {/* Filter bar */}
       <div className="bg-white px-6 py-3 border-b border-border flex items-center justify-between">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-sm">
@@ -47,7 +61,31 @@ export default function AnalyticsViolacoesTrabalhistas({ embedded }: { embedded?
           </button>
         </div>
       </div>
-      {content}
+
+      {/* Tabs */}
+      <div className="bg-white border-b border-border px-6">
+        <div className="flex gap-6">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === tab.id
+                  ? "border-[#FF5722] text-[#FF5722]"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab content */}
+      <div className="flex-1">
+        {renderTab()}
+      </div>
+
       <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
     </div>
   );

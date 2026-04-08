@@ -1,20 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Filter, Eraser } from "lucide-react";
+import { ChevronRight, Filter, Eraser, Lock } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
-import { resumo } from "@/lib/analytics-mock-data";
+import { resumo, lockedTabs } from "@/lib/analytics-mock-data";
+import LockedTabOverlay from "@/components/analytics/LockedTabOverlay";
 
-export default function AnalyticsViolacoesTrabalhistas({ embedded }: { embedded?: boolean }) {
+interface TabDef {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  sectionName: string;
+  sectionId: string;
+  tabs: TabDef[];
+}
+
+export default function AnalyticsLockedSection({ sectionName, sectionId, tabs }: Props) {
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(tabs[0]?.id || "");
 
-  const content = (
-    <div className="px-6 py-6 flex-1">
-      <p className="text-muted-foreground">Violações Trabalhistas — em construção.</p>
-    </div>
-  );
-
-  if (embedded) return content;
+  const currentLocked = lockedTabs.find((t) => t.id === activeTab);
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -24,11 +31,10 @@ export default function AnalyticsViolacoesTrabalhistas({ embedded }: { embedded?
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[#FF5722] font-medium cursor-pointer hover:underline" onClick={() => navigate("/analytics")}>Analytics</span>
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-muted-foreground">Operacional</span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground font-semibold">Violações Trabalhistas</span>
+          <span className="text-foreground font-semibold">{sectionName}</span>
         </div>
       </header>
+
       <div className="bg-white px-6 py-3 border-b border-border flex items-center justify-between">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-sm">
@@ -47,7 +53,34 @@ export default function AnalyticsViolacoesTrabalhistas({ embedded }: { embedded?
           </button>
         </div>
       </div>
-      {content}
+
+      {/* Tabs with lock icons */}
+      <div className="bg-white border-b border-border px-6">
+        <div className="flex gap-6">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 ${
+                activeTab === tab.id
+                  ? "border-[#FF5722] text-[#FF5722]"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab.label}
+              <Lock className="w-3 h-3 text-muted-foreground" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="px-6 py-4 flex-1">
+        <LockedTabOverlay
+          nome={currentLocked?.nome || activeTab}
+          descricao={currentLocked?.descricao || "Funcionalidade em desenvolvimento"}
+        />
+      </div>
+
       <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
     </div>
   );
