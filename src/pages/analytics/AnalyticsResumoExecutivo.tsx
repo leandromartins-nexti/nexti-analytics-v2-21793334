@@ -250,6 +250,7 @@ export default function AnalyticsResumoExecutivo() {
                   Média ponderada dos 5 indicadores (pesos configuráveis)
                 </div>
               </div>
+              </div>
               {/* Month legend footer */}
               <div className="flex items-center gap-4 px-4 py-1.5 border-t border-border/40">
                 <div className="w-2" />
