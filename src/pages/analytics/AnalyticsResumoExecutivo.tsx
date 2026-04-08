@@ -129,6 +129,8 @@ function SparklineTooltip({ active, payload, cardData }: any) {
   );
 }
 
+import { useMemo } from "react";
+
 // ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
   const navigate = useNavigate();
@@ -136,12 +138,41 @@ export default function AnalyticsResumoExecutivo() {
   const [rating, setRating] = useState<number | null>(null);
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
 
-  const scoreColor = resumo.scoreOperacional >= 85 ? "text-green-600" : resumo.scoreOperacional >= 70 ? "text-[#FF5722]" : "text-red-600";
+  const regionalData = selectedRegional ? dadosPorRegional[selectedRegional] : null;
+
+  const activeScore = regionalData?.scoreOperacional ?? resumo.scoreOperacional;
+  const activeFaixa = regionalData?.scoreFaixa ?? resumo.scoreFaixa;
+  const activeDiff = regionalData?.scoreDiferenca ?? resumoComparativo.scoreDiferenca;
+  const scoreColor = activeScore >= 85 ? "text-green-600" : activeScore >= 70 ? "text-[#FF5722]" : "text-red-600";
+
+  // Filtered sparkline data
+  const filteredSparklines = useMemo(() => {
+    if (!regionalData) return sparklineCards;
+    return sparklineCards.map((card) => {
+      const mult = regionalData.sparklineMultipliers[card.label];
+      if (!mult) return card;
+      return {
+        ...card,
+        score: mult.scoreOverride,
+        variacao: mult.variacaoOverride,
+        corVariacao: mult.corVariacaoOverride,
+        evolucao: card.evolucao.map((e) => ({
+          ...e,
+          valor: Math.round(e.valor * mult.valorMultiplier * 10) / 10,
+        })),
+      };
+    });
+  }, [selectedRegional]);
 
   const handleFeedbackSubmit = () => {
     console.log({ page: "resumo_executivo", rating, comment: feedbackComment, timestamp: Date.now() });
     setFeedbackSubmitted(true);
+  };
+
+  const handleRegionalClick = (nome: string) => {
+    setSelectedRegional(prev => prev === nome ? null : nome);
   };
 
   return (
