@@ -280,7 +280,7 @@ export default function AnalyticsResumoExecutivo() {
                             type="monotone"
                             dataKey="valor"
                             stroke={getLineColor(card.score)}
-                            strokeWidth={2}
+                            strokeWidth={3}
                             dot={(props: any) => (
                               <circle
                                 key={props.index}
