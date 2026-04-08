@@ -466,6 +466,99 @@ export const operacoes = {
 };
 
 // ============================================================
+// RESUMO EXECUTIVO — DADOS COMPLEMENTARES
+// ============================================================
+
+export const resumoComparativo = {
+  scoreAnterior: 62,
+  scoreDiferenca: 9,
+};
+
+export const radarIndicadores = [
+  { indicador: "Qualid. Ponto", atual: 87, anterior: 83 },
+  { indicador: "Absenteísmo", atual: 76, anterior: 68 },
+  { indicador: "Volume HE", atual: 72, anterior: 60 },
+  { indicador: "Movimentações", atual: 68, anterior: 55 },
+  { indicador: "Cobertura", atual: 72, anterior: 70 },
+];
+
+export const rankingOperacoes = [
+  { nome: "Regional SP", score: 88, tendencia: "melhorando" as const },
+  { nome: "Regional RJ", score: 82, tendencia: "melhorando" as const },
+  { nome: "Regional PR", score: 79, tendencia: "melhorando" as const },
+  { nome: "Regional MG", score: 75, tendencia: "estavel" as const },
+  { nome: "Regional BA", score: 64, tendencia: "piorando" as const },
+];
+
+export const insightsResumo = [
+  { tipo: "positivo" as const, texto: "A qualidade do ponto evoluiu de 83.2% para 87.3% no período, com 4 das 5 operações em tendência positiva." },
+  { tipo: "negativo" as const, texto: "A Regional BA concentra o maior risco operacional: absenteísmo de 6.8% (40% acima da média) e 363 movimentações por 100 colaboradores." },
+  { tipo: "atencao" as const, texto: "O volume de horas extras reduziu 22%, porém atrasos e faltas cresceram 52%. A melhora pode ser pontual, não estrutural." },
+  { tipo: "informativo" as const, texto: "O score operacional evoluiu de 62 para 71 em 12 meses (+14.5%). Regional SP (88) e Regional PR (79) puxam a evolução." },
+];
+
+// Sparkline evolution data for 5 indicators
+export const sparklineData = {
+  qualidadePonto: {
+    label: "Qualidade do Ponto",
+    valor: "87.3%",
+    variacao: "+4.1 pp",
+    corVariacao: "text-green-600",
+    corLinha: "#22c55e",
+    evolucao: disciplina.qualidade.evolucao,
+  },
+  absenteismo: {
+    label: "Absenteísmo",
+    valor: "4.8%",
+    variacao: "-0.6 pp",
+    corVariacao: "text-green-600",
+    corLinha: "#22c55e",
+    evolucao: disciplina.absenteismo.evolucaoTaxa,
+  },
+  volumeHE: {
+    label: "Volume HE",
+    valor: "33.1K h",
+    variacao: "-22.1%",
+    corVariacao: "text-green-600",
+    corLinha: "#22c55e",
+    evolucao: [
+      { competencia: "abr/25", valor: 42.5 }, { competencia: "mai/25", valor: 41.0 },
+      { competencia: "jun/25", valor: 40.2 }, { competencia: "jul/25", valor: 39.5 },
+      { competencia: "ago/25", valor: 38.1 }, { competencia: "set/25", valor: 37.0 },
+      { competencia: "out/25", valor: 36.2 }, { competencia: "nov/25", valor: 35.5 },
+      { competencia: "dez/25", valor: 37.8 }, { competencia: "jan/26", valor: 34.2 },
+      { competencia: "fev/26", valor: 33.8 }, { competencia: "mar/26", valor: 33.1 },
+    ],
+  },
+  movimentacoes: {
+    label: "Movimentações",
+    valor: "23.0K",
+    variacao: "-18.3%",
+    corVariacao: "text-green-600",
+    corLinha: "#22c55e",
+    evolucao: disciplina.movimentacoes.evolucao.map(e => ({
+      competencia: e.competencia,
+      valor: (e.trocasEscala as number) + (e.trocasPosto as number),
+    })),
+  },
+  coberturaEfetiva: {
+    label: "Cobertura Efetiva",
+    valor: "72%",
+    variacao: "+2 pp",
+    corVariacao: "text-green-600",
+    corLinha: "#f97316",
+    evolucao: [
+      { competencia: "abr/25", valor: 68 }, { competencia: "mai/25", valor: 69 },
+      { competencia: "jun/25", valor: 68 }, { competencia: "jul/25", valor: 70 },
+      { competencia: "ago/25", valor: 70 }, { competencia: "set/25", valor: 71 },
+      { competencia: "out/25", valor: 71 }, { competencia: "nov/25", valor: 72 },
+      { competencia: "dez/25", valor: 70 }, { competencia: "jan/26", valor: 72 },
+      { competencia: "fev/26", valor: 73 }, { competencia: "mar/26", valor: 72 },
+    ],
+  },
+};
+
+// ============================================================
 // DADOS GENÉRICOS PARA ABAS COM BLUR (V2+)
 // ============================================================
 
