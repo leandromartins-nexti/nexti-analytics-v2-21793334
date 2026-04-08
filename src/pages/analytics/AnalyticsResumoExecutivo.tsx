@@ -265,8 +265,8 @@ export default function AnalyticsResumoExecutivo() {
                   <InfoTip text="Indicador com maior evolução positiva no período" />
                 </div>
                 <p className="text-[11px] font-medium text-muted-foreground mt-2">Principal Melhora</p>
-                <p className="text-base font-semibold mt-0.5 text-green-600 truncate">Qualidade Ponto</p>
-                <p className="text-[11px] text-muted-foreground mt-1 truncate">+4.1 pp (83.2% → 87.3%)</p>
+                <p className="text-base font-semibold mt-0.5 text-green-600 truncate">{regionalData?.melhorIndicador ?? "Qualidade Ponto"}</p>
+                <p className="text-[11px] text-muted-foreground mt-1 truncate">{regionalData?.melhorIndicadorDetalhe ?? "+4.1 pp (83.2% → 87.3%)"}</p>
               </div>
 
               {/* Principal Piora */}
