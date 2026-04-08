@@ -261,7 +261,7 @@ export default function AnalyticsResumoExecutivo() {
                 const lastIdx = card.evolucao.length - 1;
                 return (
                   <div key={card.label} className="flex items-center gap-4 px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: card.corLinha }} />
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: getLineColor(card.score) }} />
                     <span className="text-sm font-medium text-foreground min-w-[140px]">{card.label}</span>
                     <span className={`text-xs font-bold min-w-[45px] text-center px-1.5 py-0.5 rounded ${getScoreColor(card.score)} ${getScoreBg(card.score)}`}>{card.score}</span>
                     <span className="text-sm font-semibold text-foreground min-w-[70px]">{card.valor}</span>
@@ -279,7 +279,7 @@ export default function AnalyticsResumoExecutivo() {
                           <Line
                             type="monotone"
                             dataKey="valor"
-                            stroke={card.corLinha}
+                            stroke={getLineColor(card.score)}
                             strokeWidth={2}
                             dot={(props: any) => (
                               <circle
@@ -287,13 +287,13 @@ export default function AnalyticsResumoExecutivo() {
                                 cx={props.cx}
                                 cy={props.cy}
                                 r={props.index === lastIdx ? 3.5 : 2}
-                                fill={props.index === lastIdx ? card.corLinha : 'white'}
-                                stroke={card.corLinha}
+                                fill={props.index === lastIdx ? getLineColor(card.score) : 'white'}
+                                stroke={getLineColor(card.score)}
                                 strokeWidth={props.index === lastIdx ? 1.5 : 1}
                                 className="cursor-pointer"
                               />
                             )}
-                            activeDot={{ r: 4, fill: card.corLinha, stroke: 'white', strokeWidth: 2 }}
+                            activeDot={{ r: 4, fill: getLineColor(card.score), stroke: 'white', strokeWidth: 2 }}
                           />
                         </LineChart>
                       </ResponsiveContainer>
