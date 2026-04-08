@@ -129,7 +129,7 @@ function SparklineTooltip({ active, payload, cardData }: any) {
   );
 }
 
-import { useMemo } from "react";
+
 
 // ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
