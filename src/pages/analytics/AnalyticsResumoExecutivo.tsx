@@ -67,10 +67,10 @@ const getScoreColor = (s: number) => s >= 85 ? "text-green-600" : s >= 70 ? "tex
 const getScoreBg = (s: number) => s >= 85 ? "bg-green-50" : s >= 70 ? "bg-orange-50" : s < 60 ? "bg-red-50" : "bg-yellow-50";
 
 // ── Custom sparkline tooltip ────────────────────────────────
-function SparklineTooltip({ active, payload, label, cardData }: any) {
+function SparklineTooltip({ active, payload, cardData }: any) {
   if (!active || !payload?.length) return null;
   const valor = payload[0].value as number;
-  const evolucao = cardData.evolucao as { competencia: string; valor: number }[];
+  const competencia = payload[0].payload.competencia as string;
   const idx = evolucao.findIndex((e) => e.competencia === label);
   const prev = idx > 0 ? evolucao[idx - 1] : null;
   const next = idx < evolucao.length - 1 ? evolucao[idx + 1] : null;
