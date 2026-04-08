@@ -207,7 +207,7 @@ export default function AnalyticsResumoExecutivo() {
           <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-gray-50">
             <Filter className="w-4 h-4" /> Filtros
           </button>
-          <button className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
+          <button onClick={() => setSelectedRegional(null)} className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
             <Eraser className="w-4 h-4" /> Limpar Filtros
           </button>
         </div>
