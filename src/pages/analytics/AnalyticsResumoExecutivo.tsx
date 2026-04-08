@@ -59,6 +59,13 @@ const sparklineCards = [
   sparklineData.coberturaEfetiva,
 ];
 
+const scoreGeral = Math.round(
+  sparklineCards.reduce((sum, c) => sum + c.score * c.peso, 0)
+);
+
+const getScoreColor = (s: number) => s >= 85 ? "text-green-600" : s >= 70 ? "text-orange-500" : s < 60 ? "text-red-600" : "text-yellow-600";
+const getScoreBg = (s: number) => s >= 85 ? "bg-green-50" : s >= 70 ? "bg-orange-50" : s < 60 ? "bg-red-50" : "bg-yellow-50";
+
 // ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
   const navigate = useNavigate();
