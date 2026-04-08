@@ -276,8 +276,8 @@ export default function AnalyticsResumoExecutivo() {
                   <InfoTip text="Indicador com maior deterioração no período" />
                 </div>
                 <p className="text-[11px] font-medium text-muted-foreground mt-2">Principal Piora</p>
-                <p className="text-base font-semibold mt-0.5 text-red-600 truncate">Atrasos e Faltas</p>
-                <p className="text-[11px] text-muted-foreground mt-1 truncate">+52.4% no período</p>
+                <p className="text-base font-semibold mt-0.5 text-red-600 truncate">{regionalData?.piorIndicador ?? "Atrasos e Faltas"}</p>
+                <p className="text-[11px] text-muted-foreground mt-1 truncate">{regionalData?.piorIndicadorDetalhe ?? "+52.4% no período"}</p>
               </div>
             </div>
 
