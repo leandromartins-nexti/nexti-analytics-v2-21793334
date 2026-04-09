@@ -578,6 +578,7 @@ function RankingFooter() {
 
 
 
+type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: string) => void; onItemDetail?: (n: string) => void; groupBy: GroupBy; onGroupByChange: (g: GroupBy) => void };
 
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 1: Qualidade do Ponto
