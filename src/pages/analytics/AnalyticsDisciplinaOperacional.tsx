@@ -362,11 +362,15 @@ function generateClientes(regional: string) {
     const seed = regional.length * 7 + i * 13 + n.length;
     const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
     const qualidade = +(72 + frac * 22).toFixed(1);
+    const score = Math.round(qualidade);
     const volume = `${Math.round(8 + frac * 55)}K`;
     const headcount = Math.round(30 + frac * 350);
     const tratativa = +(1.5 + frac * 9).toFixed(1);
+    const varNum = +(-5 + frac * 10).toFixed(1);
+    const variacao = `${varNum > 0 ? "+" : ""}${varNum} pp`;
+    const corVariacao = varNum >= 0 ? "text-green-600" : "text-red-500";
     const tendencia = qualidade >= 88 ? "melhorando" : qualidade >= 80 ? "estavel" : "piorando";
-    return { nome: n, qualidade, volume, headcount, tratativa, tendencia };
+    return { nome: n, qualidade, score, volume, headcount, tratativa, variacao, corVariacao, tendencia };
   });
 }
 
