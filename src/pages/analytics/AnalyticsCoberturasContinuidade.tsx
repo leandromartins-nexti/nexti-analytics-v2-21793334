@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Info, TrendingUp, TrendingDown, Minus, ArrowUp } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { coberturas } from "@/lib/analytics-mock-data";
@@ -22,15 +21,6 @@ function TrendIcon({ t }: { t: string }) {
   return <Minus size={14} className="text-gray-400" />;
 }
 
-function InsightCard({ texto, tipo }: { texto: string; tipo: string }) {
-  const borderColor = tipo === "positivo" ? "border-l-green-500" : tipo === "negativo" ? "border-l-red-500" : tipo === "atencao" ? "border-l-orange-400" : "border-l-blue-400";
-  return (
-    <div className={`bg-card border border-border/50 rounded-lg p-4 border-l-[3px] ${borderColor}`}>
-      <p className="text-sm text-foreground leading-relaxed">{texto}</p>
-    </div>
-  );
-}
-
 function KPI({ title, value, color, tip }: { title: string; value: string | number; color?: string; tip: string }) {
   return (
     <div className="bg-card border border-border/50 rounded-xl p-4">
@@ -51,11 +41,11 @@ const regularColor = (v: number) => v > 50 ? "text-green-600" : v >= 35 ? "text-
 const heColor = (v: number) => v > 30 ? "text-red-600" : v >= 20 ? "text-orange-500" : "text-green-600";
 
 export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded?: boolean }) {
-  const { kpis, distribuicaoTipoEvento, evolucao, regionais, insights } = coberturas;
+  const { kpis, distribuicaoTipoEvento, evolucao, regionais } = coberturas;
 
   const content = (
     <div className="px-6 py-4 space-y-4">
-      {/* Linha 1 — Score + 4 KPIs */}
+      {/* Linha 1 — Score + 2 KPIs */}
       <div className="flex items-stretch gap-3">
         <div className={`flex items-center gap-3 rounded-xl border border-border/50 px-5 py-3 ${scoreBg(coberturas.scoreEficiencia)}`}>
           <span className={`text-4xl font-bold ${scoreColor(coberturas.scoreEficiencia)}`}>{coberturas.scoreEficiencia}</span>
@@ -67,17 +57,14 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
             </span>
           </div>
         </div>
-        <div className="flex-1 grid grid-cols-4 gap-3">
+        <div className="flex-1 grid grid-cols-2 gap-3">
           <KPI title="Ausências Cobertas" value={`${kpis.ausenciasCobertas}%`} color={kpis.ausenciasCobertas >= 75 ? "text-green-600" : "text-yellow-600"} tip="Percentual das ausências que foram cobertas por algum tipo de reposição." />
           <KPI title="Coberturas com HE" value={`${kpis.coberturasComHE}%`} color="text-red-600" tip="Percentual das coberturas que geraram eventos de hora extra na apuração." />
-          <KPI title="Dias Posto Descoberto" value={kpis.diasPostoDescoberto} color="text-red-600" tip="Total de dias em que ao menos um posto ficou sem efetivo completo." />
-          <KPI title="Tempo Médio Reposição" value={`${kpis.tempoMedioReposicao}h`} tip="Tempo médio entre o lançamento da ausência e a criação da cobertura." />
         </div>
       </div>
 
       {/* Linha 2 — Donut + AreaChart lado a lado */}
       <div className="grid grid-cols-2 gap-4">
-        {/* Donut */}
         <div className="bg-card border border-border/50 rounded-xl p-4">
           <div className="flex items-center gap-1.5 mb-2">
             <h4 className="text-sm font-semibold">Distribuição por Tipo de Evento</h4>
@@ -94,7 +81,6 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
           </ResponsiveContainer>
         </div>
 
-        {/* Area chart */}
         <div className="bg-card border border-border/50 rounded-xl p-4">
           <h4 className="text-sm font-semibold mb-0.5">Evolução por Competência</h4>
           <p className="text-[11px] text-muted-foreground mb-2">Distribuição mensal dos tipos de evento na cobertura</p>
@@ -114,7 +100,7 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
         </div>
       </div>
 
-      {/* Linha 3 — Tabela regional */}
+      {/* Linha 3 — Tabela regional com horas */}
       <div className="bg-card border border-border/50 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/30">
@@ -133,59 +119,31 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
               <tr key={r.nome} className="hover:bg-muted/20">
                 <td className="px-4 py-2 font-medium">{r.nome}</td>
                 <td className="text-right px-4 py-2">{r.coberturas?.toLocaleString("pt-BR")}</td>
-                <td className={`text-center px-4 py-2 font-semibold ${regularColor(r.regular)}`}>{r.regular}%</td>
-                <td className={`text-center px-4 py-2 font-semibold ${heColor(r.he)}`}>{r.he}%</td>
-                <td className="text-center px-4 py-2">{r.falta}%</td>
-                <td className="text-center px-4 py-2">{r.atrasos}%</td>
+                <td className="text-center px-4 py-2">
+                  <span className={`font-semibold ${regularColor(r.regular)}`}>{r.regular}%</span>
+                  <span className="text-muted-foreground text-[11px] ml-1">· {r.regularH}h</span>
+                </td>
+                <td className="text-center px-4 py-2">
+                  <span className={`font-semibold ${heColor(r.he)}`}>{r.he}%</span>
+                  <span className="text-muted-foreground text-[11px] ml-1">· {r.heH}h</span>
+                </td>
+                <td className="text-center px-4 py-2">
+                  <span>{r.falta}%</span>
+                  <span className="text-muted-foreground text-[11px] ml-1">· {r.faltaH}h</span>
+                </td>
+                <td className="text-center px-4 py-2">
+                  <span>{r.atrasos}%</span>
+                  <span className="text-muted-foreground text-[11px] ml-1">· {r.atrasosH}h</span>
+                </td>
                 <td className="text-center px-4 py-2"><div className="flex justify-center"><TrendIcon t={r.tendencia} /></div></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Linha 4 — Insights */}
-      <div className="grid grid-cols-3 gap-3">
-        {insights.map((ins, i) => <InsightCard key={i} texto={ins.texto} tipo={ins.tipo} />)}
-      </div>
-
-      <FeedbackBlock page="coberturas" />
     </div>
   );
 
   if (embedded) return content;
   return content;
-}
-
-function FeedbackBlock({ page }: { page: string }) {
-  const [rating, setRating] = useState<number | null>(null);
-  const [comment, setComment] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  if (submitted) return (
-    <div className="border-t border-border pt-4 mt-1 flex items-center justify-center gap-2">
-      <span className="text-sm text-green-600">✓ Obrigado pelo feedback!</span>
-    </div>
-  );
-
-  return (
-    <div className="border-t border-border pt-4 mt-1">
-      <div className="flex items-center justify-center gap-3">
-        <span className="text-sm text-muted-foreground">Como você avalia esta visualização?</span>
-        <div className="flex gap-1.5">
-          {[1, 2, 3, 4, 5].map((n) => (
-            <button key={n} onClick={() => setRating(n)} className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${rating === n ? "bg-[#FF5722] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>{n}</button>
-          ))}
-        </div>
-      </div>
-      {rating && (
-        <div className="mt-4 max-w-lg mx-auto">
-          <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Quer compartilhar algo mais? (opcional)" className="w-full border border-border rounded-lg p-3 text-sm resize-none h-20 focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] outline-none" />
-          <div className="flex justify-end mt-2">
-            <button onClick={() => { console.log({ page, rating, comment }); setSubmitted(true); }} className="bg-[#FF5722] text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:opacity-90 transition">Enviar</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 }
