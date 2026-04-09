@@ -641,8 +641,10 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, onItemDetail
             return (
               <div
                 key={op.nome}
-                onClick={() => onRegionalClick(op.nome)}
+                onClick={() => onItemDetail?.(op.nome)}
+                onContextMenu={(e) => { e.preventDefault(); onRegionalClick(op.nome); }}
                 className={`flex items-center gap-2 px-0.5 py-1 rounded-md cursor-pointer transition-all text-xs ${isSelected ? "bg-orange-50 border border-[#FF5722]/30" : "hover:bg-muted/40 border border-transparent"} ${isDimmed ? "opacity-35" : ""}`}
+                title="Clique para detalhes · Botão direito para filtrar"
               >
                 <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
                 <span className={`font-bold tabular-nums shrink-0 ${scoreColor}`}>{op.score}</span>
