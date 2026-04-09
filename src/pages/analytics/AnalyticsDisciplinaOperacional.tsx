@@ -422,7 +422,7 @@ const MODAL_PAGE_SIZE = 10;
 
 function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceholder }: {
   data: T[];
-  columns: { key: string; label: string; align?: "left" | "right" | "center"; format?: (v: any, row: T) => React.ReactNode }[];
+  columns: { key: string; label: string; align?: "left" | "right" | "center"; width?: string; format?: (v: any, row: T) => React.ReactNode }[];
   searchPlaceholder?: string;
 }) {
   const [search, setSearch] = useState("");
@@ -468,14 +468,15 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
         />
       </div>
       <div className="rounded-lg border border-border overflow-hidden flex-1">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm" style={{ tableLayout: "fixed" }}>
           <thead className="sticky top-0 bg-muted/50 backdrop-blur-sm z-10">
             <tr className="border-b border-border">
               {columns.map(col => (
                 <th
                   key={col.key}
                   onClick={() => toggleSort(col.key)}
-                  className={`px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase cursor-pointer hover:text-foreground transition-colors ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}
+                  style={col.width ? { width: col.width } : undefined}
+                  className={`px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase cursor-pointer hover:text-foreground transition-colors whitespace-nowrap ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}
                 >
                   <span className="inline-flex items-center gap-0.5">
                     {col.label}
@@ -492,7 +493,7 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
             {paged.map((row, i) => (
               <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                 {columns.map(col => (
-                  <td key={col.key} className={`px-3 py-2 ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}>
+                  <td key={col.key} style={col.width ? { width: col.width } : undefined} className={`px-3 py-2 ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}>
                     {col.format ? col.format(row[col.key], row) : row[col.key]}
                   </td>
                 ))}
@@ -543,39 +544,39 @@ function RegionalDetailModal({ regional, open, onClose }: { regional: string | n
   const tendenciaFormat = (v: string) => <TrendIcon t={v} />;
 
   const clienteCols = [
-    { key: "nome", label: "Cliente", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground">{v}</span> },
-    { key: "qualidade", label: "Qualidade", align: "right" as const, format: qualidadeFormat },
-    { key: "volume", label: "Volume", align: "right" as const, format: (v: string) => <span className="text-muted-foreground">{v}</span> },
-    { key: "headcount", label: "Headcount", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}</span> },
-    { key: "tratativa", label: "Tratativa", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}d</span> },
-    { key: "tendencia", label: "Tendência", align: "center" as const, format: tendenciaFormat },
+    { key: "nome", label: "Cliente", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground truncate block">{v}</span> },
+    { key: "qualidade", label: "Qualidade", align: "right" as const, width: "85px", format: qualidadeFormat },
+    { key: "volume", label: "Volume", align: "right" as const, width: "70px", format: (v: string) => <span className="text-muted-foreground">{v}</span> },
+    { key: "headcount", label: "HC", align: "right" as const, width: "60px", format: (v: number) => <span className="text-muted-foreground">{v}</span> },
+    { key: "tratativa", label: "Tratativa", align: "right" as const, width: "75px", format: (v: number) => <span className="text-muted-foreground">{v}d</span> },
+    { key: "tendencia", label: "Tend.", align: "center" as const, width: "50px", format: tendenciaFormat },
   ];
 
   const postoCols = [
-    { key: "nome", label: "Posto", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground">{v}</span> },
-    { key: "qualidade", label: "Qualidade", align: "right" as const, format: qualidadeFormat },
-    { key: "volume", label: "Volume", align: "right" as const, format: (v: string) => <span className="text-muted-foreground">{v}</span> },
-    { key: "headcount", label: "Headcount", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}</span> },
-    { key: "tratativa", label: "Tratativa", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}d</span> },
-    { key: "tendencia", label: "Tendência", align: "center" as const, format: tendenciaFormat },
+    { key: "nome", label: "Posto", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground truncate block">{v}</span> },
+    { key: "qualidade", label: "Qualidade", align: "right" as const, width: "85px", format: qualidadeFormat },
+    { key: "volume", label: "Volume", align: "right" as const, width: "70px", format: (v: string) => <span className="text-muted-foreground">{v}</span> },
+    { key: "headcount", label: "HC", align: "right" as const, width: "60px", format: (v: number) => <span className="text-muted-foreground">{v}</span> },
+    { key: "tratativa", label: "Tratativa", align: "right" as const, width: "75px", format: (v: number) => <span className="text-muted-foreground">{v}d</span> },
+    { key: "tendencia", label: "Tend.", align: "center" as const, width: "50px", format: tendenciaFormat },
   ];
 
   const colabCols = [
-    { key: "nome", label: "Colaborador", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground">{v}</span> },
-    { key: "qualidade", label: "Qualidade", align: "right" as const, format: qualidadeFormat },
-    { key: "marcacoes", label: "Marcações", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}</span> },
-    { key: "inconsistencias", label: "Inconsistências", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v > 10 ? "text-red-600" : v > 5 ? "text-orange-500" : "text-muted-foreground"}`}>{v}</span> },
-    { key: "tratativa", label: "Tratativa", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}d</span> },
-    { key: "tendencia", label: "Tendência", align: "center" as const, format: tendenciaFormat },
+    { key: "nome", label: "Colaborador", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground truncate block">{v}</span> },
+    { key: "qualidade", label: "Qualidade", align: "right" as const, width: "85px", format: qualidadeFormat },
+    { key: "marcacoes", label: "Marcações", align: "right" as const, width: "80px", format: (v: number) => <span className="text-muted-foreground">{v}</span> },
+    { key: "inconsistencias", label: "Inconsis.", align: "right" as const, width: "75px", format: (v: number) => <span className={`font-semibold ${v > 10 ? "text-red-600" : v > 5 ? "text-orange-500" : "text-muted-foreground"}`}>{v}</span> },
+    { key: "tratativa", label: "Tratativa", align: "right" as const, width: "75px", format: (v: number) => <span className="text-muted-foreground">{v}d</span> },
+    { key: "tendencia", label: "Tend.", align: "center" as const, width: "50px", format: tendenciaFormat },
   ];
 
   const operadorCols = [
-    { key: "nome", label: "Operador", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground">{v}</span> },
-    { key: "ajustesRealizados", label: "Ajustes", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}</span> },
-    { key: "tempoMedioAjuste", label: "Tempo Médio (min)", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v > 8 ? "text-red-600" : v > 4 ? "text-orange-500" : "text-green-600"}`}>{v}</span> },
-    { key: "pendentes", label: "Pendentes", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v > 15 ? "text-red-600" : v > 8 ? "text-orange-500" : "text-muted-foreground"}`}>{v}</span> },
-    { key: "taxaAcerto", label: "Taxa Acerto", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v >= 92 ? "text-green-600" : v >= 85 ? "text-orange-500" : "text-red-600"}`}>{v}%</span> },
-    { key: "tendencia", label: "Tendência", align: "center" as const, format: tendenciaFormat },
+    { key: "nome", label: "Operador", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground truncate block">{v}</span> },
+    { key: "ajustesRealizados", label: "Ajustes", align: "right" as const, width: "70px", format: (v: number) => <span className="text-muted-foreground">{v}</span> },
+    { key: "tempoMedioAjuste", label: "Tempo Méd.", align: "right" as const, width: "85px", format: (v: number) => <span className={`font-semibold ${v > 8 ? "text-red-600" : v > 4 ? "text-orange-500" : "text-green-600"}`}>{v}min</span> },
+    { key: "pendentes", label: "Pend.", align: "right" as const, width: "60px", format: (v: number) => <span className={`font-semibold ${v > 15 ? "text-red-600" : v > 8 ? "text-orange-500" : "text-muted-foreground"}`}>{v}</span> },
+    { key: "taxaAcerto", label: "Acerto", align: "right" as const, width: "70px", format: (v: number) => <span className={`font-semibold ${v >= 92 ? "text-green-600" : v >= 85 ? "text-orange-500" : "text-red-600"}`}>{v}%</span> },
+    { key: "tendencia", label: "Tend.", align: "center" as const, width: "50px", format: tendenciaFormat },
   ];
 
   const tabs = [
