@@ -353,9 +353,29 @@ const regionalDrillDown: Record<string, { clientes: { nome: string; qualidade: n
   ]},
 };
 
-// ── Mock data for Postos and Colaboradores per regional ──
+// ── Mock data generators ──
+function generateClientes(regional: string) {
+  const nomes = [
+    "Grupo Marista", "Unimed Curitiba", "Sanepar", "Copel", "Renault do Brasil",
+    "Volvo do Brasil", "O Boticário", "Electrolux", "HSBC", "Condor Super Center",
+    "Positivo Tecnologia", "Nutrimental", "Herbarium", "Cargill", "BRF Foods",
+    "Votorantim", "Klabin", "Pernambucanas", "Riachuelo", "Magazine Luiza",
+    "Casas Bahia", "Lojas Americanas", "Mercado Livre", "Ambev", "JBS",
+  ];
+  return nomes.map((n, i) => {
+    const seed = regional.length * 7 + i * 13 + n.length;
+    const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
+    const qualidade = +(72 + frac * 22).toFixed(1);
+    const volume = `${Math.round(8 + frac * 55)}K`;
+    const headcount = Math.round(30 + frac * 350);
+    const tratativa = +(1.5 + frac * 9).toFixed(1);
+    const tendencia = qualidade >= 88 ? "melhorando" : qualidade >= 80 ? "estavel" : "piorando";
+    return { nome: n, qualidade, volume, headcount, tratativa, tendencia };
+  });
+}
+
 function generatePostos(regional: string) {
-  const prefixes = ["Posto Central", "Posto Norte", "Posto Sul", "Posto Leste", "Posto Oeste", "Posto Industrial", "Posto Comercial", "Posto Admin"];
+  const prefixes = ["Posto Central", "Posto Norte", "Posto Sul", "Posto Leste", "Posto Oeste", "Posto Industrial", "Posto Comercial", "Posto Admin", "Posto Matriz", "Posto Filial", "Posto Logística", "Posto Portaria", "Posto Recepção", "Posto Monitoramento", "Posto Ronda"];
   return prefixes.map((p, i) => {
     const seed = regional.length * 7 + i * 13;
     const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
@@ -369,7 +389,7 @@ function generatePostos(regional: string) {
 }
 
 function generateColaboradores(regional: string) {
-  const nomes = ["Ana Silva", "Carlos Santos", "Maria Oliveira", "João Pereira", "Fernanda Costa", "Ricardo Souza", "Juliana Lima", "Pedro Almeida", "Camila Rocha", "Lucas Ferreira", "Patrícia Martins", "Bruno Araújo"];
+  const nomes = ["Ana Silva", "Carlos Santos", "Maria Oliveira", "João Pereira", "Fernanda Costa", "Ricardo Souza", "Juliana Lima", "Pedro Almeida", "Camila Rocha", "Lucas Ferreira", "Patrícia Martins", "Bruno Araújo", "Tatiana Mendes", "Rafael Gonçalves", "Luciana Ribeiro", "Marcelo Dias", "Vanessa Cardoso", "Eduardo Nunes", "Débora Farias", "Gustavo Pinto"];
   return nomes.map((n, i) => {
     const seed = regional.length * 11 + i * 17;
     const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
@@ -382,8 +402,23 @@ function generateColaboradores(regional: string) {
   });
 }
 
-// ── Sortable + filterable table inside modal ──
+function generateOperadores(regional: string) {
+  const nomes = ["Op. Márcia Lopes", "Op. Thiago Reis", "Op. Sandra Vieira", "Op. Felipe Barros", "Op. Cristina Moura", "Op. André Teixeira", "Op. Renata Castro", "Op. Diego Freitas", "Op. Priscila Ramos", "Op. Rodrigo Campos", "Op. Aline Duarte", "Op. Fábio Correia", "Op. Isabela Cunha", "Op. Leandro Melo", "Op. Natália Borges"];
+  return nomes.map((n, i) => {
+    const seed = regional.length * 23 + i * 31;
+    const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
+    const ajustesRealizados = Math.round(50 + frac * 400);
+    const tempoMedioAjuste = +(0.5 + frac * 12).toFixed(1);
+    const pendentes = Math.round(frac * 25);
+    const taxaAcerto = +(80 + frac * 18).toFixed(1);
+    const tendencia = taxaAcerto >= 92 ? "melhorando" : taxaAcerto >= 85 ? "estavel" : "piorando";
+    return { nome: n, ajustesRealizados, tempoMedioAjuste, pendentes, taxaAcerto, tendencia };
+  });
+}
+
+// ── Sortable + filterable + paginated table inside modal ──
 type SortConfig = { key: string; dir: "asc" | "desc" };
+const MODAL_PAGE_SIZE = 10;
 
 function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceholder }: {
   data: T[];
@@ -392,9 +427,13 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
 }) {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortConfig>({ key: columns[1]?.key || columns[0].key, dir: "desc" });
+  const [page, setPage] = useState(1);
+
+  useEffect(() => { setPage(1); }, [search]);
 
   const toggleSort = (key: string) => {
     setSort(prev => prev.key === key ? { key, dir: prev.dir === "desc" ? "asc" : "desc" } : { key, dir: "desc" });
+    setPage(1);
   };
 
   const filtered = useMemo(() => {
@@ -413,8 +452,11 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
     });
   }, [filtered, sort]);
 
+  const totalPages = Math.ceil(sorted.length / MODAL_PAGE_SIZE);
+  const paged = useMemo(() => sorted.slice((page - 1) * MODAL_PAGE_SIZE, page * MODAL_PAGE_SIZE), [sorted, page]);
+
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div className="relative mb-2">
         <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
@@ -425,7 +467,7 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
           className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#FF5722]/40"
         />
       </div>
-      <div className="rounded-lg border border-border overflow-hidden max-h-[50vh] overflow-y-auto">
+      <div className="rounded-lg border border-border overflow-hidden flex-1">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-muted/50 backdrop-blur-sm z-10">
             <tr className="border-b border-border">
@@ -444,10 +486,10 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
             </tr>
           </thead>
           <tbody>
-            {sorted.length === 0 && (
+            {paged.length === 0 && (
               <tr><td colSpan={columns.length} className="px-3 py-4 text-center text-xs text-muted-foreground">Nenhum resultado encontrado</td></tr>
             )}
-            {sorted.map((row, i) => (
+            {paged.map((row, i) => (
               <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                 {columns.map(col => (
                   <td key={col.key} className={`px-3 py-2 ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}>
@@ -459,27 +501,43 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
           </tbody>
         </table>
       </div>
-      <p className="text-[10px] text-muted-foreground mt-1">{sorted.length} registro{sorted.length !== 1 ? "s" : ""}</p>
+      <div className="flex items-center justify-between mt-2">
+        <p className="text-[10px] text-muted-foreground">{sorted.length} registro{sorted.length !== 1 ? "s" : ""} · Página {page} de {totalPages || 1}</p>
+        {totalPages > 1 && (
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className={`w-6 h-6 rounded text-[10px] font-medium transition-colors ${page === p ? "bg-[#FF5722] text-white" : "text-muted-foreground border border-border hover:border-[#FF5722]/40"}`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 // ── Regional Detail Modal ──
 function RegionalDetailModal({ regional, open, onClose }: { regional: string | null; open: boolean; onClose: () => void }) {
-  const [activeTab, setActiveTab] = useState<"clientes" | "postos" | "colaboradores">("clientes");
+  const [activeTab, setActiveTab] = useState<"clientes" | "postos" | "colaboradores" | "operadores">("clientes");
 
   if (!regional) return null;
   const qualData = qualidadeRegionais.find(r => r.nome === regional);
   const scatterQ = scatterQualidade.find(r => r.regional === regional);
   const scatterT = scatterTratativa.find(r => r.regional === regional);
-  const drillDown = regionalDrillDown[regional] || { clientes: [] };
   if (!qualData || !scatterQ || !scatterT) return null;
 
   const scoreColor = qualData.qualidade >= 85 ? "text-green-600" : qualData.qualidade >= 75 ? "text-orange-500" : "text-red-600";
   const scoreBg = qualData.qualidade >= 85 ? "bg-green-50 border-green-200" : qualData.qualidade >= 75 ? "bg-orange-50 border-orange-200" : "bg-red-50 border-red-200";
 
+  const clientes = generateClientes(regional);
   const postos = generatePostos(regional);
   const colaboradores = generateColaboradores(regional);
+  const operadores = generateOperadores(regional);
 
   const qualidadeFormat = (v: number) => <span className={`font-semibold ${v >= 85 ? "text-green-600" : v >= 75 ? "text-orange-500" : "text-red-600"}`}>{v}%</span>;
   const tendenciaFormat = (v: string) => <TrendIcon t={v} />;
@@ -511,21 +569,31 @@ function RegionalDetailModal({ regional, open, onClose }: { regional: string | n
     { key: "tendencia", label: "Tendência", align: "center" as const, format: tendenciaFormat },
   ];
 
+  const operadorCols = [
+    { key: "nome", label: "Operador", align: "left" as const, format: (v: string) => <span className="font-medium text-foreground">{v}</span> },
+    { key: "ajustesRealizados", label: "Ajustes", align: "right" as const, format: (v: number) => <span className="text-muted-foreground">{v}</span> },
+    { key: "tempoMedioAjuste", label: "Tempo Médio (min)", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v > 8 ? "text-red-600" : v > 4 ? "text-orange-500" : "text-green-600"}`}>{v}</span> },
+    { key: "pendentes", label: "Pendentes", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v > 15 ? "text-red-600" : v > 8 ? "text-orange-500" : "text-muted-foreground"}`}>{v}</span> },
+    { key: "taxaAcerto", label: "Taxa Acerto", align: "right" as const, format: (v: number) => <span className={`font-semibold ${v >= 92 ? "text-green-600" : v >= 85 ? "text-orange-500" : "text-red-600"}`}>{v}%</span> },
+    { key: "tendencia", label: "Tendência", align: "center" as const, format: tendenciaFormat },
+  ];
+
   const tabs = [
     { id: "clientes" as const, label: "Clientes" },
     { id: "postos" as const, label: "Postos" },
     { id: "colaboradores" as const, label: "Colaboradores" },
+    { id: "operadores" as const, label: "Operadores" },
   ];
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="w-[70vw] h-[70vh] max-w-none flex flex-col" style={{ maxHeight: "70vh" }}>
+        <DialogHeader className="shrink-0">
           <DialogTitle className="text-lg font-bold">{regional}</DialogTitle>
         </DialogHeader>
 
         {/* 4 Big Numbers */}
-        <div className="grid grid-cols-4 gap-3 mt-1">
+        <div className="grid grid-cols-4 gap-3 shrink-0">
           <div className={`rounded-lg border p-3 ${scoreBg}`}>
             <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Qualidade</p>
             <p className={`text-2xl font-bold ${scoreColor}`}>{qualData.qualidade}%</p>
@@ -545,7 +613,7 @@ function RegionalDetailModal({ regional, open, onClose }: { regional: string | n
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 border-b border-border mt-2">
+        <div className="flex gap-4 border-b border-border shrink-0">
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -558,10 +626,11 @@ function RegionalDetailModal({ regional, open, onClose }: { regional: string | n
         </div>
 
         {/* Tab content */}
-        <div className="mt-2">
-          {activeTab === "clientes" && <ModalTable data={drillDown.clientes} columns={clienteCols} searchPlaceholder="Buscar cliente..." />}
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          {activeTab === "clientes" && <ModalTable data={clientes} columns={clienteCols} searchPlaceholder="Buscar cliente..." />}
           {activeTab === "postos" && <ModalTable data={postos} columns={postoCols} searchPlaceholder="Buscar posto..." />}
           {activeTab === "colaboradores" && <ModalTable data={colaboradores} columns={colabCols} searchPlaceholder="Buscar colaborador..." />}
+          {activeTab === "operadores" && <ModalTable data={operadores} columns={operadorCols} searchPlaceholder="Buscar operador..." />}
         </div>
       </DialogContent>
     </Dialog>
