@@ -368,8 +368,10 @@ function RegionalDetailModal({ regional, open, onClose }: { regional: string | n
 export default function AnalyticsDisciplinaOperacional({ embedded }: { embedded?: boolean }) {
   const [activeSubTab, setActiveSubTab] = useState("qualidade");
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
 
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
+  const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
 
   const content = (
     <div className="px-6 py-4 space-y-3">
@@ -390,9 +392,9 @@ export default function AnalyticsDisciplinaOperacional({ embedded }: { embedded?
         ))}
       </div>
 
-      {activeSubTab === "qualidade" && <QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} />}
-      {activeSubTab === "absenteismo" && <AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} />}
-      {activeSubTab === "movimentacoes" && <MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} />}
+      {activeSubTab === "qualidade" && <QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={handleGroupByChange} />}
+      {activeSubTab === "absenteismo" && <AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={handleGroupByChange} />}
+      {activeSubTab === "movimentacoes" && <MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={handleGroupByChange} />}
     </div>
   );
 
