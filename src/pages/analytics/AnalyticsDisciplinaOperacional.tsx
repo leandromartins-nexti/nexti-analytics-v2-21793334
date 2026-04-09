@@ -465,6 +465,7 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortBy, setSortBy] = useState<"score" | "nome">("score");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 30;
 
@@ -486,17 +487,25 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
     setPage(1);
   };
 
+  const toggleSort = (col: "score" | "nome") => {
+    if (sortBy === col) setSortDir(d => d === "desc" ? "asc" : "desc");
+    else { setSortBy(col); setSortDir("desc"); }
+  };
+
   const filteredAndSorted = useMemo(() => {
-    let result = items;
+    let result = [...items];
     if (debouncedSearch.trim()) {
       const q = debouncedSearch.toLowerCase();
       result = result.filter(i => i.nome.toLowerCase().includes(q));
     }
+    const dir = sortDir === "desc" ? -1 : 1;
     if (sortBy === "nome") {
-      result = [...result].sort((a, b) => a.nome.localeCompare(b.nome));
+      result.sort((a, b) => dir * a.nome.localeCompare(b.nome));
+    } else {
+      result.sort((a, b) => dir * (a.score - b.score));
     }
     return result;
-  }, [items, debouncedSearch, sortBy]);
+  }, [items, debouncedSearch, sortBy, sortDir]);
 
   const totalPages = Math.ceil(filteredAndSorted.length / PAGE_SIZE);
   const showPagination = filteredAndSorted.length > PAGE_SIZE;
