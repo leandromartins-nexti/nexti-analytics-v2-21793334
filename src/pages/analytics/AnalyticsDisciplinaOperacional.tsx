@@ -432,10 +432,67 @@ function RankingFooter() {
   );
 }
 
+// ── Shared sidebar with groupBy selector ──
+type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: string) => void; groupBy: GroupBy; onGroupByChange: (g: GroupBy) => void };
+
+function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onGroupByChange }: {
+  items: { nome: string; score: number }[];
+  selectedRegional: string | null;
+  onRegionalClick: (n: string) => void;
+  groupBy: GroupBy;
+  onGroupByChange: (g: GroupBy) => void;
+}) {
+  const label = groupByOptions.find(o => o.id === groupBy)?.label ?? "";
+  return (
+    <div className="w-[220px] shrink-0">
+      <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-xs font-semibold text-foreground">{label}</h3>
+          {selectedRegional && (
+            <button onClick={() => onRegionalClick(selectedRegional)} className="text-[10px] text-[#FF5722] hover:underline flex items-center gap-1">
+              <X size={10} /> Limpar
+            </button>
+          )}
+        </div>
+        {/* Group by selector */}
+        <div className="flex gap-1 mb-2">
+          {groupByOptions.map(o => (
+            <button
+              key={o.id}
+              onClick={() => onGroupByChange(o.id)}
+              className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors ${groupBy === o.id ? "bg-[#FF5722] text-white border-[#FF5722]" : "text-muted-foreground border-border hover:border-[#FF5722]/40"}`}
+            >
+              {o.id === "unidade" ? "UN" : o.id === "empresa" ? "Emp" : "Área"}
+            </button>
+          ))}
+        </div>
+        <p className="text-[10px] text-muted-foreground mb-2">Ordenado por score</p>
+        <div className="space-y-0.5 overflow-y-auto flex-1">
+          {items.map((op) => {
+            const isSelected = selectedRegional === op.nome;
+            const isDimmed = selectedRegional && !isSelected;
+            const scoreColor = op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
+            return (
+              <div
+                key={op.nome}
+                onClick={() => onRegionalClick(op.nome)}
+                className={`flex items-center gap-2 px-2 py-1 rounded-md cursor-pointer transition-all text-xs ${isSelected ? "bg-orange-50 ring-1 ring-[#FF5722]/30" : "hover:bg-muted/40"} ${isDimmed ? "opacity-35" : ""}`}
+              >
+                <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
+                <span className={`font-bold tabular-nums ${scoreColor}`}>{op.score}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 1: Qualidade do Ponto
 // ══════════════════════════════════════════════════════════════
-function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegional: string | null; onRegionalClick: (n: string) => void }) {
+function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return {
       score: 87, diff: "+4 pp", registradas: "892.0K", justificadas: "130.2K",
