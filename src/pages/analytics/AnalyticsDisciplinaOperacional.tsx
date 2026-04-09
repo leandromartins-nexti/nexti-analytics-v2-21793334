@@ -231,15 +231,32 @@ const absenteismoEvolucao = [
   { mes: "jan/26", value: 4.5 }, { mes: "fev/26", value: 4.3 }, { mes: "mar/26", value: 4.8 },
 ];
 const absenteismoMedia = 4.97;
-const absenteismoBarras = [
-  { mes: "abr/25", atestados: 2100, faltas: 1200 }, { mes: "mai/25", atestados: 2000, faltas: 1100 },
-  { mes: "jun/25", atestados: 2300, faltas: 1300 }, { mes: "jul/25", atestados: 2150, faltas: 1150 },
-  { mes: "ago/25", atestados: 2050, faltas: 1050 }, { mes: "set/25", atestados: 1950, faltas: 1000 },
-  { mes: "out/25", atestados: 2100, faltas: 1100 }, { mes: "nov/25", atestados: 2200, faltas: 1050 },
-  { mes: "dez/25", atestados: 2400, faltas: 1250 }, { mes: "jan/26", atestados: 2050, faltas: 980 },
-  { mes: "fev/26", atestados: 1900, faltas: 920 }, { mes: "mar/26", atestados: 2000, faltas: 1000 },
+
+const turnoverEvolucao = [
+  { mes: "abr/25", value: 9.1 }, { mes: "mai/25", value: 8.8 }, { mes: "jun/25", value: 9.4 },
+  { mes: "jul/25", value: 8.5 }, { mes: "ago/25", value: 8.2 }, { mes: "set/25", value: 7.9 },
+  { mes: "out/25", value: 8.0 }, { mes: "nov/25", value: 7.6 }, { mes: "dez/25", value: 9.0 },
+  { mes: "jan/26", value: 7.4 }, { mes: "fev/26", value: 7.8 }, { mes: "mar/26", value: 8.2 },
 ];
-const absenteismoMediaBarras = absenteismoBarras.reduce((s, d) => s + d.atestados + d.faltas, 0) / absenteismoBarras.length;
+const turnoverMedia = 8.2;
+
+// Scatter: Absenteísmo vs Turnover
+const scatterAbsTurnover = [
+  { regional: "SP", absenteismo: 4.2, turnover: 7.1, headcount: 2800 },
+  { regional: "RJ", absenteismo: 5.1, turnover: 8.5, headcount: 1900 },
+  { regional: "MG", absenteismo: 4.6, turnover: 7.8, headcount: 1400 },
+  { regional: "PR", absenteismo: 4.3, turnover: 6.9, headcount: 1100 },
+  { regional: "BA", absenteismo: 6.8, turnover: 11.3, headcount: 800 },
+];
+
+// Scatter: Absenteísmo vs Hora Extra
+const scatterAbsHE = [
+  { regional: "SP", absenteismo: 4.2, he: 329, headcount: 2800 },
+  { regional: "RJ", absenteismo: 5.1, he: 374, headcount: 1900 },
+  { regional: "MG", absenteismo: 4.6, he: 386, headcount: 1400 },
+  { regional: "PR", absenteismo: 4.3, he: 382, headcount: 1100 },
+  { regional: "BA", absenteismo: 6.8, he: 475, headcount: 800 },
+];
 
 // Derive 30 absenteísmo regionais from scatter data (seeded from qualidade)
 const absenteismoRegionais = scatterQualidade.map(sq => {
