@@ -836,9 +836,12 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, groupBy, onGr
   const scoreFaixa = totalNum <= 15000 ? "Bom" : totalNum <= 25000 ? "Atenção" : "Crítico";
   const maxTotal = Math.max(...movimentacoesRegionais.map(r => r.total));
 
-  // Sort by lowest total = best for movimentações
-  const sortedRegionais = [...movimentacoesRegionais].sort((a, b) => a.total - b.total);
   const getMovScore = (total: number) => Math.round(Math.max(0, 100 - (total / maxTotal) * 100));
+  const sidebarItems = useMemo(() => {
+    if (groupBy === "empresa") return [...empresaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
+    if (groupBy === "area") return [...areaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
+    return [...movimentacoesRegionais].sort((a, b) => a.total - b.total).map(e => ({ nome: e.nome, score: getMovScore(e.total) }));
+  }, [groupBy, maxTotal]);
 
   return (
     <div className="flex gap-3">
