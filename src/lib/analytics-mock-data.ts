@@ -335,7 +335,7 @@ export const coberturas = {
   insights: [
     { icone: "⚠️", texto: "40% das coberturas foram emergenciais (menos de 24h de antecedência), indicando oportunidade de melhora no planejamento de escala.", tipo: "atencao" as const },
     { icone: "✅", texto: "A proporção de coberturas planejadas cresceu de 42% para 48% no período, com destaque para Regional SP (55%).", tipo: "positivo" as const },
-    { icone: "🔴", texto: "Regional BA concentra o pior cenário: menor taxa de planejamento (38%) e menor percentual de ausências cobertas (64%).", tipo: "negativo" as const },
+    { icone: "🔴", texto: "Regional BA concentra o pior cenário: 48% das coberturas geraram hora extra e apenas 38% foram planejadas com antecedência.", tipo: "negativo" as const },
   ] as InsightItem[],
 };
 
