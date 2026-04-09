@@ -632,7 +632,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
 
       {/* Right sidebar: compact ranking */}
       <div className="w-[220px] shrink-0">
-        <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4">
+        <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xs font-semibold text-foreground">Regionais</h3>
             {selectedRegional && (
@@ -642,7 +642,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
             )}
           </div>
           <p className="text-[10px] text-muted-foreground mb-3">Filtro rápido · ordenado por score</p>
-          <div className="space-y-0.5">
+          <div className="space-y-0.5 overflow-y-auto flex-1">
             {sortedRegionais.map((op, i) => {
               const isSelected = selectedRegional === op.nome;
               const isDimmed = selectedRegional && !isSelected;
