@@ -55,6 +55,37 @@ function abreviar(nome: string): string {
 // Mock data
 // ══════════════════════════════════════════════════════════════
 
+// ── Grouping types ──
+type GroupBy = "unidade" | "empresa" | "area";
+const groupByOptions: { id: GroupBy; label: string }[] = [
+  { id: "unidade", label: "Unidade de Negócio" },
+  { id: "empresa", label: "Empresa" },
+  { id: "area", label: "Área" },
+];
+
+// ── Empresa mock data ──
+const empresaData = [
+  { nome: "Orsegups Vigilância", qualidade: 89.5, score: 90 },
+  { nome: "Orsegups Facilities", qualidade: 87.2, score: 87 },
+  { nome: "Orsegups Tecnologia", qualidade: 86.8, score: 87 },
+  { nome: "Orsegups Logística", qualidade: 85.4, score: 85 },
+  { nome: "Orsegups Serviços", qualidade: 84.1, score: 84 },
+].map(e => ({ ...e, tendencia: e.qualidade >= 88 ? "melhorando" : e.qualidade >= 85 ? "estavel" : "piorando" }));
+
+// ── Área mock data ──
+const areaData = [
+  { nome: "Operações SP", qualidade: 90.2, score: 90 },
+  { nome: "Operações Sul", qualidade: 89.1, score: 89 },
+  { nome: "Operações Sudeste", qualidade: 88.4, score: 88 },
+  { nome: "Operações Centro-Oeste", qualidade: 87.6, score: 88 },
+  { nome: "Operações Nordeste", qualidade: 86.3, score: 86 },
+  { nome: "Administrativo", qualidade: 85.9, score: 86 },
+  { nome: "Comercial", qualidade: 85.1, score: 85 },
+  { nome: "RH / DP", qualidade: 84.5, score: 85 },
+  { nome: "Financeiro", qualidade: 83.8, score: 84 },
+  { nome: "TI / Inovação", qualidade: 82.9, score: 83 },
+].map(e => ({ ...e, tendencia: e.qualidade >= 88 ? "melhorando" : e.qualidade >= 85 ? "estavel" : "piorando" }));
+
 // ── Scatter data (source of truth for all 30 regionals) ──
 const scatterQualidade = [
   { regional: "Novo Hamburgo", volume: 268000, qualidade: 89.2, headcount: 2800 },
