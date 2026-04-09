@@ -47,18 +47,21 @@ const scoreColor = (s: number) => s >= 80 ? "text-green-600" : s >= 70 ? "text-o
 const scoreBg = (s: number) => s >= 80 ? "bg-green-50" : s >= 70 ? "bg-orange-50" : "bg-red-50";
 const scoreLabel = (s: number) => s >= 80 ? "Bom" : s >= 70 ? "Atenção" : "Crítico";
 
-const pctPlanejadaColor = (v: number) => v > 50 ? "text-green-600" : v >= 30 ? "text-orange-500" : "text-red-600";
-const pctEmergencialColor = (v: number) => v > 50 ? "text-red-600" : v >= 30 ? "text-orange-500" : "text-green-600";
-const ausCoberColor = (v: number) => v > 75 ? "text-green-600" : v >= 50 ? "text-yellow-600" : "text-red-600";
+const planejadaColor = (v: number) => v > 50 ? "text-green-600" : v >= 35 ? "text-orange-500" : "text-red-600";
+const emergencialColor = (v: number) => v > 45 ? "text-red-600" : v >= 35 ? "text-orange-500" : "text-green-600";
+const regularColor = (v: number) => v > 45 ? "text-green-600" : v >= 30 ? "text-orange-500" : "text-red-600";
+const heColor = (v: number) => v > 40 ? "text-red-600" : v >= 25 ? "text-orange-500" : "text-green-600";
+
+type TableView = "planejamento" | "tipoEvento";
 
 export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded?: boolean }) {
-  const { kpis, distribuicaoTipo, evolucao, regionais, insights } = coberturas;
+  const [tableView, setTableView] = useState<TableView>("planejamento");
+  const { kpis, distribuicaoPlanejamento, distribuicaoTipoEvento, evolucao, regionaisPlanejamento, regionaisTipoEvento, insights } = coberturas;
 
   const content = (
     <div className="px-6 py-4 space-y-4">
-      {/* Hero score + KPIs in one row */}
+      {/* Linha 1 — Score + 4 KPIs */}
       <div className="flex items-stretch gap-3">
-        {/* Score compacto */}
         <div className={`flex items-center gap-3 rounded-xl border border-border/50 px-5 py-3 ${scoreBg(coberturas.scoreEficiencia)}`}>
           <span className={`text-4xl font-bold ${scoreColor(coberturas.scoreEficiencia)}`}>{coberturas.scoreEficiencia}</span>
           <div className="flex flex-col">
@@ -69,28 +72,25 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
             </span>
           </div>
         </div>
-
-        {/* 4 KPI cards */}
         <div className="flex-1 grid grid-cols-4 gap-3">
           <KPI title="Ausências Cobertas" value={`${kpis.ausenciasCobertas}%`} color={kpis.ausenciasCobertas >= 75 ? "text-green-600" : "text-yellow-600"} tip="Percentual das ausências no período que foram cobertas por algum tipo de reposição." />
-          <KPI title="Coberturas com HE" value={`${kpis.coberturasComHE}%`} color="text-red-600" tip="Percentual das coberturas realizadas com hora extra em vez de recursos planejados." />
-          <KPI title="Dias Posto Descoberto" value={kpis.diasPostoDescoberto} color="text-red-600" tip="Total de dias em que ao menos um posto ficou sem o efetivo completo no período." />
+          <KPI title="Coberturas com HE" value={`${kpis.coberturasComHE}%`} color="text-red-600" tip="Percentual das coberturas que geraram eventos de hora extra na apuração." />
+          <KPI title="Dias Posto Descoberto" value={kpis.diasPostoDescoberto} color="text-red-600" tip="Total de dias em que ao menos um posto ficou sem o efetivo completo." />
           <KPI title="Tempo Médio Reposição" value={`${kpis.tempoMedioReposicao}h`} tip="Tempo médio entre o lançamento da ausência e a criação da cobertura." />
         </div>
       </div>
 
-      {/* Charts row */}
+      {/* Linha 2 — 2 Donuts lado a lado */}
       <div className="grid grid-cols-2 gap-4">
-        {/* Donut */}
         <div className="bg-card border border-border/50 rounded-xl p-4">
           <div className="flex items-center gap-1.5 mb-2">
-            <h4 className="text-sm font-semibold">Distribuição por Tipo de Cobertura</h4>
-            <InfoTip text="Coberturas registradas com 24h ou mais de antecedência são classificadas como planejadas. Coberturas registradas com menos de 24h são consideradas emergenciais. Postos sem nenhuma cobertura são classificados como descobertos." />
+            <h4 className="text-sm font-semibold">Planejamento da Cobertura</h4>
+            <InfoTip text="Coberturas registradas com 24h ou mais de antecedência são classificadas como planejadas. Com menos de 24h são emergenciais. Postos sem nenhuma cobertura são classificados como descobertos." />
           </div>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
-              <Pie data={distribuicaoTipo} cx="50%" cy="50%" innerRadius={55} outerRadius={90} dataKey="value" nameKey="name" label={({ name, value }) => `${value}%`}>
-                {distribuicaoTipo.map((e, i) => <Cell key={i} fill={e.cor} />)}
+              <Pie data={distribuicaoPlanejamento} cx="50%" cy="50%" innerRadius={55} outerRadius={90} dataKey="value" nameKey="name" label={({ value }) => `${value}%`}>
+                {distribuicaoPlanejamento.map((e, i) => <Cell key={i} fill={e.cor} />)}
               </Pie>
               <RechartsTooltip formatter={(value: number, name: string) => [`${value}%`, name]} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
@@ -98,61 +98,113 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
           </ResponsiveContainer>
         </div>
 
-        {/* Area chart */}
         <div className="bg-card border border-border/50 rounded-xl p-4">
-          <h4 className="text-sm font-semibold mb-0.5">Evolução por Competência</h4>
-          <p className="text-[11px] text-muted-foreground mb-2">Distribuição mensal dos tipos de cobertura</p>
+          <div className="flex items-center gap-1.5 mb-2">
+            <h4 className="text-sm font-semibold">Tipo de Evento na Cobertura</h4>
+            <InfoTip text="Classificação baseada nos eventos reais de apuração gerados pela cobertura, não no tipo informado pelo operador." />
+          </div>
           <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={evolucao}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="competencia" tick={{ fontSize: 10 }} />
-              <YAxis tick={{ fontSize: 10 }} />
-              <RechartsTooltip />
-              <Legend />
-              <Area type="monotone" dataKey="planejada" stackId="1" fill="#22c55e" stroke="#22c55e" fillOpacity={0.6} name="Planejada" />
-              <Area type="monotone" dataKey="emergencial" stackId="1" fill="#ef4444" stroke="#ef4444" fillOpacity={0.6} name="Emergencial" />
-              <Area type="monotone" dataKey="descoberta" stackId="1" fill="#9ca3af" stroke="#9ca3af" fillOpacity={0.6} name="Descoberta" />
-            </AreaChart>
+            <PieChart>
+              <Pie data={distribuicaoTipoEvento} cx="50%" cy="50%" innerRadius={55} outerRadius={90} dataKey="value" nameKey="name" label={({ value }) => `${value}%`}>
+                {distribuicaoTipoEvento.map((e, i) => <Cell key={i} fill={e.cor} />)}
+              </Pie>
+              <RechartsTooltip formatter={(value: number, name: string) => [`${value}%`, name]} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Regional table */}
+      {/* Linha 3 — Evolução (largura total) */}
+      <div className="bg-card border border-border/50 rounded-xl p-4">
+        <h4 className="text-sm font-semibold mb-0.5">Evolução por Competência</h4>
+        <p className="text-[11px] text-muted-foreground mb-2">Distribuição mensal dos tipos de cobertura por planejamento</p>
+        <ResponsiveContainer width="100%" height={280}>
+          <AreaChart data={evolucao}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="competencia" tick={{ fontSize: 10 }} />
+            <YAxis tick={{ fontSize: 10 }} />
+            <RechartsTooltip />
+            <Legend />
+            <Area type="monotone" dataKey="planejada" stackId="1" fill="#22c55e" stroke="#22c55e" fillOpacity={0.6} name="Planejada" />
+            <Area type="monotone" dataKey="emergencial" stackId="1" fill="#ef4444" stroke="#ef4444" fillOpacity={0.6} name="Emergencial" />
+            <Area type="monotone" dataKey="descoberta" stackId="1" fill="#9ca3af" stroke="#9ca3af" fillOpacity={0.6} name="Descoberta" />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Linha 4 — Tabela com toggle */}
       <div className="bg-card border border-border/50 rounded-xl overflow-hidden">
+        <div className="px-4 py-3 flex items-center gap-2">
+          <button
+            onClick={() => setTableView("planejamento")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${tableView === "planejamento" ? "bg-[#FF5722] text-white" : "bg-white border border-border text-muted-foreground hover:bg-muted/30"}`}
+          >
+            Por Planejamento
+          </button>
+          <button
+            onClick={() => setTableView("tipoEvento")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${tableView === "tipoEvento" ? "bg-[#FF5722] text-white" : "bg-white border border-border text-muted-foreground hover:bg-muted/30"}`}
+          >
+            Por Tipo de Evento
+          </button>
+        </div>
         <table className="w-full text-sm">
           <thead className="bg-muted/30">
-            <tr>
-              <th className="text-left px-4 py-2 font-semibold">Regional</th>
-              <th className="text-right px-4 py-2 font-semibold">Coberturas</th>
-              <th className="text-center px-4 py-2 font-semibold">% Planejada</th>
-              <th className="text-center px-4 py-2 font-semibold">% Emergencial</th>
-              <th className="text-right px-4 py-2 font-semibold">Dias Descoberto</th>
-              <th className="text-center px-4 py-2 font-semibold">Ausências Cobertas %</th>
-              <th className="text-center px-4 py-2 font-semibold">Tendência</th>
-            </tr>
+            {tableView === "planejamento" ? (
+              <tr>
+                <th className="text-left px-4 py-2 font-semibold">Regional</th>
+                <th className="text-right px-4 py-2 font-semibold">Coberturas</th>
+                <th className="text-center px-4 py-2 font-semibold">Planejadas</th>
+                <th className="text-center px-4 py-2 font-semibold">Emergenciais</th>
+                <th className="text-center px-4 py-2 font-semibold">Descobertas</th>
+                <th className="text-center px-4 py-2 font-semibold">Tendência</th>
+              </tr>
+            ) : (
+              <tr>
+                <th className="text-left px-4 py-2 font-semibold">Regional</th>
+                <th className="text-right px-4 py-2 font-semibold">Coberturas</th>
+                <th className="text-center px-4 py-2 font-semibold">Regular</th>
+                <th className="text-center px-4 py-2 font-semibold">HE</th>
+                <th className="text-center px-4 py-2 font-semibold">Banco de Horas</th>
+                <th className="text-center px-4 py-2 font-semibold">Descobertas</th>
+                <th className="text-center px-4 py-2 font-semibold">Tendência</th>
+              </tr>
+            )}
           </thead>
           <tbody className="divide-y divide-border/40">
-            {regionais.map((r: any) => (
-              <tr key={r.nome} className="hover:bg-muted/20">
-                <td className="px-4 py-2 font-medium">{r.nome}</td>
-                <td className="text-right px-4 py-2">{r.coberturas?.toLocaleString("pt-BR")}</td>
-                <td className={`text-center px-4 py-2 font-semibold ${pctPlanejadaColor(r.pctPlanejada)}`}>{r.pctPlanejada}%</td>
-                <td className={`text-center px-4 py-2 font-semibold ${pctEmergencialColor(r.pctEmergencial)}`}>{r.pctEmergencial}%</td>
-                <td className="text-right px-4 py-2">{r.diasDescoberto}</td>
-                <td className={`text-center px-4 py-2 font-semibold ${ausCoberColor(r.ausenciasCobertas)}`}>{r.ausenciasCobertas}%</td>
-                <td className="text-center px-4 py-2"><div className="flex justify-center"><TrendIcon t={r.tendencia} /></div></td>
-              </tr>
-            ))}
+            {tableView === "planejamento"
+              ? regionaisPlanejamento.map((r: any) => (
+                  <tr key={r.nome} className="hover:bg-muted/20">
+                    <td className="px-4 py-2 font-medium">{r.nome}</td>
+                    <td className="text-right px-4 py-2">{r.coberturas?.toLocaleString("pt-BR")}</td>
+                    <td className={`text-center px-4 py-2 font-semibold ${planejadaColor(r.planejadas)}`}>{r.planejadas}%</td>
+                    <td className={`text-center px-4 py-2 font-semibold ${emergencialColor(r.emergenciais)}`}>{r.emergenciais}%</td>
+                    <td className="text-center px-4 py-2">{r.descobertas}%</td>
+                    <td className="text-center px-4 py-2"><div className="flex justify-center"><TrendIcon t={r.tendencia} /></div></td>
+                  </tr>
+                ))
+              : regionaisTipoEvento.map((r: any) => (
+                  <tr key={r.nome} className="hover:bg-muted/20">
+                    <td className="px-4 py-2 font-medium">{r.nome}</td>
+                    <td className="text-right px-4 py-2">{r.coberturas?.toLocaleString("pt-BR")}</td>
+                    <td className={`text-center px-4 py-2 font-semibold ${regularColor(r.regular)}`}>{r.regular}%</td>
+                    <td className={`text-center px-4 py-2 font-semibold ${heColor(r.he)}`}>{r.he}%</td>
+                    <td className="text-center px-4 py-2">{r.bancoHoras}%</td>
+                    <td className="text-center px-4 py-2">{r.descobertas}%</td>
+                    <td className="text-center px-4 py-2"><div className="flex justify-center"><TrendIcon t={r.tendencia} /></div></td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
 
-      {/* Insights */}
+      {/* Linha 5 — Insights */}
       <div className="grid grid-cols-3 gap-3">
         {insights.map((ins, i) => <InsightCard key={i} texto={ins.texto} tipo={ins.tipo} />)}
       </div>
 
-      <FeedbackBlock page="coberturas_continuidade" />
+      <FeedbackBlock page="coberturas" />
     </div>
   );
 
