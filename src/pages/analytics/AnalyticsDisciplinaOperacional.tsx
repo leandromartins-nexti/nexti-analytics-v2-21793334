@@ -719,53 +719,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
   const avgTratVolume = useMemo(() => chartScatterTrat.length ? Math.round(chartScatterTrat.reduce((s, d) => s + d.volume, 0) / chartScatterTrat.length) : 170000, [chartScatterTrat]);
   const avgTratDias = useMemo(() => chartScatterTrat.length ? +(chartScatterTrat.reduce((s, d) => s + d.dias, 0) / chartScatterTrat.length).toFixed(1) : 4.5, [chartScatterTrat]);
 
-  // Dynamic axes: always 6 equal intervals (7 ticks) based on min/max of visible data
-  const AXIS_SEGMENTS = 6;
-  const niceStep = (rawStep: number) => {
-    const magnitude = Math.pow(10, Math.floor(Math.log10(Math.abs(rawStep) || 1)));
-    const normalized = rawStep / magnitude;
-    const niceNormalized = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
-    return niceNormalized * magnitude;
-  };
-
-  const buildAxis = (values: number[], options?: { clampZero?: boolean; decimals?: number }) => {
+  // Dynamic axes: let Recharts decide tick count, just provide nice min/max
+  const buildAxis = (values: number[], options?: { clampZero?: boolean }) => {
     const clampZero = options?.clampZero ?? false;
-    const decimals = options?.decimals ?? 0;
-    if (!values.length) {
-      const fallbackTicks = Array.from({ length: AXIS_SEGMENTS + 1 }, (_, i) => i);
-      return { min: 0, max: AXIS_SEGMENTS, step: 1, ticks: fallbackTicks };
-    }
-
+    if (!values.length) return { min: 0, max: 100 };
     const rawMin = Math.min(...values);
     const rawMax = Math.max(...values);
-    const range = rawMax - rawMin || Math.max(Math.abs(rawMax), 1);
-    const step = niceStep(range / AXIS_SEGMENTS);
-
-    const minFromMin = Math.floor(rawMin / step) * step;
-    const maxFromMin = minFromMin + step * AXIS_SEGMENTS;
-
-    const maxFromMax = Math.ceil(rawMax / step) * step;
-    const minFromMax = maxFromMax - step * AXIS_SEGMENTS;
-
-    const candidates = [
-      { min: minFromMin, max: maxFromMin },
-      { min: minFromMax, max: maxFromMax },
-    ].filter(candidate => candidate.min <= rawMin && candidate.max >= rawMax);
-
-    const best = candidates.sort((a, b) => {
-      const overA = (rawMin - a.min) + (a.max - rawMax);
-      const overB = (rawMin - b.min) + (b.max - rawMax);
-      return overA - overB;
-    })[0] ?? { min: minFromMin, max: maxFromMin };
-
-    const safeMin = clampZero ? Math.max(0, best.min) : best.min;
-    const safeMax = safeMin + step * AXIS_SEGMENTS;
-    const ticks = Array.from({ length: AXIS_SEGMENTS + 1 }, (_, i) => {
-      const value = safeMin + step * i;
-      return decimals > 0 ? Number(value.toFixed(decimals)) : Math.round(value);
-    });
-
-    return { min: ticks[0], max: ticks[ticks.length - 1], step, ticks };
+    const min = clampZero ? Math.max(0, Math.floor(rawMin)) : Math.floor(rawMin);
+    const max = Math.ceil(rawMax);
+    return { min, max };
   };
 
   const qualDomain = useMemo(() => {
