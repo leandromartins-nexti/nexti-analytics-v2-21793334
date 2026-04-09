@@ -4,6 +4,7 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import { useNavigate } from "react-router-dom";
+import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import {
   ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
   AlertTriangle, ArrowDownRight, ArrowUpRight, Info, DollarSign, CheckCircle,
