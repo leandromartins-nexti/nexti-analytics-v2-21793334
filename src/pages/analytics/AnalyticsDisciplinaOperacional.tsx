@@ -218,21 +218,21 @@ function RankingFooter() {
 function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegional: string | null; onRegionalClick: (n: string) => void }) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return {
-      score: 87.3, diff: "+4.1 pp", registradas: "892.0K", justificadas: "130.2K",
-      melhorOperacao: { nome: "Regional SP", score: 89.2 },
-      maiorRisco: { nome: "Regional BA", score: 82.4, indicador: "Baixa qualidade" },
+      score: 87, diff: "+4 pp", registradas: "892.0K", justificadas: "130.2K",
+      melhorOperacao: { nome: "Regional SP", score: 89 },
+      maiorRisco: { nome: "Regional BA", score: 82, indicador: "Baixa qualidade" },
     };
     const r = qualidadeRegionais.find(x => x.nome === selectedRegional);
     if (!r) return {
-      score: 87.3, diff: "+4.1 pp", registradas: "892.0K", justificadas: "130.2K",
-      melhorOperacao: { nome: "Regional SP", score: 89.2 },
-      maiorRisco: { nome: "Regional BA", score: 82.4, indicador: "Baixa qualidade" },
+      score: 87, diff: "+4 pp", registradas: "892.0K", justificadas: "130.2K",
+      melhorOperacao: { nome: "Regional SP", score: 89 },
+      maiorRisco: { nome: "Regional BA", score: 82, indicador: "Baixa qualidade" },
     };
     return {
-      score: r.qualidade, diff: `${(r.qualidade - 87.3).toFixed(1)} pp`,
+      score: Math.round(r.qualidade), diff: `${Math.round(r.qualidade - 87)} pp`,
       registradas: `${(r.registradas * 12.4).toFixed(0)}K`, justificadas: `${(r.justificadas * 3.26).toFixed(0)}K`,
-      melhorOperacao: { nome: selectedRegional, score: r.qualidade },
-      maiorRisco: { nome: selectedRegional, score: r.qualidade, indicador: `${r.atrasos}% atrasos` },
+      melhorOperacao: { nome: selectedRegional, score: Math.round(r.qualidade) },
+      maiorRisco: { nome: selectedRegional, score: Math.round(r.qualidade), indicador: `${r.atrasos}% atrasos` },
     };
   }, [selectedRegional]);
 
