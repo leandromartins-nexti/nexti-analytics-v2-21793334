@@ -527,7 +527,7 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
   const [sortBy, setSortBy] = useState<"score" | "nome">("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 30;
+  const PAGE_SIZE = 25;
 
   // Debounce search with 500ms delay
   const searchTimerRef = useState<ReturnType<typeof setTimeout> | null>(null);
