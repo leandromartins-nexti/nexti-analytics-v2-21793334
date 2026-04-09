@@ -45,6 +45,12 @@ function TrendIcon({ t }: { t: string }) {
   return <Minus size={14} className="text-gray-400" />;
 }
 
+function abreviar(nome: string): string {
+  const words = nome.replace(/[-–]/g, " ").split(/\s+/).filter(w => w.length > 1);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return nome.slice(0, 2).toUpperCase();
+}
+
 // ══════════════════════════════════════════════════════════════
 // Mock data
 // ══════════════════════════════════════════════════════════════
