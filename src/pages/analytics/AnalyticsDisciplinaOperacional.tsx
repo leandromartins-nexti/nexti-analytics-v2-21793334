@@ -4,7 +4,7 @@ import IndicatorTable, { type TableColumn, getScoreColor, getScoreBg, getLineCol
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
-  ResponsiveContainer, LineChart, Line, BarChart, Bar,
+  ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
   ScatterChart, Scatter, ZAxis,
 } from "recharts";
