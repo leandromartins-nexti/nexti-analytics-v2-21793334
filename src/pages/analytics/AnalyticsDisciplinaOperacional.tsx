@@ -45,6 +45,12 @@ function TrendIcon({ t }: { t: string }) {
   return <Minus size={14} className="text-gray-400" />;
 }
 
+function abreviar(nome: string): string {
+  const words = nome.replace(/[-–]/g, " ").split(/\s+/).filter(w => w.length > 1);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return nome.slice(0, 2).toUpperCase();
+}
+
 // ══════════════════════════════════════════════════════════════
 // Mock data
 // ══════════════════════════════════════════════════════════════
@@ -568,7 +574,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
                 return (
                   <g onClick={() => onRegionalClick(payload.regional)} className="cursor-pointer">
                     <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={isSelected ? 0.7 : 0.15} stroke={fill} strokeWidth={isSelected ? 1.5 : 0.5} />
-                    {isSelected && <text x={cx} y={cy - r - 4} textAnchor="middle" fontSize={8} fill="#374151">{payload.regional.length > 14 ? payload.regional.slice(0, 12) + "…" : payload.regional}</text>}
+                    <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={7} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
                   </g>
                 );
               }} />
@@ -609,7 +615,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
                 return (
                   <g onClick={() => onRegionalClick(payload.regional)} className="cursor-pointer">
                     <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={isSelected ? 0.7 : 0.15} stroke={fill} strokeWidth={isSelected ? 1.5 : 0.5} />
-                    {isSelected && <text x={cx} y={cy - r - 4} textAnchor="middle" fontSize={8} fill="#374151">{payload.regional.length > 14 ? payload.regional.slice(0, 12) + "…" : payload.regional}</text>}
+                    <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={7} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
                   </g>
                 );
               }} />
