@@ -283,59 +283,45 @@ export const coberturas = {
 
   kpis: {
     ausenciasCobertas: 72,
-    coberturasComHE: 34,
+    coberturasComHE: 24,
     diasPostoDescoberto: 286,
     tempoMedioReposicao: 3.2,
   },
 
-  distribuicaoPlanejamento: [
-    { name: "Planejada", value: 48, cor: "#22c55e" },
-    { name: "Emergencial", value: 40, cor: "#ef4444" },
-    { name: "Descoberta", value: 12, cor: "#9ca3af" },
-  ],
-
   distribuicaoTipoEvento: [
-    { name: "Hora Regular", value: 42, cor: "#22c55e" },
-    { name: "Hora Extra", value: 34, cor: "#ef4444" },
-    { name: "Banco de Horas", value: 12, cor: "#3b82f6" },
-    { name: "Descoberta", value: 12, cor: "#9ca3af" },
+    { name: "Hora Regular", value: 52, cor: "#22c55e" },
+    { name: "Hora Extra", value: 24, cor: "#ef4444" },
+    { name: "Falta", value: 14, cor: "#f97316" },
+    { name: "Atrasos", value: 10, cor: "#eab308" },
   ],
 
   evolucao: [
-    { competencia: "abr/25", planejada: 280, emergencial: 220, descoberta: 55 },
-    { competencia: "mai/25", planejada: 300, emergencial: 210, descoberta: 48 },
-    { competencia: "jun/25", planejada: 290, emergencial: 225, descoberta: 52 },
-    { competencia: "jul/25", planejada: 310, emergencial: 200, descoberta: 42 },
-    { competencia: "ago/25", planejada: 325, emergencial: 190, descoberta: 38 },
-    { competencia: "set/25", planejada: 335, emergencial: 185, descoberta: 34 },
-    { competencia: "out/25", planejada: 345, emergencial: 175, descoberta: 30 },
-    { competencia: "nov/25", planejada: 340, emergencial: 170, descoberta: 28 },
-    { competencia: "dez/25", planejada: 310, emergencial: 200, descoberta: 45 },
-    { competencia: "jan/26", planejada: 355, emergencial: 165, descoberta: 25 },
-    { competencia: "fev/26", planejada: 365, emergencial: 155, descoberta: 22 },
-    { competencia: "mar/26", planejada: 360, emergencial: 160, descoberta: 26 },
+    { competencia: "abr/25", regular: 310, he: 150, falta: 80, atrasos: 60 },
+    { competencia: "mai/25", regular: 320, he: 140, falta: 75, atrasos: 55 },
+    { competencia: "jun/25", regular: 315, he: 155, falta: 82, atrasos: 58 },
+    { competencia: "jul/25", regular: 335, he: 135, falta: 70, atrasos: 50 },
+    { competencia: "ago/25", regular: 350, he: 125, falta: 65, atrasos: 48 },
+    { competencia: "set/25", regular: 360, he: 120, falta: 60, atrasos: 45 },
+    { competencia: "out/25", regular: 370, he: 115, falta: 55, atrasos: 42 },
+    { competencia: "nov/25", regular: 365, he: 110, falta: 52, atrasos: 40 },
+    { competencia: "dez/25", regular: 340, he: 140, falta: 72, atrasos: 55 },
+    { competencia: "jan/26", regular: 380, he: 105, falta: 48, atrasos: 38 },
+    { competencia: "fev/26", regular: 390, he: 100, falta: 45, atrasos: 35 },
+    { competencia: "mar/26", regular: 385, he: 105, falta: 48, atrasos: 38 },
   ],
 
-  regionaisPlanejamento: [
-    { nome: "Regional SP", coberturas: 2840, planejadas: 55, emergenciais: 38, descobertas: 7, tendencia: "melhorando" },
-    { nome: "Regional RJ", coberturas: 2120, planejadas: 46, emergenciais: 43, descobertas: 11, tendencia: "estavel" },
-    { nome: "Regional MG", coberturas: 1560, planejadas: 50, emergenciais: 39, descobertas: 11, tendencia: "melhorando" },
-    { nome: "Regional PR", coberturas: 1180, planejadas: 44, emergenciais: 42, descobertas: 14, tendencia: "piorando" },
-    { nome: "Regional BA", coberturas: 980, planejadas: 38, emergenciais: 50, descobertas: 12, tendencia: "piorando" },
-  ] as any[],
-
-  regionaisTipoEvento: [
-    { nome: "Regional SP", coberturas: 2840, regular: 52, he: 28, bancoHoras: 13, descobertas: 7, tendencia: "melhorando" },
-    { nome: "Regional RJ", coberturas: 2120, regular: 40, he: 38, bancoHoras: 11, descobertas: 11, tendencia: "estavel" },
-    { nome: "Regional MG", coberturas: 1560, regular: 44, he: 34, bancoHoras: 11, descobertas: 11, tendencia: "melhorando" },
-    { nome: "Regional PR", coberturas: 1180, regular: 38, he: 40, bancoHoras: 8, descobertas: 14, tendencia: "piorando" },
-    { nome: "Regional BA", coberturas: 980, regular: 32, he: 48, bancoHoras: 8, descobertas: 12, tendencia: "piorando" },
+  regionais: [
+    { nome: "Regional SP", coberturas: 2840, regular: 58, he: 20, falta: 12, atrasos: 10, tendencia: "melhorando" },
+    { nome: "Regional RJ", coberturas: 2120, regular: 52, he: 26, falta: 14, atrasos: 8, tendencia: "estavel" },
+    { nome: "Regional MG", coberturas: 1560, regular: 54, he: 22, falta: 13, atrasos: 11, tendencia: "melhorando" },
+    { nome: "Regional PR", coberturas: 1180, regular: 48, he: 28, falta: 15, atrasos: 9, tendencia: "piorando" },
+    { nome: "Regional BA", coberturas: 980, regular: 42, he: 32, falta: 16, atrasos: 10, tendencia: "piorando" },
   ] as any[],
 
   insights: [
-    { icone: "⚠️", texto: "40% das coberturas foram emergenciais (menos de 24h de antecedência), indicando oportunidade de melhora no planejamento de escala.", tipo: "atencao" as const },
-    { icone: "✅", texto: "A proporção de coberturas planejadas cresceu de 42% para 48% no período, com destaque para Regional SP (55%).", tipo: "positivo" as const },
-    { icone: "🔴", texto: "Regional BA concentra o pior cenário: 48% das coberturas geraram hora extra e apenas 38% foram planejadas com antecedência.", tipo: "negativo" as const },
+    { icone: "✅", texto: "52% das coberturas geraram apenas hora regular, indicando boa eficiência operacional na reposição.", tipo: "positivo" as const },
+    { icone: "🔴", texto: "Regional BA tem o maior percentual de coberturas com hora extra (32%), quase o dobro da Regional SP (20%).", tipo: "negativo" as const },
+    { icone: "⚠️", texto: "Faltas e atrasos representam 24% dos eventos de cobertura. Reduzir absenteísmo impacta diretamente a qualidade das coberturas.", tipo: "atencao" as const },
   ] as InsightItem[],
 };
 
