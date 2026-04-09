@@ -344,11 +344,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
               }} activeDot={{ r: 5 }} name="Dias" />
             </LineChart>
           </ResponsiveContainer>
-        </div>
-
-        <div className="bg-card border border-border/50 rounded-xl p-4">
-          <div className="flex items-center gap-1.5 mb-1">
-            <h4 className="text-sm font-semibold">Volume × Tempo de Tratativa por Operação</h4>
+      </div>
             <InfoTip text="Operações no quadrante superior direito (muito volume, tempo alto) precisam de reforço no back-office." />
           </div>
           <p className="text-[10px] text-muted-foreground mb-2">Cada bolha representa uma operação. Tamanho = headcount</p>
