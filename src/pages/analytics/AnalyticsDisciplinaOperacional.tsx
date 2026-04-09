@@ -738,6 +738,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
     return { xMin: Math.max(0, Math.min(...vols) - padX), xMax: Math.max(...vols) + padX, yMin: Math.max(0, +(Math.min(...dias) - padY).toFixed(1)), yMax: +(Math.max(...dias) + padY).toFixed(1) };
   }, [chartScatterTrat]);
 
+  return (
     <div className="flex gap-3">
       {/* Main content */}
       <div className="flex-1 min-w-0 space-y-3">
