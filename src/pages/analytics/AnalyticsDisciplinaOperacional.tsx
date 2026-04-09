@@ -724,37 +724,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
         </div>
       </div>
 
-      {/* Right sidebar: compact ranking */}
-      <div className="w-[220px] shrink-0">
-        <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-xs font-semibold text-foreground">Regionais</h3>
-            {selectedRegional && (
-              <button onClick={() => onRegionalClick(selectedRegional)} className="text-[10px] text-[#FF5722] hover:underline flex items-center gap-1">
-                <X size={10} /> Limpar
-              </button>
-            )}
-          </div>
-          <p className="text-[10px] text-muted-foreground mb-3">Filtro rápido · ordenado por score</p>
-          <div className="space-y-0.5 overflow-y-auto flex-1">
-            {sortedRegionais.map((op) => {
-              const isSelected = selectedRegional === op.nome;
-              const isDimmed = selectedRegional && !isSelected;
-              const scoreColor = op.qualidade >= 85 ? "text-green-600" : op.qualidade >= 75 ? "text-orange-500" : "text-red-600";
-              return (
-                <div
-                  key={op.nome}
-                  onClick={() => onRegionalClick(op.nome)}
-                  className={`flex items-center gap-2 px-2 py-1 rounded-md cursor-pointer transition-all text-xs ${isSelected ? "bg-orange-50 ring-1 ring-[#FF5722]/30" : "hover:bg-muted/40"} ${isDimmed ? "opacity-35" : ""}`}
-                >
-                  <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
-                  <span className={`font-bold tabular-nums ${scoreColor}`}>{Math.round(op.qualidade)}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} />
 
       <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
     </div>
