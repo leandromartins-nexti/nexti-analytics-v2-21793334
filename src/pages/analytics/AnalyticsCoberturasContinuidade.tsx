@@ -201,9 +201,11 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
                       <svg
                         key={p}
                         className="absolute top-0 z-20 pointer-events-none"
-                        style={{ left: `${p}%`, height: '100%', width: '1px', overflow: 'visible' }}
+                        width="2"
+                        height="16"
+                        style={{ left: `${p}%` }}
                       >
-                        <line x1="0" y1="0" x2="0" y2="100%" stroke="rgba(0,0,0,0.2)" strokeWidth="1" strokeDasharray="3 3" />
+                        <line x1="1" y1="0" x2="1" y2="16" stroke="rgba(0,0,0,0.35)" strokeWidth="1" strokeDasharray="3 3" />
                       </svg>
                     ))}
                     <div className="absolute inset-0 bg-gray-100 rounded-full overflow-hidden">
