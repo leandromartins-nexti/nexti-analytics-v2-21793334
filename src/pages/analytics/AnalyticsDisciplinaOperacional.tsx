@@ -719,7 +719,25 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
   const avgTratVolume = useMemo(() => chartScatterTrat.length ? Math.round(chartScatterTrat.reduce((s, d) => s + d.volume, 0) / chartScatterTrat.length) : 170000, [chartScatterTrat]);
   const avgTratDias = useMemo(() => chartScatterTrat.length ? +(chartScatterTrat.reduce((s, d) => s + d.dias, 0) / chartScatterTrat.length).toFixed(1) : 4.5, [chartScatterTrat]);
 
-  return (
+  // Dynamic axis domains with 10% padding
+  const qualDomain = useMemo(() => {
+    if (!chartScatterQual.length) return { xMin: 0, xMax: 280000, yMin: 70, yMax: 98 };
+    const vols = chartScatterQual.map(d => d.volume);
+    const quals = chartScatterQual.map(d => d.qualidade);
+    const padX = (Math.max(...vols) - Math.min(...vols)) * 0.1 || 10000;
+    const padY = (Math.max(...quals) - Math.min(...quals)) * 0.1 || 2;
+    return { xMin: Math.max(0, Math.min(...vols) - padX), xMax: Math.max(...vols) + padX, yMin: Math.floor(Math.min(...quals) - padY), yMax: Math.ceil(Math.max(...quals) + padY) };
+  }, [chartScatterQual]);
+
+  const tratDomain = useMemo(() => {
+    if (!chartScatterTrat.length) return { xMin: 0, xMax: 280000, yMin: 1, yMax: 10 };
+    const vols = chartScatterTrat.map(d => d.volume);
+    const dias = chartScatterTrat.map(d => d.dias);
+    const padX = (Math.max(...vols) - Math.min(...vols)) * 0.1 || 10000;
+    const padY = (Math.max(...dias) - Math.min(...dias)) * 0.1 || 0.5;
+    return { xMin: Math.max(0, Math.min(...vols) - padX), xMax: Math.max(...vols) + padX, yMin: Math.max(0, +(Math.min(...dias) - padY).toFixed(1)), yMax: +(Math.max(...dias) + padY).toFixed(1) };
+  }, [chartScatterTrat]);
+
     <div className="flex gap-3">
       {/* Main content */}
       <div className="flex-1 min-w-0 space-y-3">
