@@ -24,13 +24,8 @@ function abreviar(nome: string): string {
 // Mock data
 // ══════════════════════════════════════════════════════════════
 
-// ── Grouping types ──
-type GroupBy = "unidade" | "empresa" | "area";
-const groupByOptions: { id: GroupBy; label: string; short: string }[] = [
-  { id: "empresa", label: "Empresa", short: "Empresa" },
-  { id: "unidade", label: "Un. Negócio", short: "Un. Negócio" },
-  { id: "area", label: "Área", short: "Área" },
-];
+// ── Re-export GroupBy from shared component ──
+import GroupBySidebar, { type GroupBy, groupByOptions } from "@/components/analytics/GroupBySidebar";
 
 // ── Empresa mock data ──
 const empresaData = [
