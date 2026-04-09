@@ -882,7 +882,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
                 <XAxis type="number" dataKey="volume" name="Volume" tick={{ fontSize: 10 }} tickFormatter={v => `${(v / 1000).toFixed(0)}K`} label={{ value: "Volume de marcações", position: "insideBottom", offset: -5, fontSize: 10 }} />
                 <YAxis type="number" dataKey="dias" name="Tempo" domain={[2, 10]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}d`} label={{ value: "Tempo tratativa (dias)", angle: -90, position: "insideLeft", fontSize: 10 }} />
                 <ZAxis type="number" dataKey="headcount" range={[200, 800]} />
-                <ReferenceLine y={tratativaMedia} stroke="#9ca3af" strokeDasharray="6 4" label={{ value: `Média ${tratativaMedia.toFixed(1)}d`, position: "right", fontSize: 9, fill: "#9ca3af" }} />
+                <ReferenceLine y={tratativaMedia} stroke="#C8860A" strokeWidth={2} strokeDasharray="8 4" label={{ value: `Média ${tratativaMedia.toFixed(1)}d`, position: "right", fontSize: 9, fill: "#C8860A", fontWeight: 600 }} />
                 <RechartsTooltip content={({ active, payload }) => {
                   if (!active || !payload?.length) return null;
                   const d = payload[0].payload;
