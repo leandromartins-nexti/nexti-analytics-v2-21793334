@@ -63,13 +63,16 @@ const qualidadeEvolucao = [
   { mes: "jan/26", value: 87.0 }, { mes: "fev/26", value: 87.8 }, { mes: "mar/26", value: 87.3 },
 ];
 const qualidadeMedia = 85.7;
-const qualidadeRegionais = [
-  { nome: "Regional SP", qualidade: 89.2, atrasos: 10.1, registradas: 72, justificadas: 28, tendencia: "melhorando" },
-  { nome: "Regional MG", qualidade: 88.1, atrasos: 11.5, registradas: 70, justificadas: 30, tendencia: "melhorando" },
-  { nome: "Regional PR", qualidade: 87.5, atrasos: 13.2, registradas: 68, justificadas: 32, tendencia: "estavel" },
-  { nome: "Regional RJ", qualidade: 86.8, atrasos: 12.3, registradas: 67, justificadas: 33, tendencia: "piorando" },
-  { nome: "Regional BA", qualidade: 82.4, atrasos: 16.8, registradas: 60, justificadas: 40, tendencia: "piorando" },
-];
+// Derive qualidadeRegionais from scatterQualidade + scatterTratativa for unified data
+const qualidadeRegionais = scatterQualidade.map(sq => {
+  const st = scatterTratativa.find(t => t.regional === sq.regional);
+  const qualidade = sq.qualidade;
+  const tendencia = qualidade >= 88 ? "melhorando" : qualidade >= 85 ? "estavel" : "piorando";
+  const registradas = Math.round(qualidade);
+  const justificadas = 100 - registradas;
+  const atrasos = +(100 - qualidade).toFixed(1);
+  return { nome: sq.regional, qualidade, atrasos, registradas, justificadas, tendencia, volume: sq.volume, headcount: sq.headcount, tratativa: st?.dias ?? 6 };
+});
 
 const scatterQualidade = [
   { regional: "Novo Hamburgo", volume: 268000, qualidade: 89.2, headcount: 2800 },
