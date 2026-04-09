@@ -4,6 +4,7 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import { useNavigate } from "react-router-dom";
+import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import {
   ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
   AlertTriangle, ArrowDownRight, ArrowUpRight, Info, DollarSign, CheckCircle,
@@ -90,6 +91,33 @@ function SparklineTooltip({ active, payload, cardData }: any) {
 }
 
 
+// ── Mock data for GroupBySidebar ──
+const resumoUnidadeData = [
+  "São José do Rio Preto", "Capital ACL", "Capital SEG", "Novo Hamburgo", "Curitiba Norte",
+  "Joinville", "Campinas", "Curitiba Sul", "Administração - Sede 2", "Goiânia",
+  "Blumenau", "RHO", "Itajaí", "Chapecó", "Ribeirão Preto", "Cascavel",
+  "Administração - Sede", "Jaraguá do Sul", "Brusque", "Novo Hamburgo 2",
+  "Criciúma", "Gaspar", "Palmas", "Tubarão", "Unidade de Negócios",
+].map((n, i) => ({ nome: n, score: 90 - i }));
+
+const resumoEmpresaData = [
+  "Grupo Marista", "Unimed Curitiba", "Sanepar", "Copel", "Renault do Brasil",
+  "Volvo do Brasil", "O Boticário", "Electrolux", "HSBC", "Condor Super Center",
+  "Positivo Tecnologia", "Nutrimental", "Herbarium", "Cargill", "BRF Foods",
+].map((n, i) => ({ nome: n, score: 92 - i * 2 }));
+
+const resumoAreaData = [
+  "ROTA - POA - DM52", "MRH VEICULOS LTDA", "A 365 - Renoá", "ROTA - SOO - SEDE",
+  "Area Cliente Frimesa", "ROTA - RSL - NM51", "CCC - Sanepar", "PROGRAMADA",
+  "GERENCIAL", "G5 BANK", "TESTE-TI", "Gestão de Mão de Obra - RHO",
+].map((n, i) => ({ nome: n, score: 92 - i }));
+
+const resumoGroupData: Record<string, { nome: string; score: number }[]> = {
+  unidade: resumoUnidadeData,
+  empresa: resumoEmpresaData,
+  area: resumoAreaData,
+};
+
 
 // ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
@@ -99,6 +127,11 @@ export default function AnalyticsResumoExecutivo() {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
+
+  const sidebarItems = resumoGroupData[groupBy] || resumoUnidadeData;
+  const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
+  const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
 
   const regionalData = selectedRegional ? dadosPorRegional[selectedRegional] : null;
 
@@ -131,9 +164,6 @@ export default function AnalyticsResumoExecutivo() {
     setFeedbackSubmitted(true);
   };
 
-  const handleRegionalClick = (nome: string) => {
-    setSelectedRegional(prev => prev === nome ? null : nome);
-  };
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -175,9 +205,9 @@ export default function AnalyticsResumoExecutivo() {
 
       {/* Content: main + sidebar */}
       <div className="px-6 py-4 flex-1">
-        <div>
+        <div className="flex gap-3">
           {/* Main content */}
-          <div className="flex-1 space-y-3">
+          <div className="flex-1 min-w-0 space-y-3">
 
             {/* ═══ Linha 1: Score Compacto + 4 KPI Cards ═══ */}
             <div className="grid grid-cols-5 gap-3">
@@ -262,55 +292,6 @@ export default function AnalyticsResumoExecutivo() {
               </div>
             </div>
 
-            {/* ═══ Linha 3: Ranking ═══ */}
-            <div className="bg-card border border-border/50 rounded-xl p-4">
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="text-sm font-semibold">Ranking de Operações</h3>
-                {selectedRegional && (
-                  <button onClick={() => setSelectedRegional(null)} className="text-[11px] text-[#FF5722] hover:underline flex items-center gap-1">
-                    <Eraser size={12} /> Limpar seleção
-                  </button>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground mb-4">Score operacional por regional · clique para filtrar</p>
-              <div className="space-y-3">
-                {rankingOperacoes.map((op) => {
-                  const isSelected = selectedRegional === op.nome;
-                  const isDimmed = selectedRegional && !isSelected;
-                  return (
-                    <div
-                      key={op.nome}
-                      className={`flex items-center gap-4 cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all ${
-                        isSelected ? 'bg-orange-50 ring-1 ring-[#FF5722]/30' : 'hover:bg-muted/30'
-                      } ${isDimmed ? 'opacity-35' : ''}`}
-                      onClick={() => handleRegionalClick(op.nome)}
-                    >
-                      <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
-                      <div className="flex-1 bg-gray-100 rounded-full h-3 relative">
-                        <div
-                          className={`h-3 rounded-full transition-all ${
-                            op.score >= 85 ? "bg-green-500" :
-                            op.score >= 70 ? "bg-orange-400" :
-                            "bg-red-500"
-                          }`}
-                          style={{ width: `${op.score}%` }}
-                        />
-                      </div>
-                      <span className={`text-sm font-semibold min-w-[40px] text-right ${
-                        op.score >= 85 ? "text-green-600" :
-                        op.score >= 70 ? "text-orange-500" :
-                        "text-red-600"
-                      }`}>
-                        {op.score}
-                      </span>
-                      {op.tendencia === "melhorando" && <TrendingUp size={14} className="text-green-500" />}
-                      {op.tendencia === "estavel" && <Minus size={14} className="text-gray-400" />}
-                      {op.tendencia === "piorando" && <TrendingDown size={14} className="text-red-500" />}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* ═══ Linha 4: CTA Financeiro ═══ */}
             <div className="bg-surface border border-border/50 rounded-xl p-4 flex items-center justify-between">
@@ -386,6 +367,14 @@ export default function AnalyticsResumoExecutivo() {
               )}
             </div>
           </div>
+          {/* Sidebar */}
+          <GroupBySidebar
+            items={sidebarItems}
+            selectedRegional={selectedRegional}
+            onRegionalClick={handleRegionalClick}
+            groupBy={groupBy}
+            onGroupByChange={handleGroupByChange}
+          />
         </div>
       </div>
 
