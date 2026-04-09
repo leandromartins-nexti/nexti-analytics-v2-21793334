@@ -704,8 +704,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
   }, [groupBy]);
 
   const allScatterTratativa = useMemo(() => {
-    if (groupBy === "empresa") return empresaScatter.map(e => ({ ...e, dias: +(2 + (95 - e.qualidade) * 0.12).toFixed(1) }));
-    if (groupBy === "area") return areaScatter.map(e => ({ ...e, dias: +(2 + (95 - e.qualidade) * 0.12).toFixed(1) }));
+    if (groupBy === "empresa") return empresaScatter;
+    if (groupBy === "area") return areaScatter;
     return scatterTratativa;
   }, [groupBy]);
 
