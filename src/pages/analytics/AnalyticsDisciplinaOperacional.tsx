@@ -462,12 +462,18 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
   groupBy: GroupBy;
   onGroupByChange: (g: GroupBy) => void;
 }) {
-  const label = groupByOptions.find(o => o.id === groupBy)?.label ?? "";
+  const [search, setSearch] = useState("");
+  const filteredItems = useMemo(() => {
+    if (!search.trim()) return items;
+    const q = search.toLowerCase();
+    return items.filter(i => i.nome.toLowerCase().includes(q));
+  }, [items, search]);
+
   return (
     <div className="w-[220px] shrink-0">
       <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-xs font-semibold text-foreground">{label}</h3>
+          <h3 className="text-[11px] font-semibold text-foreground">Empresa / Un. Negócio / Área</h3>
           {selectedRegional && (
             <button onClick={() => onRegionalClick(selectedRegional)} className="text-[10px] text-[#FF5722] hover:underline flex items-center gap-1">
               <X size={10} /> Limpar
@@ -479,16 +485,27 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
           {groupByOptions.map(o => (
             <button
               key={o.id}
-              onClick={() => onGroupByChange(o.id)}
+              onClick={() => { onGroupByChange(o.id); setSearch(""); }}
               className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors ${groupBy === o.id ? "bg-[#FF5722] text-white border-[#FF5722]" : "text-muted-foreground border-border hover:border-[#FF5722]/40"}`}
             >
-              {o.id === "unidade" ? "UN" : o.id === "empresa" ? "Emp" : "Área"}
+              {o.short}
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-muted-foreground mb-2">Ordenado por score</p>
+        {/* Search */}
+        <div className="relative mb-2">
+          <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full pl-6 pr-2 py-1 text-[11px] rounded border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#FF5722]/40"
+          />
+        </div>
         <div className="space-y-0.5 overflow-y-auto flex-1">
-          {items.map((op) => {
+          {filteredItems.length === 0 && <p className="text-[10px] text-muted-foreground text-center py-2">Nenhum resultado</p>}
+          {filteredItems.map((op) => {
             const isSelected = selectedRegional === op.nome;
             const isDimmed = selectedRegional && !isSelected;
             const scoreColor = op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
@@ -498,8 +515,13 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
                 onClick={() => onRegionalClick(op.nome)}
                 className={`flex items-center gap-2 px-2 py-1 rounded-md cursor-pointer transition-all text-xs ${isSelected ? "bg-orange-50 ring-1 ring-[#FF5722]/30" : "hover:bg-muted/40"} ${isDimmed ? "opacity-35" : ""}`}
               >
-                <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
-                <span className={`font-bold tabular-nums ${scoreColor}`}>{op.score}</span>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" className="text-xs">{op.nome} — Score: {op.score}</TooltipContent>
+                </UITooltip>
+                <span className={`font-bold tabular-nums shrink-0 ${scoreColor}`}>{op.score}</span>
               </div>
             );
           })}
