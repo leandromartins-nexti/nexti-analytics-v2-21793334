@@ -130,9 +130,9 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
             <h4 className="text-sm font-semibold">Distribuição por Tipo de Evento</h4>
             <InfoTip text="Classificação baseada nos eventos reais de apuração gerados pela cobertura. Hora Regular indica coberturas que geraram apenas horas normais. Hora Extra indica coberturas onde houve eventos de HE." />
           </div>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie data={activeData.donut} cx="50%" cy="50%" innerRadius={55} outerRadius={90} dataKey="value" nameKey="name" label={({ value }) => `${value}%`}>
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart margin={{ top: 20, right: 20, bottom: 0, left: 20 }}>
+              <Pie data={activeData.donut} cx="50%" cy="45%" innerRadius={55} outerRadius={90} dataKey="value" nameKey="name" label={({ value }) => `${value}%`}>
                 {activeData.donut.map((e: any, i: number) => <Cell key={i} fill={e.cor} />)}
               </Pie>
               <RechartsTooltip formatter={(value: number, name: string) => [`${value}%`, name]} />
