@@ -164,9 +164,6 @@ export default function AnalyticsResumoExecutivo() {
     setFeedbackSubmitted(true);
   };
 
-  const handleRegionalClick = (nome: string) => {
-    setSelectedRegional(prev => prev === nome ? null : nome);
-  };
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
