@@ -514,10 +514,11 @@ function RankingFooter() {
 // Now also exposes paged items for charts
 type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: string) => void; onItemDetail?: (n: string) => void; groupBy: GroupBy; onGroupByChange: (g: GroupBy) => void };
 
-function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onGroupByChange, onPagedItemsChange }: {
+function GroupBySidebar({ items, selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange, onPagedItemsChange }: {
   items: { nome: string; score: number }[];
   selectedRegional: string | null;
   onRegionalClick: (n: string) => void;
+  onItemDetail?: (n: string) => void;
   groupBy: GroupBy;
   onGroupByChange: (g: GroupBy) => void;
   onPagedItemsChange?: (names: string[]) => void;
