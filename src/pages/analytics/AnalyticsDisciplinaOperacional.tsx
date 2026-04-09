@@ -840,7 +840,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
                     </div>
                   );
                 }} />
-                <Scatter data={scatterQualidade} shape={(props: any) => {
+                <Scatter data={chartScatterQual} shape={(props: any) => {
                   const { cx, cy, payload } = props;
                   const r = Math.sqrt(payload.headcount) / 4;
                   const fill = payload.qualidade >= 85 ? "#22c55e" : payload.qualidade >= 75 ? "#f97316" : "#ef4444";
@@ -881,7 +881,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
                     </div>
                   );
                 }} />
-                <Scatter data={scatterTratativa} shape={(props: any) => {
+                <Scatter data={chartScatterTrat} shape={(props: any) => {
                   const { cx, cy, payload } = props;
                   const r = Math.sqrt(payload.headcount) / 4;
                   const fill = payload.dias <= 5 ? "#22c55e" : payload.dias <= 7 ? "#f97316" : "#ef4444";
