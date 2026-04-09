@@ -465,6 +465,7 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortBy, setSortBy] = useState<"score" | "nome">("score");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 30;
 
@@ -486,17 +487,25 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
     setPage(1);
   };
 
+  const toggleSort = (col: "score" | "nome") => {
+    if (sortBy === col) setSortDir(d => d === "desc" ? "asc" : "desc");
+    else { setSortBy(col); setSortDir("desc"); }
+  };
+
   const filteredAndSorted = useMemo(() => {
-    let result = items;
+    let result = [...items];
     if (debouncedSearch.trim()) {
       const q = debouncedSearch.toLowerCase();
       result = result.filter(i => i.nome.toLowerCase().includes(q));
     }
+    const dir = sortDir === "desc" ? -1 : 1;
     if (sortBy === "nome") {
-      result = [...result].sort((a, b) => a.nome.localeCompare(b.nome));
+      result.sort((a, b) => dir * a.nome.localeCompare(b.nome));
+    } else {
+      result.sort((a, b) => dir * (a.score - b.score));
     }
     return result;
-  }, [items, debouncedSearch, sortBy]);
+  }, [items, debouncedSearch, sortBy, sortDir]);
 
   const totalPages = Math.ceil(filteredAndSorted.length / PAGE_SIZE);
   const showPagination = filteredAndSorted.length > PAGE_SIZE;
@@ -505,20 +514,12 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
   return (
     <div className="w-[220px] shrink-0">
       <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
-        <div className="flex items-center justify-between mb-1">
-          {selectedRegional ? (
+        <div className="flex items-center justify-end mb-1">
+          {selectedRegional && (
             <button onClick={() => onRegionalClick(selectedRegional)} className="text-[10px] text-[#FF5722] hover:underline flex items-center gap-1">
               <X size={10} /> Limpar
             </button>
-          ) : <span />}
-          <button
-            onClick={() => setSortBy(s => s === "score" ? "nome" : "score")}
-            className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-            title={sortBy === "score" ? "Ordenar por nome" : "Ordenar por score"}
-          >
-            <ArrowUpDown size={10} />
-            {sortBy === "score" ? "Score" : "A-Z"}
-          </button>
+          )}
         </div>
         {/* Group by selector */}
         <div className="flex gap-1 mb-1">
@@ -556,6 +557,15 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
             onChange={e => handleSearchChange(e.target.value)}
             className="w-full pl-6 pr-2 py-1 text-[11px] rounded border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#FF5722]/40"
           />
+        </div>
+        {/* Column headers with sort */}
+        <div className="flex items-center gap-2 px-2 mb-1">
+          <button onClick={() => toggleSort("nome")} className="flex-1 flex items-center gap-0.5 text-[10px] font-semibold text-muted-foreground hover:text-foreground">
+            Nome <ArrowUpDown size={9} className={sortBy === "nome" ? "text-[#FF5722]" : ""} />
+          </button>
+          <button onClick={() => toggleSort("score")} className="flex items-center gap-0.5 text-[10px] font-semibold text-muted-foreground hover:text-foreground">
+            Score <ArrowUpDown size={9} className={sortBy === "score" ? "text-[#FF5722]" : ""} />
+          </button>
         </div>
         <div className="space-y-0.5 overflow-y-auto flex-1">
           {pagedItems.length === 0 && <p className="text-[10px] text-muted-foreground text-center py-2">Nenhum resultado</p>}
