@@ -800,7 +800,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
                 }} />
                 <YAxis domain={[75, 95]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} />
                 <RechartsTooltip formatter={(v: number) => [`${v}%`, "Qualidade"]} />
-                <ReferenceLine y={qualidadeMedia} stroke="#9ca3af" strokeDasharray="6 4" label={{ value: `Média ${qualidadeMedia}%`, position: "right", fontSize: 10, fill: "#9ca3af" }} />
+                <ReferenceLine y={qualidadeMedia} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
                 <Line type="monotone" dataKey="value" stroke={selectedMes ? "#FF572244" : "#FF5722"} strokeWidth={2} dot={(props: any) => {
                   const { cx, cy, payload } = props;
                   const isSelected = selectedMes === payload.mes;
@@ -834,7 +834,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
                 }} />
                 <YAxis domain={[0, 12]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}d`} />
                 <RechartsTooltip formatter={(v: number) => [`${v} dias`, "Tempo Médio"]} />
-                <ReferenceLine y={tratativaMedia} stroke="#9ca3af" strokeDasharray="6 4" label={{ value: `Média ${tratativaMedia.toFixed(1)}d`, position: "right", fontSize: 10, fill: "#9ca3af" }} />
+                <ReferenceLine y={tratativaMedia} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
                 <Line type="monotone" dataKey="dias" stroke={selectedMes ? "#FF572244" : "#FF5722"} strokeWidth={2} dot={(props: any) => {
                   const { cx, cy, payload } = props;
                   const isSelected = selectedMes === payload.mes;
