@@ -380,11 +380,13 @@ function generatePostos(regional: string) {
     const seed = regional.length * 7 + i * 13;
     const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
     const qualidade = +(75 + frac * 20).toFixed(1);
+    const score = Math.round(qualidade);
     const volume = `${Math.round(5 + frac * 40)}K`;
     const headcount = Math.round(20 + frac * 200);
-    const tratativa = +(2 + frac * 8).toFixed(1);
-    const tendencia = qualidade >= 88 ? "melhorando" : qualidade >= 80 ? "estavel" : "piorando";
-    return { nome: `${p} - ${regional.slice(0, 3).toUpperCase()}${i + 1}`, qualidade, volume, headcount, tratativa, tendencia };
+    const varNum = +(-4 + frac * 8).toFixed(1);
+    const variacao = `${varNum > 0 ? "+" : ""}${varNum} pp`;
+    const corVariacao = varNum >= 0 ? "text-green-600" : "text-red-500";
+    return { nome: `${p} - ${regional.slice(0, 3).toUpperCase()}${i + 1}`, qualidade, score, volume, headcount, variacao, corVariacao };
   });
 }
 
@@ -394,11 +396,13 @@ function generateColaboradores(regional: string) {
     const seed = regional.length * 11 + i * 17;
     const r = Math.sin(seed) * 10000; const frac = r - Math.floor(r);
     const qualidade = +(70 + frac * 25).toFixed(1);
+    const score = Math.round(qualidade);
     const marcacoes = Math.round(100 + frac * 500);
     const inconsistencias = Math.round(frac * 15);
-    const tratativa = +(1 + frac * 10).toFixed(1);
-    const tendencia = qualidade >= 88 ? "melhorando" : qualidade >= 80 ? "estavel" : "piorando";
-    return { nome: n, qualidade, marcacoes, inconsistencias, tratativa, tendencia };
+    const varNum = +(-3 + frac * 9).toFixed(1);
+    const variacao = `${varNum > 0 ? "+" : ""}${varNum} pp`;
+    const corVariacao = varNum >= 0 ? "text-green-600" : "text-red-500";
+    return { nome: n, qualidade, score, marcacoes, inconsistencias, variacao, corVariacao };
   });
 }
 
