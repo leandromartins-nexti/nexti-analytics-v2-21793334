@@ -25,16 +25,6 @@ export default function AnalyticsLockedSection({ sectionName, sectionId, tabs }:
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
-      <header className="border-b border-border px-6 py-3 bg-white">
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-[#FF5722] font-medium cursor-pointer hover:underline" onClick={() => navigate("/analytics")}>Home</span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-[#FF5722] font-medium cursor-pointer hover:underline" onClick={() => navigate("/analytics")}>Analytics</span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground font-semibold">{sectionName}</span>
-        </div>
-      </header>
-
       <div className="bg-white px-6 py-3 border-b border-border flex items-center justify-between">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-sm">
