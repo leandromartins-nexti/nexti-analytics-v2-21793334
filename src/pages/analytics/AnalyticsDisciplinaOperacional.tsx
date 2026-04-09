@@ -512,12 +512,13 @@ function RankingFooter() {
 
 // ── Shared sidebar with groupBy selector ──
 // Now also exposes paged items for charts
-type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: string) => void; groupBy: GroupBy; onGroupByChange: (g: GroupBy) => void };
+type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: string) => void; onItemDetail?: (n: string) => void; groupBy: GroupBy; onGroupByChange: (g: GroupBy) => void };
 
-function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onGroupByChange, onPagedItemsChange }: {
+function GroupBySidebar({ items, selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange, onPagedItemsChange }: {
   items: { nome: string; score: number }[];
   selectedRegional: string | null;
   onRegionalClick: (n: string) => void;
+  onItemDetail?: (n: string) => void;
   groupBy: GroupBy;
   onGroupByChange: (g: GroupBy) => void;
   onPagedItemsChange?: (names: string[]) => void;
@@ -640,8 +641,10 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
             return (
               <div
                 key={op.nome}
-                onClick={() => onRegionalClick(op.nome)}
+                onClick={() => onItemDetail?.(op.nome)}
+                onContextMenu={(e) => { e.preventDefault(); onRegionalClick(op.nome); }}
                 className={`flex items-center gap-2 px-0.5 py-1 rounded-md cursor-pointer transition-all text-xs ${isSelected ? "bg-orange-50 border border-[#FF5722]/30" : "hover:bg-muted/40 border border-transparent"} ${isDimmed ? "opacity-35" : ""}`}
+                title="Clique para detalhes · Botão direito para filtrar"
               >
                 <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
                 <span className={`font-bold tabular-nums shrink-0 ${scoreColor}`}>{op.score}</span>
@@ -657,7 +660,7 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 1: Qualidade do Ponto
 // ══════════════════════════════════════════════════════════════
-function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
+function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
 
   const activeData = useMemo(() => {
@@ -681,7 +684,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
   }, [selectedRegional]);
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
-  const [detailRegional, setDetailRegional] = useState<string | null>(null);
+  
   const scoreColor = activeData.score >= 85 ? "text-green-600" : activeData.score >= 75 ? "text-orange-500" : "text-red-600";
   const scoreFaixa = activeData.score >= 85 ? "Bom" : activeData.score >= 75 ? "Atenção" : "Crítico";
 
@@ -940,9 +943,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
         </div>
       </div>
 
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
 
-      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
     </div>
   );
 }
@@ -950,7 +952,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 2: Absenteísmo
 // ══════════════════════════════════════════════════════════════
-function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
+function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return { taxa: 4.8, diff: "-0.6 pp", faltasNJ: "38%", turnover: "8.2%" };
     const r = absenteismoRegionais.find(x => x.nome === selectedRegional);
@@ -1031,7 +1033,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGrou
         </div>
       </div>
 
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} />
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} />
     </div>
   );
 }
@@ -1039,7 +1041,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGrou
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 3: Movimentações
 // ══════════════════════════════════════════════════════════════
-function MovimentacoesContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
+function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return { total: "23.0K", diff: "-18.3%", escala: "14.8K", posto: "8.2K" };
     const r = movimentacoesRegionais.find(x => x.nome === selectedRegional);
@@ -1123,7 +1125,7 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, groupBy, onGr
         </div>
       </div>
 
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} />
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} />
     </div>
   );
 }
@@ -1131,21 +1133,39 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, groupBy, onGr
 // ── Exported standalone tab wrappers ──
 export function QualidadeTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [detailRegional, setDetailRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
-  return <div className="px-6 py-4"><QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={setGroupBy} /></div>;
+  return (
+    <div className="px-6 py-4">
+      <QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={setGroupBy} />
+      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
+    </div>
+  );
 }
 
 export function AbsenteismoTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [detailRegional, setDetailRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
-  return <div className="px-6 py-4"><AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={setGroupBy} /></div>;
+  return (
+    <div className="px-6 py-4">
+      <AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={setGroupBy} />
+      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
+    </div>
+  );
 }
 
 export function MovimentacoesTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [detailRegional, setDetailRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
-  return <div className="px-6 py-4"><MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={setGroupBy} /></div>;
+  return (
+    <div className="px-6 py-4">
+      <MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={setGroupBy} />
+      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
+    </div>
+  );
 }
