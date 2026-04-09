@@ -1134,21 +1134,39 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail,
 // ── Exported standalone tab wrappers ──
 export function QualidadeTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [detailRegional, setDetailRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
-  return <div className="px-6 py-4"><QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={setGroupBy} /></div>;
+  return (
+    <div className="px-6 py-4">
+      <QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={setGroupBy} />
+      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
+    </div>
+  );
 }
 
 export function AbsenteismoTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [detailRegional, setDetailRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
-  return <div className="px-6 py-4"><AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={setGroupBy} /></div>;
+  return (
+    <div className="px-6 py-4">
+      <AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={setGroupBy} />
+      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
+    </div>
+  );
 }
 
 export function MovimentacoesTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [detailRegional, setDetailRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
-  return <div className="px-6 py-4"><MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={setGroupBy} /></div>;
+  return (
+    <div className="px-6 py-4">
+      <MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={setGroupBy} />
+      <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
+    </div>
+  );
 }
