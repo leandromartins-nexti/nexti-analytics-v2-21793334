@@ -133,7 +133,6 @@ const areaData = [
 
 // ── Generate scatter-compatible data from any entity list ──
 function toScatterData(items: { nome: string; qualidade: number; score: number }[]) {
-  // Use a seeded pseudo-random to spread volume across a wide range
   function seededRand(s: number) {
     const x = Math.sin(s * 9301 + 49297) * 49297;
     return x - Math.floor(x);
@@ -142,9 +141,12 @@ function toScatterData(items: { nome: string; qualidade: number; score: number }
     const r1 = seededRand(i * 7 + item.qualidade * 13);
     const r2 = seededRand(i * 11 + item.qualidade * 17);
     const r3 = seededRand(i * 19 + item.qualidade * 23);
-    const volume = Math.round(30000 + r1 * 250000); // 30K–280K spread
-    const headcount = Math.round(300 + r2 * 2700);   // 300–3000
-    const dias = +(1.5 + r3 * 8.5).toFixed(1);       // 1.5–10 days
+    const volume = Math.round(30000 + r1 * 250000);
+    const headcount = Math.round(300 + r2 * 2700);
+    // Items with lower quality → higher treatment time (more orange/red)
+    const baselineDias = item.qualidade < 60 ? 6.5 : item.qualidade < 75 ? 4.5 : item.qualidade < 85 ? 3.0 : 2.0;
+    const spread = item.qualidade < 70 ? 3.5 : 2.5;
+    const dias = +(baselineDias + r3 * spread).toFixed(1);
     return {
       regional: item.nome,
       volume,
