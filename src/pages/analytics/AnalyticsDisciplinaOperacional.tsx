@@ -383,42 +383,49 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
           </ResponsiveContainer>
         </div>
       </div>
-          <InfoTip text="Operações no quadrante inferior direito (alto volume, baixa qualidade) devem ser priorizadas." />
+
+      {/* Ranking */}
+      <div className="bg-card border border-border/50 rounded-xl p-4">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-sm font-semibold">Ranking de Qualidade por Regional</h3>
+          {selectedRegional && (
+            <button onClick={() => onRegionalClick(selectedRegional)} className="text-[11px] text-[#FF5722] hover:underline flex items-center gap-1">
+              <Eraser size={12} /> Limpar seleção
+            </button>
+          )}
         </div>
-        <p className="text-[10px] text-muted-foreground mb-2">Cada bolha representa uma operação. Tamanho = headcount</p>
-        <ResponsiveContainer width="100%" height={280}>
-          <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" dataKey="volume" name="Volume" tick={{ fontSize: 10 }} tickFormatter={v => `${(v / 1000).toFixed(0)}K`} label={{ value: "Volume de marcações", position: "insideBottom", offset: -5, fontSize: 10 }} />
-            <YAxis type="number" dataKey="qualidade" name="Qualidade" domain={[78, 92]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} label={{ value: "Qualidade (%)", angle: -90, position: "insideLeft", fontSize: 10 }} />
-            <ZAxis type="number" dataKey="headcount" range={[200, 800]} />
-            <ReferenceLine y={85} stroke="#9ca3af" strokeDasharray="6 4" label={{ value: "85% (Bom)", position: "right", fontSize: 9, fill: "#9ca3af" }} />
-            <ReferenceLine x={170000} stroke="#9ca3af" strokeDasharray="6 4" />
-            <RechartsTooltip content={({ active, payload }) => {
-              if (!active || !payload?.length) return null;
-              const d = payload[0].payload;
-              return (
-                <div className="bg-white border rounded-lg p-2 shadow-md text-xs">
-                  <p className="font-semibold">{d.regional}</p>
-                  <p>Volume: {(d.volume / 1000).toFixed(0)}K marcações</p>
-                  <p>Qualidade: {d.qualidade}%</p>
-                  <p>Headcount: {d.headcount}</p>
+        <p className="text-xs text-muted-foreground mb-4">Qualidade do ponto e pontualidade por regional · clique para filtrar</p>
+
+        <div className="flex items-center gap-4 mb-3 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-green-500" /> Registradas</div>
+          <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-orange-400" /> Justificadas</div>
+        </div>
+
+        <div className="space-y-3">
+          {qualidadeRegionais.map(op => {
+            const isSelected = selectedRegional === op.nome;
+            const isDimmed = selectedRegional && !isSelected;
+            const barColor = op.qualidade >= 85 ? "text-green-600" : op.qualidade >= 75 ? "text-orange-500" : "text-red-600";
+            return (
+              <div key={op.nome} className={`flex items-center gap-4 cursor-pointer rounded-lg px-2 py-1.5 -mx-2 transition-all ${isSelected ? "bg-orange-50 ring-1 ring-[#FF5722]/30" : "hover:bg-muted/30"} ${isDimmed ? "opacity-35" : ""}`} onClick={() => onRegionalClick(op.nome)}>
+                <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
+                <div className="flex-1 relative h-4">
+                  <RankingDashedGrid />
+                  <div className="absolute inset-0 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full flex">
+                      <UITooltip><TooltipTrigger asChild><div className="h-4 bg-green-500 transition-all cursor-default" style={{ width: `${op.registradas}%` }} /></TooltipTrigger><TooltipContent className="text-xs"><span className="font-semibold">Registradas</span>: {op.registradas}%</TooltipContent></UITooltip>
+                      <UITooltip><TooltipTrigger asChild><div className="h-4 bg-orange-400 transition-all cursor-default" style={{ width: `${op.justificadas}%` }} /></TooltipTrigger><TooltipContent className="text-xs"><span className="font-semibold">Justificadas</span>: {op.justificadas}%</TooltipContent></UITooltip>
+                    </div>
+                  </div>
                 </div>
-              );
-            }} />
-            <Scatter data={scatterQualidade} shape={(props: any) => {
-              const { cx, cy, payload } = props;
-              const r = Math.sqrt(payload.headcount) / 4;
-              const fill = payload.qualidade >= 85 ? "#22c55e" : payload.qualidade >= 75 ? "#f97316" : "#ef4444";
-              return (
-                <g>
-                  <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={0.7} stroke={fill} strokeWidth={1.5} />
-                  <text x={cx} y={cy - r - 4} textAnchor="middle" fontSize={9} fill="#374151">{payload.regional.replace("Regional ", "")}</text>
-                </g>
-              );
-            }} />
-          </ScatterChart>
-        </ResponsiveContainer>
+                <span className={`text-sm font-semibold min-w-[50px] text-right ${barColor}`}>{op.qualidade}%</span>
+                <span className="text-[11px] text-muted-foreground min-w-[50px] text-right">{op.atrasos}%</span>
+                <TrendIcon t={op.tendencia} />
+              </div>
+            );
+          })}
+        </div>
+        <RankingFooter />
       </div>
     </div>
   );
