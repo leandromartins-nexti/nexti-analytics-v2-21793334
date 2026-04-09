@@ -292,48 +292,76 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
         </div>
       </div>
 
+      {/* Filtro de competência ativo */}
+      {selectedMes && (
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#FF5722]/10 border border-[#FF5722]/30 rounded-lg w-fit">
+          <span className="text-xs font-medium text-[#FF5722]">Competência: {selectedMes}</span>
+          <button onClick={() => setSelectedMes(null)} className="text-[#FF5722] hover:text-[#FF5722]/70 text-xs font-bold">✕</button>
+        </div>
+      )}
+
       {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-card border border-border/50 rounded-xl p-4">
+        <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
           <h4 className="text-sm font-semibold mb-0.5">Evolução da Qualidade</h4>
-          <p className="text-[10px] text-muted-foreground mb-2">Por competência</p>
+          <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={qualidadeEvolucao} onClick={(e: any) => {
               if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
             }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
+              <XAxis dataKey="mes" tick={(props: any) => {
+                const { x, y, payload } = props;
+                const isActive = selectedMes === payload.value;
+                return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
+              }} />
               <YAxis domain={[75, 95]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} />
               <RechartsTooltip formatter={(v: number) => [`${v}%`, "Qualidade"]} />
               <ReferenceLine y={qualidadeMedia} stroke="#9ca3af" strokeDasharray="6 4" label={{ value: `Média ${qualidadeMedia}%`, position: "right", fontSize: 10, fill: "#9ca3af" }} />
-              <Line type="monotone" dataKey="value" stroke="#FF5722" strokeWidth={2} dot={(props: any) => {
+              <Line type="monotone" dataKey="value" stroke={selectedMes ? "#FF572244" : "#FF5722"} strokeWidth={2} dot={(props: any) => {
                 const { cx, cy, payload } = props;
-                const isActive = !selectedMes || selectedMes === payload.mes;
-                return <circle key={payload.mes} cx={cx} cy={cy} r={4} fill="#FF5722" stroke="#fff" strokeWidth={2} opacity={isActive ? 1 : 0.3} className="cursor-pointer" />;
+                const isSelected = selectedMes === payload.mes;
+                const isActive = !selectedMes || isSelected;
+                return (
+                  <g key={payload.mes} className="cursor-pointer">
+                    {isSelected && <circle cx={cx} cy={cy} r={10} fill="#FF5722" fillOpacity={0.15} stroke="#FF5722" strokeWidth={1} strokeDasharray="3 2" />}
+                    <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#FF5722" : isActive ? "#FF5722" : "#FF572255"} stroke="#fff" strokeWidth={2} />
+                  </g>
+                );
               }} activeDot={{ r: 6, stroke: "#FF5722", strokeWidth: 2, fill: "#fff" }} name="Qualidade" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-card border border-border/50 rounded-xl p-4">
+        <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
           <div className="flex items-center gap-1.5 mb-0.5">
             <h4 className="text-sm font-semibold">Evolução do Tempo de Tratativa</h4>
             <InfoTip text="Média de dias entre o registro da marcação e o ajuste." />
           </div>
-          <p className="text-[10px] text-muted-foreground mb-2">Média mensal em dias</p>
+          <p className="text-[10px] text-muted-foreground mb-2">Média mensal em dias · clique para filtrar</p>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={evolucaoTratativa} onClick={(e: any) => {
               if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
             }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
+              <XAxis dataKey="mes" tick={(props: any) => {
+                const { x, y, payload } = props;
+                const isActive = selectedMes === payload.value;
+                return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
+              }} />
               <YAxis domain={[0, 12]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}d`} />
               <RechartsTooltip formatter={(v: number) => [`${v} dias`, "Tempo Médio"]} />
               <ReferenceLine y={tratativaMedia} stroke="#9ca3af" strokeDasharray="6 4" label={{ value: `Média ${tratativaMedia.toFixed(1)}d`, position: "right", fontSize: 10, fill: "#9ca3af" }} />
-              <Line type="monotone" dataKey="dias" stroke="#FF5722" strokeWidth={2} dot={(props: any) => {
+              <Line type="monotone" dataKey="dias" stroke={selectedMes ? "#FF572244" : "#FF5722"} strokeWidth={2} dot={(props: any) => {
                 const { cx, cy, payload } = props;
-                const isActive = !selectedMes || selectedMes === payload.mes;
-                return <circle key={payload.mes} cx={cx} cy={cy} r={4} fill="#FF5722" stroke="#fff" strokeWidth={2} opacity={isActive ? 1 : 0.3} className="cursor-pointer" />;
+                const isSelected = selectedMes === payload.mes;
+                const isActive = !selectedMes || isSelected;
+                return (
+                  <g key={payload.mes} className="cursor-pointer">
+                    {isSelected && <circle cx={cx} cy={cy} r={10} fill="#FF5722" fillOpacity={0.15} stroke="#FF5722" strokeWidth={1} strokeDasharray="3 2" />}
+                    <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#FF5722" : isActive ? "#FF5722" : "#FF572255"} stroke="#fff" strokeWidth={2} />
+                  </g>
+                );
               }} activeDot={{ r: 6, stroke: "#FF5722", strokeWidth: 2, fill: "#fff" }} name="Dias" />
             </LineChart>
           </ResponsiveContainer>
