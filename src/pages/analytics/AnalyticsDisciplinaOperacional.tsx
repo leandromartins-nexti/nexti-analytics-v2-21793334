@@ -4,6 +4,7 @@ import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/componen
 import {
   ResponsiveContainer, LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
+  ScatterChart, Scatter, ZAxis,
 } from "recharts";
 
 // ── Shared helpers (same as Coberturas) ──
