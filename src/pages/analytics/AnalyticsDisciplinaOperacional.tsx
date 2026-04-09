@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Info, TrendingUp, TrendingDown, Minus, Eraser, AlertTriangle, ArrowUpRight, ArrowDownRight, X, ExternalLink, Search, ArrowUpDown } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -555,7 +555,11 @@ function GroupBySidebar({ items, selectedRegional, onRegionalClick, groupBy, onG
 
   const totalPages = Math.ceil(filteredAndSorted.length / PAGE_SIZE);
   const showPagination = filteredAndSorted.length > PAGE_SIZE;
-  const pagedItems = filteredAndSorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pagedItems = useMemo(() => filteredAndSorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), [filteredAndSorted, page]);
+
+  useEffect(() => {
+    onPagedItemsChange?.(pagedItems.map(i => i.nome));
+  }, [pagedItems, onPagedItemsChange]);
 
   return (
     <div className="w-[220px] shrink-0">
