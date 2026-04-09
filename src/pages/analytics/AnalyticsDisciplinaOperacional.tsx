@@ -475,7 +475,8 @@ function ModalTable<T extends Record<string, any>>({ data, columns, searchPlaceh
                 <th
                   key={col.key}
                   onClick={() => toggleSort(col.key)}
-                  className={`px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase cursor-pointer hover:text-foreground transition-colors ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}
+                  style={col.width ? { width: col.width } : undefined}
+                  className={`px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase cursor-pointer hover:text-foreground transition-colors whitespace-nowrap ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"}`}
                 >
                   <span className="inline-flex items-center gap-0.5">
                     {col.label}
