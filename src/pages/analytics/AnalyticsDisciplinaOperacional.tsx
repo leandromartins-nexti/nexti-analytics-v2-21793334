@@ -734,7 +734,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 2: Absenteísmo
 // ══════════════════════════════════════════════════════════════
-function AbsenteismoContent({ selectedRegional, onRegionalClick }: { selectedRegional: string | null; onRegionalClick: (n: string) => void }) {
+function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return { taxa: 4.8, diff: "-0.6 pp", faltasNJ: "38%", turnover: "8.2%" };
     const r = absenteismoRegionais.find(x => x.nome === selectedRegional);
