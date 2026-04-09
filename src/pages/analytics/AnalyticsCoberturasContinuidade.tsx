@@ -63,14 +63,18 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
         ausenciasCobertas: kpis.ausenciasCobertas,
         coberturasComHE: kpis.coberturasComHE,
         donut: distribuicaoTipoEvento,
+        melhorOperacao: { nome: "Regional SP", score: 88 },
+        maiorRisco: { nome: "Regional BA", score: 52, indicador: "Cobertura 41%" },
+        horaRegular: { valor: "68%", detalhe: "Estável vs anterior" },
+        horaExtra: { valor: "24%", detalhe: "+3.2 pp vs anterior" },
       };
     }
     const r = regionais.find((reg: any) => reg.nome === selectedRegional);
-    if (!r) return { score: coberturas.scoreEficiencia, scoreDiff: coberturas.scoreDiferenca, ausenciasCobertas: kpis.ausenciasCobertas, coberturasComHE: kpis.coberturasComHE, donut: distribuicaoTipoEvento };
+    if (!r) return { score: coberturas.scoreEficiencia, scoreDiff: coberturas.scoreDiferenca, ausenciasCobertas: kpis.ausenciasCobertas, coberturasComHE: kpis.coberturasComHE, donut: distribuicaoTipoEvento, melhorOperacao: { nome: "Regional SP", score: 88 }, maiorRisco: { nome: "Regional BA", score: 52, indicador: "Cobertura 41%" }, horaRegular: { valor: "68%", detalhe: "Estável vs anterior" }, horaExtra: { valor: "24%", detalhe: "+3.2 pp vs anterior" } };
     return {
       score: r.score,
       scoreDiff: Math.round((r.score - coberturas.scoreEficiencia) + coberturas.scoreDiferenca),
-      ausenciasCobertas: Math.round(r.regular * 1.24), // derived
+      ausenciasCobertas: Math.round(r.regular * 1.24),
       coberturasComHE: r.he,
       donut: [
         { name: "Hora Regular", value: r.regular, cor: "#22c55e" },
@@ -78,6 +82,10 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
         { name: "Falta", value: r.falta, cor: "#f97316" },
         { name: "Atrasos", value: r.atrasos, cor: "#eab308" },
       ],
+      melhorOperacao: { nome: r.nome, score: r.score },
+      maiorRisco: { nome: "Regional BA", score: 52, indicador: `HE ${r.he}%` },
+      horaRegular: { valor: `${r.regular}%`, detalhe: "Cobertura regular" },
+      horaExtra: { valor: `${r.he}%`, detalhe: "Cobertura com HE" },
     };
   }, [selectedRegional, regionais, kpis, distribuicaoTipoEvento]);
 
