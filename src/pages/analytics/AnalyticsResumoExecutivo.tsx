@@ -100,6 +100,7 @@ export default function AnalyticsResumoExecutivo() {
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
 
   const regionalData = selectedRegional ? dadosPorRegional[selectedRegional] : null;
 
