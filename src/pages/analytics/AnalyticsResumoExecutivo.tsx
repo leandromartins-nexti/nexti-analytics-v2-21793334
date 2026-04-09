@@ -367,6 +367,14 @@ export default function AnalyticsResumoExecutivo() {
               )}
             </div>
           </div>
+          {/* Sidebar */}
+          <GroupBySidebar
+            items={sidebarItems}
+            selectedRegional={selectedRegional}
+            onRegionalClick={handleRegionalClick}
+            groupBy={groupBy}
+            onGroupByChange={handleGroupByChange}
+          />
         </div>
       </div>
 
