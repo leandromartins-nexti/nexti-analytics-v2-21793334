@@ -720,20 +720,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
   const avgTratDias = useMemo(() => chartScatterTrat.length ? +(chartScatterTrat.reduce((s, d) => s + d.dias, 0) / chartScatterTrat.length).toFixed(1) : 4.5, [chartScatterTrat]);
 
   // Dynamic axis domains with 10% padding
-  // Build nice axis domain with even tick spacing
-  const TICK_COUNT = 7;
-  const niceAxis = (rawMin: number, rawMax: number) => {
-    const range = rawMax - rawMin || 1;
-    const rawStep = range / (TICK_COUNT - 1);
-    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
-    // Prefer smaller steps to avoid overshooting
-    const candidates = [1, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10].map(m => m * magnitude);
-    const step = candidates.find(s => s >= rawStep) || candidates[candidates.length - 1];
-    const nMin = Math.floor(rawMin / step) * step;
-    // Find smallest tick count that covers the data (min 5 ticks)
-    let ticks = TICK_COUNT - 1;
-    while (nMin + step * ticks < rawMax && ticks < 10) ticks++;
-    return { min: Math.max(0, nMin), max: nMin + step * ticks };
+  // Round volume axis to nearest 50K multiple, with minimal overshoot
+  const niceVolAxis = (rawMin: number, rawMax: number) => {
+    const pad = (rawMax - rawMin) * 0.08 || 10000;
+    const lo = rawMin - pad;
+    const hi = rawMax + pad;
+    // Choose step: 10K for small ranges, 25K for medium, 50K for large
+    const range = hi - lo;
+    const step = range <= 100000 ? 10000 : range <= 200000 ? 25000 : 50000;
+    return { min: Math.max(0, Math.floor(lo / step) * step), max: Math.ceil(hi / step) * step };
   };
 
   const qualDomain = useMemo(() => {
