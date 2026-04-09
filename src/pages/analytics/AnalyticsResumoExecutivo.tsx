@@ -183,10 +183,6 @@ export default function AnalyticsResumoExecutivo() {
             <div className="grid grid-cols-5 gap-3">
               <ScoreBoard title="Score Operacional" tooltip="Índice de saúde da operação calculado a partir de 5 indicadores: qualidade do ponto, absenteísmo, volume de horas extras, movimentações e cobertura efetiva. Pesos configuráveis em Configuração.">
                 <ScoreGauge score={activeScore} label={`${activeScore}`} faixa={activeFaixa} />
-                <div className="flex items-center justify-center gap-1 mt-1">
-                  <TrendingUp size={12} className="text-green-500" />
-                  <span className="text-[11px] font-medium text-green-600">+{activeDiff} vs anterior</span>
-                </div>
               </ScoreBoard>
               <KPIBoard title="Melhor Operação" tooltip="Operação com maior score operacional no período" value={resumo.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${resumo.melhorOperacao.score} · Alta`} />
               <KPIBoard title="Maior Risco" tooltip="Operação com menor score e maior concentração de risco" value={resumo.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${resumo.maiorRisco.score} · ${resumo.maiorRisco.indicador}`} />
