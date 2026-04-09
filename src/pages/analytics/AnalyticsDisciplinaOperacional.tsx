@@ -131,6 +131,25 @@ const areaData = [
   { nome: "ROTA - SOO - DS43", qualidade: 46.3, score: 46 },
 ].map(e => ({ ...e, tendencia: e.qualidade >= 88 ? "melhorando" : e.qualidade >= 85 ? "estavel" : "piorando" }));
 
+// ── Generate scatter-compatible data from any entity list ──
+function toScatterData(items: { nome: string; qualidade: number; score: number }[]) {
+  return items.map((item, i) => {
+    const seed = item.qualidade * 1000 + i;
+    const volume = Math.round(50000 + (item.qualidade - 40) * 3500 + (seed % 80000));
+    const headcount = Math.round(volume / 100 + (seed % 500));
+    const dias = +(2 + (95 - item.qualidade) * 0.12 + ((seed % 30) / 10)).toFixed(1);
+    return {
+      regional: item.nome,
+      volume,
+      qualidade: item.qualidade,
+      headcount,
+      dias,
+    };
+  });
+}
+const empresaScatter = toScatterData(empresaData);
+const areaScatter = toScatterData(areaData);
+
 // ── Scatter data (source of truth for all 30 regionals) ──
 const scatterQualidade = [
   { regional: "Novo Hamburgo", volume: 268000, qualidade: 89.2, headcount: 2800 },
