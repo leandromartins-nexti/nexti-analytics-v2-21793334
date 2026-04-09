@@ -195,15 +195,17 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
                   onClick={() => handleRegionalClick(op.nome)}
                 >
                   <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
-                  <div className="flex-1 bg-gray-100 rounded-full h-4 relative overflow-hidden">
-                    {/* Dashed grid lines at every 20% */}
-                    {[20, 40, 60, 80].map(p => (
-                      <div
-                        key={p}
-                        className="absolute top-0 bottom-0 z-10 pointer-events-none"
-                        style={{ left: `${p}%`, borderLeft: '1px dashed rgba(0,0,0,0.15)' }}
-                      />
-                    ))}
+                  <div className="flex-1 rounded-full h-4 relative overflow-hidden"
+                    style={{
+                      background: `
+                        repeating-linear-gradient(to bottom, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 2px, transparent 2px, transparent 5px) 20% 0 / 1px 100% no-repeat,
+                        repeating-linear-gradient(to bottom, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 2px, transparent 2px, transparent 5px) 40% 0 / 1px 100% no-repeat,
+                        repeating-linear-gradient(to bottom, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 2px, transparent 2px, transparent 5px) 60% 0 / 1px 100% no-repeat,
+                        repeating-linear-gradient(to bottom, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 2px, transparent 2px, transparent 5px) 80% 0 / 1px 100% no-repeat,
+                        #f3f4f6
+                      `,
+                    }}
+                  >
                     <div className="relative h-full flex">
                       {[
                         { pct: op.regular, hours: op.regularH, label: "Hora Regular", bg: "bg-green-500" },
