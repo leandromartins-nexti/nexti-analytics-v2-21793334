@@ -14,28 +14,6 @@ export default function AnalyticsLockedPage() {
 
   return (
     <div className="bg-[hsl(var(--surface))] min-h-screen flex flex-col">
-      <header className="border-b border-border px-6 py-3 bg-[hsl(var(--surface))]">
-        <div className="flex items-center gap-2 text-sm">
-          <span
-            className="text-[#FF5722] font-medium cursor-pointer hover:underline"
-            onClick={() => navigate("/analytics")}
-          >
-            Home
-          </span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span
-            className="text-[#FF5722] font-medium cursor-pointer hover:underline"
-            onClick={() => navigate("/analytics")}
-          >
-            Analytics
-          </span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-muted-foreground">{tab.grupo}</span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground font-semibold">{tab.nome}</span>
-        </div>
-      </header>
-
       <div className="px-6 py-4 flex-1">
         <LockedTabOverlay nome={tab.nome} descricao={tab.descricao} />
       </div>
