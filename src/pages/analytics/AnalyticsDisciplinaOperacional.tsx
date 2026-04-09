@@ -899,7 +899,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, groupBy, onGroupB
         </div>
       </div>
 
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} />
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
 
       <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
     </div>
