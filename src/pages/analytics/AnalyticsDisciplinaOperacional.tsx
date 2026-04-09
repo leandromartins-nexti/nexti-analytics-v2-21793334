@@ -502,17 +502,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload;
                 return (
-                  <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs">
+                  <div className="bg-white border rounded-lg p-2 shadow-md text-xs">
                     <p className="font-semibold">{d.regional}</p>
                     <p>Volume: {(d.volume / 1000).toFixed(0)}K marcações</p>
                     <p>Qualidade: {d.qualidade}%</p>
                     <p>Headcount: {d.headcount}</p>
-                    <button
-                      className="mt-1.5 flex items-center gap-1 text-[#FF5722] font-medium hover:underline"
-                      onMouseDown={(e) => { e.stopPropagation(); setDetailRegional(d.regional); }}
-                    >
-                      <ExternalLink size={10} /> Ver detalhes
-                    </button>
                   </div>
                 );
               }} />
@@ -549,17 +543,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload;
                 return (
-                  <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs">
+                  <div className="bg-white border rounded-lg p-2 shadow-md text-xs">
                     <p className="font-semibold">{d.regional}</p>
                     <p>Volume: {(d.volume / 1000).toFixed(0)}K marcações</p>
                     <p>Tempo: {d.dias} dias</p>
                     <p>Headcount: {d.headcount}</p>
-                    <button
-                      className="mt-1.5 flex items-center gap-1 text-[#FF5722] font-medium hover:underline"
-                      onMouseDown={(e) => { e.stopPropagation(); setDetailRegional(d.regional); }}
-                    >
-                      <ExternalLink size={10} /> Ver detalhes
-                    </button>
                   </div>
                 );
               }} />
@@ -617,6 +605,13 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
                 <span className={`text-sm font-semibold min-w-[50px] text-right ${barColor}`}>{op.qualidade}%</span>
                 <span className="text-[11px] text-muted-foreground min-w-[50px] text-right">{op.atrasos}%</span>
                 <TrendIcon t={op.tendencia} />
+                <button
+                  onClick={(e) => { e.stopPropagation(); setDetailRegional(op.nome); }}
+                  className="p-1 rounded hover:bg-muted/50 text-muted-foreground hover:text-[#FF5722] transition-colors"
+                  title="Ver detalhes"
+                >
+                  <ExternalLink size={13} />
+                </button>
               </div>
             );
           })}
