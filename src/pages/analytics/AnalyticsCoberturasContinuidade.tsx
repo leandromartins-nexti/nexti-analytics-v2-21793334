@@ -175,9 +175,9 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
         {/* Legend */}
         <div className="flex items-center gap-4 mb-3 text-[10px] text-muted-foreground">
           <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-green-500" /> Hora Regular</div>
-          <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Hora Extra</div>
-          <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-orange-400" /> Falta</div>
           <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-yellow-400" /> Atrasos</div>
+          <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-orange-400" /> Falta</div>
+          <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Hora Extra</div>
         </div>
 
         <div className="space-y-3">
@@ -197,9 +197,9 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
                 {/* Stacked bar by event type */}
                 <div className="flex-1 bg-gray-100 rounded-full h-3 relative overflow-hidden flex">
                   <div className="h-3 bg-green-500 transition-all" style={{ width: `${op.regular}%` }} />
-                  <div className="h-3 bg-red-500 transition-all" style={{ width: `${op.he}%` }} />
-                  <div className="h-3 bg-orange-400 transition-all" style={{ width: `${op.falta}%` }} />
                   <div className="h-3 bg-yellow-400 transition-all" style={{ width: `${op.atrasos}%` }} />
+                  <div className="h-3 bg-orange-400 transition-all" style={{ width: `${op.falta}%` }} />
+                  <div className="h-3 bg-red-500 transition-all" style={{ width: `${op.he}%` }} />
                 </div>
                 <span className={`text-sm font-semibold min-w-[40px] text-right ${barScoreColor}`}>
                   {op.score}
