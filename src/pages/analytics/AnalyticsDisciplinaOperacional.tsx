@@ -953,7 +953,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 2: Absenteísmo
 // ══════════════════════════════════════════════════════════════
-function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
+function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return { taxa: 4.8, diff: "-0.6 pp", faltasNJ: "38%", turnover: "8.2%" };
     const r = absenteismoRegionais.find(x => x.nome === selectedRegional);
@@ -1034,7 +1034,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGrou
         </div>
       </div>
 
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} />
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} />
     </div>
   );
 }
@@ -1042,7 +1042,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, groupBy, onGrou
 // ══════════════════════════════════════════════════════════════
 // Sub-aba 3: Movimentações
 // ══════════════════════════════════════════════════════════════
-function MovimentacoesContent({ selectedRegional, onRegionalClick, groupBy, onGroupByChange }: ContentProps) {
+function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const activeData = useMemo(() => {
     if (!selectedRegional) return { total: "23.0K", diff: "-18.3%", escala: "14.8K", posto: "8.2K" };
     const r = movimentacoesRegionais.find(x => x.nome === selectedRegional);
@@ -1126,7 +1126,7 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, groupBy, onGr
         </div>
       </div>
 
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} groupBy={groupBy} onGroupByChange={onGroupByChange} />
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} />
     </div>
   );
 }
