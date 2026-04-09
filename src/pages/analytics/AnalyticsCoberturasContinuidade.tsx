@@ -180,21 +180,7 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
           <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Hora Extra</div>
         </div>
 
-        <div className="relative">
-          {/* Dashed grid lines spanning all rows */}
-          <div className="absolute inset-0 pointer-events-none" style={{ left: 136, right: 72 }}>
-            {[0, 20, 40, 60, 80, 100].map(p => (
-              <div
-                key={p}
-                className="absolute top-0 bottom-6"
-                style={{
-                  left: `${p}%`,
-                  borderLeft: '1px dashed rgba(0,0,0,0.12)',
-                }}
-              />
-            ))}
-          </div>
-
+        <div>
           <div className="space-y-3">
             {regionais.map((op: any) => {
               const isSelected = selectedRegional === op.nome;
@@ -210,6 +196,14 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
                 >
                   <span className="text-sm font-medium min-w-[120px]">{op.nome}</span>
                   <div className="flex-1 bg-gray-100 rounded-full h-4 relative overflow-hidden">
+                    {/* Dashed grid lines at every 20% */}
+                    {[20, 40, 60, 80].map(p => (
+                      <div
+                        key={p}
+                        className="absolute top-0 bottom-0 z-10 pointer-events-none"
+                        style={{ left: `${p}%`, borderLeft: '1px dashed rgba(0,0,0,0.15)' }}
+                      />
+                    ))}
                     <div className="relative h-full flex">
                       {[
                         { pct: op.regular, hours: op.regularH, label: "Hora Regular", bg: "bg-green-500" },
