@@ -463,6 +463,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick }: { selectedRegio
         </div>
       </div>
 
+function abreviar(nome: string): string {
+  const words = nome.replace(/[-–]/g, " ").split(/\s+/).filter(w => w.length > 1);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return nome.slice(0, 2).toUpperCase();
+}
 
       {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
       <div className="grid grid-cols-2 gap-3">
