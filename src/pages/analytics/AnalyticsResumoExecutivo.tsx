@@ -5,7 +5,7 @@ import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import { useNavigate } from "react-router-dom";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
-import { getSidebarItems, getQualidadeKpiSummary, aggregateQualidadeEvolucao, formatMesLabel } from "@/lib/ajustesData";
+import { getSidebarItems, getQualidadeKpiSummary, ajustesMeses, formatMesLabel } from "@/lib/ajustesData";
 import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import {
   ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
