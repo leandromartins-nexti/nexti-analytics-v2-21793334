@@ -10,7 +10,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
   ScatterChart, Scatter, ZAxis, Cell,
 } from "recharts";
-import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao, aggregateQualidadeEvolucaoDetalhado } from "@/lib/ajustesData";
+import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao, aggregateQualidadeEvolucaoDetalhado, aggregateQualidadeVolume } from "@/lib/ajustesData";
 
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
@@ -30,12 +30,14 @@ function abreviar(nome: string): string {
 // ── Re-export GroupBy from shared component ──
 import GroupBySidebar, { type GroupBy, groupByOptions } from "@/components/analytics/GroupBySidebar";
 
-// ── Empresa data from real JSON entities ──
-const empresaData = ajustesEmpresas.map((e, i) => {
-  const quals = [89.0, 82.1, 77.3];
-  const q = quals[i % quals.length];
-  return { nome: e.name, qualidade: q, score: Math.round(q), tendencia: q >= 88 ? "melhorando" : q >= 85 ? "estavel" : "piorando" };
-});
+// ── Empresa data from real aggregated quality ──
+const empresaDataFromReal = aggregateQualidadeVolume(null);
+const empresaData = empresaDataFromReal.map(e => ({
+  nome: e.regional,
+  qualidade: e.qualidade,
+  score: Math.round(e.qualidade),
+  tendencia: e.qualidade >= 88 ? "melhorando" as const : e.qualidade >= 75 ? "estavel" as const : "piorando" as const,
+}));
 
 // ── Área data from real JSON entities ──
 const areaData = ajustesAreas.map((a, i) => {
@@ -608,10 +610,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [groupBy]);
 
   const allScatter = useMemo(() => {
-    if (groupBy === "empresa") return empresaScatter;
+    if (groupBy === "empresa") return aggregateQualidadeVolume(selectedReferenceMonth);
     if (groupBy === "area") return areaScatter;
     return scatterQualidade;
-  }, [groupBy]);
+  }, [groupBy, selectedReferenceMonth]);
 
   const allScatterTratativa = useMemo(() => aggregateAjustes(selectedReferenceMonth, groupBy), [selectedReferenceMonth, groupBy]);
 
@@ -984,7 +986,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               <h4 className="text-sm font-semibold">Qualidade vs Volume</h4>
               <InfoTip text="Operações no quadrante inferior direito (alto volume, baixa qualidade) devem ser priorizadas." />
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Por operação · tamanho = headcount</p>
+            <p className="text-[10px] text-muted-foreground mb-2">Por operação · tamanho = headcount{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
             <ResponsiveContainer width="100%" height={280}>
               <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" />
