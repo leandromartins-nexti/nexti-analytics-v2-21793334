@@ -8,7 +8,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
   ScatterChart, Scatter, ZAxis,
 } from "recharts";
-import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas } from "@/lib/ajustesData";
+import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao } from "@/lib/ajustesData";
 
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
@@ -144,14 +144,7 @@ const scatterTratativa = [
   { regional: "Unidade de Negócios", volume: 110000, dias: 7.0, headcount: 850 },
 ];
 
-// ── Qualidade do Ponto ──
-const qualidadeEvolucao = [
-  { mes: "abr/25", value: 83.2 }, { mes: "mai/25", value: 84.1 }, { mes: "jun/25", value: 84.5 },
-  { mes: "jul/25", value: 85.0 }, { mes: "ago/25", value: 85.3 }, { mes: "set/25", value: 85.8 },
-  { mes: "out/25", value: 86.2 }, { mes: "nov/25", value: 86.5 }, { mes: "dez/25", value: 86.1 },
-  { mes: "jan/26", value: 87.0 }, { mes: "fev/26", value: 87.8 }, { mes: "mar/26", value: 87.3 },
-];
-const qualidadeMedia = 85.7;
+// qualidadeEvolucao is now computed dynamically inside QualidadeContent via aggregateQualidadeEvolucao
 
 // Derive all 30 regionais from scatter data
 const qualidadeRegionais = scatterQualidade.map(sq => {
