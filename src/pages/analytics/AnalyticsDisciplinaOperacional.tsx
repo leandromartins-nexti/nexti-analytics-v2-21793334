@@ -30,12 +30,14 @@ function abreviar(nome: string): string {
 // ── Re-export GroupBy from shared component ──
 import GroupBySidebar, { type GroupBy, groupByOptions } from "@/components/analytics/GroupBySidebar";
 
-// ── Empresa data from real JSON entities ──
-const empresaData = ajustesEmpresas.map((e, i) => {
-  const quals = [89.0, 82.1, 77.3];
-  const q = quals[i % quals.length];
-  return { nome: e.name, qualidade: q, score: Math.round(q), tendencia: q >= 88 ? "melhorando" : q >= 85 ? "estavel" : "piorando" };
-});
+// ── Empresa data from real aggregated quality ──
+const empresaDataFromReal = aggregateQualidadeVolume(null);
+const empresaData = empresaDataFromReal.map(e => ({
+  nome: e.regional,
+  qualidade: e.qualidade,
+  score: Math.round(e.qualidade),
+  tendencia: e.qualidade >= 88 ? "melhorando" as const : e.qualidade >= 75 ? "estavel" as const : "piorando" as const,
+}));
 
 // ── Área data from real JSON entities ──
 const areaData = ajustesAreas.map((a, i) => {
