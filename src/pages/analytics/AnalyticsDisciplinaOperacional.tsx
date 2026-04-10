@@ -661,11 +661,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const mais15dColor = activeData.mais15DiaPct <= 10 ? "text-green-600" : activeData.mais15DiaPct <= 25 ? "text-orange-500" : "text-red-600";
 
   return (
-    <div className="flex gap-3">
-      {/* Left: KPI cards + charts */}
-      <div className="flex-1 min-w-0 space-y-3">
-        {/* Linha 1: 5 KPI Cards */}
-        <div className="grid grid-cols-5 gap-3">
+    <div className="space-y-3">
+      {/* Linha 1: 5 KPI Cards - full width */}
+      <div className="grid grid-cols-5 gap-3">
           <ScoreBoard title="Qualidade do Ponto" tooltip="Score composto considerando qualidade das marcações e tempo de tratativa dos ajustes.">
             <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} />
           </ScoreBoard>
