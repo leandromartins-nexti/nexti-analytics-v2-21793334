@@ -572,6 +572,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     () => qualidadeEvolucaoReal.length ? +(qualidadeEvolucaoReal.reduce((s, d) => s + d.value, 0) / qualidadeEvolucaoReal.length).toFixed(1) : 85,
     [qualidadeEvolucaoReal]
   );
+  const qualidadeDetalhado = useMemo(
+    () => aggregateQualidadeEvolucaoDetalhado(selectedRegional, groupBy as any),
+    [selectedRegional, groupBy]
+  );
+  const showDetalhado = chartMode === "bar" && groupBy === "area";
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
