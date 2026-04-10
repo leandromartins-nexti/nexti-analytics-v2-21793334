@@ -405,6 +405,9 @@ export default function OnboardingTour() {
 
   // Check if should show on mount or restart requested
   useEffect(() => {
+    // Don't interrupt an active tour
+    if (phase === "touring" || phase === "completed") return;
+
     const restart = localStorage.getItem(RESTART_KEY);
     if (restart === "true") {
       localStorage.removeItem(RESTART_KEY);
@@ -418,7 +421,7 @@ export default function OnboardingTour() {
         setPhase("welcome");
       }
     }
-  }, [location.pathname]);
+  }, [location.pathname, phase]);
 
   // Update target rect when step changes, navigate if needed
   useEffect(() => {
