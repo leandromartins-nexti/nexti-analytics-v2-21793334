@@ -93,8 +93,8 @@ export default function GroupBySidebar({
   // ── Collapsed mode ──
   if (collapsed) {
     return (
-      <div className="w-[52px] shrink-0">
-        <div className="bg-card border border-border/50 rounded-xl p-1.5 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col items-center gap-1">
+      <div className="w-[52px] shrink-0 self-stretch">
+        <div className="bg-white border-l border-border/40 p-1.5 h-full flex flex-col items-center gap-1">
           {/* Expand button */}
           <button
             onClick={() => setCollapsed(false)}
