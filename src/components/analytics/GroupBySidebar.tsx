@@ -35,6 +35,7 @@ export default function GroupBySidebar({
   onGroupByChange,
   onPagedItemsChange,
   pageSize = 25,
+  horizontal = false,
 }: GroupBySidebarProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
