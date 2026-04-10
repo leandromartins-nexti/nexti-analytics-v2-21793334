@@ -479,7 +479,7 @@ export default function AnalyticsDisciplinaOperacional({ embedded }: { embedded?
 
   const content = (
     <div className="flex flex-1 min-h-0">
-      <div className="flex-1 min-w-0 px-6 py-4 space-y-3">
+      <div className="flex-1 min-w-0 pl-6 py-4 space-y-3 overflow-y-auto">
         {/* Sub-tab toggle */}
         <div className="flex gap-2">
           {subTabs.map(t => (
@@ -663,7 +663,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const mais15dColor = activeData.mais15DiaPct <= 10 ? "text-green-600" : activeData.mais15DiaPct <= 25 ? "text-orange-500" : "text-red-600";
 
   return (
-    <div className="flex gap-3">
+    <div className="flex">
       {/* Left: KPI cards + charts */}
       <div className="flex-1 min-w-0 space-y-3">
         {/* Linha 1: 5 KPI Cards */}
