@@ -655,23 +655,29 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     return { xMin: x.min, xMax: x.max, yMin: y.min, yMax: y.max };
   }, [chartScatterTrat]);
 
-  return (
-    <div className="flex gap-3">
-      {/* Main content */}
-      <div className="flex-1 min-w-0 space-y-3">
-        {/* Linha 1: Score + 4 KPI Cards */}
-        <div className="grid grid-cols-5 gap-3">
-          <ScoreBoard title="Qualidade do Ponto" tooltip="Percentual de marcações registradas corretamente vs total de marcações que exigiram intervenção (justificativas manuais).">
-            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} />
-          </ScoreBoard>
-          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${activeData.melhorOperacao.score} · ${activeData.melhorOperacao.score >= 85 ? "Alta" : activeData.melhorOperacao.score >= 70 ? "Média" : "Baixa"}`} />
-          <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${activeData.maiorRisco.score} · ${activeData.maiorRisco.indicador}`} />
-          <KPIBoard title="Registradas" tooltip="Total de marcações registradas pelo colaborador sem necessidade de ajuste." value={activeData.registradas} valueColor="text-green-600" />
-          <KPIBoard title="Justificadas" tooltip="Total de marcações que foram justificadas manualmente pelo operador ou gestor." value={activeData.justificadas} valueColor="text-orange-500" />
-        </div>
+  const qualColor = activeData.qualidadePct >= 85 ? "text-green-600" : activeData.qualidadePct >= 70 ? "text-orange-500" : "text-red-600";
+  const tempoColor = activeData.tempoMedioDias < 3 ? "text-green-600" : activeData.tempoMedioDias <= 7 ? "text-orange-500" : "text-red-600";
+  const ate1dColor = activeData.ate1DiaPct >= 50 ? "text-green-600" : activeData.ate1DiaPct >= 30 ? "text-orange-500" : "text-red-600";
 
-        {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
-        <div className="grid grid-cols-2 gap-3">
+  return (
+    <div className="space-y-3">
+      {/* Linha 1: 6 KPI Cards */}
+      <div className="grid grid-cols-6 gap-3">
+        <ScoreBoard title="Qualidade do Ponto" tooltip="Score composto considerando qualidade das marcações e tempo de tratativa dos ajustes.">
+          <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} />
+        </ScoreBoard>
+        <KPIBoard title="Qualidade" tooltip="Percentual de marcações registradas corretamente, sem necessidade de ajuste." value={`${activeData.qualidadePct}%`} valueColor={qualColor} />
+        <KPIBoard title="Tempo Médio" tooltip="Tempo médio em dias entre a marcação original e o ajuste pelo operador." value={`${activeData.tempoMedioDias} dias`} valueColor={tempoColor} />
+        <KPIBoard title="Até 1 Dia" tooltip="Percentual dos ajustes de ponto tratados em menos de 24 horas." value={`${activeData.ate1DiaPct}%`} valueColor={ate1dColor} />
+        <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${activeData.melhorOperacao.score} · ${activeData.melhorOperacao.score >= 85 ? "Alta" : activeData.melhorOperacao.score >= 70 ? "Média" : "Baixa"}`} />
+        <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${activeData.maiorRisco.score} · ${activeData.maiorRisco.indicador}`} />
+      </div>
+
+      {/* Linha 2: Painel GroupBy horizontal */}
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} horizontal />
+
+      {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
+      <div className="grid grid-cols-2 gap-3">
           <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
             <div className="flex items-center justify-between mb-0.5">
               <div>
@@ -1073,11 +1079,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ScatterChart>
             </ResponsiveContainer>
           </div>
-        </div>
       </div>
-
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
-
     </div>
   );
 }
