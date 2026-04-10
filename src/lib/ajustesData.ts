@@ -811,6 +811,9 @@ export function getQualidadeKpiSummary(
   diff: string;
   registradas: string;
   justificadas: string;
+  qualidadePct: number;
+  tempoMedioDias: number;
+  ate1DiaPct: number;
   melhorOperacao: { nome: string; score: number };
   maiorRisco: { nome: string; score: number; indicador: string };
 } {
@@ -836,6 +839,10 @@ export function getQualidadeKpiSummary(
     cRows = composicaoEmpresaData.map(r => ({ name: r.company_name, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   }
 
+  // Ajustes data for tempo medio
+  const ajustesSource = groupBy === "unidade" ? ajustesUnidadeData : groupBy === "area" ? ajustesAreaData : ajustesEmpresaData;
+  const filteredAjustes = selectedName ? ajustesSource.filter(r => r.business_unit_name === selectedName) : ajustesSource;
+
   const filtered = selectedName ? rows.filter(r => r.name === selectedName) : rows;
   const filteredC = selectedName ? cRows.filter(r => r.name === selectedName) : cRows;
 
@@ -853,6 +860,19 @@ export function getQualidadeKpiSummary(
   let tF1 = 0, tF2 = 0, tF3 = 0, tF4 = 0, tF5 = 0;
   for (const r of filteredC) { tF1 += r.f1; tF2 += r.f2; tF3 += r.f3; tF4 += r.f4; tF5 += r.f5; }
   const tTotal = tF1 + tF2 + tF3 + tF4 + tF5;
+
+  // Tempo medio ponderado por volume
+  let tempoWeighted = 0, tempoVolume = 0;
+  for (const r of filteredAjustes) {
+    if (r.tempo_medio_dias != null) {
+      tempoWeighted += r.tempo_medio_dias * r.volume_marcacoes;
+      tempoVolume += r.volume_marcacoes;
+    }
+  }
+  const tempoMedioDias = tempoVolume > 0 ? +(tempoWeighted / tempoVolume).toFixed(1) : 0;
+
+  // % até 1 dia
+  const ate1DiaPct = tTotal > 0 ? +((tF1 / tTotal) * 100).toFixed(1) : 0;
 
   function calcComposite(qPct: number, f1: number, f2: number, f3: number, f4: number, f5: number, tot: number): number {
     if (!scoreConfig) return Math.round(qPct);
@@ -895,6 +915,9 @@ export function getQualidadeKpiSummary(
     diff: "",
     registradas: formatKpiValue(totalReg),
     justificadas: formatKpiValue(totalJust),
+    qualidadePct: +qualPct.toFixed(1),
+    tempoMedioDias,
+    ate1DiaPct,
     melhorOperacao: melhor,
     maiorRisco: pior,
   };
