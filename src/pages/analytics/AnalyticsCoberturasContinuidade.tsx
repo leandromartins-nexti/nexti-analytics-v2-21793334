@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Info, TrendingUp, TrendingDown, Minus, Eraser, AlertTriangle, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { coberturas } from "@/lib/analytics-mock-data";
 import {
