@@ -121,6 +121,15 @@ Nexti Official Theme
   transition: all var(--onboarding-duration, 350ms) ease-in-out;
 }
 
+@keyframes bounce-horizontal {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-12px); }
+}
+
+.animate-bounce-horizontal {
+  animation: bounce-horizontal 1.2s ease-in-out infinite;
+}
+
 .onboarding-backdrop-in {
   animation: onboarding-fade-in var(--onboarding-duration, 300ms) ease-out;
 }
