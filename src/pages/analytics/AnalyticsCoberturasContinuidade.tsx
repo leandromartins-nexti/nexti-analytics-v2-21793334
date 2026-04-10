@@ -13,6 +13,7 @@ import { TrendIcon, getScoreColor } from "@/components/analytics/IndicatorTable"
 
 export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded?: boolean }) {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
 
   const { kpis, distribuicaoTipoEvento, evolucao, regionais } = coberturas;
 
