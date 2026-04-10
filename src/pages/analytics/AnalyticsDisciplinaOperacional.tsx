@@ -665,7 +665,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   return (
     <div className="flex">
       {/* Left: KPI cards + charts */}
-      <div className="flex-1 min-w-0 space-y-3">
+      <div className="flex-1 min-w-0 space-y-3 pl-6 py-4">
         {/* Linha 1: 5 KPI Cards */}
         <div className="grid grid-cols-5 gap-3">
           <ScoreBoard title="Qualidade do Ponto" tooltip="Score composto considerando qualidade das marcações e tempo de tratativa dos ajustes.">
@@ -1209,7 +1209,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
 
   return (
     <div className="flex">
-      <div className="flex-1 min-w-0 space-y-3">
+      <div className="flex-1 min-w-0 space-y-3 pl-6 py-4">
         {/* Linha 1: Score + 4 KPI Cards */}
         <div className="grid grid-cols-5 gap-3">
           <ScoreBoard title="Absenteísmo" tooltip="Taxa de ausências sobre o efetivo total no período. Inclui atestados, faltas justificadas e não justificadas.">
@@ -1407,7 +1407,7 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail,
 
   return (
     <div className="flex">
-      <div className="flex-1 min-w-0 space-y-3">
+      <div className="flex-1 min-w-0 space-y-3 pl-6 py-4">
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-card border border-border/50 rounded-xl p-3 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1 mb-1">
