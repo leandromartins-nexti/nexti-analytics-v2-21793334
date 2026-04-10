@@ -582,3 +582,99 @@ export function aggregateQualidadeEvolucaoDetalhado(selectedName: string | null,
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, d]) => ({ mes: formatMesLabel(month), registradas: d.reg, justificadas: d.just }));
 }
+
+// ══════════════════════════════════════════════════════════════
+// Qualidade vs Volume – scatter data (from real clocking JSON)
+// ══════════════════════════════════════════════════════════════
+
+export interface QualidadeVolumeRecord {
+  company_id: number;
+  company_name: string;
+  reference_month: string;
+  clocking_count: number;
+  quality_percentage: number;
+  headcount: number;
+}
+
+export const qualidadeVolumeEmpresaData: QualidadeVolumeRecord[] = [
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-04-01", clocking_count: 8194, quality_percentage: 87.83, headcount: 207 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-04-01", clocking_count: 1148, quality_percentage: 40.18, headcount: 21 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-04-01", clocking_count: 753, quality_percentage: 89.22, headcount: 12 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-05-01", clocking_count: 8274, quality_percentage: 86.57, headcount: 206 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-05-01", clocking_count: 1177, quality_percentage: 47.44, headcount: 19 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-05-01", clocking_count: 729, quality_percentage: 85.52, headcount: 12 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-06-01", clocking_count: 8088, quality_percentage: 85.78, headcount: 210 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-06-01", clocking_count: 1072, quality_percentage: 54.57, headcount: 16 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-06-01", clocking_count: 631, quality_percentage: 90.26, headcount: 11 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-07-01", clocking_count: 8427, quality_percentage: 86.74, headcount: 216 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-07-01", clocking_count: 1038, quality_percentage: 58.45, headcount: 17 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-07-01", clocking_count: 594, quality_percentage: 87.63, headcount: 12 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-08-01", clocking_count: 8625, quality_percentage: 87.20, headcount: 211 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-08-01", clocking_count: 1047, quality_percentage: 59.07, headcount: 17 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-08-01", clocking_count: 771, quality_percentage: 86.57, headcount: 13 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-09-01", clocking_count: 20891, quality_percentage: 39.15, headcount: 392 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-09-01", clocking_count: 930, quality_percentage: 61.45, headcount: 16 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-09-01", clocking_count: 595, quality_percentage: 95.28, headcount: 10 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-10-01", clocking_count: 28778, quality_percentage: 64.91, headcount: 412 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-10-01", clocking_count: 1014, quality_percentage: 48.90, headcount: 16 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-10-01", clocking_count: 645, quality_percentage: 86.60, headcount: 12 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-11-01", clocking_count: 24143, quality_percentage: 74.43, headcount: 387 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-11-01", clocking_count: 1098, quality_percentage: 40.73, headcount: 21 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-11-01", clocking_count: 620, quality_percentage: 85.96, headcount: 10 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2025-12-01", clocking_count: 26171, quality_percentage: 82.68, headcount: 395 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2025-12-01", clocking_count: 1388, quality_percentage: 36.59, headcount: 22 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2025-12-01", clocking_count: 677, quality_percentage: 87.06, headcount: 11 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2026-01-01", clocking_count: 23169, quality_percentage: 86.14, headcount: 398 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2026-01-01", clocking_count: 1369, quality_percentage: 39.20, headcount: 21 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2026-01-01", clocking_count: 689, quality_percentage: 90.18, headcount: 11 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2026-02-01", clocking_count: 22178, quality_percentage: 86.66, headcount: 404 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2026-02-01", clocking_count: 1257, quality_percentage: 48.74, headcount: 21 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2026-02-01", clocking_count: 602, quality_percentage: 90.00, headcount: 11 },
+  { company_id: 9380, company_name: "VIG EYES PORTARIA E LIMPEZA LTDA", reference_month: "2026-03-01", clocking_count: 25795, quality_percentage: 91.90, headcount: 404 },
+  { company_id: 9379, company_name: "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA", reference_month: "2026-03-01", clocking_count: 1175, quality_percentage: 65.11, headcount: 19 },
+  { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2026-03-01", clocking_count: 696, quality_percentage: 83.48, headcount: 12 },
+];
+
+export interface QualidadeVolumeScatterPoint {
+  regional: string;
+  volume: number;
+  qualidade: number;
+  headcount: number;
+}
+
+/**
+ * Aggregate qualidade vs volume scatter data from real clocking records.
+ * Groups by company_name, sums clocking_count (volume),
+ * computes weighted average quality_percentage, and takes max headcount.
+ */
+export function aggregateQualidadeVolume(
+  selectedMonth: string | null = null
+): QualidadeVolumeScatterPoint[] {
+  const filtered = selectedMonth
+    ? qualidadeVolumeEmpresaData.filter(r => r.reference_month === selectedMonth)
+    : qualidadeVolumeEmpresaData;
+
+  const map = new Map<string, { volume: number; qualWeighted: number; headcount: number }>();
+
+  for (const r of filtered) {
+    const existing = map.get(r.company_name);
+    if (existing) {
+      existing.qualWeighted += r.quality_percentage * r.clocking_count;
+      existing.volume += r.clocking_count;
+      existing.headcount = Math.max(existing.headcount, r.headcount);
+    } else {
+      map.set(r.company_name, {
+        volume: r.clocking_count,
+        qualWeighted: r.quality_percentage * r.clocking_count,
+        headcount: r.headcount,
+      });
+    }
+  }
+
+  return Array.from(map.entries()).map(([name, d]) => ({
+    regional: name,
+    volume: d.volume,
+    qualidade: +(d.qualWeighted / d.volume).toFixed(2),
+    headcount: d.headcount,
+  }));
+}
