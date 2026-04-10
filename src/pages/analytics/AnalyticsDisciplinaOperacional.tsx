@@ -674,29 +674,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <h4 className="text-sm font-semibold">Evolução da Qualidade</h4>
                 <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
               </div>
-              <div className="flex items-center gap-1.5">
-                <div className="flex gap-0.5 bg-muted/50 rounded-lg p-0.5">
-                  {([
-                    { mode: "percent" as const, icon: Percent, tip: "Percentual" },
-                    { mode: "valor" as const, icon: Hash, tip: "Valor absoluto" },
-                  ]).map(({ mode, icon: Icon, tip }) => (
-                    <button key={mode} onClick={() => setDataMode(mode)}
-                      className={`p-1.5 rounded-md transition-colors ${dataMode === mode ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                      title={tip}><Icon size={14} /></button>
-                  ))}
-                </div>
-                <div className="flex gap-0.5 bg-muted/50 rounded-lg p-0.5">
-                  {([
-                    { mode: "line" as const, icon: LineChartIcon, tip: "Linha" },
-                    { mode: "bar" as const, icon: BarChart3, tip: "Barras" },
-                    { mode: "area" as const, icon: AreaChartIcon, tip: "Área" },
-                  ]).map(({ mode, icon: Icon, tip }) => (
-                    <button key={mode} onClick={() => setChartMode(mode)}
-                      className={`p-1.5 rounded-md transition-colors ${chartMode === mode ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                      title={tip}><Icon size={14} /></button>
-                  ))}
-                </div>
-              </div>
+              <ChartModeToggle
+                dataMode={dataMode} onDataModeChange={setDataMode}
+                chartMode={chartMode} onChartModeChange={setChartMode}
+              />
             </div>
             <ResponsiveContainer width="100%" height={250}>
               {chartMode === "bar" ? (
