@@ -591,10 +591,13 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const scoreFaixa = scoreClassif.label;
 
   const sidebarItems = useMemo(() => {
-    if (groupBy === "empresa") return [...empresaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
-    if (groupBy === "area") return [...areaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
-    return [...unidadeData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
-  }, [groupBy]);
+    // Compute composite score per entity using config
+    const entities = groupBy === "empresa" ? empresaData : groupBy === "area" ? areaData : unidadeData;
+    return entities.map(e => {
+      const summary = getQualidadeKpiSummary(e.nome, groupBy as any, scoreConfig);
+      return { nome: e.nome, score: summary.score };
+    }).sort((a, b) => b.score - a.score);
+  }, [groupBy, scoreConfig]);
 
   const allScatter = useMemo(() => {
     if (groupBy === "empresa") return aggregateQualidadeVolume(selectedReferenceMonth, "empresa");
