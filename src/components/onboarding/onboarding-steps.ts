@@ -1,7 +1,7 @@
 import {
-  Sparkles, LayoutList, PanelLeftClose, Gauge, TrendingUp, Building2,
-  MousePointerClick, Mouse, ToggleLeft, BarChart3, Lock, MessageSquare,
-  CheckCircle2,
+  Sparkles, Gauge, TrendingUp, Building2,
+  MousePointerClick, Mouse, ToggleLeft, BarChart3, MessageSquare,
+  ArrowLeft,
 } from "lucide-react";
 
 export interface OnboardingStep {
@@ -17,6 +17,8 @@ export interface OnboardingStep {
   isModal?: boolean;
   /** Custom label for next button on last step */
   nextLabel?: string;
+  /** If true, show a visual arrow pointing left (for iframe context where sidebar is external) */
+  showLeftArrow?: boolean;
 }
 
 export const onboardingSteps: OnboardingStep[] = [
@@ -31,22 +33,15 @@ export const onboardingSteps: OnboardingStep[] = [
     isModal: true,
   },
   {
-    id: "sidebar-menu",
-    icon: LayoutList,
-    title: "Navegue entre as visões",
+    id: "sidebar-hint",
+    icon: ArrowLeft,
+    title: "Navegue pelo menu lateral",
     description:
-      "O Analytics tem 5 páginas principais. Comece pelo Resumo Executivo para uma visão geral e aprofunde no Operacional para análises detalhadas por tema.",
-    target: "[data-onboarding='analytics-menu']",
+      "Use o menu à esquerda para alternar entre as visões: Resumo Executivo, Operacional, Coberturas e mais. Recolha o menu para ter mais espaço nos gráficos.",
+    target: null,
     tooltipPosition: "right",
-  },
-  {
-    id: "collapse-sidebar",
-    icon: PanelLeftClose,
-    title: "Mais espaço para os gráficos",
-    description:
-      "Clique aqui para reduzir o menu lateral e ganhar mais área de visualização. Útil quando você está analisando dados complexos.",
-    target: "[data-onboarding='sidebar-toggle']",
-    tooltipPosition: "right",
+    isModal: false,
+    showLeftArrow: true,
   },
   {
     id: "score-operacional",
@@ -110,15 +105,6 @@ export const onboardingSteps: OnboardingStep[] = [
       "O mesmo dado pode ser visto como linha (para tendências), barra (para comparações) ou área (para composição acumulada). Experimente para encontrar o melhor para cada análise.",
     target: "[data-onboarding='chart-mode']",
     tooltipPosition: "bottom",
-  },
-  {
-    id: "locked-items",
-    icon: Lock,
-    title: "Em breve: visão financeira e muito mais",
-    description:
-      "Estas abas serão liberadas em versões futuras. Com elas você verá retorno em R$, plano de ação automatizado, alertas de compliance e insights com IA.",
-    target: "[data-onboarding='locked-items']",
-    tooltipPosition: "right",
   },
   {
     id: "feedback",
