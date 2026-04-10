@@ -559,15 +559,32 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
       }));
   }
 
-  // For unidade/area, keep existing logic
-  type QRow = { name: string; reference_month: string; registradas: number; justificadas: number };
-  let rows: QRow[];
-
   if (groupBy === "unidade") {
-    rows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
-  } else {
-    rows = qualidadeAreaData.map(r => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const filtered = selectedName
+      ? qualidadeUnidadeData.filter(r => r.business_unit_name === selectedName)
+      : qualidadeUnidadeData;
+
+    const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
+    for (const r of filtered) {
+      const existing = byMonth.get(r.reference_month);
+      if (existing) {
+        existing.qualWeighted += r.qualidade_percentual * r.total_marcacoes;
+        existing.volume += r.total_marcacoes;
+      } else {
+        byMonth.set(r.reference_month, { qualWeighted: r.qualidade_percentual * r.total_marcacoes, volume: r.total_marcacoes });
+      }
+    }
+
+    return Array.from(byMonth.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, d]) => ({
+        mes: formatMesLabel(month),
+        value: d.volume > 0 ? +((d.qualWeighted / d.volume)).toFixed(2) : 0,
+      }));
   }
+
+  // For area, keep existing logic
+  const rows = qualidadeAreaData.map(r => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
 
   const filtered = selectedName ? rows.filter(r => r.name === selectedName) : rows;
   const byMonth = new Map<string, { reg: number; just: number }>();
