@@ -833,7 +833,22 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
                     }} />
                     <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} />
-                    <RechartsTooltip formatter={(v: number) => [`${v}%`, "Qualidade"]} />
+                    <RechartsTooltip content={({ active, payload, label }) => {
+                      if (!active || !payload?.length) return null;
+                      const val = payload[0]?.value as number ?? 0;
+                      return (
+                        <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                          <p className="font-semibold text-foreground">{label}</p>
+                          {[{ name: "Registradas", value: val, color: "#22c55e" }, { name: "Justificadas", value: +(100 - val).toFixed(1), color: "#ef4444" }].map(f => (
+                            <div key={f.name} className="flex items-center gap-1.5">
+                              <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: f.color }} />
+                              <span className="text-muted-foreground">{f.name}:</span>
+                              <span className="font-medium text-foreground">{f.value}%</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }} />
                     <ReferenceLine y={qualidadeMedia} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
                     <Line type="monotone" dataKey="value" stroke={selectedMes ? "#FF572244" : "#FF5722"} strokeWidth={2} dot={(props: any) => {
                       const { cx, cy, payload } = props;
