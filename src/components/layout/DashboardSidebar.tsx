@@ -188,7 +188,7 @@ export function DashboardSidebar() {
             <CollapsibleContent>
               <SidebarMenu className="mt-0.5">
                 {analyticsSubmenus.map((item) => (
-                  <SidebarMenuItem key={item.label}>
+                  <SidebarMenuItem key={item.label} {...(item.locked ? { "data-onboarding": "locked-items" } : {})}>
                     <SidebarMenuButton
                       asChild
                       className={cn(
