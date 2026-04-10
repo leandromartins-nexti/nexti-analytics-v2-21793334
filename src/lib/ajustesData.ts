@@ -926,6 +926,9 @@ export function getQualidadeKpiSummary(
     qualidadePct: +qualPct.toFixed(1),
     tempoMedioDias,
     ate1DiaPct,
+    mais15DiaPct,
+    registradasPct,
+    ajustadasPct,
     melhorOperacao: melhor,
     maiorRisco: pior,
   };
