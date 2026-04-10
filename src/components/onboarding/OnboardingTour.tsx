@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { onboardingSteps } from "./onboarding-steps";
-import { Sparkles, CheckCircle2, ChevronLeft, ChevronRight, X, List, ArrowLeft } from "lucide-react";
+import { Sparkles, CheckCircle2, ChevronLeft, ChevronRight, X, List, ArrowLeft, Gift, Phone, Mail, Users, Clock, Percent } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 
