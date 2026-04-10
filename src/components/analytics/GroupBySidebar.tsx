@@ -168,7 +168,7 @@ export default function GroupBySidebar({
   // ── Expanded mode ──
   return (
     <div className="w-[240px] shrink-0">
-      <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
+      <div className="bg-card border border-border/50 rounded-xl pl-3 pr-2 py-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
         {/* Header: title + collapse button */}
         <div className="flex items-center justify-between mb-1.5">
           <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Filtrar por</p>
@@ -187,7 +187,7 @@ export default function GroupBySidebar({
             <button
               key={o.id}
               onClick={() => handleGroupChange(o.id)}
-              className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors flex-1 ${
+              className={`px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors flex-1 whitespace-nowrap ${
                 groupBy === o.id
                   ? "bg-[#FF5722] text-white border-[#FF5722]"
                   : "text-muted-foreground border-border hover:border-[#FF5722]/40"
