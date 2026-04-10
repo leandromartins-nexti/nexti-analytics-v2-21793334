@@ -761,10 +761,25 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       }} />
                       <YAxis tick={{ fontSize: 10 }} domain={showDetalhado ? undefined : [0, 100]}
                         tickFormatter={v => showDetalhado ? (v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`) : `${Math.round(v)}%`} />
-                      <RechartsTooltip formatter={(v: number, name: string) => [
-                        showDetalhado ? v.toLocaleString("pt-BR") : `${v}%`,
-                        name === "registradas" ? "Registradas" : "Justificadas"
-                      ]} />
+                      <RechartsTooltip content={({ active, payload, label }) => {
+                        if (!active || !payload?.length) return null;
+                        const reg = payload.find((p: any) => p.dataKey === "registradas")?.value as number ?? 0;
+                        const jus = payload.find((p: any) => p.dataKey === "justificadas")?.value as number ?? 0;
+                        const total = showDetalhado ? reg + jus : 100;
+                        return (
+                          <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                            <p className="font-semibold text-foreground">{label}</p>
+                            {showDetalhado && <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">{total.toLocaleString("pt-BR")}</span></p>}
+                            {[{ name: "Registradas", value: reg, color: "#22c55e" }, { name: "Justificadas", value: jus, color: "#ef4444" }].map(f => (
+                              <div key={f.name} className="flex items-center gap-1.5">
+                                <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: f.color }} />
+                                <span className="text-muted-foreground">{f.name}:</span>
+                                <span className="font-medium text-foreground">{showDetalhado ? `${((f.value / total) * 100).toFixed(0)}% (${f.value.toLocaleString("pt-BR")})` : `${f.value}%`}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }} />
                       {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                       <Area type="monotone" dataKey="registradas" stackId="qual" stroke="#22c55e" fill={`rgba(34,197,94,${selectedMes ? 0.2 : 0.35})`} fillOpacity={1} name="Registradas" />
                       <Area type="monotone" dataKey="justificadas" stackId="qual" stroke="#ef4444" fill={`rgba(239,68,68,${selectedMes ? 0.2 : 0.35})`} fillOpacity={1} name="Justificadas" />
@@ -784,7 +799,25 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
                     }} />
                     <YAxis tick={{ fontSize: 10 }} tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`} />
-                    <RechartsTooltip formatter={(v: number, name: string) => [v.toLocaleString("pt-BR"), name === "registradas" ? "Registradas" : "Justificadas"]} />
+                    <RechartsTooltip content={({ active, payload, label }) => {
+                      if (!active || !payload?.length) return null;
+                      const reg = payload.find((p: any) => p.dataKey === "registradas")?.value as number ?? 0;
+                      const jus = payload.find((p: any) => p.dataKey === "justificadas")?.value as number ?? 0;
+                      const total = reg + jus;
+                      return (
+                        <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                          <p className="font-semibold text-foreground">{label}</p>
+                          <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">{total.toLocaleString("pt-BR")}</span></p>
+                          {[{ name: "Registradas", value: reg, color: "#22c55e" }, { name: "Justificadas", value: jus, color: "#ef4444" }].map(f => (
+                            <div key={f.name} className="flex items-center gap-1.5">
+                              <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: f.color }} />
+                              <span className="text-muted-foreground">{f.name}:</span>
+                              <span className="font-medium text-foreground">{`${((f.value / total) * 100).toFixed(1)}% (${f.value.toLocaleString("pt-BR")})`}</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }} />
                     <Legend formatter={(value: string) => value === "registradas" ? "Registradas" : "Justificadas"} wrapperStyle={{ fontSize: 11 }} />
                     <Line type="monotone" dataKey="registradas" stroke="#22c55e" strokeWidth={2} dot={{ r: 3, fill: "#22c55e", stroke: "#fff", strokeWidth: 2 }} name="registradas" />
                     <Line type="monotone" dataKey="justificadas" stroke="#ef4444" strokeWidth={2} dot={{ r: 3, fill: "#ef4444", stroke: "#fff", strokeWidth: 2 }} name="justificadas" />
