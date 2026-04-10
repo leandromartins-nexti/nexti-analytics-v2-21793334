@@ -214,7 +214,7 @@ export function aggregateAjustes(selectedMonth: string | null, groupBy: "unidade
   }));
 }
 
-// ── Composição do Tempo de Tratativa (por empresa × mês) ──
+// ── Composição do Tempo de Tratativa ──
 export interface ComposicaoFaixaRecord {
   company_id: number;
   company_name: string;
@@ -268,12 +268,54 @@ export const composicaoEmpresaData: ComposicaoFaixaRecord[] = [
   { company_id: 9381, company_name: "VIG EYES SEGURANCA PATRIMONIAL LTDA", reference_month: "2026-04-01", total_ajustes: 4, faixa_ate_1_dia: 0, faixa_1_3_dias: 0, faixa_3_7_dias: 1, faixa_7_15_dias: 3, faixa_mais_15_dias: 0 },
 ];
 
-/** Aggregate composição faixas by month, optionally filtering by company name.
- *  Returns data ready for the stacked area chart (percentages). */
-export function aggregateComposicaoFaixas(selectedCompany: string | null): { mes: string; ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }[] {
-  const filtered = selectedCompany
-    ? composicaoEmpresaData.filter(r => r.company_name === selectedCompany)
-    : composicaoEmpresaData;
+export const composicaoUnidadeData: ComposicaoFaixaRecord[] = [
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-04-01", total_ajustes: 717, faixa_ate_1_dia: 381, faixa_1_3_dias: 128, faixa_3_7_dias: 110, faixa_7_15_dias: 94, faixa_mais_15_dias: 4 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-04-01", total_ajustes: 420, faixa_ate_1_dia: 67, faixa_1_3_dias: 85, faixa_3_7_dias: 137, faixa_7_15_dias: 117, faixa_mais_15_dias: 14 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-04-01", total_ajustes: 78, faixa_ate_1_dia: 29, faixa_1_3_dias: 9, faixa_3_7_dias: 21, faixa_7_15_dias: 8, faixa_mais_15_dias: 11 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-05-01", total_ajustes: 988, faixa_ate_1_dia: 507, faixa_1_3_dias: 157, faixa_3_7_dias: 103, faixa_7_15_dias: 100, faixa_mais_15_dias: 121 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-05-01", total_ajustes: 424, faixa_ate_1_dia: 61, faixa_1_3_dias: 55, faixa_3_7_dias: 70, faixa_7_15_dias: 105, faixa_mais_15_dias: 133 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-05-01", total_ajustes: 153, faixa_ate_1_dia: 29, faixa_1_3_dias: 27, faixa_3_7_dias: 60, faixa_7_15_dias: 14, faixa_mais_15_dias: 23 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-06-01", total_ajustes: 1062, faixa_ate_1_dia: 335, faixa_1_3_dias: 194, faixa_3_7_dias: 188, faixa_7_15_dias: 149, faixa_mais_15_dias: 196 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-06-01", total_ajustes: 453, faixa_ate_1_dia: 19, faixa_1_3_dias: 44, faixa_3_7_dias: 75, faixa_7_15_dias: 104, faixa_mais_15_dias: 211 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-06-01", total_ajustes: 150, faixa_ate_1_dia: 28, faixa_1_3_dias: 43, faixa_3_7_dias: 53, faixa_7_15_dias: 13, faixa_mais_15_dias: 13 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-07-01", total_ajustes: 1191, faixa_ate_1_dia: 482, faixa_1_3_dias: 236, faixa_3_7_dias: 112, faixa_7_15_dias: 151, faixa_mais_15_dias: 210 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-07-01", total_ajustes: 408, faixa_ate_1_dia: 61, faixa_1_3_dias: 74, faixa_3_7_dias: 98, faixa_7_15_dias: 83, faixa_mais_15_dias: 92 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-07-01", total_ajustes: 230, faixa_ate_1_dia: 68, faixa_1_3_dias: 63, faixa_3_7_dias: 60, faixa_7_15_dias: 11, faixa_mais_15_dias: 28 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-08-01", total_ajustes: 866, faixa_ate_1_dia: 477, faixa_1_3_dias: 222, faixa_3_7_dias: 94, faixa_7_15_dias: 49, faixa_mais_15_dias: 24 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-08-01", total_ajustes: 586, faixa_ate_1_dia: 68, faixa_1_3_dias: 87, faixa_3_7_dias: 123, faixa_7_15_dias: 131, faixa_mais_15_dias: 177 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-08-01", total_ajustes: 262, faixa_ate_1_dia: 117, faixa_1_3_dias: 71, faixa_3_7_dias: 42, faixa_7_15_dias: 22, faixa_mais_15_dias: 10 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-09-01", total_ajustes: 1860, faixa_ate_1_dia: 763, faixa_1_3_dias: 785, faixa_3_7_dias: 221, faixa_7_15_dias: 82, faixa_mais_15_dias: 9 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-09-01", total_ajustes: 346, faixa_ate_1_dia: 106, faixa_1_3_dias: 74, faixa_3_7_dias: 98, faixa_7_15_dias: 64, faixa_mais_15_dias: 4 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-09-01", total_ajustes: 301, faixa_ate_1_dia: 66, faixa_1_3_dias: 95, faixa_3_7_dias: 86, faixa_7_15_dias: 50, faixa_mais_15_dias: 4 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-10-01", total_ajustes: 14430, faixa_ate_1_dia: 2355, faixa_1_3_dias: 1925, faixa_3_7_dias: 3327, faixa_7_15_dias: 6121, faixa_mais_15_dias: 702 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-10-01", total_ajustes: 447, faixa_ate_1_dia: 44, faixa_1_3_dias: 88, faixa_3_7_dias: 136, faixa_7_15_dias: 112, faixa_mais_15_dias: 67 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-10-01", total_ajustes: 288, faixa_ate_1_dia: 38, faixa_1_3_dias: 78, faixa_3_7_dias: 96, faixa_7_15_dias: 71, faixa_mais_15_dias: 5 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-11-01", total_ajustes: 11807, faixa_ate_1_dia: 2140, faixa_1_3_dias: 1776, faixa_3_7_dias: 1456, faixa_7_15_dias: 1983, faixa_mais_15_dias: 4452 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-11-01", total_ajustes: 757, faixa_ate_1_dia: 76, faixa_1_3_dias: 88, faixa_3_7_dias: 175, faixa_7_15_dias: 243, faixa_mais_15_dias: 175 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-11-01", total_ajustes: 508, faixa_ate_1_dia: 44, faixa_1_3_dias: 70, faixa_3_7_dias: 115, faixa_7_15_dias: 139, faixa_mais_15_dias: 140 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2025-12-01", total_ajustes: 7383, faixa_ate_1_dia: 2783, faixa_1_3_dias: 2159, faixa_3_7_dias: 1635, faixa_7_15_dias: 478, faixa_mais_15_dias: 328 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2025-12-01", total_ajustes: 1124, faixa_ate_1_dia: 209, faixa_1_3_dias: 296, faixa_3_7_dias: 302, faixa_7_15_dias: 249, faixa_mais_15_dias: 68 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2025-12-01", total_ajustes: 309, faixa_ate_1_dia: 61, faixa_1_3_dias: 54, faixa_3_7_dias: 68, faixa_7_15_dias: 67, faixa_mais_15_dias: 59 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2026-01-01", total_ajustes: 4701, faixa_ate_1_dia: 1010, faixa_1_3_dias: 1466, faixa_3_7_dias: 1632, faixa_7_15_dias: 438, faixa_mais_15_dias: 155 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2026-01-01", total_ajustes: 886, faixa_ate_1_dia: 143, faixa_1_3_dias: 271, faixa_3_7_dias: 383, faixa_7_15_dias: 76, faixa_mais_15_dias: 13 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2026-01-01", total_ajustes: 152, faixa_ate_1_dia: 17, faixa_1_3_dias: 17, faixa_3_7_dias: 36, faixa_7_15_dias: 20, faixa_mais_15_dias: 62 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2026-02-01", total_ajustes: 5371, faixa_ate_1_dia: 1565, faixa_1_3_dias: 1859, faixa_3_7_dias: 831, faixa_7_15_dias: 609, faixa_mais_15_dias: 507 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2026-02-01", total_ajustes: 692, faixa_ate_1_dia: 103, faixa_1_3_dias: 160, faixa_3_7_dias: 270, faixa_7_15_dias: 110, faixa_mais_15_dias: 49 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2026-02-01", total_ajustes: 183, faixa_ate_1_dia: 31, faixa_1_3_dias: 38, faixa_3_7_dias: 89, faixa_7_15_dias: 24, faixa_mais_15_dias: 1 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2026-03-01", total_ajustes: 2766, faixa_ate_1_dia: 647, faixa_1_3_dias: 570, faixa_3_7_dias: 634, faixa_7_15_dias: 647, faixa_mais_15_dias: 268 },
+  { company_id: 17517, company_name: "VIG EYES TERCEIRIZACAO", reference_month: "2026-03-01", total_ajustes: 623, faixa_ate_1_dia: 43, faixa_1_3_dias: 70, faixa_3_7_dias: 138, faixa_7_15_dias: 185, faixa_mais_15_dias: 187 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2026-03-01", total_ajustes: 272, faixa_ate_1_dia: 56, faixa_1_3_dias: 70, faixa_3_7_dias: 98, faixa_7_15_dias: 42, faixa_mais_15_dias: 6 },
+  { company_id: 17518, company_name: "VIG EYES PORTARIA E LIMPEZA", reference_month: "2026-04-01", total_ajustes: 155, faixa_ate_1_dia: 15, faixa_1_3_dias: 18, faixa_3_7_dias: 17, faixa_7_15_dias: 61, faixa_mais_15_dias: 44 },
+  { company_id: 17519, company_name: "VIG EYES SEGURANCA PATRIMONIAL", reference_month: "2026-04-01", total_ajustes: 18, faixa_ate_1_dia: 0, faixa_1_3_dias: 4, faixa_3_7_dias: 7, faixa_7_15_dias: 7, faixa_mais_15_dias: 0 },
+];
+
+/** Aggregate composição faixas by month, optionally filtering by entity name.
+ *  groupBy selects the dataset; selectedName filters within it. */
+export function aggregateComposicaoFaixas(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }[] {
+  const source = groupBy === "unidade" ? composicaoUnidadeData : composicaoEmpresaData;
+  const filtered = selectedName
+    ? source.filter(r => r.company_name === selectedName)
+    : source;
 
   const byMonth = new Map<string, { ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }>();
 
