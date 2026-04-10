@@ -542,8 +542,10 @@ type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: stri
 // ══════════════════════════════════════════════════════════════
 function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
-  const [chartMode, setChartMode] = useState<"line" | "bar" | "area">("line");
-  const [dataMode, setDataMode] = useState<"percent" | "valor">("percent");
+  const [chartMode, setChartMode] = useState<ChartMode>("line");
+  const [dataMode, setDataMode] = useState<DataMode>("percent");
+  const [tratChartMode, setTratChartMode] = useState<ChartMode>("area");
+  const [tratDataMode, setTratDataMode] = useState<DataMode>("percent");
 
   const activeData = useMemo(() => {
     if (!selectedRegional) return {
