@@ -724,8 +724,16 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         name === "registradas" ? "Registradas" : "Justificadas"
                       ]} />
                       <Legend iconType="square" iconSize={10} formatter={(value: string) => value === "registradas" ? "Registradas" : "Justificadas"} wrapperStyle={{ fontSize: 11 }} payload={[{ value: "Registradas", type: "square", color: "#22c55e" }, { value: "Justificadas", type: "square", color: "#ef4444" }]} />
-                      <Bar dataKey="registradas" stackId="qual" fill="rgba(34,197,94,0.65)" stroke="#22c55e" strokeWidth={1} radius={[0, 0, 0, 0]} />
-                      <Bar dataKey="justificadas" stackId="qual" fill="rgba(239,68,68,0.65)" stroke="#ef4444" strokeWidth={1} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="registradas" stackId="qual" stroke="#22c55e" strokeWidth={1} radius={[0, 0, 0, 0]}>
+                        {barData.map((entry, idx) => (
+                          <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? "rgba(34,197,94,0.25)" : "rgba(34,197,94,0.65)"} />
+                        ))}
+                      </Bar>
+                      <Bar dataKey="justificadas" stackId="qual" stroke="#ef4444" strokeWidth={1} radius={[4, 4, 0, 0]}>
+                        {barData.map((entry, idx) => (
+                          <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? "rgba(239,68,68,0.25)" : "rgba(239,68,68,0.65)"} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   );
                 })()
