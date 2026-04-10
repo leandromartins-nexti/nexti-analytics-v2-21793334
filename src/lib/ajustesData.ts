@@ -711,12 +711,12 @@ export function aggregateQualidadeVolume(
       if (existing) {
         existing.qualWeighted += r.qualidade_percentual * r.total_marcacoes;
         existing.volume += r.total_marcacoes;
-        existing.headcount = Math.max(existing.headcount, (r as any).headcount ?? 0);
+        existing.headcount = Math.max(existing.headcount, r.headcount);
       } else {
         map.set(r.business_unit_name, {
           volume: r.total_marcacoes,
           qualWeighted: r.qualidade_percentual * r.total_marcacoes,
-          headcount: (r as any).headcount ?? 0,
+          headcount: r.headcount,
         });
       }
     }
