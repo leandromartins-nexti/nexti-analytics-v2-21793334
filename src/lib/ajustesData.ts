@@ -692,12 +692,42 @@ export interface QualidadeVolumeScatterPoint {
 /**
  * Aggregate qualidade vs volume scatter data.
  * quality_percentage = % de marcações registradas (qualidade boa).
- * Groups by company_name, sums clocking_count (volume),
- * computes weighted average quality_percentage, and takes max headcount.
+ * Groups by entity name, sums volume (clocking_count / total_marcacoes),
+ * computes weighted average quality, and takes max headcount.
  */
 export function aggregateQualidadeVolume(
-  selectedMonth: string | null = null
+  selectedMonth: string | null = null,
+  groupBy: "empresa" | "unidade" | "area" = "empresa"
 ): QualidadeVolumeScatterPoint[] {
+  if (groupBy === "unidade") {
+    const filtered = selectedMonth
+      ? qualidadeUnidadeData.filter(r => r.reference_month === selectedMonth)
+      : qualidadeUnidadeData;
+
+    const map = new Map<string, { volume: number; qualWeighted: number; headcount: number }>();
+    for (const r of filtered) {
+      const existing = map.get(r.business_unit_name);
+      if (existing) {
+        existing.qualWeighted += r.qualidade_percentual * r.total_marcacoes;
+        existing.volume += r.total_marcacoes;
+        existing.headcount = Math.max(existing.headcount, (r as any).headcount ?? 0);
+      } else {
+        map.set(r.business_unit_name, {
+          volume: r.total_marcacoes,
+          qualWeighted: r.qualidade_percentual * r.total_marcacoes,
+          headcount: (r as any).headcount ?? 0,
+        });
+      }
+    }
+    return Array.from(map.entries()).map(([name, d]) => ({
+      regional: name,
+      volume: d.volume,
+      qualidade: +(d.qualWeighted / d.volume).toFixed(2),
+      headcount: d.headcount,
+    }));
+  }
+
+  // Default: empresa
   const filtered = selectedMonth
     ? qualidadeVolumeEmpresaData.filter(r => r.reference_month === selectedMonth)
     : qualidadeVolumeEmpresaData;
