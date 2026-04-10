@@ -95,6 +95,100 @@ export default function GroupBySidebar({
     onPagedItemsChange?.(pagedItems.map(i => i.nome));
   }, [pagedItems, onPagedItemsChange]);
 
+  if (horizontal) {
+    return (
+      <div className="w-full">
+        <div className="bg-card border border-border/50 rounded-xl p-3">
+          {/* Header row: toggles + search + pagination */}
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            <div className="flex gap-1">
+              {groupByOptions.map(o => (
+                <button
+                  key={o.id}
+                  onClick={() => handleGroupChange(o.id)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors ${
+                    groupBy === o.id
+                      ? "bg-[#FF5722] text-white border-[#FF5722]"
+                      : "text-muted-foreground border-border hover:border-[#FF5722]/40"
+                  }`}
+                >
+                  {o.short}
+                </button>
+              ))}
+            </div>
+            <div className="relative">
+              <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={search}
+                onChange={e => handleSearchChange(e.target.value)}
+                className="pl-6 pr-2 py-1 text-[11px] rounded border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#FF5722]/40 w-48"
+              />
+            </div>
+            {showPagination && (
+              <div className="flex gap-1 flex-wrap">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`w-5 h-5 rounded text-[10px] font-medium transition-colors ${
+                      page === p
+                        ? "bg-[#FF5722] text-white"
+                        : "text-muted-foreground border border-border hover:border-[#FF5722]/40"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="ml-auto flex items-center gap-2">
+              <button onClick={() => toggleSort("nome")} className="flex items-center gap-0.5 text-[10px] font-semibold text-muted-foreground hover:text-foreground">
+                Nome <ArrowUpDown size={9} className={sortBy === "nome" ? "text-[#FF5722]" : ""} />
+              </button>
+              <button onClick={() => toggleSort("score")} className="flex items-center gap-0.5 text-[10px] font-semibold text-muted-foreground hover:text-foreground">
+                Score <ArrowUpDown size={9} className={sortBy === "score" ? "text-[#FF5722]" : ""} />
+              </button>
+            </div>
+          </div>
+
+          {/* Items grid */}
+          <div className="flex flex-wrap gap-1">
+            {pagedItems.length === 0 && (
+              <p className="text-[10px] text-muted-foreground text-center py-2 w-full">Nenhum resultado</p>
+            )}
+            {pagedItems.map(op => {
+              const isSelected = selectedRegional === op.nome;
+              const isDimmed = selectedRegional && !isSelected;
+              const scoreColor =
+                op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
+              return (
+                <div
+                  key={op.nome}
+                  onClick={() => onRegionalClick(op.nome)}
+                  onContextMenu={e => {
+                    e.preventDefault();
+                    onItemDetail?.(op.nome);
+                  }}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md cursor-pointer transition-all text-xs border ${
+                    isSelected
+                      ? "bg-orange-50 border-[#FF5722]/30"
+                      : "hover:bg-muted/40 border-transparent"
+                  } ${isDimmed ? "opacity-35" : ""}`}
+                  title="Clique para filtrar · Botão direito para detalhes"
+                >
+                  <span className="font-medium truncate text-foreground max-w-[160px]">{op.nome}</span>
+                  <span className={`font-bold tabular-nums shrink-0 ${scoreColor}`}>{op.score}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-[220px] shrink-0">
       <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
