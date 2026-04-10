@@ -169,8 +169,9 @@ export default function GroupBySidebar({
   return (
     <div className="w-[220px] shrink-0">
       <div className="bg-card border border-border/50 rounded-xl p-3 sticky top-4 max-h-[calc(100vh-120px)] flex flex-col">
-        {/* Header: collapse button + group toggles */}
-        <div className="flex items-center gap-1 mb-1">
+        {/* Header: title + collapse button */}
+        <div className="flex items-center justify-between mb-1.5">
+          <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Filtrar por</p>
           <button
             onClick={() => setCollapsed(true)}
             className="p-1 rounded-md hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors shrink-0"
@@ -178,21 +179,23 @@ export default function GroupBySidebar({
           >
             <PanelRightOpen size={13} />
           </button>
-          <div className="flex gap-1 flex-1">
-            {groupByOptions.map(o => (
-              <button
-                key={o.id}
-                onClick={() => handleGroupChange(o.id)}
-                className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors ${
-                  groupBy === o.id
-                    ? "bg-[#FF5722] text-white border-[#FF5722]"
-                    : "text-muted-foreground border-border hover:border-[#FF5722]/40"
-                }`}
-              >
-                {o.short}
-              </button>
-            ))}
-          </div>
+        </div>
+
+        {/* Group toggles */}
+        <div className="flex gap-1 mb-1.5">
+          {groupByOptions.map(o => (
+            <button
+              key={o.id}
+              onClick={() => handleGroupChange(o.id)}
+              className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors flex-1 ${
+                groupBy === o.id
+                  ? "bg-[#FF5722] text-white border-[#FF5722]"
+                  : "text-muted-foreground border-border hover:border-[#FF5722]/40"
+              }`}
+            >
+              {o.short}
+            </button>
+          ))}
         </div>
 
         {/* Search */}
