@@ -586,8 +586,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     [mesLabelToReferenceMonth, selectedMes]
   );
   
-  const scoreColor = activeData.score >= 85 ? "text-green-600" : activeData.score >= 75 ? "text-orange-500" : "text-red-600";
-  const scoreFaixa = activeData.score >= 85 ? "Bom" : activeData.score >= 75 ? "Atenção" : "Crítico";
+  const scoreClassif = getScoreClassification(activeData.score, scoreConfig);
+  const scoreColor = scoreClassif.text;
+  const scoreFaixa = scoreClassif.label;
 
   const sidebarItems = useMemo(() => {
     if (groupBy === "empresa") return [...empresaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
