@@ -222,12 +222,12 @@ function toAbsScatterData(items: { nome: string; qualidade: number; score: numbe
   });
 }
 
-// Unidade scatter (from qualidadeRegionais)
-const unidadeAbsScatter = scatterQualidade.map(sq => {
-  const taxa = +(2 + (92 - sq.qualidade) * 0.55).toFixed(1);
-  const turnover = +(4 + (92 - sq.qualidade) * 0.8).toFixed(1);
-  const he = Math.round(250 + (92 - sq.qualidade) * 12 + sq.headcount * 0.02);
-  return { regional: sq.regional, absenteismo: taxa, turnover, he, headcount: sq.headcount };
+// Unidade scatter (from real unidadeData)
+const unidadeAbsScatter = unidadeData.map(u => {
+  const taxa = +(2 + (92 - u.qualidade) * 0.55).toFixed(1);
+  const turnover = +(4 + (92 - u.qualidade) * 0.8).toFixed(1);
+  const he = Math.round(250 + (92 - u.qualidade) * 12);
+  return { regional: u.nome, absenteismo: taxa, turnover, he, headcount: 200 };
 });
 const empresaAbsScatter = toAbsScatterData(empresaData);
 const areaAbsScatter = toAbsScatterData(areaData);
