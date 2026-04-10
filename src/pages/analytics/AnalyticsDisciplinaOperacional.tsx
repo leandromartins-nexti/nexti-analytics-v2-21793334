@@ -577,7 +577,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     () => aggregateQualidadeEvolucaoDetalhado(selectedRegional, groupBy as any),
     [selectedRegional, groupBy]
   );
-  const showDetalhado = chartMode === "bar" && groupBy === "area";
+  const showDetalhado = dataMode === "valor";
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
