@@ -363,7 +363,6 @@ export default function AnalyticsResumoExecutivo() {
             groupBy={groupBy}
             onGroupByChange={handleGroupByChange}
           />
-        </div>
       </div>
 
       <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} />
