@@ -112,26 +112,28 @@ export default function AnalyticsResumoExecutivo() {
 
   const regionalData = selectedRegional ? dadosPorRegional[selectedRegional] : null;
 
-  // Build real Qualidade do Ponto sparkline card from JSON data
+  // Build real Qualidade do Ponto sparkline card — score per month
   const qualidadeCard = useMemo(() => {
-    const kpi = getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig);
-    const evolucao = aggregateQualidadeEvolucao(selectedRegional, groupBy as any);
-    const evolucaoFormatted = evolucao.map(e => ({ competencia: e.mes, valor: +e.value.toFixed(1) }));
-    const first = evolucaoFormatted[0]?.valor ?? 0;
-    const last = evolucaoFormatted[evolucaoFormatted.length - 1]?.valor ?? 0;
-    const diff = +(last - first).toFixed(1);
-    const variacao = diff >= 0 ? `+${diff} pp` : `${diff} pp`;
+    // Compute composite score for each month
+    const evolucao = ajustesMeses.map(month => {
+      const kpi = getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig, month);
+      return { competencia: formatMesLabel(month), valor: kpi.score };
+    });
+    const lastScore = evolucao[evolucao.length - 1]?.valor ?? 0;
+    const firstScore = evolucao[0]?.valor ?? 0;
+    const diff = lastScore - firstScore;
+    const variacao = diff >= 0 ? `+${diff} pts` : `${diff} pts`;
     const corVariacao = diff >= 0 ? "text-green-600" : "text-red-600";
-    const scoreClassif = getScoreClassification(kpi.score, scoreConfig);
     return {
       label: "Qualidade do Ponto",
-      valor: `${kpi.qualidadePct}%`,
+      valor: `${lastScore}`,
       variacao,
       corVariacao,
-      corLinha: getLineColor(kpi.score),
-      score: kpi.score,
+      corLinha: getLineColor(lastScore),
+      score: lastScore,
       peso: 0.25,
-      evolucao: evolucaoFormatted,
+      evolucao,
+      perPointColors: true, // flag for gradient rendering
     };
   }, [selectedRegional, groupBy, scoreConfig]);
 
