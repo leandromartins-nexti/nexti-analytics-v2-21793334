@@ -814,6 +814,9 @@ export function getQualidadeKpiSummary(
   qualidadePct: number;
   tempoMedioDias: number;
   ate1DiaPct: number;
+  mais15DiaPct: number;
+  registradasPct: number;
+  ajustadasPct: number;
   melhorOperacao: { nome: string; score: number };
   maiorRisco: { nome: string; score: number; indicador: string };
 } {
