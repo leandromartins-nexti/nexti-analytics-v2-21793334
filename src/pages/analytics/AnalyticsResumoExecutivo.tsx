@@ -5,7 +5,8 @@ import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import { useNavigate } from "react-router-dom";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
-import { getSidebarItems } from "@/lib/ajustesData";
+import { getSidebarItems, getQualidadeKpiSummary, aggregateQualidadeEvolucao, formatMesLabel } from "@/lib/ajustesData";
+import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import {
   ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
   AlertTriangle, ArrowDownRight, ArrowUpRight, Info, DollarSign, CheckCircle,
@@ -20,19 +21,13 @@ import {
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 
-
-// ── Sparkline cards config ──────────────────────────────────
-const sparklineCards = [
-  sparklineData.qualidadePonto,
+// ── Sparkline cards config (mock for non-qualidade indicators) ──
+const mockSparklineCards = [
   sparklineData.absenteismo,
   sparklineData.volumeHE,
   sparklineData.movimentacoes,
   sparklineData.coberturaEfetiva,
 ];
-
-const scoreGeral = Math.round(
-  sparklineCards.reduce((sum, c) => sum + c.score * c.peso, 0)
-);
 
 
 
