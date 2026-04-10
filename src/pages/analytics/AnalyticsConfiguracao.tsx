@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Database, ChevronRight, ChevronDown, Table2, Eye } from "lucide-react";
+import { Database, ChevronRight, ChevronDown, Table2, Eye, Settings2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import ScoreQualidadeConfig from "./ScoreQualidadeConfig";
 
 // Import all data sources
 import {
@@ -299,6 +300,10 @@ export default function AnalyticsConfiguracao() {
               <Database className="w-3.5 h-3.5" />
               Base de Dados
             </TabsTrigger>
+            <TabsTrigger value="score-qualidade" className="gap-1.5">
+              <Settings2 className="w-3.5 h-3.5" />
+              Score de Qualidade
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="base-dados">
@@ -319,6 +324,16 @@ export default function AnalyticsConfiguracao() {
                 <MenuSection key={menu.menuName} menu={menu} />
               ))}
             </div>
+          </TabsContent>
+
+          <TabsContent value="score-qualidade">
+            <div className="mb-4">
+              <h2 className="text-lg font-bold text-foreground">Score de Qualidade do Ponto</h2>
+              <p className="text-xs text-muted-foreground">
+                Configure os pesos dos componentes e as notas por faixa de tempo de tratativa
+              </p>
+            </div>
+            <ScoreQualidadeConfig />
           </TabsContent>
         </Tabs>
       </div>

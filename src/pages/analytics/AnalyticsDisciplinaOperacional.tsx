@@ -11,6 +11,7 @@ import {
   ScatterChart, Scatter, ZAxis, Cell,
 } from "recharts";
 import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao, aggregateQualidadeEvolucaoDetalhado, aggregateQualidadeVolume, getQualidadeKpiSummary } from "@/lib/ajustesData";
+import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
@@ -543,6 +544,7 @@ type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: stri
 // Sub-aba 1: Qualidade do Ponto
 // ══════════════════════════════════════════════════════════════
 function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
+  const { config: scoreConfig } = useScoreConfig();
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
   const [chartMode, setChartMode] = useState<ChartMode>("line");
   const [dataMode, setDataMode] = useState<DataMode>("percent");
@@ -550,8 +552,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [tratDataMode, setTratDataMode] = useState<DataMode>("percent");
 
   const activeData = useMemo(() => {
-    return getQualidadeKpiSummary(selectedRegional, groupBy as any);
-  }, [selectedRegional, groupBy]);
+    return getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig);
+  }, [selectedRegional, groupBy, scoreConfig]);
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
 
@@ -584,14 +586,18 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     [mesLabelToReferenceMonth, selectedMes]
   );
   
-  const scoreColor = activeData.score >= 85 ? "text-green-600" : activeData.score >= 75 ? "text-orange-500" : "text-red-600";
-  const scoreFaixa = activeData.score >= 85 ? "Bom" : activeData.score >= 75 ? "Atenção" : "Crítico";
+  const scoreClassif = getScoreClassification(activeData.score, scoreConfig);
+  const scoreColor = scoreClassif.text;
+  const scoreFaixa = scoreClassif.label;
 
   const sidebarItems = useMemo(() => {
-    if (groupBy === "empresa") return [...empresaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
-    if (groupBy === "area") return [...areaData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
-    return [...unidadeData].sort((a, b) => b.qualidade - a.qualidade).map(e => ({ nome: e.nome, score: Math.round(e.qualidade) }));
-  }, [groupBy]);
+    // Compute composite score per entity using config
+    const entities = groupBy === "empresa" ? empresaData : groupBy === "area" ? areaData : unidadeData;
+    return entities.map(e => {
+      const summary = getQualidadeKpiSummary(e.nome, groupBy as any, scoreConfig);
+      return { nome: e.nome, score: summary.score };
+    }).sort((a, b) => b.score - a.score);
+  }, [groupBy, scoreConfig]);
 
   const allScatter = useMemo(() => {
     if (groupBy === "empresa") return aggregateQualidadeVolume(selectedReferenceMonth, "empresa");
