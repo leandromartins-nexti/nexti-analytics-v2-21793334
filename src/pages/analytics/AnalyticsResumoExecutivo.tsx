@@ -5,7 +5,7 @@ import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import { useNavigate } from "react-router-dom";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
-import { getSidebarItems, getQualidadeKpiSummary, aggregateQualidadeEvolucao, formatMesLabel } from "@/lib/ajustesData";
+import { getSidebarItems, getQualidadeKpiSummary, ajustesMeses, formatMesLabel } from "@/lib/ajustesData";
 import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import {
   ChevronRight, Filter, Eraser, TrendingUp, TrendingDown, Minus,
@@ -41,22 +41,22 @@ function SparklineTooltip({ active, payload, cardData }: any) {
   const idx = evolucao.findIndex((e) => e.competencia === comp);
   const prev = idx > 0 ? evolucao[idx - 1] : null;
   const next = idx < evolucao.length - 1 ? evolucao[idx + 1] : null;
+  const isScore = cardData.perPointColors;
   const fmt = (v: number) => {
-    if (cardData.label === "Qualidade do Ponto" || cardData.label === "Absenteísmo" || cardData.label === "Cobertura Efetiva") return `${v}%`;
+    if (isScore) return `${v}`;
+    if (cardData.label === "Absenteísmo" || cardData.label === "Cobertura Efetiva") return `${v}%`;
     return `${v}K`;
   };
-  const diff = (a: number, b: number) => {
-    const d = a - b;
-    return d > 0 ? `+${d.toFixed(1)}` : d.toFixed(1);
-  };
+  const pointColor = isScore ? getLineColor(valor) : getLineColor(cardData.score);
+  const pointScore = isScore ? valor : cardData.score;
   return (
     <div className="bg-card border border-border rounded-lg shadow-lg px-3 py-2.5 text-xs min-w-[180px] z-[9999] relative">
       <p className="font-semibold text-foreground mb-2">{comp}</p>
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getLineColor(cardData.score) }} />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: pointColor }} />
         <span className="text-muted-foreground">{cardData.label}:</span>
         <span className="font-bold text-foreground">{fmt(valor)}</span>
-        <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(cardData.score)} ${getScoreBg(cardData.score)}`}>Score {cardData.score}</span>
+        <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(pointScore)} ${getScoreBg(pointScore)}`}>Score {pointScore}</span>
       </div>
       <div className="border-t border-border/50 pt-2 space-y-1">
         {prev && (() => {
@@ -112,26 +112,28 @@ export default function AnalyticsResumoExecutivo() {
 
   const regionalData = selectedRegional ? dadosPorRegional[selectedRegional] : null;
 
-  // Build real Qualidade do Ponto sparkline card from JSON data
+  // Build real Qualidade do Ponto sparkline card — score per month
   const qualidadeCard = useMemo(() => {
-    const kpi = getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig);
-    const evolucao = aggregateQualidadeEvolucao(selectedRegional, groupBy as any);
-    const evolucaoFormatted = evolucao.map(e => ({ competencia: e.mes, valor: +e.value.toFixed(1) }));
-    const first = evolucaoFormatted[0]?.valor ?? 0;
-    const last = evolucaoFormatted[evolucaoFormatted.length - 1]?.valor ?? 0;
-    const diff = +(last - first).toFixed(1);
-    const variacao = diff >= 0 ? `+${diff} pp` : `${diff} pp`;
+    // Compute composite score for each month
+    const evolucao = ajustesMeses.map(month => {
+      const kpi = getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig, month);
+      return { competencia: formatMesLabel(month), valor: kpi.score };
+    });
+    const lastScore = evolucao[evolucao.length - 1]?.valor ?? 0;
+    const firstScore = evolucao[0]?.valor ?? 0;
+    const diff = lastScore - firstScore;
+    const variacao = diff >= 0 ? `+${diff} pts` : `${diff} pts`;
     const corVariacao = diff >= 0 ? "text-green-600" : "text-red-600";
-    const scoreClassif = getScoreClassification(kpi.score, scoreConfig);
     return {
       label: "Qualidade do Ponto",
-      valor: `${kpi.qualidadePct}%`,
+      valor: `${lastScore}`,
       variacao,
       corVariacao,
-      corLinha: getLineColor(kpi.score),
-      score: kpi.score,
+      corLinha: getLineColor(lastScore),
+      score: lastScore,
       peso: 0.25,
-      evolucao: evolucaoFormatted,
+      evolucao,
+      perPointColors: true, // flag for gradient rendering
     };
   }, [selectedRegional, groupBy, scoreConfig]);
 
@@ -239,6 +241,16 @@ export default function AnalyticsResumoExecutivo() {
                     <div className="flex-1 h-[36px] min-w-[120px]">
                       <ResponsiveContainer width="100%" height={36}>
                         <LineChart data={card.evolucao}>
+                          {(card as any).perPointColors && (
+                            <defs>
+                              <linearGradient id={`grad-${card.label.replace(/\s/g,'')}`} x1="0" y1="0" x2="1" y2="0">
+                                {card.evolucao.map((pt, i) => {
+                                  const pct = card.evolucao.length > 1 ? (i / (card.evolucao.length - 1)) * 100 : 0;
+                                  return <stop key={i} offset={`${pct}%`} stopColor={getLineColor(pt.valor)} />;
+                                })}
+                              </linearGradient>
+                            </defs>
+                          )}
                           <RechartsTooltip
                             content={<SparklineTooltip cardData={card} />}
                             cursor={false}
@@ -247,21 +259,27 @@ export default function AnalyticsResumoExecutivo() {
                           <Line
                             type="monotone"
                             dataKey="valor"
-                            stroke={getLineColor(card.score)}
+                            stroke={(card as any).perPointColors ? `url(#grad-${card.label.replace(/\s/g,'')})` : getLineColor(card.score)}
                             strokeWidth={3}
-                            dot={(props: any) => (
-                              <circle
-                                key={props.index}
-                                cx={props.cx}
-                                cy={props.cy}
-                                r={props.index === lastIdx ? 5 : 3.5}
-                                fill={getLineColor(card.score)}
-                                stroke="white"
-                                strokeWidth={2}
-                                className="cursor-pointer"
-                              />
-                            )}
-                            activeDot={{ r: 4, fill: getLineColor(card.score), stroke: 'white', strokeWidth: 2 }}
+                            dot={(props: any) => {
+                              const ptColor = (card as any).perPointColors ? getLineColor(props.payload.valor) : getLineColor(card.score);
+                              return (
+                                <circle
+                                  key={props.index}
+                                  cx={props.cx}
+                                  cy={props.cy}
+                                  r={props.index === lastIdx ? 5 : 3.5}
+                                  fill={ptColor}
+                                  stroke="white"
+                                  strokeWidth={2}
+                                  className="cursor-pointer"
+                                />
+                              );
+                            }}
+                            activeDot={(props: any) => {
+                              const ptColor = (card as any).perPointColors ? getLineColor(props.payload.valor) : getLineColor(card.score);
+                              return <circle cx={props.cx} cy={props.cy} r={4} fill={ptColor} stroke="white" strokeWidth={2} />;
+                            }}
                           />
                         </LineChart>
                       </ResponsiveContainer>
