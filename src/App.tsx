@@ -13,6 +13,7 @@ import AnalyticsV3 from "./pages/AnalyticsV3";
 import ROIConfig from "./pages/ROIConfig";
 import ROIConfigV3 from "./pages/ROIConfigV3";
 import NotFound from "./pages/NotFound";
+import { ScoreConfigProvider } from "./contexts/ScoreConfigContext";
 
 // Analytics V1 pages
 import AnalyticsResumoExecutivo from "./pages/analytics/AnalyticsResumoExecutivo";
@@ -28,36 +29,38 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<DashboardLayout />}>
-            <Route path="/" element={<AnalyticsResumoExecutivo />} />
-            <Route path="/nexti-analytics" element={<NextiAnalytics />} />
-            <Route path="/strategy-prime" element={<StrategyPrime />} />
-            <Route path="/operacional-prime" element={<OperacionalPrime />} />
-            <Route path="/executive" element={<Executive />} />
-            <Route path="/executive-v2" element={<ExecutiveV2 />} />
-            <Route path="/analytics-v3" element={<AnalyticsV3 />} />
-            <Route path="/roi-config" element={<ROIConfig />} />
-            <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
+    <ScoreConfigProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<AnalyticsResumoExecutivo />} />
+              <Route path="/nexti-analytics" element={<NextiAnalytics />} />
+              <Route path="/strategy-prime" element={<StrategyPrime />} />
+              <Route path="/operacional-prime" element={<OperacionalPrime />} />
+              <Route path="/executive" element={<Executive />} />
+              <Route path="/executive-v2" element={<ExecutiveV2 />} />
+              <Route path="/analytics-v3" element={<AnalyticsV3 />} />
+              <Route path="/roi-config" element={<ROIConfig />} />
+              <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
 
-            {/* Analytics V1 — 2-level menu */}
-            <Route path="/analytics" element={<AnalyticsResumoExecutivo />} />
-            <Route path="/analytics/operacional" element={<AnalyticsOperacional />} />
-            <Route path="/analytics/financeiro" element={<AnalyticsFinanceiro />} />
-            <Route path="/analytics/estrategico" element={<AnalyticsEstrategico />} />
-            <Route path="/analytics/compliance" element={<AnalyticsCompliance />} />
-            <Route path="/analytics/inteligencia" element={<AnalyticsInteligencia />} />
-            <Route path="/analytics/configuracao" element={<AnalyticsConfiguracao />} />
-            <Route path="/analytics/gauge-showcase" element={<GaugeShowcase />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+              {/* Analytics V1 — 2-level menu */}
+              <Route path="/analytics" element={<AnalyticsResumoExecutivo />} />
+              <Route path="/analytics/operacional" element={<AnalyticsOperacional />} />
+              <Route path="/analytics/financeiro" element={<AnalyticsFinanceiro />} />
+              <Route path="/analytics/estrategico" element={<AnalyticsEstrategico />} />
+              <Route path="/analytics/compliance" element={<AnalyticsCompliance />} />
+              <Route path="/analytics/inteligencia" element={<AnalyticsInteligencia />} />
+              <Route path="/analytics/configuracao" element={<AnalyticsConfiguracao />} />
+              <Route path="/analytics/gauge-showcase" element={<GaugeShowcase />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ScoreConfigProvider>
   </QueryClientProvider>
 );
 
