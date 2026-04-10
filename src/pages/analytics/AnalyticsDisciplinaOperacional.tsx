@@ -639,17 +639,28 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     return { min, max };
   };
 
+  const padDomain = (min: number, max: number, clampZero = false) => {
+    const range = max - min || 1;
+    const padded = { min: min - range * 0.1, max: max + range * 0.1 };
+    if (clampZero && padded.min < 0) padded.min = 0;
+    return padded;
+  };
+
   const qualDomain = useMemo(() => {
     if (!chartScatterQual.length) return { xMin: 0, xMax: 300000, yMin: 70, yMax: 100 };
-    const x = buildAxis(chartScatterQual.map(d => d.volume), { clampZero: true });
-    const y = buildAxis(chartScatterQual.map(d => d.qualidade));
+    const xs = chartScatterQual.map(d => d.volume);
+    const ys = chartScatterQual.map(d => d.qualidade);
+    const x = padDomain(Math.min(...xs), Math.max(...xs), true);
+    const y = padDomain(Math.min(...ys), Math.max(...ys));
     return { xMin: x.min, xMax: x.max, yMin: y.min, yMax: y.max };
   }, [chartScatterQual]);
 
   const tratDomain = useMemo(() => {
     if (!chartScatterTrat.length) return { xMin: 0, xMax: 300000, yMin: 1, yMax: 7 };
-    const x = buildAxis(chartScatterTrat.map(d => d.volume), { clampZero: true });
-    const y = buildAxis(chartScatterTrat.map(d => d.dias));
+    const xs = chartScatterTrat.map(d => d.volume);
+    const ys = chartScatterTrat.map(d => d.dias);
+    const x = padDomain(Math.min(...xs), Math.max(...xs), true);
+    const y = padDomain(Math.min(...ys), Math.max(...ys));
     return { xMin: x.min, xMax: x.max, yMin: y.min, yMax: y.max };
   }, [chartScatterTrat]);
 
