@@ -650,7 +650,12 @@ export default function OnboardingTour() {
         <WelcomeModal onStart={handleStart} onSkip={handleSkip} onDismiss={handleDismiss} />
       )}
 
-      {phase === "touring" && (
+      {phase === "touring" && step?.isGTM ? (
+        <GTMPromoModal
+          onNext={() => setPhase("completed")}
+          onSkip={() => setPhase("completed")}
+        />
+      ) : phase === "touring" && (
         <>
           <SpotlightOverlay targetRect={step?.isModal || step?.showLeftArrow ? null : targetRect} />
 
