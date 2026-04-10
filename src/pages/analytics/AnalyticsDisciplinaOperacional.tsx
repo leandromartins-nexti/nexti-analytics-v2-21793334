@@ -1079,11 +1079,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ScatterChart>
             </ResponsiveContainer>
           </div>
-        </div>
       </div>
-
-      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
-
     </div>
   );
 }
