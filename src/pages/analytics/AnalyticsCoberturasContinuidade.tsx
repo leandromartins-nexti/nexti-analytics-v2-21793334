@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Info, TrendingUp, TrendingDown, Minus, Eraser, AlertTriangle, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { coberturas } from "@/lib/analytics-mock-data";
 import {
@@ -12,6 +13,7 @@ import { TrendIcon, getScoreColor } from "@/components/analytics/IndicatorTable"
 
 export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded?: boolean }) {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
 
   const { kpis, distribuicaoTipoEvento, evolucao, regionais } = coberturas;
 
@@ -56,9 +58,16 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
   const handleRegionalClick = (nome: string) => {
     setSelectedRegional(prev => prev === nome ? null : nome);
   };
+  const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
+
+  const sidebarItems = useMemo(() =>
+    regionais.map((r: any) => ({ nome: r.nome, score: r.score })).sort((a: any, b: any) => b.score - a.score),
+    [regionais]
+  );
 
   const content = (
-    <div className="px-6 py-4 space-y-3">
+    <div className="flex flex-1 min-h-0">
+      <div className="flex-1 min-w-0 pl-6 pr-4 py-4 space-y-3 overflow-y-auto">
       {/* ═══ Linha 1: Score + 4 KPI Cards (idêntico ao Resumo Executivo) ═══ */}
       <div className="grid grid-cols-5 gap-3">
         {/* Score Cobertura */}
@@ -254,6 +263,8 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
           </div>
         </div>
       </div>
+      </div>
+      <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
     </div>
   );
 
