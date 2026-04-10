@@ -805,7 +805,8 @@ function formatKpiValue(n: number): string {
 export function getQualidadeKpiSummary(
   selectedName: string | null,
   groupBy: "empresa" | "unidade" | "area" = "empresa",
-  scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number }
+  scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number },
+  selectedMonth?: string | null
 ): {
   score: number;
   diff: string;
