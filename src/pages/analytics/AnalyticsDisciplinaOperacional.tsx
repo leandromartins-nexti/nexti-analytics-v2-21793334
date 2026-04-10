@@ -679,6 +679,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${activeData.maiorRisco.score} · ${activeData.maiorRisco.indicador}`} />
         </div>
 
+        {/* Charts + Sidebar row */}
+        <div className="flex gap-3">
+          <div className="flex-1 min-w-0 space-y-3">
         {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
         <div className="grid grid-cols-2 gap-3">
           <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
