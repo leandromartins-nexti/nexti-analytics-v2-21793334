@@ -7,7 +7,6 @@ import { resetOnboardingTour } from "@/components/onboarding/OnboardingTour";
 
 type FeedbackType = "sugestao" | "problema" | "dado_incorreto" | "elogio" | null;
 
-const ONBOARDING_KEY = "analytics_onboarding_completed";
 
 export function FloatingActionMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
