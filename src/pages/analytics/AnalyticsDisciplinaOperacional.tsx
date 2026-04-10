@@ -675,12 +675,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               <InfoTip text="Percentual de marcações registradas corretamente, sem necessidade de ajuste." />
             </div>
             <p className={`text-xl font-bold mt-0.5 truncate ${qualColor}`}>{activeData.qualidadePct}%</p>
-            <p className="text-[11px] text-muted-foreground mt-1">Registradas {activeData.registradasPct}% · Ajustadas {activeData.ajustadasPct}%</p>
-            <p className="text-[11px] text-muted-foreground">Tempo médio {activeData.tempoMedioDias} dias</p>
-            <div className="flex items-center gap-3 mt-1">
-              <p className="text-[11px] text-muted-foreground">Até 1d <span className={`font-semibold ${ate1dColor}`}>{activeData.ate1DiaPct}%</span></p>
-              <p className="text-[11px] text-muted-foreground">+15d <span className={`font-semibold ${mais15dColor}`}>{activeData.mais15DiaPct}%</span></p>
-            </div>
           </div>
           <KPIBoard title="Tempo Médio" tooltip="Tempo médio em dias entre a marcação original e o ajuste pelo operador." value={`${activeData.tempoMedioDias} dias`} valueColor={tempoColor} />
           <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${activeData.melhorOperacao.score} · ${activeData.melhorOperacao.score >= 85 ? "Alta" : activeData.melhorOperacao.score >= 70 ? "Média" : "Baixa"}`} />
