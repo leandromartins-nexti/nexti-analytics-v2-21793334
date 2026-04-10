@@ -658,7 +658,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           <ScoreBoard title="Qualidade do Ponto" tooltip="Percentual de marcações registradas corretamente vs total de marcações que exigiram intervenção (justificativas manuais).">
             <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} />
           </ScoreBoard>
-          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${activeData.melhorOperacao.score} · Alta`} />
+          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${activeData.melhorOperacao.score} · ${activeData.melhorOperacao.score >= 85 ? "Alta" : activeData.melhorOperacao.score >= 70 ? "Média" : "Baixa"}`} />
           <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${activeData.maiorRisco.score} · ${activeData.maiorRisco.indicador}`} />
           <KPIBoard title="Registradas" tooltip="Total de marcações registradas pelo colaborador sem necessidade de ajuste." value={activeData.registradas} valueColor="text-green-600" />
           <KPIBoard title="Justificadas" tooltip="Total de marcações que foram justificadas manualmente pelo operador ou gestor." value={activeData.justificadas} valueColor="text-orange-500" />
