@@ -580,8 +580,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
-      const companyFilter = (groupBy === "empresa" && selectedRegional) ? selectedRegional : null;
-      return aggregateComposicaoFaixas(companyFilter);
+      const nameFilter = ((groupBy === "empresa" || groupBy === "unidade") && selectedRegional) ? selectedRegional : null;
+      return aggregateComposicaoFaixas(nameFilter, groupBy as any);
     },
     [groupBy, selectedRegional]
   );
