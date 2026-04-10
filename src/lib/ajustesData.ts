@@ -441,6 +441,7 @@ export interface QualidadeUnidadeRecord {
   registradas: number;
   justificadas: number;
   qualidade_percentual: number;
+  headcount: number;
 }
 
 export const qualidadeUnidadeData: QualidadeUnidadeRecord[] = [
