@@ -704,10 +704,25 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       }} />
                       <YAxis tick={{ fontSize: 10 }} domain={showDetalhado ? undefined : [0, 100]}
                         tickFormatter={v => showDetalhado ? (v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`) : `${v}%`} />
-                      <RechartsTooltip formatter={(v: number, name: string) => [
-                        showDetalhado ? v.toLocaleString("pt-BR") : `${v}%`,
-                        name === "registradas" ? "Registradas" : "Justificadas"
-                      ]} />
+                      <RechartsTooltip content={({ active, payload, label }) => {
+                        if (!active || !payload?.length) return null;
+                        const reg = payload.find((p: any) => p.dataKey === "registradas")?.value as number ?? 0;
+                        const jus = payload.find((p: any) => p.dataKey === "justificadas")?.value as number ?? 0;
+                        const total = showDetalhado ? reg + jus : 100;
+                        return (
+                          <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                            <p className="font-semibold text-foreground">{label}</p>
+                            {showDetalhado && <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">{total.toLocaleString("pt-BR")}</span></p>}
+                            {[{ name: "Registradas", value: reg, color: "#22c55e" }, { name: "Justificadas", value: jus, color: "#ef4444" }].map(f => (
+                              <div key={f.name} className="flex items-center gap-1.5">
+                                <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: f.color }} />
+                                <span className="text-muted-foreground">{f.name}:</span>
+                                <span className="font-medium text-foreground">{showDetalhado ? `${((f.value / total) * 100).toFixed(0)}% (${f.value.toLocaleString("pt-BR")})` : `${f.value}%`}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }} />
                       <Legend iconType="square" iconSize={10} formatter={(value: string) => value === "registradas" ? "Registradas" : "Justificadas"} wrapperStyle={{ fontSize: 11 }} payload={[{ value: "Registradas", type: "square", color: "#22c55e" }, { value: "Justificadas", type: "square", color: "#ef4444" }]} />
                       <Bar dataKey="registradas" stackId="qual" stroke="#22c55e" strokeWidth={1} radius={[0, 0, 0, 0]}>
                         {barData.map((entry, idx) => (
