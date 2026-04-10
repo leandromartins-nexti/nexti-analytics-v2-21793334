@@ -3,14 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight, Filter, Eraser } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { resumo } from "@/lib/analytics-mock-data";
+import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
+
+const placeholderItems = [
+  { nome: "Regional SP", score: 85 },
+  { nome: "Regional RJ", score: 78 },
+  { nome: "Regional MG", score: 72 },
+  { nome: "Regional BA", score: 60 },
+  { nome: "Regional RS", score: 76 },
+];
 
 export default function AnalyticsOperacoesEstruturas({ embedded }: { embedded?: boolean }) {
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
+  const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
+
+  const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
+  const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
 
   const content = (
-    <div className="px-6 py-6 flex-1">
-      <p className="text-muted-foreground">Operações e Estruturas — em construção.</p>
+    <div className="flex flex-1 min-h-0">
+      <div className="flex-1 min-w-0 pl-6 pr-4 py-6 overflow-y-auto">
+        <p className="text-muted-foreground">Operações e Estruturas — em construção.</p>
+      </div>
+      <GroupBySidebar items={placeholderItems} selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
     </div>
   );
 
