@@ -216,7 +216,7 @@ export default function AnalyticsResumoExecutivo() {
             </div>
 
             {/* ═══ Linha 2: Indicadores — lista vertical com sparklines inline ═══ */}
-            <div className="bg-card border border-border/50 rounded-xl">
+            <div className="bg-card border border-border/50 rounded-xl" data-onboarding="sparkline-table">
               {/* Header */}
               <div className="flex items-center gap-4 px-4 py-2 border-b border-border/40 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
                 <div className="w-2" />
