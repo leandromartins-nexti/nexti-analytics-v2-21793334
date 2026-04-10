@@ -724,8 +724,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         name === "registradas" ? "Registradas" : "Justificadas"
                       ]} />
                       <Legend formatter={(value: string) => value === "registradas" ? "Registradas" : "Justificadas"} wrapperStyle={{ fontSize: 11 }} />
-                      <Bar dataKey="registradas" stackId="qual" fill="#4CAF50" fillOpacity={0.85} radius={[0, 0, 0, 0]} />
-                      <Bar dataKey="justificadas" stackId="qual" fill="#FF5722" fillOpacity={0.85} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="registradas" stackId="qual" fill="#22c55e" fillOpacity={0.85} radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="justificadas" stackId="qual" fill="#ef4444" fillOpacity={0.85} radius={[4, 4, 0, 0]} />
                     </BarChart>
                   );
                 })()
@@ -758,8 +758,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         name === "registradas" ? "Registradas" : "Justificadas"
                       ]} />
                       {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
-                      <Area type="monotone" dataKey="registradas" stackId="qual" stroke="#4CAF50" fill={`rgba(76,175,80,${selectedMes ? 0.3 : 0.55})`} fillOpacity={1} name="Registradas" />
-                      <Area type="monotone" dataKey="justificadas" stackId="qual" stroke="#FF5722" fill={`rgba(255,87,34,${selectedMes ? 0.3 : 0.55})`} fillOpacity={1} name="Justificadas" />
+                      <Area type="monotone" dataKey="registradas" stackId="qual" stroke="#22c55e" fill={`rgba(34,197,94,${selectedMes ? 0.3 : 0.55})`} fillOpacity={1} name="Registradas" />
+                      <Area type="monotone" dataKey="justificadas" stackId="qual" stroke="#ef4444" fill={`rgba(239,68,68,${selectedMes ? 0.3 : 0.55})`} fillOpacity={1} name="Justificadas" />
                       <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} />
                     </AreaChart>
                   );
@@ -778,8 +778,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                     <YAxis tick={{ fontSize: 10 }} tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`} />
                     <RechartsTooltip formatter={(v: number, name: string) => [v.toLocaleString("pt-BR"), name === "registradas" ? "Registradas" : "Justificadas"]} />
                     <Legend formatter={(value: string) => value === "registradas" ? "Registradas" : "Justificadas"} wrapperStyle={{ fontSize: 11 }} />
-                    <Line type="monotone" dataKey="registradas" stroke="#4CAF50" strokeWidth={2} dot={{ r: 3, fill: "#4CAF50", stroke: "#fff", strokeWidth: 2 }} name="registradas" />
-                    <Line type="monotone" dataKey="justificadas" stroke="#FF5722" strokeWidth={2} dot={{ r: 3, fill: "#FF5722", stroke: "#fff", strokeWidth: 2 }} name="justificadas" />
+                    <Line type="monotone" dataKey="registradas" stroke="#22c55e" strokeWidth={2} dot={{ r: 3, fill: "#22c55e", stroke: "#fff", strokeWidth: 2 }} name="registradas" />
+                    <Line type="monotone" dataKey="justificadas" stroke="#ef4444" strokeWidth={2} dot={{ r: 3, fill: "#ef4444", stroke: "#fff", strokeWidth: 2 }} name="justificadas" />
                   </LineChart>
                 ) : (
                   <LineChart data={qualidadeEvolucaoReal} onClick={(e: any) => {
