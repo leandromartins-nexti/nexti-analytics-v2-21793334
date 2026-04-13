@@ -1099,6 +1099,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
+  const [absChartMode, setAbsChartMode] = useState<ChartMode>("line");
+  const [absDataMode, setAbsDataMode] = useState<DataMode>("percent");
+  const [turnChartMode, setTurnChartMode] = useState<ChartMode>("line");
+  const [turnDataMode, setTurnDataMode] = useState<DataMode>("percent");
 
   // Scatter data per groupBy
   const allScatterData = useMemo(() => {
@@ -1129,6 +1133,15 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     const ratio = item.turnover / turnoverMedia;
     return turnoverEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1) }));
   }, [selectedRegional, allScatterData]);
+
+  // Absolute value data for # mode
+  const absEvolucaoValor = useMemo(() => filteredAbsEvolucao.map(d => ({
+    ...d, ausencias: Math.round(d.value * 80), // ~80 ausências por 1% de taxa
+  })), [filteredAbsEvolucao]);
+
+  const turnEvolucaoValor = useMemo(() => filteredTurnoverEvolucao.map(d => ({
+    ...d, desligamentos: Math.round(d.value * 12), // ~12 desligamentos por 1%
+  })), [filteredTurnoverEvolucao]);
 
   const activeData = useMemo(() => {
     if (!selectedRegional) {
@@ -1206,6 +1219,131 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
   const avgTurnover = chartScatter.reduce((s, d) => s + d.turnover, 0) / (chartScatter.length || 1);
   const avgHE = chartScatter.reduce((s, d) => s + d.he, 0) / (chartScatter.length || 1);
 
+  // Shared chart helpers
+  const showAbsValor = absDataMode === "valor";
+  const showTurnValor = turnDataMode === "valor";
+
+  const absMediaRef = filteredAbsEvolucao.reduce((s, d) => s + d.value, 0) / filteredAbsEvolucao.length;
+  const turnMediaRef = filteredTurnoverEvolucao.reduce((s, d) => s + d.value, 0) / filteredTurnoverEvolucao.length;
+
+  const handleChartClick = (e: any) => {
+    if (e?.activeLabel) setSelectedMes((prev: string | null) => prev === e.activeLabel ? null : e.activeLabel);
+  };
+  const xTick = (props: any) => {
+    const { x, y, payload } = props;
+    const isActive = selectedMes === payload.value;
+    return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
+  };
+
+  // Render evolution chart (abs or turnover)
+  const renderEvoChart = (
+    data: any[],
+    dataKey: string,
+    percentKey: string,
+    color: string,
+    chartMode: ChartMode,
+    dataMode: DataMode,
+    mediaRef: number,
+    label: string,
+  ) => {
+    const isValor = dataMode === "valor";
+    const yFmt = (v: number) => isValor ? (v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`) : `${v}%`;
+    const activeKey = isValor ? dataKey : percentKey;
+
+    if (chartMode === "bar") {
+      return (
+        <BarChart data={data} onClick={handleChartClick}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="mes" tick={xTick} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} />
+          <RechartsTooltip content={({ active, payload, label: lbl }) => {
+            if (!active || !payload?.length) return null;
+            const d = payload[0].payload;
+            return (
+              <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                <p className="font-semibold text-foreground">{lbl}</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5" style={{ backgroundColor: color }} />
+                  <span className="text-muted-foreground">{label}:</span>
+                  <span className="font-medium text-foreground">{d.value}%{isValor ? ` (${d[dataKey].toLocaleString("pt-BR")})` : ""}</span>
+                </div>
+              </div>
+            );
+          }} />
+          {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
+          {!isValor && <ReferenceLine y={mediaRef} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
+          <Bar dataKey={activeKey} radius={[4, 4, 0, 0]}>
+            {data.map((entry, idx) => (
+              <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? `${color}40` : `${color}A6`} />
+            ))}
+          </Bar>
+        </BarChart>
+      );
+    }
+
+    if (chartMode === "area") {
+      return (
+        <AreaChart data={data} onClick={handleChartClick}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="mes" tick={xTick} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} domain={isValor ? undefined : ["auto", "auto"]} />
+          <RechartsTooltip content={({ active, payload, label: lbl }) => {
+            if (!active || !payload?.length) return null;
+            const d = payload[0].payload;
+            return (
+              <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                <p className="font-semibold text-foreground">{lbl}</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5" style={{ backgroundColor: color }} />
+                  <span className="text-muted-foreground">{label}:</span>
+                  <span className="font-medium text-foreground">{d.value}%{isValor ? ` (${d[dataKey].toLocaleString("pt-BR")})` : ""}</span>
+                </div>
+              </div>
+            );
+          }} />
+          {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
+          {!isValor && <ReferenceLine y={mediaRef} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
+          <Area type="monotone" dataKey={activeKey} stroke={color} fill={`${color}${selectedMes ? "33" : "59"}`} fillOpacity={1} />
+        </AreaChart>
+      );
+    }
+
+    // line (default)
+    return (
+      <LineChart data={data} onClick={handleChartClick}>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+        <XAxis dataKey="mes" tick={xTick} />
+        <YAxis domain={isValor ? undefined : ["auto", "auto"]} tick={{ fontSize: 10 }} tickFormatter={yFmt} />
+        <RechartsTooltip content={({ active, payload, label: lbl }) => {
+          if (!active || !payload?.length) return null;
+          const d = payload[0].payload;
+          return (
+            <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+              <p className="font-semibold text-foreground">{lbl}</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5" style={{ backgroundColor: color }} />
+                <span className="text-muted-foreground">{label}:</span>
+                <span className="font-medium text-foreground">{d.value}%{isValor ? ` (${d[dataKey].toLocaleString("pt-BR")})` : ""}</span>
+              </div>
+            </div>
+          );
+        }} />
+        {!isValor && <ReferenceLine y={mediaRef} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
+        <Line type="monotone" dataKey={activeKey} stroke={color} strokeWidth={2} dot={(props: any) => {
+          const { cx, cy, payload } = props;
+          const isSelected = selectedMes === payload.mes;
+          const isActive = !selectedMes || isSelected;
+          return (
+            <g key={payload.mes} className="cursor-pointer">
+              {isSelected && <circle cx={cx} cy={cy} r={10} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={1} strokeDasharray="3 2" />}
+              <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? color : isActive ? color : `${color}55`} stroke="#fff" strokeWidth={2} />
+            </g>
+          );
+        }} activeDot={{ r: 6, stroke: color, strokeWidth: 2, fill: "#fff" }} name={label} />
+      </LineChart>
+    );
+  };
+
   return (
     <div className="flex">
       <div className="flex-1 min-w-0 space-y-3 pl-6 pr-4 py-4">
@@ -1220,70 +1358,34 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
           <KPIBoard title="Turnover" tooltip="Taxa de rotatividade: desligamentos no período sobre o efetivo médio." value={activeData.turnover} valueColor="text-orange-500" />
         </div>
 
-        {/* Row 2: 2 Line charts */}
+        {/* Row 2: 2 Evolution charts with ChartModeToggle */}
         <div className="grid grid-cols-2 gap-3">
           <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
-            <h4 className="text-sm font-semibold mb-0.5">Evolução do Absenteísmo</h4>
-            <p className="text-[10px] text-muted-foreground mb-2">Taxa mensal (%) · clique para filtrar</p>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={filteredAbsEvolucao} onClick={(e: any) => {
-                if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
-              }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="mes" tick={(props: any) => {
-                  const { x, y, payload } = props;
-                  const isActive = selectedMes === payload.value;
-                  return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
-                }} />
-                <YAxis domain={["auto", "auto"]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} />
-                <RechartsTooltip formatter={(v: number) => [`${v}%`, "Absenteísmo"]} />
-                <ReferenceLine y={filteredAbsEvolucao.reduce((s, d) => s + d.value, 0) / filteredAbsEvolucao.length} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
-                <Line type="monotone" dataKey="value" stroke="hsl(var(--destructive))" strokeWidth={2} dot={(props: any) => {
-                  const { cx, cy, payload } = props;
-                  const isSelected = selectedMes === payload.mes;
-                  const isActive = !selectedMes || isSelected;
-                  return (
-                    <g key={payload.mes} className="cursor-pointer">
-                      {isSelected && <circle cx={cx} cy={cy} r={10} fill="hsl(var(--destructive))" fillOpacity={0.15} stroke="hsl(var(--destructive))" strokeWidth={1} strokeDasharray="3 2" />}
-                      <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "hsl(var(--destructive))" : isActive ? "hsl(var(--destructive))" : "hsl(var(--destructive) / 0.3)"} stroke="#fff" strokeWidth={2} />
-                    </g>
-                  );
-                }} activeDot={{ r: 6, stroke: "hsl(var(--destructive))", strokeWidth: 2, fill: "#fff" }} name="Taxa" />
-              </LineChart>
+            <div className="flex items-center justify-between mb-0.5">
+              <div>
+                <h4 className="text-sm font-semibold">Evolução do Absenteísmo</h4>
+                <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
+              </div>
+              <ChartModeToggle dataMode={absDataMode} onDataModeChange={setAbsDataMode} chartMode={absChartMode} onChartModeChange={setAbsChartMode} />
+            </div>
+            <ResponsiveContainer width="100%" height={280}>
+              {renderEvoChart(absEvolucaoValor, "ausencias", "value", "hsl(var(--destructive))", absChartMode, absDataMode, absMediaRef, "Absenteísmo")}
             </ResponsiveContainer>
           </div>
 
           <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <h4 className="text-sm font-semibold">Evolução do Turnover</h4>
-              <InfoTip text="Taxa de rotatividade mensal: desligamentos sobre o efetivo médio." />
+            <div className="flex items-center justify-between mb-0.5">
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h4 className="text-sm font-semibold">Evolução do Turnover</h4>
+                  <InfoTip text="Taxa de rotatividade mensal: desligamentos sobre o efetivo médio." />
+                </div>
+                <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
+              </div>
+              <ChartModeToggle dataMode={turnDataMode} onDataModeChange={setTurnDataMode} chartMode={turnChartMode} onChartModeChange={setTurnChartMode} />
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Taxa mensal (%) · clique para filtrar</p>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={filteredTurnoverEvolucao} onClick={(e: any) => {
-                if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
-              }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="mes" tick={(props: any) => {
-                  const { x, y, payload } = props;
-                  const isActive = selectedMes === payload.value;
-                  return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
-                }} />
-                <YAxis domain={["auto", "auto"]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} />
-                <RechartsTooltip formatter={(v: number) => [`${v}%`, "Turnover"]} />
-                <ReferenceLine y={filteredTurnoverEvolucao.reduce((s, d) => s + d.value, 0) / filteredTurnoverEvolucao.length} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
-                <Line type="monotone" dataKey="value" stroke="#f97316" strokeWidth={2} dot={(props: any) => {
-                  const { cx, cy, payload } = props;
-                  const isSelected = selectedMes === payload.mes;
-                  const isActive = !selectedMes || isSelected;
-                  return (
-                    <g key={payload.mes} className="cursor-pointer">
-                      {isSelected && <circle cx={cx} cy={cy} r={10} fill="#f97316" fillOpacity={0.15} stroke="#f97316" strokeWidth={1} strokeDasharray="3 2" />}
-                      <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#f97316" : isActive ? "#f97316" : "#f9731655"} stroke="#fff" strokeWidth={2} />
-                    </g>
-                  );
-                }} activeDot={{ r: 6, stroke: "#f97316", strokeWidth: 2, fill: "#fff" }} name="Turnover" />
-              </LineChart>
+            <ResponsiveContainer width="100%" height={280}>
+              {renderEvoChart(turnEvolucaoValor, "desligamentos", "value", "#f97316", turnChartMode, turnDataMode, turnMediaRef, "Turnover")}
             </ResponsiveContainer>
           </div>
         </div>
@@ -1318,13 +1420,13 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
                 }} />
                 <Scatter data={chartScatter} shape={(props: any) => {
                   const { cx, cy, payload } = props;
-                  const r = Math.sqrt(payload.headcount) / 4;
+                  const r = Math.max(8, Math.sqrt(payload.headcount) * 0.8);
                   const fill = getAbsTurnoverColor(payload.absenteismo, payload.turnover);
                   const isSelected = !selectedRegional || selectedRegional === payload.regional;
                   return (
                     <g onClick={() => onRegionalClick(payload.regional)} onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.regional); }} className="cursor-pointer">
                       <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={isSelected ? 0.7 : 0.15} stroke={fill} strokeWidth={isSelected ? 1.5 : 0.5} />
-                      <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={7} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
+                      <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={8} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
                     </g>
                   );
                 }} />
@@ -1360,13 +1462,13 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
                 }} />
                 <Scatter data={chartScatter} shape={(props: any) => {
                   const { cx, cy, payload } = props;
-                  const r = Math.sqrt(payload.headcount) / 4;
+                  const r = Math.max(8, Math.sqrt(payload.headcount) * 0.8);
                   const fill = getAbsHEColor(payload.absenteismo, payload.he);
                   const isSelected = !selectedRegional || selectedRegional === payload.regional;
                   return (
                     <g onClick={() => onRegionalClick(payload.regional)} onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.regional); }} className="cursor-pointer">
                       <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={isSelected ? 0.7 : 0.15} stroke={fill} strokeWidth={isSelected ? 1.5 : 0.5} />
-                      <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={7} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
+                      <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={8} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
                     </g>
                   );
                 }} />
