@@ -1353,38 +1353,35 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     return allScatterData.filter(d => visibleNames.includes(d.regional));
   }, [allScatterData, visibleNames]);
 
-  // Evolution data filtered by selectedRegional (use real per-empresa/unidade data when available)
+  // Evolution data filtered by selectedRegional AND groupBy (use correct map per groupBy)
   const filteredAbsEvolucao = useMemo(() => {
     if (!selectedRegional) return absenteismoEvolucao;
-    // Check real per-empresa data
-    const perEmpresa = absenteismoEvolucaoPorEmpresa[selectedRegional];
-    if (perEmpresa) return perEmpresa;
-    // Check real per-unidade data
-    const perUnidade = absenteismoEvolucaoPorUnidade[selectedRegional];
-    if (perUnidade) return perUnidade;
-    // Check real per-area data
-    const perArea = absenteismoEvolucaoPorArea[selectedRegional];
-    if (perArea) return perArea;
+    // Pick the correct map based on active groupBy
+    const mapByGroupBy = groupBy === "empresa" ? absenteismoEvolucaoPorEmpresa
+      : groupBy === "unidade" ? absenteismoEvolucaoPorUnidade
+      : absenteismoEvolucaoPorArea;
+    const perGroup = mapByGroupBy[selectedRegional];
+    if (perGroup) return perGroup;
     // Fallback: ratio-based simulation
     const item = allScatterData.find(d => d.regional === selectedRegional);
     if (!item) return absenteismoEvolucao;
     const ratio = item.absenteismo / absenteismoMedia;
     return absenteismoEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), ausencias: Math.round(d.ausencias * ratio) }));
-  }, [selectedRegional, allScatterData]);
+  }, [selectedRegional, allScatterData, groupBy]);
 
   const filteredTurnoverEvolucao = useMemo(() => {
     if (!selectedRegional) return turnoverEvolucao;
-    const perEmpresa = turnoverEvolucaoPorEmpresa[selectedRegional];
-    if (perEmpresa) return perEmpresa;
-    const perUnidade = turnoverEvolucaoPorUnidade[selectedRegional];
-    if (perUnidade) return perUnidade;
-    const perArea = turnoverEvolucaoPorArea[selectedRegional];
-    if (perArea) return perArea;
+    // Pick the correct map based on active groupBy
+    const mapByGroupBy = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa
+      : groupBy === "unidade" ? turnoverEvolucaoPorUnidade
+      : turnoverEvolucaoPorArea;
+    const perGroup = mapByGroupBy[selectedRegional];
+    if (perGroup) return perGroup;
     const item = allScatterData.find(d => d.regional === selectedRegional);
     if (!item) return turnoverEvolucao;
     const ratio = item.turnover / turnoverMedia;
     return turnoverEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), desligamentos: Math.round(d.desligamentos * ratio) }));
-  }, [selectedRegional, allScatterData]);
+  }, [selectedRegional, allScatterData, groupBy]);
 
   // Data with ausencias for # mode (already in filteredAbsEvolucao from real data)
   const absEvolucaoValor = useMemo(() => filteredAbsEvolucao.map(d => ({
