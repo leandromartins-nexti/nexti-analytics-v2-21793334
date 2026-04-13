@@ -406,6 +406,76 @@ const turnoverEvolucaoPorArea: Record<string, { mes: string; value: number; desl
   ],
 };
 
+// Abs vs Turnover monthly data per empresa (from real JSON)
+const absVsTurnoverPorEmpresa: Record<string, { mes: string; absenteismo: number; turnover: number; headcount: number; desligamentos: number }[]> = {
+  "PORTARIA E LIMPEZA": [
+    { mes: "abr/25", absenteismo: 13.21, turnover: 1.38, headcount: 218, desligamentos: 3 },
+    { mes: "mai/25", absenteismo: 15.80, turnover: 5.38, headcount: 223, desligamentos: 12 },
+    { mes: "jun/25", absenteismo: 13.64, turnover: 3.15, headcount: 222, desligamentos: 7 },
+    { mes: "jul/25", absenteismo: 13.33, turnover: 3.11, headcount: 225, desligamentos: 7 },
+    { mes: "ago/25", absenteismo: 14.15, turnover: 7.11, headcount: 225, desligamentos: 16 },
+    { mes: "set/25", absenteismo: 9.85, turnover: 3.83, headcount: 418, desligamentos: 16 },
+    { mes: "out/25", absenteismo: 16.76, turnover: 3.10, headcount: 420, desligamentos: 13 },
+    { mes: "nov/25", absenteismo: 17.03, turnover: 2.96, headcount: 405, desligamentos: 12 },
+    { mes: "dez/25", absenteismo: 18.92, turnover: 5.41, headcount: 407, desligamentos: 22 },
+    { mes: "jan/26", absenteismo: 14.80, turnover: 1.96, headcount: 408, desligamentos: 8 },
+    { mes: "fev/26", absenteismo: 19.57, turnover: 2.88, headcount: 417, desligamentos: 12 },
+    { mes: "mar/26", absenteismo: 12.86, turnover: 1.44, headcount: 417, desligamentos: 6 },
+  ],
+  "TERCEIRIZACAO": [
+    { mes: "abr/25", absenteismo: 14.22, turnover: 25.00, headcount: 20, desligamentos: 5 },
+    { mes: "mai/25", absenteismo: 11.47, turnover: 0.00, headcount: 17, desligamentos: 0 },
+    { mes: "jun/25", absenteismo: 13.83, turnover: 0.00, headcount: 17, desligamentos: 0 },
+    { mes: "jul/25", absenteismo: 18.64, turnover: 5.88, headcount: 17, desligamentos: 1 },
+    { mes: "ago/25", absenteismo: 6.87, turnover: 5.88, headcount: 17, desligamentos: 1 },
+    { mes: "set/25", absenteismo: 14.98, turnover: 0.00, headcount: 16, desligamentos: 0 },
+    { mes: "out/25", absenteismo: 9.10, turnover: 6.67, headcount: 15, desligamentos: 1 },
+    { mes: "nov/25", absenteismo: 4.97, turnover: 0.00, headcount: 20, desligamentos: 0 },
+    { mes: "dez/25", absenteismo: 6.95, turnover: 0.00, headcount: 22, desligamentos: 0 },
+    { mes: "jan/26", absenteismo: 14.26, turnover: 0.00, headcount: 22, desligamentos: 0 },
+    { mes: "fev/26", absenteismo: 17.25, turnover: 9.09, headcount: 22, desligamentos: 2 },
+    { mes: "mar/26", absenteismo: 34.13, turnover: 4.76, headcount: 21, desligamentos: 1 },
+  ],
+  "SEGURANCA PATRIMONIAL": [
+    { mes: "abr/25", absenteismo: 7.13, turnover: 0.00, headcount: 12, desligamentos: 0 },
+    { mes: "mai/25", absenteismo: 10.00, turnover: 0.00, headcount: 12, desligamentos: 0 },
+    { mes: "jun/25", absenteismo: 20.81, turnover: 0.00, headcount: 12, desligamentos: 0 },
+    { mes: "jul/25", absenteismo: 29.98, turnover: 0.00, headcount: 12, desligamentos: 0 },
+    { mes: "ago/25", absenteismo: 9.65, turnover: 7.69, headcount: 13, desligamentos: 1 },
+    { mes: "set/25", absenteismo: 20.89, turnover: 0.00, headcount: 12, desligamentos: 0 },
+    { mes: "out/25", absenteismo: 13.89, turnover: 8.33, headcount: 12, desligamentos: 1 },
+    { mes: "nov/25", absenteismo: 13.36, turnover: 0.00, headcount: 11, desligamentos: 0 },
+    { mes: "dez/25", absenteismo: 4.90, turnover: 0.00, headcount: 11, desligamentos: 0 },
+    { mes: "jan/26", absenteismo: 3.36, turnover: 0.00, headcount: 11, desligamentos: 0 },
+    { mes: "fev/26", absenteismo: 8.68, turnover: 0.00, headcount: 11, desligamentos: 0 },
+    { mes: "mar/26", absenteismo: 9.53, turnover: 8.33, headcount: 12, desligamentos: 1 },
+  ],
+};
+
+// Abs vs Turnover monthly data per unidade (derived from abs + turnover evolution data)
+function buildAbsVsTurnoverFromMaps(
+  absMap: Record<string, { mes: string; value: number }[]>,
+  turnMap: Record<string, { mes: string; value: number; desligamentos: number }[]>,
+  scatterData: { regional: string; headcount: number }[]
+): Record<string, { mes: string; absenteismo: number; turnover: number; headcount: number; desligamentos: number }[]> {
+  const result: Record<string, { mes: string; absenteismo: number; turnover: number; headcount: number; desligamentos: number }[]> = {};
+  const hcMap = Object.fromEntries(scatterData.map(s => [s.regional, s.headcount]));
+  for (const [name, absData] of Object.entries(absMap)) {
+    const turnData = turnMap[name] || [];
+    const turnByMes = Object.fromEntries(turnData.map(t => [t.mes, t]));
+    result[name] = absData.map(a => ({
+      mes: a.mes,
+      absenteismo: a.value,
+      turnover: turnByMes[a.mes]?.value ?? 0,
+      headcount: hcMap[name] ?? 0,
+      desligamentos: turnByMes[a.mes]?.desligamentos ?? 0,
+    }));
+  }
+  return result;
+}
+
+const absVsTurnoverPorUnidade = buildAbsVsTurnoverFromMaps(absenteismoEvolucaoPorUnidade, turnoverEvolucaoPorUnidade, realUnidadeAbsScatter);
+const absVsTurnoverPorArea = buildAbsVsTurnoverFromMaps(absenteismoEvolucaoPorArea, turnoverEvolucaoPorArea, realAreaAbsScatter);
 
 const realEmpresaAbsScatter = [
   { regional: "SEGURANCA PATRIMONIAL", absenteismo: 12.87, turnover: 8.5, he: 320, headcount: 13 },
