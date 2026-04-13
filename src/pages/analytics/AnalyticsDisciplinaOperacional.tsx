@@ -255,156 +255,170 @@ const realAreaAbsScatter = [
   { regional: "SOROCABA", absenteismo: 15.88, turnover: 7.1, he: 397, headcount: 10 },
 ];
 
-const turnoverEvolucao = [
-  { mes: "abr/25", value: 3.16, desligamentos: 8 },
-  { mes: "mai/25", value: 4.82, desligamentos: 12 },
-  { mes: "jun/25", value: 2.81, desligamentos: 7 },
-  { mes: "jul/25", value: 3.17, desligamentos: 8 },
-  { mes: "ago/25", value: 7.2, desligamentos: 18 },
-  { mes: "set/25", value: 4.65, desligamentos: 16 },
-  { mes: "out/25", value: 3.39, desligamentos: 15 },
-  { mes: "nov/25", value: 2.69, desligamentos: 12 },
-  { mes: "dez/25", value: 4.91, desligamentos: 22 },
-  { mes: "jan/26", value: 1.75, desligamentos: 8 },
-  { mes: "fev/26", value: 2.94, desligamentos: 14 },
-  { mes: "mar/26", value: 1.65, desligamentos: 8 },
-];
-const turnoverMedia = 3.6;
+type TurnoverEvoRow = { mes: string; turnover_exit: number; turnover_entry: number; terminations: number; hires: number; avg_headcount: number };
 
-const turnoverEvolucaoPorEmpresa: Record<string, { mes: string; value: number; desligamentos: number }[]> = {
+const turnoverEvolucaoPorEmpresa: Record<string, TurnoverEvoRow[]> = {
   "PORTARIA E LIMPEZA": [
-    { mes: "abr/25", value: 1.35, desligamentos: 3 },
-    { mes: "mai/25", value: 5.48, desligamentos: 12 },
-    { mes: "jun/25", value: 3.2, desligamentos: 7 },
-    { mes: "jul/25", value: 3.15, desligamentos: 7 },
-    { mes: "ago/25", value: 7.24, desligamentos: 16 },
-    { mes: "set/25", value: 5.08, desligamentos: 16 },
-    { mes: "out/25", value: 3.14, desligamentos: 13 },
-    { mes: "nov/25", value: 2.88, desligamentos: 12 },
-    { mes: "dez/25", value: 5.31, desligamentos: 22 },
-    { mes: "jan/26", value: 1.89, desligamentos: 8 },
-    { mes: "fev/26", value: 2.71, desligamentos: 12 },
-    { mes: "mar/26", value: 1.33, desligamentos: 6 },
+    { mes: "abr/25", turnover_exit: 1.35, turnover_entry: 0.0, terminations: 3, hires: 0, avg_headcount: 223 },
+    { mes: "mai/25", turnover_exit: 5.48, turnover_entry: 3.65, terminations: 12, hires: 8, avg_headcount: 219 },
+    { mes: "jun/25", turnover_exit: 3.2, turnover_entry: 5.02, terminations: 7, hires: 11, avg_headcount: 219 },
+    { mes: "jul/25", turnover_exit: 3.15, turnover_entry: 5.39, terminations: 7, hires: 12, avg_headcount: 223 },
+    { mes: "ago/25", turnover_exit: 7.24, turnover_entry: 2.71, terminations: 16, hires: 6, avg_headcount: 221 },
+    { mes: "set/25", turnover_exit: 5.08, turnover_entry: 67.62, terminations: 16, hires: 213, avg_headcount: 315 },
+    { mes: "out/25", turnover_exit: 3.14, turnover_entry: 3.86, terminations: 13, hires: 16, avg_headcount: 415 },
+    { mes: "nov/25", turnover_exit: 2.88, turnover_entry: 3.12, terminations: 12, hires: 13, avg_headcount: 417 },
+    { mes: "dez/25", turnover_exit: 5.31, turnover_entry: 4.1, terminations: 22, hires: 17, avg_headcount: 415 },
+    { mes: "jan/26", turnover_exit: 1.89, turnover_entry: 7.32, terminations: 8, hires: 31, avg_headcount: 424 },
+    { mes: "fev/26", turnover_exit: 2.71, turnover_entry: 4.97, terminations: 12, hires: 22, avg_headcount: 443 },
+    { mes: "mar/26", turnover_exit: 1.33, turnover_entry: 2.43, terminations: 6, hires: 11, avg_headcount: 453 },
   ],
   "SEGURANCA PATRIMONIAL": [
-    { mes: "abr/25", value: 0.0, desligamentos: 0 },
-    { mes: "mai/25", value: 0.0, desligamentos: 0 },
-    { mes: "jun/25", value: 0.0, desligamentos: 0 },
-    { mes: "jul/25", value: 0.0, desligamentos: 0 },
-    { mes: "ago/25", value: 7.69, desligamentos: 1 },
-    { mes: "set/25", value: 0.0, desligamentos: 0 },
-    { mes: "out/25", value: 8.0, desligamentos: 1 },
-    { mes: "nov/25", value: 0.0, desligamentos: 0 },
-    { mes: "dez/25", value: 0.0, desligamentos: 0 },
-    { mes: "jan/26", value: 0.0, desligamentos: 0 },
-    { mes: "fev/26", value: 0.0, desligamentos: 0 },
-    { mes: "mar/26", value: 8.33, desligamentos: 1 },
+    { mes: "abr/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 13 },
+    { mes: "mai/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 13 },
+    { mes: "jun/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 13 },
+    { mes: "jul/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 13 },
+    { mes: "ago/25", turnover_exit: 7.69, turnover_entry: 7.69, terminations: 1, hires: 1, avg_headcount: 13 },
+    { mes: "set/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 13 },
+    { mes: "out/25", turnover_exit: 8.0, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 13 },
+    { mes: "nov/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 12 },
+    { mes: "dez/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 12 },
+    { mes: "jan/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 12 },
+    { mes: "fev/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 12 },
+    { mes: "mar/26", turnover_exit: 8.33, turnover_entry: 8.33, terminations: 1, hires: 1, avg_headcount: 12 },
   ],
   "TERCEIRIZACAO": [
-    { mes: "abr/25", value: 28.57, desligamentos: 5 },
-    { mes: "mai/25", value: 0.0, desligamentos: 0 },
-    { mes: "jun/25", value: 0.0, desligamentos: 0 },
-    { mes: "jul/25", value: 6.06, desligamentos: 1 },
-    { mes: "ago/25", value: 6.25, desligamentos: 1 },
-    { mes: "set/25", value: 0.0, desligamentos: 0 },
-    { mes: "out/25", value: 6.67, desligamentos: 1 },
-    { mes: "nov/25", value: 0.0, desligamentos: 0 },
-    { mes: "dez/25", value: 0.0, desligamentos: 0 },
-    { mes: "jan/26", value: 0.0, desligamentos: 0 },
-    { mes: "fev/26", value: 9.52, desligamentos: 2 },
-    { mes: "mar/26", value: 5.13, desligamentos: 1 },
+    { mes: "abr/25", turnover_exit: 28.57, turnover_entry: 11.43, terminations: 5, hires: 2, avg_headcount: 18 },
+    { mes: "mai/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 17 },
+    { mes: "jun/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 17 },
+    { mes: "jul/25", turnover_exit: 6.06, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 17 },
+    { mes: "ago/25", turnover_exit: 6.25, turnover_entry: 6.25, terminations: 1, hires: 1, avg_headcount: 16 },
+    { mes: "set/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 16 },
+    { mes: "out/25", turnover_exit: 6.67, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 15 },
+    { mes: "nov/25", turnover_exit: 0.0, turnover_entry: 28.57, terminations: 0, hires: 5, avg_headcount: 18 },
+    { mes: "dez/25", turnover_exit: 0.0, turnover_entry: 9.3, terminations: 0, hires: 2, avg_headcount: 22 },
+    { mes: "jan/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 22 },
+    { mes: "fev/26", turnover_exit: 9.52, turnover_entry: 0.0, terminations: 2, hires: 0, avg_headcount: 21 },
+    { mes: "mar/26", turnover_exit: 5.13, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 20 },
   ],
 };
 
-const turnoverEvolucaoPorUnidade: Record<string, { mes: string; value: number; desligamentos: number }[]> = {
+const turnoverEvolucaoPorUnidade: Record<string, TurnoverEvoRow[]> = {
   "PORTARIA E LIMPEZA": [
-    { mes: "abr/25", value: 1.44, desligamentos: 3 },
-    { mes: "mai/25", value: 5.35, desligamentos: 11 },
-    { mes: "jun/25", value: 1.95, desligamentos: 4 },
-    { mes: "jul/25", value: 2.39, desligamentos: 5 },
-    { mes: "ago/25", value: 6.81, desligamentos: 14 },
-    { mes: "set/25", value: 4.67, desligamentos: 14 },
-    { mes: "out/25", value: 3.54, desligamentos: 14 },
-    { mes: "nov/25", value: 2.52, desligamentos: 10 },
-    { mes: "dez/25", value: 5.56, desligamentos: 22 },
-    { mes: "jan/26", value: 1.98, desligamentos: 8 },
-    { mes: "fev/26", value: 3.33, desligamentos: 14 },
-    { mes: "mar/26", value: 0.46, desligamentos: 2 },
+    { mes: "abr/25", turnover_exit: 1.44, turnover_entry: 0.0, terminations: 3, hires: 0, avg_headcount: 208 },
+    { mes: "mai/25", turnover_exit: 5.35, turnover_entry: 3.41, terminations: 11, hires: 7, avg_headcount: 206 },
+    { mes: "jun/25", turnover_exit: 1.95, turnover_entry: 3.9, terminations: 4, hires: 8, avg_headcount: 205 },
+    { mes: "jul/25", turnover_exit: 2.39, turnover_entry: 4.78, terminations: 5, hires: 10, avg_headcount: 209 },
+    { mes: "ago/25", turnover_exit: 6.81, turnover_entry: 2.38, terminations: 14, hires: 5, avg_headcount: 206 },
+    { mes: "set/25", turnover_exit: 4.67, turnover_entry: 65.54, terminations: 14, hires: 197, avg_headcount: 300 },
+    { mes: "out/25", turnover_exit: 3.54, turnover_entry: 3.79, terminations: 14, hires: 15, avg_headcount: 395 },
+    { mes: "nov/25", turnover_exit: 2.52, turnover_entry: 2.77, terminations: 10, hires: 11, avg_headcount: 397 },
+    { mes: "dez/25", turnover_exit: 5.56, turnover_entry: 4.04, terminations: 22, hires: 16, avg_headcount: 396 },
+    { mes: "jan/26", turnover_exit: 1.98, turnover_entry: 7.18, terminations: 8, hires: 29, avg_headcount: 404 },
+    { mes: "fev/26", turnover_exit: 3.33, turnover_entry: 4.76, terminations: 14, hires: 20, avg_headcount: 420 },
+    { mes: "mar/26", turnover_exit: 0.46, turnover_entry: 2.32, terminations: 2, hires: 10, avg_headcount: 431 },
   ],
   "SEGURANCA PATRIMONIAL": [
-    { mes: "abr/25", value: 4.08, desligamentos: 1 },
-    { mes: "mai/25", value: 4.26, desligamentos: 1 },
-    { mes: "jun/25", value: 12.77, desligamentos: 3 },
-    { mes: "jul/25", value: 8.33, desligamentos: 2 },
-    { mes: "ago/25", value: 11.54, desligamentos: 3 },
-    { mes: "set/25", value: 7.69, desligamentos: 2 },
-    { mes: "out/25", value: 0.0, desligamentos: 0 },
-    { mes: "nov/25", value: 7.69, desligamentos: 2 },
-    { mes: "dez/25", value: 0.0, desligamentos: 0 },
-    { mes: "jan/26", value: 0.0, desligamentos: 0 },
-    { mes: "fev/26", value: 0.0, desligamentos: 0 },
-    { mes: "mar/26", value: 7.55, desligamentos: 2 },
+    { mes: "abr/25", turnover_exit: 4.08, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 24 },
+    { mes: "mai/25", turnover_exit: 4.26, turnover_entry: 4.26, terminations: 1, hires: 1, avg_headcount: 23 },
+    { mes: "jun/25", turnover_exit: 12.77, turnover_entry: 8.51, terminations: 3, hires: 2, avg_headcount: 24 },
+    { mes: "jul/25", turnover_exit: 8.33, turnover_entry: 4.17, terminations: 2, hires: 1, avg_headcount: 24 },
+    { mes: "ago/25", turnover_exit: 11.54, turnover_entry: 7.69, terminations: 3, hires: 2, avg_headcount: 26 },
+    { mes: "set/25", turnover_exit: 7.69, turnover_entry: 3.85, terminations: 2, hires: 1, avg_headcount: 26 },
+    { mes: "out/25", turnover_exit: 0.0, turnover_entry: 3.85, terminations: 0, hires: 1, avg_headcount: 26 },
+    { mes: "nov/25", turnover_exit: 7.69, turnover_entry: 3.85, terminations: 2, hires: 1, avg_headcount: 26 },
+    { mes: "dez/25", turnover_exit: 0.0, turnover_entry: 4.0, terminations: 0, hires: 1, avg_headcount: 25 },
+    { mes: "jan/26", turnover_exit: 0.0, turnover_entry: 3.85, terminations: 0, hires: 1, avg_headcount: 26 },
+    { mes: "fev/26", turnover_exit: 0.0, turnover_entry: 3.85, terminations: 0, hires: 1, avg_headcount: 26 },
+    { mes: "mar/26", turnover_exit: 7.55, turnover_entry: 3.77, terminations: 2, hires: 1, avg_headcount: 26 },
   ],
   "TERCEIRIZACAO": [
-    { mes: "abr/25", value: 19.51, desligamentos: 4 },
-    { mes: "mai/25", value: 0.0, desligamentos: 0 },
-    { mes: "jun/25", value: 0.0, desligamentos: 0 },
-    { mes: "jul/25", value: 5.26, desligamentos: 1 },
-    { mes: "ago/25", value: 5.41, desligamentos: 1 },
-    { mes: "set/25", value: 0.0, desligamentos: 0 },
-    { mes: "out/25", value: 5.13, desligamentos: 1 },
-    { mes: "nov/25", value: 0.0, desligamentos: 0 },
-    { mes: "dez/25", value: 0.0, desligamentos: 0 },
-    { mes: "jan/26", value: 0.0, desligamentos: 0 },
-    { mes: "fev/26", value: 0.0, desligamentos: 0 },
-    { mes: "mar/26", value: 16.0, desligamentos: 4 },
+    { mes: "abr/25", turnover_exit: 19.51, turnover_entry: 9.76, terminations: 4, hires: 2, avg_headcount: 21 },
+    { mes: "mai/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 19 },
+    { mes: "jun/25", turnover_exit: 0.0, turnover_entry: 5.26, terminations: 0, hires: 1, avg_headcount: 19 },
+    { mes: "jul/25", turnover_exit: 5.26, turnover_entry: 5.26, terminations: 1, hires: 1, avg_headcount: 19 },
+    { mes: "ago/25", turnover_exit: 5.41, turnover_entry: 5.41, terminations: 1, hires: 1, avg_headcount: 18 },
+    { mes: "set/25", turnover_exit: 0.0, turnover_entry: 5.56, terminations: 0, hires: 1, avg_headcount: 18 },
+    { mes: "out/25", turnover_exit: 5.13, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 19 },
+    { mes: "nov/25", turnover_exit: 0.0, turnover_entry: 26.32, terminations: 0, hires: 5, avg_headcount: 19 },
+    { mes: "dez/25", turnover_exit: 0.0, turnover_entry: 8.7, terminations: 0, hires: 2, avg_headcount: 23 },
+    { mes: "jan/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 23 },
+    { mes: "fev/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 23 },
+    { mes: "mar/26", turnover_exit: 16.0, turnover_entry: 0.0, terminations: 4, hires: 0, avg_headcount: 25 },
   ],
 };
 
-const turnoverEvolucaoPorArea: Record<string, { mes: string; value: number; desligamentos: number }[]> = {
+const turnoverEvolucaoPorArea: Record<string, TurnoverEvoRow[]> = {
   "PIRACICABA": [
-    { mes: "abr/25", value: 10.53, desligamentos: 1 },
-    { mes: "mai/25", value: 0.0, desligamentos: 0 },
-    { mes: "jun/25", value: 22.22, desligamentos: 2 },
-    { mes: "jul/25", value: 0.0, desligamentos: 0 },
-    { mes: "ago/25", value: 0.0, desligamentos: 0 },
-    { mes: "set/25", value: 10.53, desligamentos: 1 },
-    { mes: "out/25", value: 0.0, desligamentos: 0 },
-    { mes: "nov/25", value: 10.53, desligamentos: 1 },
-    { mes: "dez/25", value: 0.0, desligamentos: 0 },
-    { mes: "jan/26", value: 0.0, desligamentos: 0 },
-    { mes: "fev/26", value: 0.0, desligamentos: 0 },
-    { mes: "mar/26", value: 10.0, desligamentos: 1 },
+    { mes: "abr/25", turnover_exit: 10.53, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 10 },
+    { mes: "mai/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 9 },
+    { mes: "jun/25", turnover_exit: 22.22, turnover_entry: 22.22, terminations: 2, hires: 2, avg_headcount: 9 },
+    { mes: "jul/25", turnover_exit: 0.0, turnover_entry: 10.53, terminations: 0, hires: 1, avg_headcount: 10 },
+    { mes: "ago/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 10 },
+    { mes: "set/25", turnover_exit: 10.53, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 10 },
+    { mes: "out/25", turnover_exit: 0.0, turnover_entry: 10.53, terminations: 0, hires: 1, avg_headcount: 10 },
+    { mes: "nov/25", turnover_exit: 10.53, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 10 },
+    { mes: "dez/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 9 },
+    { mes: "jan/26", turnover_exit: 0.0, turnover_entry: 10.53, terminations: 0, hires: 1, avg_headcount: 10 },
+    { mes: "fev/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 10 },
+    { mes: "mar/26", turnover_exit: 10.0, turnover_entry: 10.0, terminations: 1, hires: 1, avg_headcount: 10 },
   ],
   "SAO PAULO": [
-    { mes: "abr/25", value: 6.25, desligamentos: 3 },
-    { mes: "mai/25", value: 2.11, desligamentos: 1 },
-    { mes: "jun/25", value: 6.32, desligamentos: 3 },
-    { mes: "jul/25", value: 8.6, desligamentos: 4 },
-    { mes: "ago/25", value: 10.53, desligamentos: 5 },
-    { mes: "set/25", value: 4.17, desligamentos: 2 },
-    { mes: "out/25", value: 8.25, desligamentos: 4 },
-    { mes: "nov/25", value: 3.88, desligamentos: 2 },
-    { mes: "dez/25", value: 1.83, desligamentos: 1 },
-    { mes: "jan/26", value: 1.79, desligamentos: 1 },
-    { mes: "fev/26", value: 5.31, desligamentos: 3 },
-    { mes: "mar/26", value: 7.34, desligamentos: 4 },
+    { mes: "abr/25", turnover_exit: 6.25, turnover_entry: 4.17, terminations: 3, hires: 2, avg_headcount: 48 },
+    { mes: "mai/25", turnover_exit: 2.11, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 48 },
+    { mes: "jun/25", turnover_exit: 6.32, turnover_entry: 8.42, terminations: 3, hires: 4, avg_headcount: 48 },
+    { mes: "jul/25", turnover_exit: 8.6, turnover_entry: 6.45, terminations: 4, hires: 3, avg_headcount: 47 },
+    { mes: "ago/25", turnover_exit: 10.53, turnover_entry: 12.63, terminations: 5, hires: 6, avg_headcount: 48 },
+    { mes: "set/25", turnover_exit: 4.17, turnover_entry: 4.17, terminations: 2, hires: 2, avg_headcount: 48 },
+    { mes: "out/25", turnover_exit: 8.25, turnover_entry: 12.37, terminations: 4, hires: 6, avg_headcount: 49 },
+    { mes: "nov/25", turnover_exit: 3.88, turnover_entry: 9.71, terminations: 2, hires: 5, avg_headcount: 52 },
+    { mes: "dez/25", turnover_exit: 1.83, turnover_entry: 5.5, terminations: 1, hires: 3, avg_headcount: 55 },
+    { mes: "jan/26", turnover_exit: 1.79, turnover_entry: 5.36, terminations: 1, hires: 3, avg_headcount: 56 },
+    { mes: "fev/26", turnover_exit: 5.31, turnover_entry: 3.54, terminations: 3, hires: 2, avg_headcount: 57 },
+    { mes: "mar/26", turnover_exit: 7.34, turnover_entry: 1.83, terminations: 4, hires: 1, avg_headcount: 55 },
   ],
   "SOROCABA": [
-    { mes: "abr/25", value: 0.0, desligamentos: 0 },
-    { mes: "mai/25", value: 0.0, desligamentos: 0 },
-    { mes: "jun/25", value: 0.0, desligamentos: 0 },
-    { mes: "jul/25", value: 0.0, desligamentos: 0 },
-    { mes: "ago/25", value: 0.0, desligamentos: 0 },
-    { mes: "set/25", value: 0.0, desligamentos: 0 },
-    { mes: "out/25", value: 8.0, desligamentos: 1 },
-    { mes: "nov/25", value: 7.69, desligamentos: 1 },
-    { mes: "dez/25", value: 21.43, desligamentos: 3 },
-    { mes: "jan/26", value: 6.67, desligamentos: 1 },
-    { mes: "fev/26", value: 5.88, desligamentos: 1 },
-    { mes: "mar/26", value: 0.0, desligamentos: 0 },
+    { mes: "abr/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 3 },
+    { mes: "mai/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 3 },
+    { mes: "jun/25", turnover_exit: 0.0, turnover_entry: 50.0, terminations: 0, hires: 2, avg_headcount: 4 },
+    { mes: "jul/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 5 },
+    { mes: "ago/25", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 5 },
+    { mes: "set/25", turnover_exit: 0.0, turnover_entry: 88.89, terminations: 0, hires: 8, avg_headcount: 9 },
+    { mes: "out/25", turnover_exit: 8.0, turnover_entry: 0.0, terminations: 1, hires: 0, avg_headcount: 13 },
+    { mes: "nov/25", turnover_exit: 7.69, turnover_entry: 23.08, terminations: 1, hires: 3, avg_headcount: 13 },
+    { mes: "dez/25", turnover_exit: 21.43, turnover_entry: 21.43, terminations: 3, hires: 3, avg_headcount: 14 },
+    { mes: "jan/26", turnover_exit: 6.67, turnover_entry: 20.0, terminations: 1, hires: 3, avg_headcount: 15 },
+    { mes: "fev/26", turnover_exit: 5.88, turnover_entry: 11.76, terminations: 1, hires: 2, avg_headcount: 17 },
+    { mes: "mar/26", turnover_exit: 0.0, turnover_entry: 0.0, terminations: 0, hires: 0, avg_headcount: 18 },
   ],
 };
+
+// Aggregate turnover across all groups (weighted by headcount)
+function aggregateTurnoverEvo(map: Record<string, TurnoverEvoRow[]>): TurnoverEvoRow[] {
+  const byMes: Record<string, { terminations: number; hires: number; totalHC: number }> = {};
+  for (const rows of Object.values(map)) {
+    for (const r of rows) {
+      if (!byMes[r.mes]) byMes[r.mes] = { terminations: 0, hires: 0, totalHC: 0 };
+      byMes[r.mes].terminations += r.terminations;
+      byMes[r.mes].hires += r.hires;
+      byMes[r.mes].totalHC += r.avg_headcount;
+    }
+  }
+  const meses = ["abr/25","mai/25","jun/25","jul/25","ago/25","set/25","out/25","nov/25","dez/25","jan/26","fev/26","mar/26"];
+  return meses.map(mes => {
+    const d = byMes[mes] || { terminations: 0, hires: 0, totalHC: 1 };
+    return {
+      mes,
+      turnover_exit: +(d.terminations / d.totalHC * 100).toFixed(2),
+      turnover_entry: +(d.hires / d.totalHC * 100).toFixed(2),
+      terminations: d.terminations,
+      hires: d.hires,
+      avg_headcount: d.totalHC,
+    };
+  });
+}
+
+const turnoverEvolucao = aggregateTurnoverEvo(turnoverEvolucaoPorEmpresa);
+const turnoverMedia = turnoverEvolucao.reduce((s, d) => s + d.turnover_exit, 0) / turnoverEvolucao.length;
 
 // Abs vs Turnover monthly data per empresa (from real JSON)
 const absVsTurnoverPorEmpresa: Record<string, { mes: string; absenteismo: number; turnover: number; headcount: number; desligamentos: number }[]> = {
@@ -455,7 +469,7 @@ const absVsTurnoverPorEmpresa: Record<string, { mes: string; absenteismo: number
 // Abs vs Turnover monthly data per unidade (derived from abs + turnover evolution data)
 function buildAbsVsTurnoverFromMaps(
   absMap: Record<string, { mes: string; value: number }[]>,
-  turnMap: Record<string, { mes: string; value: number; desligamentos: number }[]>,
+  turnMap: Record<string, TurnoverEvoRow[]>,
   scatterData: { regional: string; headcount: number }[]
 ): Record<string, { mes: string; absenteismo: number; turnover: number; headcount: number; desligamentos: number }[]> {
   const result: Record<string, { mes: string; absenteismo: number; turnover: number; headcount: number; desligamentos: number }[]> = {};
@@ -466,9 +480,9 @@ function buildAbsVsTurnoverFromMaps(
     result[name] = absData.map(a => ({
       mes: a.mes,
       absenteismo: a.value,
-      turnover: turnByMes[a.mes]?.value ?? 0,
+      turnover: turnByMes[a.mes]?.turnover_exit ?? 0,
       headcount: hcMap[name] ?? 0,
-      desligamentos: turnByMes[a.mes]?.desligamentos ?? 0,
+      desligamentos: turnByMes[a.mes]?.terminations ?? 0,
     }));
   }
   return result;
@@ -1406,8 +1420,6 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
   const [absChartMode, setAbsChartMode] = useState<ChartMode>("line");
   const [absDataMode, setAbsDataMode] = useState<DataMode>("percent");
-  const [turnChartMode, setTurnChartMode] = useState<ChartMode>("line");
-  const [turnDataMode, setTurnDataMode] = useState<DataMode>("percent");
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
   const { config: absConfig } = useAbsenteismoScoreConfig();
 
@@ -1470,7 +1482,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     return absenteismoEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), ausencias: Math.round(d.ausencias * ratio) }));
   }, [selectedRegional, selectedLabel, allScatterData, groupBy]);
 
-  const filteredTurnoverEvolucao = useMemo(() => {
+  const filteredTurnoverEvolucao = useMemo((): TurnoverEvoRow[] => {
     if (!selectedRegional) return turnoverEvolucao;
     const mapByGroupBy = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa
       : groupBy === "unidade" ? turnoverEvolucaoPorUnidade
@@ -1480,16 +1492,20 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     const item = allScatterData.find(d => ((d as any).entityId ?? d.regional) === selectedRegional);
     if (!item) return turnoverEvolucao;
     const ratio = item.turnover / turnoverMedia;
-    return turnoverEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), desligamentos: Math.round(d.desligamentos * ratio) }));
+    return turnoverEvolucao.map(d => ({
+      ...d,
+      turnover_exit: +(d.turnover_exit * ratio).toFixed(2),
+      turnover_entry: +(d.turnover_entry * ratio).toFixed(2),
+      terminations: Math.round(d.terminations * ratio),
+      hires: Math.round(d.hires * ratio),
+    }));
   }, [selectedRegional, selectedLabel, allScatterData, groupBy]);
 
   const absEvolucaoValor = useMemo(() => filteredAbsEvolucao.map(d => ({
     ...d, ausencias: (d as any).ausencias ?? Math.round(d.value * 80),
   })), [filteredAbsEvolucao]);
 
-  const turnEvolucaoValor = useMemo(() => filteredTurnoverEvolucao.map(d => ({
-    ...d, desligamentos: (d as any).desligamentos ?? Math.round(d.value * 12),
-  })), [filteredTurnoverEvolucao]);
+  const turnEvolucaoValor = useMemo(() => filteredTurnoverEvolucao, [filteredTurnoverEvolucao]);
 
   const getItemCompositeScore = useCallback((absTaxa: number, turnoverMensal: number) => {
     const turnoverAnual = turnoverMensal * 12;
@@ -1598,10 +1614,10 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
 
   // Shared chart helpers
   const showAbsValor = absDataMode === "valor";
-  const showTurnValor = turnDataMode === "valor";
 
   const absMediaRef = filteredAbsEvolucao.reduce((s, d) => s + d.value, 0) / filteredAbsEvolucao.length;
-  const turnMediaRef = filteredTurnoverEvolucao.reduce((s, d) => s + d.value, 0) / filteredTurnoverEvolucao.length;
+  const turnMediaExitRef = filteredTurnoverEvolucao.reduce((s, d) => s + d.turnover_exit, 0) / filteredTurnoverEvolucao.length;
+  const turnMediaEntryRef = filteredTurnoverEvolucao.reduce((s, d) => s + d.turnover_entry, 0) / filteredTurnoverEvolucao.length;
 
   const handleChartClick = (e: any) => {
     if (e?.activeLabel) setSelectedMes((prev: string | null) => prev === e.activeLabel ? null : e.activeLabel);
@@ -1725,7 +1741,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
   const filterClause = selectedLabel ? `\n  AND ${groupColumn} = '${selectedLabel}'` : "";
 
   const sqlAbsEvolucao = `SELECT\n  ${groupColumn} AS operacao,\n  DATE_FORMAT(competencia, '%b/%y') AS mes,\n  ROUND(taxa_absenteismo, 2) AS taxa_pct,\n  total_ausencias AS ausencias\nFROM vw_absenteismo_mensal\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'${filterClause}\nORDER BY operacao, competencia;`;
-  const sqlTurnEvolucao = `SELECT\n  ${groupColumn} AS operacao,\n  DATE_FORMAT(competencia, '%b/%y') AS mes,\n  ROUND(taxa_turnover, 2) AS taxa_pct,\n  total_desligamentos AS desligamentos\nFROM vw_turnover_mensal\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'${filterClause}\nORDER BY operacao, competencia;`;
+  const sqlTurnEvolucao = `SELECT\n  ${groupColumn} AS operacao,\n  DATE_FORMAT(reference_month, '%b/%y') AS mes,\n  turnover_exit_percentage AS demissoes_pct,\n  turnover_entry_percentage AS admissoes_pct,\n  terminations AS desligamentos,\n  hires AS admissoes,\n  avg_headcount AS headcount_medio\nFROM vw_turnover_mensal\nWHERE reference_month BETWEEN '2025-04-01' AND '2026-03-31'${filterClause}\nORDER BY operacao, reference_month;`;
   const sqlAbsVsTurnover = `WITH absenteismo AS (
     SELECT
         tt.customer_id,
@@ -1793,11 +1809,11 @@ ORDER BY a.reference_month, a.headcount DESC;`;
 
   const turnModalData = useMemo(() => {
     const turnMap = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa : groupBy === "unidade" ? turnoverEvolucaoPorUnidade : turnoverEvolucaoPorArea;
-    const rows: { operacao: string; mes: string; value: number; desligamentos: number }[] = [];
+    const rows: { operacao: string; mes: string; turnover_exit: number; turnover_entry: number; terminations: number; hires: number; avg_headcount: number; saldo: number }[] = [];
     for (const [name, data] of Object.entries(turnMap)) {
       if (selectedLabel && name !== selectedLabel) continue;
       for (const d of data) {
-        rows.push({ operacao: name, mes: d.mes, value: d.value, desligamentos: d.desligamentos });
+        rows.push({ operacao: name, mes: d.mes, turnover_exit: d.turnover_exit, turnover_entry: d.turnover_entry, terminations: d.terminations, hires: d.hires, avg_headcount: d.avg_headcount, saldo: d.hires - d.terminations });
       }
     }
     return rows;
@@ -1852,17 +1868,71 @@ ORDER BY a.reference_month, a.headcount DESC;`;
               <div>
                 <div className="flex items-center gap-1.5">
                   <h4 className="text-sm font-semibold">Evolução do Turnover</h4>
-                  <InfoTip text="Taxa de rotatividade mensal: desligamentos sobre o efetivo médio." />
+                  <InfoTip text="Taxa de rotatividade mensal: demissões (vermelha) e admissões (verde) sobre o efetivo médio." />
                 </div>
-                <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
+                <p className="text-[10px] text-muted-foreground mb-2">Demissões e Admissões mensais · clique para filtrar</p>
               </div>
               <div className="flex items-center gap-1">
                 <button onClick={() => setChartDataModal("turnEvolucao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
-                <ChartModeToggle dataMode={turnDataMode} onDataModeChange={setTurnDataMode} chartMode={turnChartMode} onChartModeChange={setTurnChartMode} />
               </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              {renderEvoChart(turnEvolucaoValor, "desligamentos", "value", "#f97316", turnChartMode, turnDataMode, turnMediaRef, "Turnover")}
+              <LineChart data={turnEvolucaoValor} onClick={handleChartClick}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="mes" tick={xTick} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v: number) => `${v}%`} domain={["auto", "auto"]} />
+                <RechartsTooltip content={({ active, payload, label: lbl }) => {
+                  if (!active || !payload?.length) return null;
+                  const d = payload[0].payload as TurnoverEvoRow;
+                  const saldo = d.hires - d.terminations;
+                  return (
+                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                      <p className="font-semibold text-foreground">{lbl}</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#ef4444" }} />
+                        <span className="text-muted-foreground">Demissões:</span>
+                        <span className="font-medium text-foreground">{d.turnover_exit}% ({d.terminations} pessoas)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#22c55e" }} />
+                        <span className="text-muted-foreground">Admissões:</span>
+                        <span className="font-medium text-foreground">{d.turnover_entry}% ({d.hires} pessoas)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 pt-0.5 border-t border-border/50">
+                        <span className="text-muted-foreground">Saldo:</span>
+                        <span className={`font-semibold ${saldo > 0 ? "text-green-600" : saldo < 0 ? "text-red-600" : "text-muted-foreground"}`}>{saldo > 0 ? "+" : ""}{saldo} pessoas</span>
+                      </div>
+                    </div>
+                  );
+                }} />
+                {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
+                <ReferenceLine y={turnMediaExitRef} stroke="#ef444466" strokeWidth={1} strokeDasharray="8 4" />
+                <ReferenceLine y={turnMediaEntryRef} stroke="#22c55e66" strokeWidth={1} strokeDasharray="8 4" />
+                <Line type="monotone" dataKey="turnover_exit" stroke="#ef4444" strokeWidth={2} dot={(props: any) => {
+                  const { cx, cy, payload: p } = props;
+                  const isSelected = selectedMes === p.mes;
+                  return (
+                    <g key={`exit-${p.mes}`} className="cursor-pointer">
+                      {isSelected && <circle cx={cx} cy={cy} r={10} fill="#ef4444" fillOpacity={0.15} stroke="#ef4444" strokeWidth={1} strokeDasharray="3 2" />}
+                      <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#ef4444" : !selectedMes ? "#ef4444" : "#ef444455"} stroke="#fff" strokeWidth={2} />
+                    </g>
+                  );
+                }} activeDot={{ r: 6, stroke: "#ef4444", strokeWidth: 2, fill: "#fff" }} name="Demissões" />
+                <Line type="monotone" dataKey="turnover_entry" stroke="#22c55e" strokeWidth={2} dot={(props: any) => {
+                  const { cx, cy, payload: p } = props;
+                  const isSelected = selectedMes === p.mes;
+                  return (
+                    <g key={`entry-${p.mes}`} className="cursor-pointer">
+                      {isSelected && <circle cx={cx} cy={cy} r={10} fill="#22c55e" fillOpacity={0.15} stroke="#22c55e" strokeWidth={1} strokeDasharray="3 2" />}
+                      <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#22c55e" : !selectedMes ? "#22c55e" : "#22c55e55"} stroke="#fff" strokeWidth={2} />
+                    </g>
+                  );
+                }} activeDot={{ r: 6, stroke: "#22c55e", strokeWidth: 2, fill: "#fff" }} name="Admissões" />
+                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
+                  { value: "Demissões", type: "circle" as const, color: "#ef4444" },
+                  { value: "Admissões", type: "circle" as const, color: "#22c55e" },
+                ]} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -1964,7 +2034,7 @@ ORDER BY a.reference_month, a.headcount DESC;`;
       <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
 
       <ChartDataModal open={chartDataModal === "absEvolucao"} onClose={() => setChartDataModal(null)} title={`Evolução do Absenteísmo — ${groupLabel}`} data={absModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "value", label: "Taxa (%)" }, { key: "ausencias", label: "Ausências" }]} sqlQuery={sqlAbsEvolucao} />
-      <ChartDataModal open={chartDataModal === "turnEvolucao"} onClose={() => setChartDataModal(null)} title={`Evolução do Turnover — ${groupLabel}`} data={turnModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "value", label: "Taxa (%)" }, { key: "desligamentos", label: "Desligamentos" }]} sqlQuery={sqlTurnEvolucao} />
+      <ChartDataModal open={chartDataModal === "turnEvolucao"} onClose={() => setChartDataModal(null)} title={`Evolução do Turnover — ${groupLabel}`} data={turnModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "turnover_exit", label: "Demissões (%)" }, { key: "turnover_entry", label: "Admissões (%)" }, { key: "terminations", label: "Desligamentos" }, { key: "hires", label: "Admissões" }, { key: "avg_headcount", label: "HC Médio" }, { key: "saldo", label: "Saldo" }]} sqlQuery={sqlTurnEvolucao} />
       <ChartDataModal open={chartDataModal === "absVsTurnover"} onClose={() => setChartDataModal(null)} title={`Absenteísmo vs Turnover — ${groupLabel}`} data={absVsTurnoverModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "absenteismo", label: "Absenteísmo (%)" }, { key: "turnover", label: "Turnover (%)" }, { key: "headcount", label: "Headcount" }, { key: "desligamentos", label: "Desligamentos" }]} sqlQuery={sqlAbsVsTurnover} />
       <ChartDataModal open={chartDataModal === "absVsHE"} onClose={() => setChartDataModal(null)} title={`Absenteísmo vs Hora Extra — ${groupLabel}`} data={chartScatter} columns={[{ key: "regional", label: groupLabel }, { key: "absenteismo", label: "Absenteísmo (%)" }, { key: "he", label: "HE/100 colab (h)" }, { key: "headcount", label: "Headcount" }]} sqlQuery={sqlAbsVsHE} />
     </div>
