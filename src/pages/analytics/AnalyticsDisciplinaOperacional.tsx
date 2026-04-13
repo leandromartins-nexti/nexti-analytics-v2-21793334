@@ -1395,53 +1395,77 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     ...d, desligamentos: (d as any).desligamentos ?? Math.round(d.value * 12),
   })), [filteredTurnoverEvolucao]);
 
-  const getAbsScoreFromTaxa = (taxa: number) => Math.round(Math.max(0, Math.min(100, 100 - taxa * 5)));
-  const getAbsFaixa = (taxa: number) => taxa <= 8 ? "Bom" : taxa <= 15 ? "Atenção" : "Crítico";
+  // Helper: compute composite score for an item
+  const getItemCompositeScore = useCallback((absTaxa: number, turnoverMensal: number) => {
+    const turnoverAnual = turnoverMensal * 12;
+    return computeAbsCompositeScore(absTaxa, turnoverAnual, absConfig);
+  }, [absConfig]);
 
   const activeData = useMemo(() => {
     if (!selectedRegional) {
-      const sorted = [...allScatterData].sort((a, b) => a.absenteismo - b.absenteismo);
+      const sorted = [...allScatterData].sort((a, b) => {
+        const sa = getItemCompositeScore(a.absenteismo, a.turnover).score;
+        const sb = getItemCompositeScore(b.absenteismo, b.turnover).score;
+        return sb - sa; // highest score first
+      });
       const best = sorted[0];
       const worst = sorted[sorted.length - 1];
       const avgTaxa = absenteismoMedia;
-      const score = getAbsScoreFromTaxa(avgTaxa);
+      const turnoverAnual = +(turnoverMedia * 12).toFixed(1);
+      const composite = computeAbsCompositeScore(avgTaxa, turnoverAnual, absConfig);
+      const classif = getAbsScoreClassification(composite.score, absConfig);
+      const bestScore = best ? getItemCompositeScore(best.absenteismo, best.turnover).score : 0;
+      const worstScore = worst ? getItemCompositeScore(worst.absenteismo, worst.turnover).score : 0;
       return {
-        score, taxa: avgTaxa, faixa: getAbsFaixa(avgTaxa),
-        melhorOperacao: { nome: best?.regional ?? "—", score: getAbsScoreFromTaxa(best?.absenteismo ?? 10) },
-        maiorRisco: { nome: worst?.regional ?? "—", score: getAbsScoreFromTaxa(worst?.absenteismo ?? 10), indicador: `${worst?.absenteismo ?? 0}% taxa` },
-        faltasNJ: "38%", turnover: "8.2%",
+        score: Math.round(composite.score), taxa: avgTaxa, faixa: classif.label,
+        melhorOperacao: { nome: best?.regional ?? "—", score: Math.round(bestScore) },
+        maiorRisco: { nome: worst?.regional ?? "—", score: Math.round(worstScore), indicador: `${worst?.absenteismo ?? 0}% taxa` },
+        turnover: `${turnoverAnual}%`,
       };
     }
     const r = allScatterData.find(x => x.regional === selectedRegional);
-    if (!r) return {
-      score: 52, taxa: absenteismoMedia, faixa: "Atenção" as string,
-      melhorOperacao: { nome: "—", score: 0 },
-      maiorRisco: { nome: "—", score: 0, indicador: "—" },
-      faltasNJ: "38%", turnover: "8.2%",
-    };
-    const score = getAbsScoreFromTaxa(r.absenteismo);
+    if (!r) {
+      const composite = computeAbsCompositeScore(absenteismoMedia, turnoverMedia * 12, absConfig);
+      const classif = getAbsScoreClassification(composite.score, absConfig);
+      return {
+        score: Math.round(composite.score), taxa: absenteismoMedia, faixa: classif.label,
+        melhorOperacao: { nome: "—", score: 0 },
+        maiorRisco: { nome: "—", score: 0, indicador: "—" },
+        turnover: `${(turnoverMedia * 12).toFixed(1)}%`,
+      };
+    }
+    const turnoverAnual = +(r.turnover * 12).toFixed(1);
+    const composite = computeAbsCompositeScore(r.absenteismo, turnoverAnual, absConfig);
+    const classif = getAbsScoreClassification(composite.score, absConfig);
     return {
-      score, taxa: r.absenteismo,
-      faixa: getAbsFaixa(r.absenteismo),
-      melhorOperacao: { nome: selectedRegional, score },
-      maiorRisco: { nome: selectedRegional, score, indicador: `${r.absenteismo}% taxa` },
-      faltasNJ: `${Math.round(30 + r.absenteismo * 1.5)}%`,
-      turnover: `${r.turnover}%`,
+      score: Math.round(composite.score), taxa: r.absenteismo,
+      faixa: classif.label,
+      melhorOperacao: { nome: selectedRegional, score: Math.round(composite.score) },
+      maiorRisco: { nome: selectedRegional, score: Math.round(composite.score), indicador: `${r.absenteismo}% taxa` },
+      turnover: `${turnoverAnual}%`,
     };
-  }, [selectedRegional, allScatterData]);
+  }, [selectedRegional, allScatterData, absConfig, getItemCompositeScore]);
 
-  const getAbsScore = (abs: number) => Math.round(Math.max(0, Math.min(100, 100 - abs * 5)));
   const sidebarItems = useMemo(() => {
-    if (groupBy === "empresa") return [...empresaAbsScatter].sort((a, b) => a.absenteismo - b.absenteismo).map(e => ({ nome: e.regional, score: getAbsScore(e.absenteismo) }));
-    if (groupBy === "area") return [...areaAbsScatter].sort((a, b) => a.absenteismo - b.absenteismo).map(e => ({ nome: e.regional, score: getAbsScore(e.absenteismo) }));
-    return [...unidadeAbsScatter].sort((a, b) => a.absenteismo - b.absenteismo).map(e => ({ nome: e.regional, score: getAbsScore(e.absenteismo) }));
-  }, [groupBy]);
+    const getItems = () => {
+      if (groupBy === "empresa") return empresaAbsScatter;
+      if (groupBy === "area") return areaAbsScatter;
+      return unidadeAbsScatter;
+    };
+    return [...getItems()]
+      .map(e => {
+        const cs = getItemCompositeScore(e.absenteismo, e.turnover);
+        return { nome: e.regional, score: Math.round(cs.score) };
+      })
+      .sort((a, b) => b.score - a.score);
+  }, [groupBy, absConfig, getItemCompositeScore]);
 
-  // Scatter color helpers
+  // Scatter color helpers using composite score
   const getAbsTurnoverColor = (abs: number, turn: number) => {
-    if (abs < 5 && turn < 8) return "#22c55e";
-    if (abs >= 5 && turn >= 8) return "#ef4444";
-    return "#f97316";
+    const cs = getItemCompositeScore(abs, turn).score;
+    if (cs >= 70) return "#22c55e";
+    if (cs >= 55) return "#f97316";
+    return "#ef4444";
   };
   const getAbsHEColor = (abs: number, he: number) => {
     if (abs < 5 && he < 380) return "#22c55e";
