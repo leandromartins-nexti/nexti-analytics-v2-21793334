@@ -1812,11 +1812,11 @@ ORDER BY a.reference_month, a.headcount DESC;`;
 
   const turnModalData = useMemo(() => {
     const turnMap = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa : groupBy === "unidade" ? turnoverEvolucaoPorUnidade : turnoverEvolucaoPorArea;
-    const rows: { operacao: string; mes: string; value: number; desligamentos: number }[] = [];
+    const rows: { operacao: string; mes: string; turnover_exit: number; turnover_entry: number; terminations: number; hires: number; avg_headcount: number; saldo: number }[] = [];
     for (const [name, data] of Object.entries(turnMap)) {
       if (selectedLabel && name !== selectedLabel) continue;
       for (const d of data) {
-        rows.push({ operacao: name, mes: d.mes, value: d.value, desligamentos: d.desligamentos });
+        rows.push({ operacao: name, mes: d.mes, turnover_exit: d.turnover_exit, turnover_entry: d.turnover_entry, terminations: d.terminations, hires: d.hires, avg_headcount: d.avg_headcount, saldo: d.hires - d.terminations });
       }
     }
     return rows;
