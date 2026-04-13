@@ -1848,8 +1848,19 @@ ORDER BY a.reference_month, a.headcount DESC;`;
 
   const movimentacaoYMax = useMemo(() => {
     const maxVal = Math.max(...movimentacaoData.map(d => Math.max(d.hires, d.terminations)));
-    return Math.ceil(maxVal * 1.15) || 10;
+    if (maxVal <= 0) return 10;
+    // Round up to a nice number for symmetric ticks
+    const candidates = [10, 20, 25, 50, 100, 150, 200, 250, 300, 400, 500, 750, 1000];
+    const nice = candidates.find(c => c >= maxVal) ?? Math.ceil(maxVal / 50) * 50;
+    return nice;
   }, [movimentacaoData]);
+
+  const movimentacaoTicks = useMemo(() => {
+    const step = movimentacaoYMax / 4;
+    return [-movimentacaoYMax, -step * 3, -step * 2, -step, 0, step, step * 2, step * 3, movimentacaoYMax].map(v => Math.round(v));
+  }, [movimentacaoYMax]);
+
+  const [hoveredMovMes, setHoveredMovMes] = useState<string | null>(null);
 
   const movimentacaoSaldoMedio = useMemo(() => {
     const saldos = movimentacaoData.map(d => d.hires - d.terminations);
@@ -2031,13 +2042,15 @@ ORDER BY a.reference_month, a.headcount DESC;`;
             </div>
             <p className="text-[10px] text-muted-foreground mb-2">Admissões e demissões em número absoluto · clique para filtrar</p>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={movimentacaoData} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+               <BarChart data={movimentacaoData} margin={{ top: 10, right: 80, bottom: 10, left: 0 }}
+                 onMouseMove={(state: any) => { if (state?.activeLabel) setHoveredMovMes(state.activeLabel); }}
+                 onMouseLeave={() => setHoveredMovMes(null)}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v: number) => `${Math.abs(v)}`} domain={[-(movimentacaoYMax), movimentacaoYMax]} />
-                <ReferenceLine y={0} stroke="#000" strokeWidth={1} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v: number) => `${Math.abs(v)}`} domain={[-movimentacaoYMax, movimentacaoYMax]} ticks={movimentacaoTicks} />
+                <ReferenceLine y={0} stroke="#000" strokeWidth={2} ifOverflow="extendDomain" />
                 {movimentacaoSaldoMedio !== 0 && (
-                  <ReferenceLine y={movimentacaoSaldoMedio} stroke="#f59e0b" strokeWidth={1.2} strokeDasharray="6 4" label={{ value: `Saldo médio: ${movimentacaoSaldoMedio > 0 ? "+" : ""}${movimentacaoSaldoMedio.toFixed(0)}`, position: "right", fontSize: 9, fill: "#f59e0b" }} />
+                  <ReferenceLine y={movimentacaoSaldoMedio} stroke="#f59e0b" strokeWidth={1.2} strokeDasharray="6 4" label={{ value: `Saldo médio: ${movimentacaoSaldoMedio > 0 ? "+" : ""}${Math.round(movimentacaoSaldoMedio)}`, position: "right", fontSize: 9, fill: "#f59e0b" }} />
                 )}
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
@@ -2045,18 +2058,28 @@ ORDER BY a.reference_month, a.headcount DESC;`;
                   if (!row) return null;
                   const saldo = row.hires - row.terminations;
                   return (
-                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs min-w-[160px]">
+                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs min-w-[180px]">
                       <p className="font-semibold mb-1">{label}</p>
-                      <p className="text-green-600">Admissões: {row.hires} pessoas</p>
-                      <p className="text-red-600">Demissões: {row.terminations} pessoas</p>
-                      <p className={saldo >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>Saldo: {saldo > 0 ? "+" : ""}{saldo} pessoas</p>
-                      <p className="text-muted-foreground">Movimentação total: {row.hires + row.terminations} pessoas</p>
+                      <p style={{ color: "#16a34a" }}>Admissões: {row.hires} pessoas</p>
+                      <p style={{ color: "#dc2626" }}>Demissões: {row.terminations} pessoas</p>
+                      <p style={{ color: saldo >= 0 ? "#16a34a" : "#dc2626", fontWeight: 500 }}>Saldo: {saldo > 0 ? "+" : ""}{saldo} pessoas</p>
+                      <p style={{ color: "#6b7280" }}>Movimentação total: {row.hires + row.terminations}</p>
                     </div>
                   );
                 }} />
                 <Legend formatter={(value: string) => <span className="text-xs">{value}</span>} />
-                <Bar dataKey="hires" name="Admissões" fill="#22c55e" radius={[3, 3, 0, 0]} animationDuration={600} />
-                <Bar dataKey="terminations_negative" name="Demissões" fill="#ef4444" radius={[0, 0, 3, 3]} animationDuration={600} />
+                <Bar dataKey="hires" name="Admissões" fill="#22c55e" radius={[3, 3, 0, 0]} animationDuration={600}
+                  shape={(props: any) => {
+                    const isHovered = !hoveredMovMes || props?.mes === hoveredMovMes || props?.payload?.mes === hoveredMovMes;
+                    return <rect x={props.x} y={props.y} width={props.width} height={props.height} fill="#22c55e" rx={3} ry={3} opacity={isHovered ? 1 : 0.4} stroke={hoveredMovMes && isHovered ? "#15803d" : "none"} strokeWidth={1} />;
+                  }}
+                />
+                <Bar dataKey="terminations_negative" name="Demissões" fill="#ef4444" radius={[0, 0, 3, 3]} animationDuration={600}
+                  shape={(props: any) => {
+                    const isHovered = !hoveredMovMes || props?.mes === hoveredMovMes || props?.payload?.mes === hoveredMovMes;
+                    return <rect x={props.x} y={props.y} width={props.width} height={Math.abs(props.height)} fill="#ef4444" rx={3} ry={3} opacity={isHovered ? 1 : 0.4} stroke={hoveredMovMes && isHovered ? "#b91c1c" : "none"} strokeWidth={1} />;
+                  }}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
