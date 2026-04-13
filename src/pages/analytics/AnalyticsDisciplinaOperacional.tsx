@@ -1848,8 +1848,19 @@ ORDER BY a.reference_month, a.headcount DESC;`;
 
   const movimentacaoYMax = useMemo(() => {
     const maxVal = Math.max(...movimentacaoData.map(d => Math.max(d.hires, d.terminations)));
-    return Math.ceil(maxVal * 1.15) || 10;
+    if (maxVal <= 0) return 10;
+    // Round up to a nice number for symmetric ticks
+    const candidates = [10, 20, 25, 50, 100, 150, 200, 250, 300, 400, 500, 750, 1000];
+    const nice = candidates.find(c => c >= maxVal) ?? Math.ceil(maxVal / 50) * 50;
+    return nice;
   }, [movimentacaoData]);
+
+  const movimentacaoTicks = useMemo(() => {
+    const step = movimentacaoYMax / 4;
+    return [-movimentacaoYMax, -step * 3, -step * 2, -step, 0, step, step * 2, step * 3, movimentacaoYMax].map(v => Math.round(v));
+  }, [movimentacaoYMax]);
+
+  const [hoveredMovMes, setHoveredMovMes] = useState<string | null>(null);
 
   const movimentacaoSaldoMedio = useMemo(() => {
     const saldos = movimentacaoData.map(d => d.hires - d.terminations);
