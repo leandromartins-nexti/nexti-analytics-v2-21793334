@@ -1327,10 +1327,10 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
 
   const filteredTurnoverEvolucao = useMemo(() => {
     if (!selectedRegional) return turnoverEvolucao;
-    // Check real per-empresa data
     const perEmpresa = turnoverEvolucaoPorEmpresa[selectedRegional];
     if (perEmpresa) return perEmpresa;
-    // Fallback ratio
+    const perUnidade = turnoverEvolucaoPorUnidade[selectedRegional];
+    if (perUnidade) return perUnidade;
     const item = allScatterData.find(d => d.regional === selectedRegional);
     if (!item) return turnoverEvolucao;
     const ratio = item.turnover / turnoverMedia;
