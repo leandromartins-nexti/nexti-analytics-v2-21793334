@@ -1726,7 +1726,56 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
 
   const sqlAbsEvolucao = `SELECT\n  ${groupColumn} AS operacao,\n  DATE_FORMAT(competencia, '%b/%y') AS mes,\n  ROUND(taxa_absenteismo, 2) AS taxa_pct,\n  total_ausencias AS ausencias\nFROM vw_absenteismo_mensal\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'${filterClause}\nORDER BY operacao, competencia;`;
   const sqlTurnEvolucao = `SELECT\n  ${groupColumn} AS operacao,\n  DATE_FORMAT(competencia, '%b/%y') AS mes,\n  ROUND(taxa_turnover, 2) AS taxa_pct,\n  total_desligamentos AS desligamentos\nFROM vw_turnover_mensal\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'${filterClause}\nORDER BY operacao, competencia;`;
-  const sqlAbsVsTurnover = `SELECT\n  ${groupColumn} AS operacao,\n  ROUND(taxa_absenteismo, 2) AS absenteismo_pct,\n  ROUND(taxa_turnover, 2) AS turnover_pct,\n  headcount\nFROM vw_indicadores_operacao\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'\nGROUP BY operacao\nORDER BY absenteismo_pct DESC;`;
+  const sqlAbsVsTurnover = `WITH absenteismo AS (
+    SELECT
+        tt.customer_id,
+        co.id AS company_id,
+        co.${groupColumn} AS operacao,
+        DATE_FORMAT(tt.reference_date, '%Y-%m-01') AS reference_month,
+        ROUND(
+            SUM(CASE WHEN tt.time_tracking_type_id IN (18,19,20,21,22,23,24,25,26,51,55,79,80,81,93,127,309) THEN tt.minutes ELSE 0 END)
+            / NULLIF(
+                SUM(CASE WHEN tt.time_tracking_type_id IN (1,2,8,12,13,71,72,94,95,217,218,262,18,19,20,21,22,23,24,25,26,51,55,79,80,81,93,127,309) THEN tt.minutes ELSE 0 END), 0
+            ) * 100, 2
+        ) AS absenteeism_percentage,
+        COUNT(DISTINCT tt.person_id) AS headcount
+    FROM time_tracking tt
+    JOIN person p ON tt.person_id = p.id
+    JOIN company co ON p.company_id = co.id
+    WHERE tt.customer_id = 642
+      AND tt.reference_date >= '2025-04-01'
+      AND tt.reference_date < '2026-04-01'${filterClause}
+    GROUP BY tt.customer_id, co.id, operacao, reference_month
+),
+demissoes AS (
+    SELECT p.id AS person_id, p.company_id,
+        COALESCE(p.demission_date,
+            (SELECT MAX(a.start_date) FROM absence a
+             JOIN absence_situation asit ON a.absence_situation_id = asit.id
+             WHERE a.person_id = p.id AND asit.absence_type_id = 3)
+        ) AS demission_date_final
+    FROM person p
+    WHERE p.customer_id = 642 AND p.person_situation_id = 3
+),
+turnover AS (
+    SELECT d.company_id,
+        DATE_FORMAT(d.demission_date_final, '%Y-%m-01') AS reference_month,
+        COUNT(DISTINCT d.person_id) AS terminations
+    FROM demissoes d
+    WHERE d.demission_date_final >= '2025-04-01'
+      AND d.demission_date_final < '2026-04-01'
+    GROUP BY d.company_id, reference_month
+)
+SELECT
+    a.operacao,
+    a.reference_month,
+    a.absenteeism_percentage,
+    a.headcount,
+    COALESCE(t.terminations, 0) AS terminations,
+    ROUND(COALESCE(t.terminations, 0) / NULLIF(a.headcount, 0) * 100, 2) AS turnover_percentage
+FROM absenteismo a
+LEFT JOIN turnover t ON a.company_id = t.company_id AND a.reference_month = t.reference_month
+ORDER BY a.reference_month, a.headcount DESC;`;
   const sqlAbsVsHE = `SELECT\n  ${groupColumn} AS operacao,\n  ROUND(taxa_absenteismo, 2) AS absenteismo_pct,\n  ROUND(horas_extras_por_100_colab, 0) AS he_por_100_colab,\n  headcount\nFROM vw_indicadores_operacao\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'\nGROUP BY operacao\nORDER BY absenteismo_pct DESC;`;
 
   // Build comprehensive table data for modals (all entities flattened)
