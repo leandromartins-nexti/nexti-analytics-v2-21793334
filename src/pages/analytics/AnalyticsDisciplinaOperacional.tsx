@@ -1674,7 +1674,11 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
                 <h4 className="text-sm font-semibold">Evolução do Absenteísmo</h4>
                 <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
               </div>
-              <ChartModeToggle dataMode={absDataMode} onDataModeChange={setAbsDataMode} chartMode={absChartMode} onChartModeChange={setAbsChartMode} />
+              <div className="flex items-center gap-1">
+                <button onClick={() => setChartDataModal("absEvolucao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
+                <ChartModeToggle dataMode={absDataMode} onDataModeChange={setAbsDataMode} chartMode={absChartMode} onChartModeChange={setAbsChartMode} />
+              </div>
+            </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
               {renderEvoChart(absEvolucaoValor, "ausencias", "value", "hsl(var(--destructive))", absChartMode, absDataMode, absMediaRef, "Absenteísmo")}
@@ -1690,7 +1694,10 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
                 </div>
                 <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
               </div>
-              <ChartModeToggle dataMode={turnDataMode} onDataModeChange={setTurnDataMode} chartMode={turnChartMode} onChartModeChange={setTurnChartMode} />
+              <div className="flex items-center gap-1">
+                <button onClick={() => setChartDataModal("turnEvolucao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
+                <ChartModeToggle dataMode={turnDataMode} onDataModeChange={setTurnDataMode} chartMode={turnChartMode} onChartModeChange={setTurnChartMode} />
+              </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
               {renderEvoChart(turnEvolucaoValor, "desligamentos", "value", "#f97316", turnChartMode, turnDataMode, turnMediaRef, "Turnover")}
@@ -1701,9 +1708,12 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
         {/* Row 3: 2 Scatter charts */}
         <div className="grid grid-cols-2 gap-3">
           <div className={`bg-card border rounded-xl p-4 ${selectedRegional ? "border-[#FF5722]/30" : "border-border/50"}`}>
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <h4 className="text-sm font-semibold">Absenteísmo vs Turnover</h4>
-              <InfoTip text="Operações no quadrante superior direito indicam problema estrutural: alta rotatividade combinada com alto absenteísmo." />
+            <div className="flex items-center justify-between mb-0.5">
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-sm font-semibold">Absenteísmo vs Turnover</h4>
+                <InfoTip text="Operações no quadrante superior direito indicam problema estrutural: alta rotatividade combinada com alto absenteísmo." />
+              </div>
+              <button onClick={() => setChartDataModal("absVsTurnover")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
             <p className="text-[10px] text-muted-foreground mb-2">Por operação · tamanho = headcount</p>
             <ResponsiveContainer width="100%" height={280}>
@@ -1743,9 +1753,12 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
           </div>
 
           <div className={`bg-card border rounded-xl p-4 ${selectedRegional ? "border-[#FF5722]/30" : "border-border/50"}`}>
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <h4 className="text-sm font-semibold">Absenteísmo vs Hora Extra</h4>
-              <InfoTip text="Operações no quadrante superior direito podem estar em ciclo vicioso: colaboradores faltam, quem fica faz hora extra, se cansa e falta mais." />
+            <div className="flex items-center justify-between mb-0.5">
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-sm font-semibold">Absenteísmo vs Hora Extra</h4>
+                <InfoTip text="Operações no quadrante superior direito podem estar em ciclo vicioso: colaboradores faltam, quem fica faz hora extra, se cansa e falta mais." />
+              </div>
+              <button onClick={() => setChartDataModal("absVsHE")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
             <p className="text-[10px] text-muted-foreground mb-2">Por operação · tamanho = headcount</p>
             <ResponsiveContainer width="100%" height={280}>
