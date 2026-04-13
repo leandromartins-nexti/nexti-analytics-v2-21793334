@@ -1660,7 +1660,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
   const sqlAbsVsHE = `SELECT\n  ${groupColumn} AS operacao,\n  ROUND(taxa_absenteismo, 2) AS absenteismo_pct,\n  ROUND(horas_extras_por_100_colab, 0) AS he_por_100_colab,\n  headcount\nFROM vw_indicadores_operacao\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'\nGROUP BY operacao\nORDER BY absenteismo_pct DESC;`;
 
   return (
-    <>
+    <div>
     <div className="flex">
       <div className="flex-1 min-w-0 space-y-3 pl-6 pr-4 py-4">
         {/* Linha 1: Score + 4 KPI Cards */}
@@ -1860,7 +1860,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
         ]}
         sqlQuery={sqlAbsVsHE}
       />
-    </>
+    </div>
   );
 }
 
