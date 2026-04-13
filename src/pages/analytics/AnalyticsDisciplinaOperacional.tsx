@@ -1871,17 +1871,71 @@ ORDER BY a.reference_month, a.headcount DESC;`;
               <div>
                 <div className="flex items-center gap-1.5">
                   <h4 className="text-sm font-semibold">Evolução do Turnover</h4>
-                  <InfoTip text="Taxa de rotatividade mensal: desligamentos sobre o efetivo médio." />
+                  <InfoTip text="Taxa de rotatividade mensal: demissões (vermelha) e admissões (verde) sobre o efetivo médio." />
                 </div>
-                <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
+                <p className="text-[10px] text-muted-foreground mb-2">Demissões e Admissões mensais · clique para filtrar</p>
               </div>
               <div className="flex items-center gap-1">
                 <button onClick={() => setChartDataModal("turnEvolucao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
-                <ChartModeToggle dataMode={turnDataMode} onDataModeChange={setTurnDataMode} chartMode={turnChartMode} onChartModeChange={setTurnChartMode} />
               </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
-              {renderEvoChart(turnEvolucaoValor, "desligamentos", "value", "#f97316", turnChartMode, turnDataMode, turnMediaRef, "Turnover")}
+              <LineChart data={turnEvolucaoValor} onClick={handleChartClick}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="mes" tick={xTick} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v: number) => `${v}%`} domain={["auto", "auto"]} />
+                <RechartsTooltip content={({ active, payload, label: lbl }) => {
+                  if (!active || !payload?.length) return null;
+                  const d = payload[0].payload as TurnoverEvoRow;
+                  const saldo = d.hires - d.terminations;
+                  return (
+                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                      <p className="font-semibold text-foreground">{lbl}</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#ef4444" }} />
+                        <span className="text-muted-foreground">Demissões:</span>
+                        <span className="font-medium text-foreground">{d.turnover_exit}% ({d.terminations} pessoas)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#22c55e" }} />
+                        <span className="text-muted-foreground">Admissões:</span>
+                        <span className="font-medium text-foreground">{d.turnover_entry}% ({d.hires} pessoas)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 pt-0.5 border-t border-border/50">
+                        <span className="text-muted-foreground">Saldo:</span>
+                        <span className={`font-semibold ${saldo > 0 ? "text-green-600" : saldo < 0 ? "text-red-600" : "text-muted-foreground"}`}>{saldo > 0 ? "+" : ""}{saldo} pessoas</span>
+                      </div>
+                    </div>
+                  );
+                }} />
+                {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
+                <ReferenceLine y={turnMediaExitRef} stroke="#ef444466" strokeWidth={1} strokeDasharray="8 4" />
+                <ReferenceLine y={turnMediaEntryRef} stroke="#22c55e66" strokeWidth={1} strokeDasharray="8 4" />
+                <Line type="monotone" dataKey="turnover_exit" stroke="#ef4444" strokeWidth={2} dot={(props: any) => {
+                  const { cx, cy, payload: p } = props;
+                  const isSelected = selectedMes === p.mes;
+                  return (
+                    <g key={`exit-${p.mes}`} className="cursor-pointer">
+                      {isSelected && <circle cx={cx} cy={cy} r={10} fill="#ef4444" fillOpacity={0.15} stroke="#ef4444" strokeWidth={1} strokeDasharray="3 2" />}
+                      <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#ef4444" : !selectedMes ? "#ef4444" : "#ef444455"} stroke="#fff" strokeWidth={2} />
+                    </g>
+                  );
+                }} activeDot={{ r: 6, stroke: "#ef4444", strokeWidth: 2, fill: "#fff" }} name="Demissões" />
+                <Line type="monotone" dataKey="turnover_entry" stroke="#22c55e" strokeWidth={2} dot={(props: any) => {
+                  const { cx, cy, payload: p } = props;
+                  const isSelected = selectedMes === p.mes;
+                  return (
+                    <g key={`entry-${p.mes}`} className="cursor-pointer">
+                      {isSelected && <circle cx={cx} cy={cy} r={10} fill="#22c55e" fillOpacity={0.15} stroke="#22c55e" strokeWidth={1} strokeDasharray="3 2" />}
+                      <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? "#22c55e" : !selectedMes ? "#22c55e" : "#22c55e55"} stroke="#fff" strokeWidth={2} />
+                    </g>
+                  );
+                }} activeDot={{ r: 6, stroke: "#22c55e", strokeWidth: 2, fill: "#fff" }} name="Admissões" />
+                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
+                  { value: "Demissões", type: "circle" as const, color: "#ef4444" },
+                  { value: "Admissões", type: "circle" as const, color: "#22c55e" },
+                ]} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
