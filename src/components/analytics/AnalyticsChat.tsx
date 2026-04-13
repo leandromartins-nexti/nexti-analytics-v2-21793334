@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { MessageCircle, X, Send, Bot, User, FileDown, Loader2 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 interface ChatMessage {
   id: string;
