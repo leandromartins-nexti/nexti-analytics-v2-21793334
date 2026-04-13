@@ -18,10 +18,10 @@ function abreviar(nome: string): string {
 }
 
 interface GroupBySidebarProps {
-  items: { nome: string; score: number }[];
+  items: { nome: string; score: number; value?: string }[];
   selectedRegional: string | null;
-  onRegionalClick: (name: string) => void;
-  onItemDetail?: (name: string) => void;
+  onRegionalClick: (value: string) => void;
+  onItemDetail?: (value: string) => void;
   groupBy: GroupBy;
   onGroupByChange: (g: GroupBy) => void;
   onPagedItemsChange?: (names: string[]) => void;
@@ -87,7 +87,7 @@ export default function GroupBySidebar({
   );
 
   useEffect(() => {
-    onPagedItemsChange?.(pagedItems.map(i => i.nome));
+    onPagedItemsChange?.(pagedItems.map(i => i.value ?? i.nome));
   }, [pagedItems, onPagedItemsChange]);
 
   // ── Collapsed mode ──
@@ -131,17 +131,18 @@ export default function GroupBySidebar({
           {/* Abbreviated items */}
           <div className="flex flex-col gap-0.5 overflow-y-auto flex-1">
             {pagedItems.map(op => {
-              const isSelected = selectedRegional === op.nome;
+              const itemValue = op.value ?? op.nome;
+              const isSelected = selectedRegional === itemValue;
               const isDimmed = selectedRegional && !isSelected;
               const scoreColor =
                 op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
               const abbr = abreviar(op.nome);
               return (
-                <UITooltip key={op.nome}>
+                <UITooltip key={itemValue}>
                   <TooltipTrigger asChild>
                     <button
-                      onClick={() => onRegionalClick(op.nome)}
-                      onContextMenu={e => { e.preventDefault(); onItemDetail?.(op.nome); }}
+                      onClick={() => onRegionalClick(itemValue)}
+                      onContextMenu={e => { e.preventDefault(); onItemDetail?.(itemValue); }}
                       className={`flex flex-col items-center px-1 py-1 rounded-md cursor-pointer transition-all text-[9px] leading-tight ${
                         isSelected
                           ? "bg-orange-50 border border-[#FF5722]/30"
@@ -245,15 +246,16 @@ export default function GroupBySidebar({
             <p className="text-[10px] text-muted-foreground text-center py-2">Nenhum resultado</p>
           )}
           {pagedItems.map(op => {
-            const isSelected = selectedRegional === op.nome;
+            const itemValue = op.value ?? op.nome;
+            const isSelected = selectedRegional === itemValue;
             const isDimmed = selectedRegional && !isSelected;
             const scoreColor =
               op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
             return (
               <div
-                key={op.nome}
-                onClick={() => onRegionalClick(op.nome)}
-                onContextMenu={e => { e.preventDefault(); onItemDetail?.(op.nome); }}
+                key={itemValue}
+                onClick={() => onRegionalClick(itemValue)}
+                onContextMenu={e => { e.preventDefault(); onItemDetail?.(itemValue); }}
                 className={`flex items-center gap-2 px-0.5 py-1 rounded-md cursor-pointer transition-all text-xs ${
                   isSelected
                     ? "bg-orange-50 border border-[#FF5722]/30"

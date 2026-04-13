@@ -1340,50 +1340,78 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
   const [turnDataMode, setTurnDataMode] = useState<DataMode>("percent");
   const { config: absConfig } = useAbsenteismoScoreConfig();
 
+  const idToLabelByGroup = useMemo(() => ({
+    empresa: {
+      "9379": "TERCEIRIZACAO",
+      "9380": "PORTARIA E LIMPEZA",
+      "9381": "SEGURANCA PATRIMONIAL",
+    },
+    unidade: {
+      "17517": "TERCEIRIZACAO",
+      "17518": "PORTARIA E LIMPEZA",
+      "17519": "SEGURANCA PATRIMONIAL",
+    },
+    area: {
+      "11043": "SAO PAULO",
+      "11045": "SOROCABA",
+      "11046": "PIRACICABA",
+    },
+  }), []);
+
+  const labelToIdByGroup = useMemo(() => ({
+    empresa: Object.fromEntries(Object.entries(idToLabelByGroup.empresa).map(([id, label]) => [label, id])),
+    unidade: Object.fromEntries(Object.entries(idToLabelByGroup.unidade).map(([id, label]) => [label, id])),
+    area: Object.fromEntries(Object.entries(idToLabelByGroup.area).map(([id, label]) => [label, id])),
+  }), [idToLabelByGroup]);
+
+  const selectedLabel = useMemo(() => {
+    if (!selectedRegional) return null;
+    return idToLabelByGroup[groupBy][selectedRegional as keyof typeof idToLabelByGroup[typeof groupBy]] ?? selectedRegional;
+  }, [selectedRegional, groupBy, idToLabelByGroup]);
+
   // Scatter data per groupBy
   const allScatterData = useMemo(() => {
-    if (groupBy === "empresa") return empresaAbsScatter;
-    if (groupBy === "area") return areaAbsScatter;
-    return unidadeAbsScatter;
-  }, [groupBy]);
+    const source = groupBy === "empresa" ? empresaAbsScatter : groupBy === "area" ? areaAbsScatter : unidadeAbsScatter;
+    const labelToId = labelToIdByGroup[groupBy];
+    return source.map((item) => ({
+      ...item,
+      entityId: labelToId[item.regional as keyof typeof labelToId] ?? item.regional,
+    }));
+  }, [groupBy, labelToIdByGroup]);
 
-  // Filter scatter by visible sidebar names
+  // Filter scatter by visible sidebar ids
   const chartScatter = useMemo(() => {
     if (visibleNames.length === 0) return allScatterData;
-    return allScatterData.filter(d => visibleNames.includes(d.regional));
+    return allScatterData.filter(d => visibleNames.includes((d as any).entityId ?? d.regional));
   }, [allScatterData, visibleNames]);
 
   // Evolution data filtered by selectedRegional AND groupBy (use correct map per groupBy)
   const filteredAbsEvolucao = useMemo(() => {
     if (!selectedRegional) return absenteismoEvolucao;
-    // Pick the correct map based on active groupBy
     const mapByGroupBy = groupBy === "empresa" ? absenteismoEvolucaoPorEmpresa
       : groupBy === "unidade" ? absenteismoEvolucaoPorUnidade
       : absenteismoEvolucaoPorArea;
-    const perGroup = mapByGroupBy[selectedRegional];
+    const perGroup = selectedLabel ? mapByGroupBy[selectedLabel] : undefined;
     if (perGroup) return perGroup;
-    // Fallback: ratio-based simulation
-    const item = allScatterData.find(d => d.regional === selectedRegional);
+    const item = allScatterData.find(d => ((d as any).entityId ?? d.regional) === selectedRegional);
     if (!item) return absenteismoEvolucao;
     const ratio = item.absenteismo / absenteismoMedia;
     return absenteismoEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), ausencias: Math.round(d.ausencias * ratio) }));
-  }, [selectedRegional, allScatterData, groupBy]);
+  }, [selectedRegional, selectedLabel, allScatterData, groupBy]);
 
   const filteredTurnoverEvolucao = useMemo(() => {
     if (!selectedRegional) return turnoverEvolucao;
-    // Pick the correct map based on active groupBy
     const mapByGroupBy = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa
       : groupBy === "unidade" ? turnoverEvolucaoPorUnidade
       : turnoverEvolucaoPorArea;
-    const perGroup = mapByGroupBy[selectedRegional];
+    const perGroup = selectedLabel ? mapByGroupBy[selectedLabel] : undefined;
     if (perGroup) return perGroup;
-    const item = allScatterData.find(d => d.regional === selectedRegional);
+    const item = allScatterData.find(d => ((d as any).entityId ?? d.regional) === selectedRegional);
     if (!item) return turnoverEvolucao;
     const ratio = item.turnover / turnoverMedia;
     return turnoverEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), desligamentos: Math.round(d.desligamentos * ratio) }));
-  }, [selectedRegional, allScatterData, groupBy]);
+  }, [selectedRegional, selectedLabel, allScatterData, groupBy]);
 
-  // Data with ausencias for # mode (already in filteredAbsEvolucao from real data)
   const absEvolucaoValor = useMemo(() => filteredAbsEvolucao.map(d => ({
     ...d, ausencias: (d as any).ausencias ?? Math.round(d.value * 80),
   })), [filteredAbsEvolucao]);
@@ -1392,7 +1420,6 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     ...d, desligamentos: (d as any).desligamentos ?? Math.round(d.value * 12),
   })), [filteredTurnoverEvolucao]);
 
-  // Helper: compute composite score for an item
   const getItemCompositeScore = useCallback((absTaxa: number, turnoverMensal: number) => {
     const turnoverAnual = turnoverMensal * 12;
     return computeAbsCompositeScore(absTaxa, turnoverAnual, absConfig);
@@ -1403,7 +1430,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
       const sorted = [...allScatterData].sort((a, b) => {
         const sa = getItemCompositeScore(a.absenteismo, a.turnover).score;
         const sb = getItemCompositeScore(b.absenteismo, b.turnover).score;
-        return sb - sa; // highest score first
+        return sb - sa;
       });
       const best = sorted[0];
       const worst = sorted[sorted.length - 1];
@@ -1420,7 +1447,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
         turnover: `${turnoverAnual}%`,
       };
     }
-    const r = allScatterData.find(x => x.regional === selectedRegional);
+    const r = allScatterData.find(x => ((x as any).entityId ?? x.regional) === selectedRegional);
     if (!r) {
       const composite = computeAbsCompositeScore(absenteismoMedia, turnoverMedia * 12, absConfig);
       const classif = getAbsScoreClassification(composite.score, absConfig);
@@ -1437,11 +1464,11 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     return {
       score: Math.round(composite.score), taxa: r.absenteismo,
       faixa: classif.label,
-      melhorOperacao: { nome: selectedRegional, score: Math.round(composite.score) },
-      maiorRisco: { nome: selectedRegional, score: Math.round(composite.score), indicador: `${r.absenteismo}% taxa` },
+      melhorOperacao: { nome: selectedLabel ?? r.regional, score: Math.round(composite.score) },
+      maiorRisco: { nome: selectedLabel ?? r.regional, score: Math.round(composite.score), indicador: `${r.absenteismo}% taxa` },
       turnover: `${turnoverAnual}%`,
     };
-  }, [selectedRegional, allScatterData, absConfig, getItemCompositeScore]);
+  }, [selectedRegional, selectedLabel, allScatterData, absConfig, getItemCompositeScore]);
 
   const sidebarItems = useMemo(() => {
     const getItems = () => {
@@ -1449,13 +1476,14 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
       if (groupBy === "area") return areaAbsScatter;
       return unidadeAbsScatter;
     };
+    const labelToId = labelToIdByGroup[groupBy];
     return [...getItems()]
       .map(e => {
         const cs = getItemCompositeScore(e.absenteismo, e.turnover);
-        return { nome: e.regional, score: Math.round(cs.score) };
+        return { nome: e.regional, value: labelToId[e.regional as keyof typeof labelToId] ?? e.regional, score: Math.round(cs.score) };
       })
       .sort((a, b) => b.score - a.score);
-  }, [groupBy, absConfig, getItemCompositeScore]);
+  }, [groupBy, labelToIdByGroup, absConfig, getItemCompositeScore]);
 
   // Scatter color helpers using composite score
   const getAbsTurnoverColor = (abs: number, turn: number) => {
