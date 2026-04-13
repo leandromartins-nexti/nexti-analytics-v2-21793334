@@ -1660,7 +1660,6 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
   const sqlAbsVsHE = `SELECT\n  ${groupColumn} AS operacao,\n  ROUND(taxa_absenteismo, 2) AS absenteismo_pct,\n  ROUND(horas_extras_por_100_colab, 0) AS he_por_100_colab,\n  headcount\nFROM vw_indicadores_operacao\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'\nGROUP BY operacao\nORDER BY absenteismo_pct DESC;`;
 
   return (
-    <div>
     <div className="flex">
       <div className="flex-1 min-w-0 space-y-3 pl-6 pr-4 py-4">
         {/* Linha 1: Score + 4 KPI Cards */}
@@ -1808,58 +1807,11 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
       </div>
 
       <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
-    </div>
 
-      <ChartDataModal
-        open={chartDataModal === "absEvolucao"}
-        onClose={() => setChartDataModal(null)}
-        title="Evolução do Absenteísmo — Dados"
-        data={absEvolucaoValor}
-        columns={[
-          { key: "mes", label: "Competência" },
-          { key: "value", label: "Taxa (%)", format: (v: number) => `${v}%` },
-          { key: "ausencias", label: "Ausências", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" },
-        ]}
-        sqlQuery={sqlAbsEvolucao}
-      />
-      <ChartDataModal
-        open={chartDataModal === "turnEvolucao"}
-        onClose={() => setChartDataModal(null)}
-        title="Evolução do Turnover — Dados"
-        data={turnEvolucaoValor}
-        columns={[
-          { key: "mes", label: "Competência" },
-          { key: "value", label: "Taxa (%)", format: (v: number) => `${v}%` },
-          { key: "desligamentos", label: "Desligamentos", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" },
-        ]}
-        sqlQuery={sqlTurnEvolucao}
-      />
-      <ChartDataModal
-        open={chartDataModal === "absVsTurnover"}
-        onClose={() => setChartDataModal(null)}
-        title="Absenteísmo vs Turnover — Dados"
-        data={chartScatter}
-        columns={[
-          { key: "regional", label: "Operação" },
-          { key: "absenteismo", label: "Absenteísmo (%)", format: (v: number) => `${v}%` },
-          { key: "turnover", label: "Turnover (%)", format: (v: number) => `${v}%` },
-          { key: "headcount", label: "Headcount", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" },
-        ]}
-        sqlQuery={sqlAbsVsTurnover}
-      />
-      <ChartDataModal
-        open={chartDataModal === "absVsHE"}
-        onClose={() => setChartDataModal(null)}
-        title="Absenteísmo vs Hora Extra — Dados"
-        data={chartScatter}
-        columns={[
-          { key: "regional", label: "Operação" },
-          { key: "absenteismo", label: "Absenteísmo (%)", format: (v: number) => `${v}%` },
-          { key: "he", label: "HE/100 colab (h)" },
-          { key: "headcount", label: "Headcount", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" },
-        ]}
-        sqlQuery={sqlAbsVsHE}
-      />
+      <ChartDataModal open={chartDataModal === "absEvolucao"} onClose={() => setChartDataModal(null)} title="Evolução do Absenteísmo — Dados" data={absEvolucaoValor} columns={[{ key: "mes", label: "Competência" }, { key: "value", label: "Taxa (%)", format: (v: number) => `${v}%` }, { key: "ausencias", label: "Ausências", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" }]} sqlQuery={sqlAbsEvolucao} />
+      <ChartDataModal open={chartDataModal === "turnEvolucao"} onClose={() => setChartDataModal(null)} title="Evolução do Turnover — Dados" data={turnEvolucaoValor} columns={[{ key: "mes", label: "Competência" }, { key: "value", label: "Taxa (%)", format: (v: number) => `${v}%` }, { key: "desligamentos", label: "Desligamentos", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" }]} sqlQuery={sqlTurnEvolucao} />
+      <ChartDataModal open={chartDataModal === "absVsTurnover"} onClose={() => setChartDataModal(null)} title="Absenteísmo vs Turnover — Dados" data={chartScatter} columns={[{ key: "regional", label: "Operação" }, { key: "absenteismo", label: "Absenteísmo (%)", format: (v: number) => `${v}%` }, { key: "turnover", label: "Turnover (%)", format: (v: number) => `${v}%` }, { key: "headcount", label: "Headcount", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" }]} sqlQuery={sqlAbsVsTurnover} />
+      <ChartDataModal open={chartDataModal === "absVsHE"} onClose={() => setChartDataModal(null)} title="Absenteísmo vs Hora Extra — Dados" data={chartScatter} columns={[{ key: "regional", label: "Operação" }, { key: "absenteismo", label: "Absenteísmo (%)", format: (v: number) => `${v}%` }, { key: "he", label: "HE/100 colab (h)" }, { key: "headcount", label: "Headcount", format: (v: number) => v?.toLocaleString("pt-BR") ?? "—" }]} sqlQuery={sqlAbsVsHE} />
     </div>
   );
 }
