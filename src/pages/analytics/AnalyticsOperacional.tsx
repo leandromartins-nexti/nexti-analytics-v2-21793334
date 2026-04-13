@@ -60,13 +60,15 @@ export default function AnalyticsOperacional() {
           <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium">Período: {resumo.periodo}</span>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <InsightsCenter />
           <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-gray-50">
             <Filter className="w-4 h-4" /> Filtros
           </button>
           <button className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
             <Eraser className="w-4 h-4" /> Limpar Filtros
           </button>
+          <Separator orientation="vertical" className="h-6" />
+          <InsightsCenter />
+          <AnalyticsChat activeTab={activeTab} />
         </div>
       </div>
 
