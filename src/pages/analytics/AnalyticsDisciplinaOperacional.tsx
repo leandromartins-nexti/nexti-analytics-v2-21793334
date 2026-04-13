@@ -1792,7 +1792,7 @@ SELECT
 FROM absenteismo a
 LEFT JOIN turnover t ON a.company_id = t.company_id AND a.reference_month = t.reference_month
 ORDER BY a.reference_month, a.headcount DESC;`;
-  const sqlAbsVsHE = `SELECT\n  ${groupColumn} AS operacao,\n  ROUND(taxa_absenteismo, 2) AS absenteismo_pct,\n  ROUND(horas_extras_por_100_colab, 0) AS he_por_100_colab,\n  headcount\nFROM vw_indicadores_operacao\nWHERE competencia BETWEEN '2025-04-01' AND '2026-03-31'\nGROUP BY operacao\nORDER BY absenteismo_pct DESC;`;
+  const sqlMovimentacao = `SELECT\n  ${groupColumn} AS operacao,\n  TO_CHAR(reference_month, 'Mon/YY') AS mes,\n  SUM(CASE WHEN tipo = 'admissao' THEN 1 ELSE 0 END) AS admissoes,\n  SUM(CASE WHEN tipo = 'demissao' THEN 1 ELSE 0 END) AS demissoes,\n  SUM(CASE WHEN tipo = 'admissao' THEN 1 ELSE 0 END) - SUM(CASE WHEN tipo = 'demissao' THEN 1 ELSE 0 END) AS saldo\nFROM vw_movimentacoes\nWHERE reference_month BETWEEN '2025-04-01' AND '2026-03-31'\n${selectedLabel ? `  AND ${groupColumn} = '${selectedLabel}'` : ""}\nGROUP BY operacao, reference_month\nORDER BY reference_month;`;
 
   // Build comprehensive table data for modals (all entities flattened)
   const absModalData = useMemo(() => {
@@ -1826,6 +1826,43 @@ ORDER BY a.reference_month, a.headcount DESC;`;
       if (selectedLabel && name !== selectedLabel) continue;
       for (const d of data) {
         rows.push({ operacao: name, mes: d.mes, absenteismo: d.absenteismo, turnover: d.turnover, headcount: d.headcount, desligamentos: d.desligamentos });
+      }
+    }
+    return rows;
+  }, [groupBy, selectedLabel]);
+
+  // Movimentação Mensal data (derived from turnover evolution data)
+  const movimentacaoData = useMemo(() => {
+    const turnMap = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa : groupBy === "unidade" ? turnoverEvolucaoPorUnidade : turnoverEvolucaoPorArea;
+    const meses = ["abr/25","mai/25","jun/25","jul/25","ago/25","set/25","out/25","nov/25","dez/25","jan/26","fev/26","mar/26"];
+    return meses.map(mes => {
+      let totalHires = 0, totalTerminations = 0;
+      for (const [name, data] of Object.entries(turnMap)) {
+        if (selectedLabel && name !== selectedLabel) continue;
+        const row = data.find(d => d.mes === mes);
+        if (row) { totalHires += row.hires; totalTerminations += row.terminations; }
+      }
+      return { mes, hires: totalHires, terminations: totalTerminations, terminations_negative: -totalTerminations };
+    });
+  }, [groupBy, selectedLabel]);
+
+  const movimentacaoYMax = useMemo(() => {
+    const maxVal = Math.max(...movimentacaoData.map(d => Math.max(d.hires, d.terminations)));
+    return Math.ceil(maxVal * 1.15) || 10;
+  }, [movimentacaoData]);
+
+  const movimentacaoSaldoMedio = useMemo(() => {
+    const saldos = movimentacaoData.map(d => d.hires - d.terminations);
+    return saldos.reduce((a, b) => a + b, 0) / (saldos.length || 1);
+  }, [movimentacaoData]);
+
+  const movimentacaoModalData = useMemo(() => {
+    const turnMap = groupBy === "empresa" ? turnoverEvolucaoPorEmpresa : groupBy === "unidade" ? turnoverEvolucaoPorUnidade : turnoverEvolucaoPorArea;
+    const rows: { operacao: string; mes: string; hires: number; terminations: number; saldo: number; total: number }[] = [];
+    for (const [name, data] of Object.entries(turnMap)) {
+      if (selectedLabel && name !== selectedLabel) continue;
+      for (const d of data) {
+        rows.push({ operacao: name, mes: d.mes, hires: d.hires, terminations: d.terminations, saldo: d.hires - d.terminations, total: d.hires + d.terminations });
       }
     }
     return rows;
@@ -1987,45 +2024,40 @@ ORDER BY a.reference_month, a.headcount DESC;`;
           <div className={`bg-card border rounded-xl p-4 ${selectedRegional ? "border-[#FF5722]/30" : "border-border/50"}`}>
             <div className="flex items-center justify-between mb-0.5">
               <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-semibold">Absenteísmo vs Hora Extra</h4>
-                <InfoTip text="Operações no quadrante superior direito podem estar em ciclo vicioso: colaboradores faltam, quem fica faz hora extra, se cansa e falta mais." />
+                <h4 className="text-sm font-semibold">Movimentação Mensal</h4>
+                <InfoTip text="Admissões e demissões em número absoluto por mês. Barras verdes (para cima) são admissões, vermelhas (para baixo) são demissões." />
               </div>
-              <button onClick={() => setChartDataModal("absVsHE")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
+              <button onClick={() => setChartDataModal("movimentacao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Por operação · tamanho = headcount</p>
+            <p className="text-[10px] text-muted-foreground mb-2">Admissões e demissões em número absoluto · clique para filtrar</p>
             <ResponsiveContainer width="100%" height={280}>
-              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="absenteismo" name="Absenteísmo" domain={[absHEDomain.xMin, absHEDomain.xMax]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} label={{ value: "Absenteísmo (%)", position: "insideBottom", offset: -5, fontSize: 10 }} />
-                <YAxis type="number" dataKey="he" name="HE/100 colab" domain={[absHEDomain.yMin, absHEDomain.yMax]} tick={{ fontSize: 10 }} label={{ value: "HE por 100 colab. (horas)", angle: -90, position: "insideLeft", fontSize: 10 }} />
-                <ZAxis type="number" dataKey="headcount" range={[200, 800]} />
-                <ReferenceLine y={avgHE} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
-                <ReferenceLine x={avgAbs} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
-                <RechartsTooltip content={({ active, payload }) => {
+              <BarChart data={movimentacaoData} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v: number) => `${Math.abs(v)}`} domain={[-(movimentacaoYMax), movimentacaoYMax]} />
+                <ReferenceLine y={0} stroke="#000" strokeWidth={1} />
+                {movimentacaoSaldoMedio !== 0 && (
+                  <ReferenceLine y={movimentacaoSaldoMedio} stroke="#f59e0b" strokeWidth={1.2} strokeDasharray="6 4" label={{ value: `Saldo médio: ${movimentacaoSaldoMedio > 0 ? "+" : ""}${movimentacaoSaldoMedio.toFixed(0)}`, position: "right", fontSize: 9, fill: "#f59e0b" }} />
+                )}
+                <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
-                  const d = payload[0].payload;
+                  const row = payload[0]?.payload;
+                  if (!row) return null;
+                  const saldo = row.hires - row.terminations;
                   return (
-                    <div className="bg-white border rounded-lg p-2 shadow-md text-xs">
-                      <p className="font-semibold">{d.regional}</p>
-                      <p>Absenteísmo: {d.absenteismo}%</p>
-                      <p>HE/100 colab: {d.he}h</p>
-                      <p>Headcount: {d.headcount}</p>
+                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs min-w-[160px]">
+                      <p className="font-semibold mb-1">{label}</p>
+                      <p className="text-green-600">Admissões: {row.hires} pessoas</p>
+                      <p className="text-red-600">Demissões: {row.terminations} pessoas</p>
+                      <p className={saldo >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>Saldo: {saldo > 0 ? "+" : ""}{saldo} pessoas</p>
+                      <p className="text-muted-foreground">Movimentação total: {row.hires + row.terminations} pessoas</p>
                     </div>
                   );
                 }} />
-                <Scatter data={chartScatter} shape={(props: any) => {
-                  const { cx, cy, payload } = props;
-                  const r = Math.max(8, Math.sqrt(payload.headcount) * 0.8);
-                  const fill = getAbsHEColor(payload.absenteismo, payload.he);
-                  const isSelected = !selectedRegional || selectedRegional === (payload.entityId ?? payload.regional);
-                  return (
-                    <g onClick={() => onRegionalClick(payload.entityId ?? payload.regional)} onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.entityId ?? payload.regional); }} className="cursor-pointer">
-                      <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={isSelected ? 0.7 : 0.15} stroke={fill} strokeWidth={isSelected ? 1.5 : 0.5} />
-                      <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize={8} fontWeight={600} fill={isSelected ? "#374151" : "#9ca3af"}>{abreviar(payload.regional)}</text>
-                    </g>
-                  );
-                }} />
-              </ScatterChart>
+                <Legend formatter={(value: string) => <span className="text-xs">{value}</span>} />
+                <Bar dataKey="hires" name="Admissões" fill="#22c55e" radius={[3, 3, 0, 0]} animationDuration={600} />
+                <Bar dataKey="terminations_negative" name="Demissões" fill="#ef4444" radius={[0, 0, 3, 3]} animationDuration={600} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -2036,7 +2068,7 @@ ORDER BY a.reference_month, a.headcount DESC;`;
       <ChartDataModal open={chartDataModal === "absEvolucao"} onClose={() => setChartDataModal(null)} title={`Evolução do Absenteísmo — ${groupLabel}`} data={absModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "value", label: "Taxa (%)" }, { key: "ausencias", label: "Ausências" }]} sqlQuery={sqlAbsEvolucao} />
       <ChartDataModal open={chartDataModal === "turnEvolucao"} onClose={() => setChartDataModal(null)} title={`Evolução do Turnover — ${groupLabel}`} data={turnModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "turnover_exit", label: "Demissões (%)" }, { key: "turnover_entry", label: "Admissões (%)" }, { key: "terminations", label: "Desligamentos" }, { key: "hires", label: "Admissões" }, { key: "avg_headcount", label: "HC Médio" }, { key: "saldo", label: "Saldo" }]} sqlQuery={sqlTurnEvolucao} />
       <ChartDataModal open={chartDataModal === "absVsTurnover"} onClose={() => setChartDataModal(null)} title={`Absenteísmo vs Turnover — ${groupLabel}`} data={absVsTurnoverModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "absenteismo", label: "Absenteísmo (%)" }, { key: "turnover", label: "Turnover (%)" }, { key: "headcount", label: "Headcount" }, { key: "desligamentos", label: "Desligamentos" }]} sqlQuery={sqlAbsVsTurnover} />
-      <ChartDataModal open={chartDataModal === "absVsHE"} onClose={() => setChartDataModal(null)} title={`Absenteísmo vs Hora Extra — ${groupLabel}`} data={chartScatter} columns={[{ key: "regional", label: groupLabel }, { key: "absenteismo", label: "Absenteísmo (%)" }, { key: "he", label: "HE/100 colab (h)" }, { key: "headcount", label: "Headcount" }]} sqlQuery={sqlAbsVsHE} />
+      <ChartDataModal open={chartDataModal === "movimentacao"} onClose={() => setChartDataModal(null)} title={`Movimentação Mensal — ${groupLabel}`} data={movimentacaoModalData} columns={[{ key: "operacao", label: groupLabel }, { key: "mes", label: "Competência" }, { key: "hires", label: "Admissões" }, { key: "terminations", label: "Demissões" }, { key: "saldo", label: "Saldo" }, { key: "total", label: "Movimentação Total" }]} sqlQuery={sqlMovimentacao} />
     </div>
   );
 }
