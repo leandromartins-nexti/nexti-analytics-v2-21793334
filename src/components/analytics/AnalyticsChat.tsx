@@ -321,6 +321,7 @@ export default function AnalyticsChat({ activeTab }: AnalyticsChatProps) {
           };
           setMessages((prev) => [...prev, botMsg]);
         } catch (err) {
+          console.error("PDF generation error:", err);
           const botMsg: ChatMessage = {
             id: `a-${Date.now()}`,
             role: "assistant",
