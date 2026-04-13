@@ -1686,7 +1686,6 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
                 <ChartModeToggle dataMode={absDataMode} onDataModeChange={setAbsDataMode} chartMode={absChartMode} onChartModeChange={setAbsChartMode} />
               </div>
             </div>
-            </div>
             <ResponsiveContainer width="100%" height={280}>
               {renderEvoChart(absEvolucaoValor, "ausencias", "value", "hsl(var(--destructive))", absChartMode, absDataMode, absMediaRef, "Absenteísmo")}
             </ResponsiveContainer>
