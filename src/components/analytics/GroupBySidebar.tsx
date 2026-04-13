@@ -246,15 +246,16 @@ export default function GroupBySidebar({
             <p className="text-[10px] text-muted-foreground text-center py-2">Nenhum resultado</p>
           )}
           {pagedItems.map(op => {
-            const isSelected = selectedRegional === op.nome;
+            const itemValue = op.value ?? op.nome;
+            const isSelected = selectedRegional === itemValue;
             const isDimmed = selectedRegional && !isSelected;
             const scoreColor =
               op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
             return (
               <div
-                key={op.nome}
-                onClick={() => onRegionalClick(op.nome)}
-                onContextMenu={e => { e.preventDefault(); onItemDetail?.(op.nome); }}
+                key={itemValue}
+                onClick={() => onRegionalClick(itemValue)}
+                onContextMenu={e => { e.preventDefault(); onItemDetail?.(itemValue); }}
                 className={`flex items-center gap-2 px-0.5 py-1 rounded-md cursor-pointer transition-all text-xs ${
                   isSelected
                     ? "bg-orange-50 border border-[#FF5722]/30"
