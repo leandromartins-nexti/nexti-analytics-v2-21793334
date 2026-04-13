@@ -1282,10 +1282,14 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
 
   const filteredTurnoverEvolucao = useMemo(() => {
     if (!selectedRegional) return turnoverEvolucao;
+    // Check real per-empresa data
+    const perEmpresa = turnoverEvolucaoPorEmpresa[selectedRegional];
+    if (perEmpresa) return perEmpresa;
+    // Fallback ratio
     const item = allScatterData.find(d => d.regional === selectedRegional);
     if (!item) return turnoverEvolucao;
     const ratio = item.turnover / turnoverMedia;
-    return turnoverEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1) }));
+    return turnoverEvolucao.map(d => ({ ...d, value: +(d.value * ratio).toFixed(1), desligamentos: Math.round(d.desligamentos * ratio) }));
   }, [selectedRegional, allScatterData]);
 
   // Data with ausencias for # mode (already in filteredAbsEvolucao from real data)
