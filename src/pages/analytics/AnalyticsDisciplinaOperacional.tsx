@@ -10,7 +10,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import {
   ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
-  ScatterChart, Scatter, ZAxis, Cell, ComposedChart, LabelList,
+  ScatterChart, Scatter, ZAxis, Cell, LabelList,
 } from "recharts";
 import esforcoEmpresa from "@/data/qualidade-ponto/esforco-tratativa-por-empresa.json";
 import esforcoUnNegocio from "@/data/qualidade-ponto/esforco-tratativa-por-un-negocio.json";
