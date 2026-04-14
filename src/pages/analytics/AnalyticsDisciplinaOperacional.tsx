@@ -869,8 +869,6 @@ type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: stri
 function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const { config: scoreConfig } = useScoreConfig();
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
-  const [tratChartMode, setTratChartMode] = useState<ChartMode>("area");
-  const [tratDataMode, setTratDataMode] = useState<DataMode>("percent");
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
 
