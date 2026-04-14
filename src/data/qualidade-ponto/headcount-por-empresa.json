@@ -1,218 +1,434 @@
 [
   {
-    "competencia": "2025-04",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 222
+    "reference_month": "2025-04-01",
+    "clocking_count": 742,
+    "registered_count": 662,
+    "justified_count": 65,
+    "quality_percentage": 89.22,
+    "headcount": 12,
+    "active_headcount": 13
   },
   {
-    "competencia": "2025-05",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-04-01",
+    "clocking_count": 1028,
+    "registered_count": 413,
+    "justified_count": 523,
+    "quality_percentage": 40.18,
+    "headcount": 21,
+    "active_headcount": 17
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-04-01",
+    "clocking_count": 7891,
+    "registered_count": 6931,
+    "justified_count": 654,
+    "quality_percentage": 87.83,
+    "headcount": 207,
+    "active_headcount": 221
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-05-01",
+    "clocking_count": 1094,
+    "registered_count": 519,
+    "justified_count": 494,
+    "quality_percentage": 47.44,
+    "headcount": 19,
+    "active_headcount": 17
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-05-01",
+    "clocking_count": 7842,
+    "registered_count": 6789,
+    "justified_count": 729,
+    "quality_percentage": 86.57,
+    "headcount": 206,
+    "active_headcount": 217
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 228
+    "reference_month": "2025-05-01",
+    "clocking_count": 718,
+    "registered_count": 614,
+    "justified_count": 71,
+    "quality_percentage": 85.52,
+    "headcount": 12,
+    "active_headcount": 13
   },
   {
-    "competencia": "2025-06",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 223
+    "reference_month": "2025-06-01",
+    "clocking_count": 616,
+    "registered_count": 556,
+    "justified_count": 27,
+    "quality_percentage": 90.26,
+    "headcount": 11,
+    "active_headcount": 13
   },
   {
-    "competencia": "2025-07",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-06-01",
+    "clocking_count": 7731,
+    "registered_count": 6632,
+    "justified_count": 822,
+    "quality_percentage": 85.78,
+    "headcount": 210,
+    "active_headcount": 221
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-06-01",
+    "clocking_count": 1028,
+    "registered_count": 561,
+    "justified_count": 421,
+    "quality_percentage": 54.57,
+    "headcount": 16,
+    "active_headcount": 17
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 226
+    "reference_month": "2025-07-01",
+    "clocking_count": 590,
+    "registered_count": 517,
+    "justified_count": 46,
+    "quality_percentage": 87.63,
+    "headcount": 12,
+    "active_headcount": 13
   },
   {
-    "competencia": "2025-08",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-07-01",
+    "clocking_count": 982,
+    "registered_count": 574,
+    "justified_count": 388,
+    "quality_percentage": 58.45,
+    "headcount": 17,
+    "active_headcount": 16
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-07-01",
+    "clocking_count": 7950,
+    "registered_count": 6896,
+    "justified_count": 751,
+    "quality_percentage": 86.74,
+    "headcount": 216,
+    "active_headcount": 226
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 227
+    "reference_month": "2025-08-01",
+    "clocking_count": 752,
+    "registered_count": 651,
+    "justified_count": 50,
+    "quality_percentage": 86.57,
+    "headcount": 13,
+    "active_headcount": 13
   },
   {
-    "competencia": "2025-09",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-08-01",
+    "clocking_count": 992,
+    "registered_count": 586,
+    "justified_count": 381,
+    "quality_percentage": 59.07,
+    "headcount": 17,
+    "active_headcount": 16
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-08-01",
+    "clocking_count": 7998,
+    "registered_count": 6974,
+    "justified_count": 628,
+    "quality_percentage": 87.2,
+    "headcount": 211,
+    "active_headcount": 216
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 396
+    "reference_month": "2025-09-01",
+    "clocking_count": 572,
+    "registered_count": 545,
+    "justified_count": 20,
+    "quality_percentage": 95.28,
+    "headcount": 10,
+    "active_headcount": 13
   },
   {
-    "competencia": "2025-10",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-09-01",
+    "clocking_count": 895,
+    "registered_count": 550,
+    "justified_count": 316,
+    "quality_percentage": 61.45,
+    "headcount": 16,
+    "active_headcount": 16
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-09-01",
+    "clocking_count": 19094,
+    "registered_count": 7475,
+    "justified_count": 7553,
+    "quality_percentage": 39.15,
+    "headcount": 392,
+    "active_headcount": 413
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 398
+    "reference_month": "2025-10-01",
+    "clocking_count": 642,
+    "registered_count": 556,
+    "justified_count": 68,
+    "quality_percentage": 86.6,
+    "headcount": 12,
+    "active_headcount": 12
   },
   {
-    "competencia": "2025-11",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-10-01",
+    "clocking_count": 21901,
+    "registered_count": 14217,
+    "justified_count": 6281,
+    "quality_percentage": 64.91,
+    "headcount": 412,
+    "active_headcount": 416
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-10-01",
+    "clocking_count": 906,
+    "registered_count": 443,
+    "justified_count": 404,
+    "quality_percentage": 48.9,
+    "headcount": 16,
+    "active_headcount": 15
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-11-01",
+    "clocking_count": 19999,
+    "registered_count": 14886,
+    "justified_count": 4043,
+    "quality_percentage": 74.43,
+    "headcount": 387,
+    "active_headcount": 417
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-11-01",
+    "clocking_count": 1014,
+    "registered_count": 413,
+    "justified_count": 483,
+    "quality_percentage": 40.73,
+    "headcount": 21,
+    "active_headcount": 20
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 389
+    "reference_month": "2025-11-01",
+    "clocking_count": 584,
+    "registered_count": 502,
+    "justified_count": 52,
+    "quality_percentage": 85.96,
+    "headcount": 10,
+    "active_headcount": 12
   },
   {
-    "competencia": "2025-12",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2025-12-01",
+    "clocking_count": 19751,
+    "registered_count": 16331,
+    "justified_count": 2383,
+    "quality_percentage": 82.68,
+    "headcount": 395,
+    "active_headcount": 412
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2025-12-01",
+    "clocking_count": 1298,
+    "registered_count": 475,
+    "justified_count": 652,
+    "quality_percentage": 36.59,
+    "headcount": 22,
+    "active_headcount": 22
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 392
+    "reference_month": "2025-12-01",
+    "clocking_count": 657,
+    "registered_count": 572,
+    "justified_count": 51,
+    "quality_percentage": 87.06,
+    "headcount": 11,
+    "active_headcount": 12
   },
   {
-    "competencia": "2026-01",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2026-01-01",
+    "clocking_count": 19766,
+    "registered_count": 17027,
+    "justified_count": 1793,
+    "quality_percentage": 86.14,
+    "headcount": 398,
+    "active_headcount": 435
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2026-01-01",
+    "clocking_count": 1232,
+    "registered_count": 483,
+    "justified_count": 651,
+    "quality_percentage": 39.2,
+    "headcount": 21,
+    "active_headcount": 22
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 392
+    "reference_month": "2026-01-01",
+    "clocking_count": 682,
+    "registered_count": 615,
+    "justified_count": 36,
+    "quality_percentage": 90.18,
+    "headcount": 11,
+    "active_headcount": 12
   },
   {
-    "competencia": "2026-02",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2026-02-01",
+    "clocking_count": 18598,
+    "registered_count": 16117,
+    "justified_count": 1938,
+    "quality_percentage": 86.66,
+    "headcount": 404,
+    "active_headcount": 450
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2026-02-01",
+    "clocking_count": 1034,
+    "registered_count": 504,
+    "justified_count": 457,
+    "quality_percentage": 48.74,
+    "headcount": 21,
+    "active_headcount": 20
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 400
+    "reference_month": "2026-02-01",
+    "clocking_count": 600,
+    "registered_count": 540,
+    "justified_count": 51,
+    "quality_percentage": 90.0,
+    "headcount": 11,
+    "active_headcount": 12
   },
   {
-    "competencia": "2026-03",
-    "company_id": 1,
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "reference_month": "2026-03-01",
+    "clocking_count": 23284,
+    "registered_count": 21012,
+    "justified_count": 1846,
+    "quality_percentage": 90.24,
+    "headcount": 404,
+    "active_headcount": 455
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "reference_month": "2026-03-01",
+    "clocking_count": 814,
+    "registered_count": 530,
+    "justified_count": 240,
+    "quality_percentage": 65.11,
+    "headcount": 19,
+    "active_headcount": 19
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
     "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
-    "headcount": 399
-  },
-  {
-    "competencia": "2025-04",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-05",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 23
-  },
-  {
-    "competencia": "2025-06",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-07",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-08",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-09",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2025-10",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 40
-  },
-  {
-    "competencia": "2025-11",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2025-12",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2026-01",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2026-02",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2026-03",
-    "company_id": 2,
-    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2025-04",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 8
-  },
-  {
-    "competencia": "2025-05",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-06",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 8
-  },
-  {
-    "competencia": "2025-07",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-08",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-09",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
-  },
-  {
-    "competencia": "2025-10",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
-  },
-  {
-    "competencia": "2025-11",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
-  },
-  {
-    "competencia": "2025-12",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
-  },
-  {
-    "competencia": "2026-01",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
-  },
-  {
-    "competencia": "2026-02",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
-  },
-  {
-    "competencia": "2026-03",
-    "company_id": 3,
-    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
-    "headcount": 15
+    "reference_month": "2026-03-01",
+    "clocking_count": 684,
+    "registered_count": 571,
+    "justified_count": 56,
+    "quality_percentage": 83.48,
+    "headcount": 12,
+    "active_headcount": 12
   }
 ]

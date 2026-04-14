@@ -1,218 +1,434 @@
 [
   {
-    "competencia": "2025-04",
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 208
+    "reference_month": "2025-04-01",
+    "clocking_count": 1222,
+    "registered_count": 1120,
+    "justified_count": 86,
+    "quality_percentage": 91.65,
+    "headcount": 20,
+    "active_headcount": 23
   },
   {
-    "competencia": "2025-05",
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-04-01",
+    "clocking_count": 1211,
+    "registered_count": 601,
+    "justified_count": 525,
+    "quality_percentage": 49.63,
+    "headcount": 22,
+    "active_headcount": 20
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-04-01",
+    "clocking_count": 7228,
+    "registered_count": 6285,
+    "justified_count": 631,
+    "quality_percentage": 86.95,
+    "headcount": 199,
+    "active_headcount": 204
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-05-01",
+    "clocking_count": 1224,
+    "registered_count": 668,
+    "justified_count": 455,
+    "quality_percentage": 54.58,
+    "headcount": 22,
+    "active_headcount": 19
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-05-01",
+    "clocking_count": 7397,
+    "registered_count": 6303,
+    "justified_count": 788,
+    "quality_percentage": 85.21,
+    "headcount": 198,
+    "active_headcount": 205
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 214
+    "reference_month": "2025-05-01",
+    "clocking_count": 1033,
+    "registered_count": 951,
+    "justified_count": 51,
+    "quality_percentage": 92.06,
+    "headcount": 19,
+    "active_headcount": 21
   },
   {
-    "competencia": "2025-06",
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 209
+    "reference_month": "2025-06-01",
+    "clocking_count": 967,
+    "registered_count": 816,
+    "justified_count": 88,
+    "quality_percentage": 84.38,
+    "headcount": 21,
+    "active_headcount": 21
   },
   {
-    "competencia": "2025-07",
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-06-01",
+    "clocking_count": 7338,
+    "registered_count": 6303,
+    "justified_count": 797,
+    "quality_percentage": 85.9,
+    "headcount": 198,
+    "active_headcount": 204
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-06-01",
+    "clocking_count": 1070,
+    "registered_count": 630,
+    "justified_count": 385,
+    "quality_percentage": 58.88,
+    "headcount": 18,
+    "active_headcount": 19
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 212
+    "reference_month": "2025-07-01",
+    "clocking_count": 968,
+    "registered_count": 784,
+    "justified_count": 106,
+    "quality_percentage": 80.99,
+    "headcount": 20,
+    "active_headcount": 24
   },
   {
-    "competencia": "2025-08",
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-07-01",
+    "clocking_count": 1105,
+    "registered_count": 677,
+    "justified_count": 407,
+    "quality_percentage": 61.27,
+    "headcount": 19,
+    "active_headcount": 18
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-07-01",
+    "clocking_count": 7449,
+    "registered_count": 6526,
+    "justified_count": 672,
+    "quality_percentage": 87.61,
+    "headcount": 206,
+    "active_headcount": 210
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 212
+    "reference_month": "2025-08-01",
+    "clocking_count": 1207,
+    "registered_count": 964,
+    "justified_count": 137,
+    "quality_percentage": 79.87,
+    "headcount": 25,
+    "active_headcount": 25
   },
   {
-    "competencia": "2025-09",
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-08-01",
+    "clocking_count": 1088,
+    "registered_count": 671,
+    "justified_count": 390,
+    "quality_percentage": 61.67,
+    "headcount": 21,
+    "active_headcount": 19
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-08-01",
+    "clocking_count": 7447,
+    "registered_count": 6576,
+    "justified_count": 532,
+    "quality_percentage": 88.3,
+    "headcount": 199,
+    "active_headcount": 196
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 372
+    "reference_month": "2025-09-01",
+    "clocking_count": 1153,
+    "registered_count": 937,
+    "justified_count": 185,
+    "quality_percentage": 81.27,
+    "headcount": 21,
+    "active_headcount": 24
   },
   {
-    "competencia": "2025-10",
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-09-01",
+    "clocking_count": 1087,
+    "registered_count": 697,
+    "justified_count": 354,
+    "quality_percentage": 64.12,
+    "headcount": 20,
+    "active_headcount": 18
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-09-01",
+    "clocking_count": 18321,
+    "registered_count": 6936,
+    "justified_count": 7350,
+    "quality_percentage": 37.86,
+    "headcount": 381,
+    "active_headcount": 394
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 380
+    "reference_month": "2025-10-01",
+    "clocking_count": 1128,
+    "registered_count": 895,
+    "justified_count": 165,
+    "quality_percentage": 79.34,
+    "headcount": 21,
+    "active_headcount": 25
   },
   {
-    "competencia": "2025-11",
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-10-01",
+    "clocking_count": 21127,
+    "registered_count": 13648,
+    "justified_count": 6156,
+    "quality_percentage": 64.6,
+    "headcount": 399,
+    "active_headcount": 391
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-10-01",
+    "clocking_count": 1194,
+    "registered_count": 673,
+    "justified_count": 432,
+    "quality_percentage": 56.37,
+    "headcount": 22,
+    "active_headcount": 21
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-11-01",
+    "clocking_count": 19190,
+    "registered_count": 14494,
+    "justified_count": 3717,
+    "quality_percentage": 75.53,
+    "headcount": 374,
+    "active_headcount": 390
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-11-01",
+    "clocking_count": 1397,
+    "registered_count": 541,
+    "justified_count": 674,
+    "quality_percentage": 38.73,
+    "headcount": 28,
+    "active_headcount": 28
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 371
+    "reference_month": "2025-11-01",
+    "clocking_count": 1010,
+    "registered_count": 766,
+    "justified_count": 187,
+    "quality_percentage": 75.84,
+    "headcount": 21,
+    "active_headcount": 24
   },
   {
-    "competencia": "2025-12",
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2025-12-01",
+    "clocking_count": 18885,
+    "registered_count": 15831,
+    "justified_count": 2003,
+    "quality_percentage": 83.83,
+    "headcount": 380,
+    "active_headcount": 388
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2025-12-01",
+    "clocking_count": 1685,
+    "registered_count": 668,
+    "justified_count": 924,
+    "quality_percentage": 39.64,
+    "headcount": 28,
+    "active_headcount": 27
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 374
+    "reference_month": "2025-12-01",
+    "clocking_count": 1136,
+    "registered_count": 879,
+    "justified_count": 159,
+    "quality_percentage": 77.38,
+    "headcount": 22,
+    "active_headcount": 25
   },
   {
-    "competencia": "2026-01",
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2026-01-01",
+    "clocking_count": 18930,
+    "registered_count": 16442,
+    "justified_count": 1582,
+    "quality_percentage": 86.86,
+    "headcount": 389,
+    "active_headcount": 413
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2026-01-01",
+    "clocking_count": 1588,
+    "registered_count": 660,
+    "justified_count": 830,
+    "quality_percentage": 41.56,
+    "headcount": 28,
+    "active_headcount": 24
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 367
+    "reference_month": "2026-01-01",
+    "clocking_count": 1162,
+    "registered_count": 1023,
+    "justified_count": 68,
+    "quality_percentage": 88.04,
+    "headcount": 22,
+    "active_headcount": 25
   },
   {
-    "competencia": "2026-02",
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2026-02-01",
+    "clocking_count": 17962,
+    "registered_count": 15686,
+    "justified_count": 1760,
+    "quality_percentage": 87.33,
+    "headcount": 394,
+    "active_headcount": 421
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2026-02-01",
+    "clocking_count": 1254,
+    "registered_count": 620,
+    "justified_count": 575,
+    "quality_percentage": 49.44,
+    "headcount": 23,
+    "active_headcount": 23
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 375
+    "reference_month": "2026-02-01",
+    "clocking_count": 1016,
+    "registered_count": 855,
+    "justified_count": 111,
+    "quality_percentage": 84.15,
+    "headcount": 21,
+    "active_headcount": 26
   },
   {
-    "competencia": "2026-03",
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_month": "2026-03-01",
+    "clocking_count": 22543,
+    "registered_count": 20456,
+    "justified_count": 1702,
+    "quality_percentage": 90.74,
+    "headcount": 392,
+    "active_headcount": 424
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_month": "2026-03-01",
+    "clocking_count": 1065,
+    "registered_count": 717,
+    "justified_count": 303,
+    "quality_percentage": 67.32,
+    "headcount": 27,
+    "active_headcount": 22
+  },
+  {
+    "customer_id": 642,
     "business_unit_id": 17519,
     "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
-    "headcount": 374
-  },
-  {
-    "competencia": "2025-04",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 21
-  },
-  {
-    "competencia": "2025-05",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-06",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 21
-  },
-  {
-    "competencia": "2025-07",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-08",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 22
-  },
-  {
-    "competencia": "2025-09",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 38
-  },
-  {
-    "competencia": "2025-10",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 40
-  },
-  {
-    "competencia": "2025-11",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2025-12",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2026-01",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 38
-  },
-  {
-    "competencia": "2026-02",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 39
-  },
-  {
-    "competencia": "2026-03",
-    "business_unit_id": 17518,
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
-    "headcount": 38
-  },
-  {
-    "competencia": "2025-04",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-05",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-06",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-07",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-08",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 9
-  },
-  {
-    "competencia": "2025-09",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
-  },
-  {
-    "competencia": "2025-10",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
-  },
-  {
-    "competencia": "2025-11",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
-  },
-  {
-    "competencia": "2025-12",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
-  },
-  {
-    "competencia": "2026-01",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
-  },
-  {
-    "competencia": "2026-02",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
-  },
-  {
-    "competencia": "2026-03",
-    "business_unit_id": 17517,
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
-    "headcount": 15
+    "reference_month": "2026-03-01",
+    "clocking_count": 1174,
+    "registered_count": 940,
+    "justified_count": 137,
+    "quality_percentage": 80.07,
+    "headcount": 24,
+    "active_headcount": 27
   }
 ]
