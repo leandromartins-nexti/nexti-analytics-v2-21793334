@@ -30,6 +30,7 @@ import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSe
 import qpDecomposicaoScore from "@/data/qualidade-ponto/decomposicao-score.json";
 import qpKpisPeriodoAnterior from "@/data/qualidade-ponto/kpis-periodo-anterior.json";
 import { evolucaoQualidadeHeadcountSource, evolucaoQualidadeHeadcountColumns } from "@/data/chart-sources/evolucao-qualidade-headcount";
+import { evolucaoTempoTratativaSource, evolucaoTempoTratativaColumns } from "@/data/chart-sources/evolucao-tempo-tratativa";
 function abreviar(nome: string): string {
   const words = nome.replace(/[-–]/g, " ").split(/\s+/).filter(w => w.length > 1);
   if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
@@ -1416,6 +1417,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   <h4 className="text-sm font-semibold">Evolução do Tempo de Tratativa</h4>
                   <p className="text-[10px] text-muted-foreground mb-2">Evolução mensal da distribuição por faixa · linha azul = tempo médio (dias)</p>
                 </div>
+                <button onClick={() => setChartDataModal("evoTratativa")} className="p-1.5 rounded-md hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors" title="Ver dados e query">
+                  <Database className="w-4 h-4" />
+                </button>
               </div>
               <ResponsiveContainer width="100%" height={280}>
                 <ComposedChart data={tratData} onClick={tratClick}>
@@ -1685,6 +1689,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
         title="Evolução da Qualidade e Headcount"
         columns={evolucaoQualidadeHeadcountColumns}
         source={evolucaoQualidadeHeadcountSource}
+        activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
+      />
+      <ChartDataModal
+        open={chartDataModal === "evoTratativa"}
+        onClose={() => setChartDataModal(null)}
+        title="Evolução do Tempo de Tratativa"
+        columns={evolucaoTempoTratativaColumns}
+        source={evolucaoTempoTratativaSource}
         activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
       />
     </div>

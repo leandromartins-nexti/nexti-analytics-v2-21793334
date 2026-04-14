@@ -10,6 +10,10 @@ import {
   evolucaoQualidadeHeadcountSource,
   evolucaoQualidadeHeadcountColumns,
 } from "@/data/chart-sources/evolucao-qualidade-headcount";
+import {
+  evolucaoTempoTratativaSource,
+  evolucaoTempoTratativaColumns,
+} from "@/data/chart-sources/evolucao-tempo-tratativa";
 
 // ── Registry types ──
 interface ChartEntry {
@@ -42,6 +46,12 @@ const dataRegistry: MenuEntry[] = [
             chartName: "Evolução da Qualidade e Headcount",
             columns: evolucaoQualidadeHeadcountColumns,
             source: evolucaoQualidadeHeadcountSource,
+          },
+          {
+            id: "evo-tempo-tratativa",
+            chartName: "Evolução do Tempo de Tratativa",
+            columns: evolucaoTempoTratativaColumns,
+            source: evolucaoTempoTratativaSource,
           },
         ],
       },
