@@ -908,6 +908,17 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     [qualidadeDetalhado]
   );
   const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.headcount), 1), [qualidadeComHeadcount]);
+  const maxBarTotal = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.registradas + d.justificadas), 1), [qualidadeComHeadcount]);
+  // Scale right axis so headcount area always sits visually above bar tops
+  // If bar top = maxBarTotal on left axis, headcount should render at ~70% of chart height
+  // So we set right domain max so that maxHeadcount maps to ~60% of the chart
+  const rightDomainMax = useMemo(() => {
+    // We want: headcount / rightMax = 0.6 (area fills ~60% from top)
+    // But minimum headcount visual position should be above the tallest bar
+    // tallest bar fraction on left axis ≈ maxBarTotal / leftMax ≈ 1.0
+    // So headcount fraction must be > 1.0 → we scale so headcount sits at 60%
+    return Math.ceil(maxHeadcount * 0.55);
+  }, [maxHeadcount]);
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
