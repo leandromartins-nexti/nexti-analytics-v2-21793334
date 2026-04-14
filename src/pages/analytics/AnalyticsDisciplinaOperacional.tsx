@@ -1691,6 +1691,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
         source={evolucaoQualidadeHeadcountSource}
         activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
       />
+      <ChartDataModal
+        open={chartDataModal === "evoTratativa"}
+        onClose={() => setChartDataModal(null)}
+        title="Evolução do Tempo de Tratativa"
+        columns={evolucaoTempoTratativaColumns}
+        source={evolucaoTempoTratativaSource}
+        activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
+      />
     </div>
   );
 }

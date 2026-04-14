@@ -10,6 +10,10 @@ import {
   evolucaoQualidadeHeadcountSource,
   evolucaoQualidadeHeadcountColumns,
 } from "@/data/chart-sources/evolucao-qualidade-headcount";
+import {
+  evolucaoTempoTratativaSource,
+  evolucaoTempoTratativaColumns,
+} from "@/data/chart-sources/evolucao-tempo-tratativa";
 
 // ── Registry types ──
 interface ChartEntry {
