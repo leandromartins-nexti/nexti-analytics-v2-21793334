@@ -4,18 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 export interface ScoreConfig {
   weight_quality: number;
   weight_treatment: number;
-  weight_pressure: number;
   weight_backoffice: number;
   grade_under_1d: number;
   grade_1_3d: number;
   grade_3_7d: number;
   grade_7_15d: number;
   grade_over_15d: number;
-  grade_pressure_under_1: number;
-  grade_pressure_1_2: number;
-  grade_pressure_2_4: number;
-  grade_pressure_4_6: number;
-  grade_pressure_over_6: number;
   grade_bo_under_400: number;
   grade_bo_400_700: number;
   grade_bo_700_1000: number;
@@ -28,20 +22,14 @@ export interface ScoreConfig {
 }
 
 export const DEFAULT_CONFIG: ScoreConfig = {
-  weight_quality: 45,
-  weight_treatment: 20,
-  weight_pressure: 20,
-  weight_backoffice: 15,
+  weight_quality: 50,
+  weight_treatment: 30,
+  weight_backoffice: 20,
   grade_under_1d: 100,
   grade_1_3d: 75,
   grade_3_7d: 50,
   grade_7_15d: 20,
   grade_over_15d: 0,
-  grade_pressure_under_1: 100,
-  grade_pressure_1_2: 75,
-  grade_pressure_2_4: 50,
-  grade_pressure_4_6: 25,
-  grade_pressure_over_6: 0,
   grade_bo_under_400: 100,
   grade_bo_400_700: 75,
   grade_bo_700_1000: 50,
@@ -65,7 +53,6 @@ export function getScoreClassification(score: number, config: ScoreConfig) {
 export {
   computeQualityPercentage,
   computeTreatmentScore,
-  computePressureScore,
   computeBackofficeScore,
   computeCompositeScore,
   computeFullBreakdown,
@@ -102,20 +89,14 @@ export function ScoreConfigProvider({ children }: { children: ReactNode }) {
         const { data } = await (supabase as any).from("score_config").select("*").eq("config_key", "qualidade_ponto").single();
         if (data) {
           setConfig({
-            weight_quality: data.weight_quality,
-            weight_treatment: data.weight_treatment,
-            weight_pressure: data.weight_pressure ?? DEFAULT_CONFIG.weight_pressure,
+            weight_quality: data.weight_quality ?? DEFAULT_CONFIG.weight_quality,
+            weight_treatment: data.weight_treatment ?? DEFAULT_CONFIG.weight_treatment,
             weight_backoffice: data.weight_backoffice ?? DEFAULT_CONFIG.weight_backoffice,
             grade_under_1d: data.grade_under_1d,
             grade_1_3d: data.grade_1_3d,
             grade_3_7d: data.grade_3_7d,
             grade_7_15d: data.grade_7_15d,
             grade_over_15d: data.grade_over_15d,
-            grade_pressure_under_1: data.grade_pressure_under_1 ?? DEFAULT_CONFIG.grade_pressure_under_1,
-            grade_pressure_1_2: data.grade_pressure_1_2 ?? DEFAULT_CONFIG.grade_pressure_1_2,
-            grade_pressure_2_4: data.grade_pressure_2_4 ?? DEFAULT_CONFIG.grade_pressure_2_4,
-            grade_pressure_4_6: data.grade_pressure_4_6 ?? DEFAULT_CONFIG.grade_pressure_4_6,
-            grade_pressure_over_6: data.grade_pressure_over_6 ?? DEFAULT_CONFIG.grade_pressure_over_6,
             grade_bo_under_400: data.grade_bo_under_400 ?? DEFAULT_CONFIG.grade_bo_under_400,
             grade_bo_400_700: data.grade_bo_400_700 ?? DEFAULT_CONFIG.grade_bo_400_700,
             grade_bo_700_1000: data.grade_bo_700_1000 ?? DEFAULT_CONFIG.grade_bo_700_1000,
