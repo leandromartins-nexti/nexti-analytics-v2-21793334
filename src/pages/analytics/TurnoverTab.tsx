@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { Database } from "lucide-react";
+import { Database, AlertTriangle } from "lucide-react";
 import ChartModeToggle from "@/components/analytics/ChartModeToggle";
 import type { ChartMode } from "@/components/analytics/ChartModeToggle";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
@@ -8,6 +8,9 @@ import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import tempoCasaData from "@/data/turnover/tempo-casa-desligados.json";
+import rankingEmpresa from "@/data/turnover/ranking-clientes-turnover-por-empresa.json";
+import rankingUnidade from "@/data/turnover/ranking-clientes-turnover-por-un-negocio.json";
+import rankingArea from "@/data/turnover/ranking-clientes-turnover-por-area.json";
 import {
   ResponsiveContainer, ComposedChart, LineChart, Line, BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine, Cell,
@@ -63,26 +66,122 @@ function getTempoCasaDataset(groupBy: GroupBy, selectedRegional: string | null) 
   return entry || tempoCasaData.consolidado;
 }
 
-// Chart 3: Decomposição do Turnover
-const decomposicaoData = [
-  { mes: "abr/25", voluntario: 5, involuntario: 2, fimContrato: 1 },
-  { mes: "mai/25", voluntario: 7, involuntario: 3, fimContrato: 0 },
-  { mes: "jun/25", voluntario: 6, involuntario: 2, fimContrato: 1 },
-  { mes: "jul/25", voluntario: 8, involuntario: 3, fimContrato: 1 },
-  { mes: "ago/25", voluntario: 5, involuntario: 4, fimContrato: 1 },
-  { mes: "set/25", voluntario: 4, involuntario: 3, fimContrato: 2 },
-  { mes: "out/25", voluntario: 9, involuntario: 5, fimContrato: 2 },
-  { mes: "nov/25", voluntario: 12, involuntario: 6, fimContrato: 3 },
-  { mes: "dez/25", voluntario: 14, involuntario: 7, fimContrato: 2 },
-  { mes: "jan/26", voluntario: 8, involuntario: 5, fimContrato: 3 },
-  { mes: "fev/26", voluntario: 11, involuntario: 6, fimContrato: 3 },
-  { mes: "mar/26", voluntario: 9, involuntario: 5, fimContrato: 4 },
-];
-const DECOMP_SERIES = [
-  { key: "voluntario", name: "Voluntário", color: "#22c55e", rgba: "34,197,94" },
-  { key: "involuntario", name: "Involuntário", color: "#ef4444", rgba: "239,68,68" },
-  { key: "fimContrato", name: "Fim de Contrato", color: "#eab308", rgba: "234,179,8" },
-];
+// Ranking Clientes data mapping
+interface RankingClienteRow {
+  customer_id: number;
+  client_id: number;
+  client_name: string;
+  headcount_atual: number;
+  saidas_periodo: number;
+  turnover_pct: number;
+  avg_tenure_days: number;
+  company_name?: string;
+  business_unit_name?: string;
+  area_name?: string;
+  company_id?: number;
+  business_unit_id?: number;
+  area_id?: number;
+}
+
+const RANKING_JSON_MAP: Record<GroupBy, RankingClienteRow[]> = {
+  empresa: rankingEmpresa as RankingClienteRow[],
+  unidade: rankingUnidade as RankingClienteRow[],
+  area: rankingArea as RankingClienteRow[],
+};
+
+function getGroupLabel(row: RankingClienteRow, groupBy: GroupBy): string {
+  if (groupBy === "empresa") {
+    const name = row.company_name || "";
+    if (name.includes("PORTARIA")) return "POR";
+    if (name.includes("SEGURANCA")) return "SEG";
+    if (name.includes("TERCEIRIZACAO")) return "TER";
+    return name.slice(0, 3).toUpperCase();
+  }
+  if (groupBy === "unidade") {
+    const name = row.business_unit_name || "";
+    if (name.includes("PORTARIA")) return "POR";
+    if (name.includes("SEGURANCA")) return "SEG";
+    if (name.includes("TERCEIRIZACAO")) return "TER";
+    return name.slice(0, 3).toUpperCase();
+  }
+  return (row.area_name || "S/Área").slice(0, 3).toUpperCase();
+}
+
+function getGroupId(row: RankingClienteRow, groupBy: GroupBy): string | number {
+  if (groupBy === "empresa") return row.company_id || 0;
+  if (groupBy === "unidade") return row.business_unit_id || 0;
+  return row.area_id || "null";
+}
+
+function getGroupName(row: RankingClienteRow, groupBy: GroupBy): string {
+  if (groupBy === "empresa") return row.company_name || "";
+  if (groupBy === "unidade") return row.business_unit_name || "";
+  return row.area_name || "Sem área";
+}
+
+function getRankingTop10(groupBy: GroupBy, selectedRegional: string | null): { data: RankingClienteRow[]; totalWithExits: number } {
+  const raw = RANKING_JSON_MAP[groupBy];
+
+  // Filter by selected regional if any
+  let filtered = raw;
+  if (selectedRegional) {
+    filtered = raw.filter(r => {
+      const name = getGroupName(r, groupBy);
+      return name.toUpperCase().includes(selectedRegional.toUpperCase());
+    });
+  }
+
+  // Aggregate by client_id
+  const byClient = new Map<number, { client_name: string; headcount_atual: number; saidas_periodo: number; avg_tenure_days_sum: number; avg_tenure_count: number; groups: Set<string> }>();
+  for (const r of filtered) {
+    const existing = byClient.get(r.client_id);
+    const label = getGroupLabel(r, groupBy);
+    if (existing) {
+      existing.headcount_atual += r.headcount_atual;
+      existing.saidas_periodo += r.saidas_periodo;
+      if (r.avg_tenure_days) { existing.avg_tenure_days_sum += r.avg_tenure_days * r.saidas_periodo; existing.avg_tenure_count += r.saidas_periodo; }
+      existing.groups.add(label);
+    } else {
+      byClient.set(r.client_id, {
+        client_name: r.client_name,
+        headcount_atual: r.headcount_atual,
+        saidas_periodo: r.saidas_periodo,
+        avg_tenure_days_sum: r.avg_tenure_days ? r.avg_tenure_days * r.saidas_periodo : 0,
+        avg_tenure_count: r.avg_tenure_days ? r.saidas_periodo : 0,
+        groups: new Set([label]),
+      });
+    }
+  }
+
+  const aggregated: (RankingClienteRow & { chipLabel: string })[] = [];
+  for (const [clientId, v] of byClient) {
+    const totalPeople = v.headcount_atual + v.saidas_periodo;
+    aggregated.push({
+      customer_id: 642,
+      client_id: clientId,
+      client_name: v.client_name,
+      headcount_atual: v.headcount_atual,
+      saidas_periodo: v.saidas_periodo,
+      turnover_pct: totalPeople > 0 ? Math.round(v.saidas_periodo * 1000 / totalPeople) / 10 : 0,
+      avg_tenure_days: v.avg_tenure_count > 0 ? Math.round(v.avg_tenure_days_sum / v.avg_tenure_count) : 0,
+      chipLabel: Array.from(v.groups).sort().join(" · "),
+    } as any);
+  }
+
+  // Exclude headcount_atual = 0 and saidas < 1
+  const valid = aggregated.filter(r => r.headcount_atual > 0 && r.saidas_periodo >= 1);
+  const totalWithExits = valid.length;
+
+  // Sort by saidas_periodo DESC, take top 10
+  valid.sort((a, b) => b.saidas_periodo - a.saidas_periodo);
+  return { data: valid.slice(0, 10), totalWithExits };
+}
+
+function getTurnoverBarColor(pct: number): string {
+  if (pct > 40) return "#ef4444";
+  if (pct >= 20) return "#eab308";
+  return "#22c55e";
+}
 
 // Chart 4: Movimentação Mensal (migrated from Absenteísmo)
 const movimentacaoData = [
@@ -246,11 +345,9 @@ export default function TurnoverTab() {
   // KPI calculations
   const turnoverAnual = 43.1;
   const turnoverPrecoce = 38.4;
-  // Calculate voluntary turnover % from decomposition data
-  const totalDeslig = decomposicaoData.reduce((s, d) => s + d.voluntario + d.involuntario + d.fimContrato, 0);
-  const totalVol = decomposicaoData.reduce((s, d) => s + d.voluntario, 0);
-  const turnoverVoluntarioPct = totalDeslig > 0 ? (totalVol / totalDeslig) * 100 : 0;
-  const score = computeTurnoverCompositeScore(turnoverAnual, turnoverVoluntarioPct, turnoverPrecoce);
+   // Hardcoded voluntary turnover % (decomposição data removed)
+   const turnoverVoluntarioPct = 55;
+   const score = computeTurnoverCompositeScore(turnoverAnual, turnoverVoluntarioPct, turnoverPrecoce);
   const faixa = getTurnoverFaixa(score);
   const melhorOp = sidebarItems.reduce((a, b) => a.score > b.score ? a : b);
   const maiorRisco = sidebarItems.reduce((a, b) => a.score < b.score ? a : b);
@@ -348,57 +445,80 @@ export default function TurnoverTab() {
 
         {/* Row 3: 2 charts */}
         <div className="grid grid-cols-2 gap-3">
-          {/* Chart 3: Decomposição do Turnover */}
-          <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
-            <div className="flex items-center justify-between mb-0.5">
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h4 className="text-sm font-semibold">Decomposição do Turnover</h4>
-                  <InfoTip text="Decomposição mensal dos desligamentos por motivo. Voluntário indica retenção. Involuntário indica gestão. Fim de contrato indica modelo de contratação." />
-                </div>
-                <p className="text-[10px] text-muted-foreground mb-2">Desligamentos por motivo · clique para filtrar</p>
-              </div>
-              <button onClick={() => setChartDataModal("decomposicao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
-            </div>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={decomposicaoData} onClick={handleChartClick}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="mes" tick={xTick} />
-                <YAxis tick={{ fontSize: 10 }} />
-                <RechartsTooltip content={({ active, payload, label }) => {
-                  if (!active || !payload?.length) return null;
-                  const d = payload[0].payload;
-                  const total = d.voluntario + d.involuntario + d.fimContrato;
-                  return (
-                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
-                      <p className="font-semibold text-foreground">{label}</p>
-                      <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">{total}</span></p>
-                      {DECOMP_SERIES.map(s => {
-                        const val = d[s.key as keyof typeof d] as number;
-                        const pct = total > 0 ? ((val / total) * 100).toFixed(0) : "0";
-                        return (
-                          <div key={s.key} className="flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5" style={{ backgroundColor: s.color }} />
-                            <span className="text-muted-foreground">{s.name}:</span>
-                            <span className="font-medium text-foreground">{val} ({pct}%)</span>
-                          </div>
-                        );
-                      })}
+          {/* Chart 3: Top 10 Clientes com Maior Volume de Saídas */}
+          {(() => {
+            const { data: rankingData, totalWithExits } = getRankingTop10(groupBy, selectedRegional);
+            const maxSaidas = Math.max(...rankingData.map(r => r.saidas_periodo), 1);
+            return (
+              <div className="bg-card border rounded-xl p-4 border-border/50">
+                <div className="flex items-center justify-between mb-0.5">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-sm font-semibold">Top 10 Clientes com Maior Volume de Saídas</h4>
+                      <InfoTip text="Os 10 clientes com maior número absoluto de desligamentos no período. A cor da barra reflete a taxa de turnover: vermelho acima de 40%, amarelo entre 20% e 40%, verde abaixo de 20%." />
                     </div>
-                  );
-                }} />
-                {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
-                {DECOMP_SERIES.map((s, i) => (
-                  <Bar key={s.key} dataKey={s.key} stackId="decomp" stroke={`rgba(${s.rgba},0.5)`} strokeWidth={1} name={s.name} radius={i === DECOMP_SERIES.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}>
-                    {decomposicaoData.map((entry, idx) => (
-                      <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? `rgba(${s.rgba},0.25)` : `rgba(${s.rgba},0.65)`} />
-                    ))}
-                  </Bar>
-                ))}
-                <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={DECOMP_SERIES.map(s => ({ value: s.name, type: "square" as const, color: s.color }))} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+                    <p className="text-[10px] text-muted-foreground mb-2">Ranking por volume no período · clique para filtrar</p>
+                  </div>
+                  <button onClick={() => setChartDataModal("rankingClientes")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
+                </div>
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={rankingData} layout="vertical" margin={{ top: 5, right: 120, bottom: 5, left: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                    <XAxis type="number" tick={{ fontSize: 10 }} domain={[0, Math.ceil(maxSaidas * 1.25)]} />
+                    <YAxis type="category" dataKey="client_name" tick={({ x, y, payload }: any) => {
+                      const row = rankingData.find(r => r.client_name === payload.value);
+                      const chip = (row as any)?.chipLabel || "";
+                      const name = payload.value.length > 20 ? payload.value.slice(0, 18) + "…" : payload.value;
+                      return (
+                        <g>
+                          <text x={x - 4} y={y} textAnchor="end" fontSize={9} fill="hsl(var(--foreground))" dominantBaseline="middle">{name}</text>
+                          {chip && <text x={x - 4} y={y + 11} textAnchor="end" fontSize={7} fill="hsl(var(--muted-foreground))" dominantBaseline="middle">{chip}</text>}
+                        </g>
+                      );
+                    }} width={130} />
+                    <RechartsTooltip content={({ active, payload }) => {
+                      if (!active || !payload?.length) return null;
+                      const d = payload[0].payload as RankingClienteRow;
+                      const groupName = getGroupName(d, groupBy);
+                      return (
+                        <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1 max-w-[260px]">
+                          <p className="font-semibold text-foreground">{d.client_name}</p>
+                          <p className="text-muted-foreground">{groupName}</p>
+                          <div className="border-t border-border/50 pt-1 mt-1 space-y-0.5">
+                            <p>Headcount atual: <span className="font-medium">{d.headcount_atual} colaboradores</span></p>
+                            <p>Saídas no período: <span className="font-medium">{d.saidas_periodo}</span></p>
+                            <p>Turnover: <span className="font-medium">{d.turnover_pct}%</span></p>
+                            <p>Tempo médio de casa: <span className="font-medium">{d.avg_tenure_days} dias</span></p>
+                            {d.headcount_atual === 0 && (
+                              <p className="text-orange-600 flex items-center gap-1 mt-1"><AlertTriangle className="w-3 h-3" />Contrato provavelmente encerrado</p>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }} />
+                    <Bar dataKey="saidas_periodo" radius={[0, 4, 4, 0]} animationDuration={600}
+                      label={({ x, y, width, index }: any) => {
+                        const r = rankingData[index];
+                        return (
+                          <text x={x + width + 6} y={y + 14} fontSize={10} fill="hsl(var(--foreground))" fontWeight={600}>
+                            {r.saidas_periodo} saídas · {r.turnover_pct}%
+                          </text>
+                        );
+                      }}
+                    >
+                      {rankingData.map((r, i) => {
+                        const barColor = getTurnoverBarColor(r.turnover_pct);
+                        return <Cell key={i} fill={barColor} fillOpacity={0.65} stroke={barColor} strokeOpacity={0.5} strokeWidth={1} />;
+                      })}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+                <p className="text-[10px] text-muted-foreground text-center mt-1">
+                  Mostrando {rankingData.length} de {totalWithExits} clientes com saídas no período
+                </p>
+              </div>
+            );
+          })()}
 
           {/* Chart 4: Movimentação Mensal */}
           <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
@@ -486,7 +606,7 @@ export default function TurnoverTab() {
       {/* Data Modals */}
       <ChartDataModal open={chartDataModal === "evoHeadcount"} onClose={() => setChartDataModal(null)} title="Evolução do Turnover e Headcount" data={turnoverHeadcountData} columns={[{ key: "mes", label: "Competência" }, { key: "turnover", label: "Turnover (%)" }, { key: "headcount", label: "Headcount" }]} sqlQuery={`SELECT DATE_FORMAT(reference_month, '%b/%y') AS mes, ROUND(turnover_percentage, 1) AS turnover_pct, avg_headcount FROM vw_turnover_mensal WHERE reference_month BETWEEN '2025-04-01' AND '2026-03-31' ORDER BY reference_month;`} />
       <ChartDataModal open={chartDataModal === "tempoCasa"} onClose={() => setChartDataModal(null)} title="Tempo de Casa dos Desligados" data={getTempoCasaDataset(groupBy, selectedRegional).faixas} columns={[{ key: "label", label: "Faixa" }, { key: "count", label: "Desligamentos" }, { key: "pct", label: "%" , format: (v: number) => `${v}%` }, { key: "avg_days", label: "Média (dias)" }]} sqlQuery={`SELECT tenure_bucket, COUNT(*) AS desligamentos_count, ROUND(AVG(DATEDIFF(demission_date, admission_date)),0) AS avg_tenure_days, ROUND(COUNT(*)*100.0/SUM(COUNT(*)) OVER(),1) AS pct FROM vw_turnover_detail WHERE customer_id = 642 AND demission_date BETWEEN '2025-04-01' AND '2026-03-31' GROUP BY tenure_bucket ORDER BY bucket_order;`} />
-      <ChartDataModal open={chartDataModal === "decomposicao"} onClose={() => setChartDataModal(null)} title="Decomposição do Turnover" data={decomposicaoData.map(d => ({ ...d, total: d.voluntario + d.involuntario + d.fimContrato }))} columns={[{ key: "mes", label: "Competência" }, { key: "voluntario", label: "Voluntário" }, { key: "involuntario", label: "Involuntário" }, { key: "fimContrato", label: "Fim Contrato" }, { key: "total", label: "Total" }]} sqlQuery={`SELECT DATE_FORMAT(demission_date, '%b/%y') AS mes, SUM(CASE WHEN reason = 'voluntary' THEN 1 ELSE 0 END) AS voluntario, SUM(CASE WHEN reason = 'involuntary' THEN 1 ELSE 0 END) AS involuntario, SUM(CASE WHEN reason = 'end_contract' THEN 1 ELSE 0 END) AS fim_contrato FROM vw_turnover_detail WHERE customer_id = 642 GROUP BY mes ORDER BY demission_date;`} />
+      <ChartDataModal open={chartDataModal === "rankingClientes"} onClose={() => setChartDataModal(null)} title="Top 10 Clientes com Maior Volume de Saídas" data={getRankingTop10(groupBy, selectedRegional).data} columns={[{ key: "client_name", label: "Cliente" }, { key: "headcount_atual", label: "Headcount" }, { key: "saidas_periodo", label: "Saídas" }, { key: "turnover_pct", label: "Turnover %", format: (v: number) => `${v}%` }, { key: "avg_tenure_days", label: "Tempo Médio (dias)" }]} sqlQuery={`SELECT cli.name AS client_name, COUNT(DISTINCT CASE WHEN p.demission_date IS NULL THEN p.id END) AS headcount_atual, COUNT(DISTINCT CASE WHEN p.demission_date >= '2025-04-01' AND p.demission_date < '2026-04-01' THEN p.id END) AS saidas_periodo, ROUND(saidas_periodo * 100.0 / NULLIF(COUNT(DISTINCT p.id), 0), 1) AS turnover_pct, ROUND(AVG(DATEDIFF(p.demission_date, p.admission_date)), 0) AS avg_tenure_days FROM person p INNER JOIN workplace_transfer wt ON wt.person_id = p.id INNER JOIN workplace w ON w.id = wt.workplace_id LEFT JOIN client cli ON cli.id = w.client_id WHERE p.customer_id = 642 GROUP BY cli.name HAVING saidas_periodo > 0 ORDER BY saidas_periodo DESC LIMIT 10;`} />
       <ChartDataModal open={chartDataModal === "movimentacao"} onClose={() => setChartDataModal(null)} title="Movimentação Mensal" data={movimentacaoData.map(d => ({ ...d, demissoes_abs: Math.abs(d.demissoes), saldo: d.admissoes + d.demissoes }))} columns={[{ key: "mes", label: "Competência" }, { key: "admissoes", label: "Admissões" }, { key: "demissoes_abs", label: "Demissões" }, { key: "saldo", label: "Saldo" }]} sqlQuery={`SELECT DATE_FORMAT(reference_month, '%b/%y') AS mes, SUM(CASE WHEN tipo = 'admissao' THEN 1 ELSE 0 END) AS admissoes, SUM(CASE WHEN tipo = 'demissao' THEN 1 ELSE 0 END) AS demissoes FROM vw_movimentacoes WHERE customer_id = 642 AND reference_month BETWEEN '2025-04-01' AND '2026-03-31' GROUP BY reference_month ORDER BY reference_month;`} />
     </div>
   );

@@ -12,7 +12,7 @@ export interface Insight {
   title: string;
   narrative: string;
   evidence: InsightEvidence | null;
-  actionFilter: Record<string, string> | null;
+  actionFilter: Record<string, string | number> | null;
 }
 
 export const mockInsights: Insight[] = [
@@ -82,5 +82,67 @@ export const mockInsights: Insight[] = [
       "Atual em 6 dias, melhor operação do grupo (SEG) opera em 4 dias. Aplicando o mesmo SLA na POR liberaria ~1.200 ajustes mais rápido por mês.",
     evidence: null,
     actionFilter: { unidadeNegocio: "POR" },
+  },
+  // ── Turnover · Ranking de Clientes ──
+  {
+    id: "ins_006",
+    category: "critical",
+    severity: "critical",
+    tabOrigin: "Turnover · Ranking de Clientes",
+    timestamp: "há 1h",
+    title: "92% da operação depende de 1 único contrato",
+    narrative: "A Prefeitura de Sorocaba concentra 412 dos 449 colaboradores ativos da Vig Eyes. A perda desse contrato representaria impacto operacional e financeiro imediato. Recomenda-se acelerar diversificação do portfólio de clientes.",
+    evidence: {
+      before: { label: "Prefeitura SP", value: "412 colab." },
+      after: { label: "Demais clientes", value: "37 colab." },
+    },
+    actionFilter: { client_id: 549577 },
+  },
+  {
+    id: "ins_007",
+    category: "achievement",
+    severity: "success",
+    tabOrigin: "Turnover · Ranking de Clientes",
+    timestamp: "há 1h",
+    title: "Prefeitura de Sorocaba opera 75% abaixo do benchmark",
+    narrative: "Com 19.7% de turnover anual e tempo médio de casa de 274 dias, o contrato Prefeitura de Sorocaba performa muito acima da mediana do setor de vigilância e facilities (80% a 120% ao ano). Representa case de retenção que pode ser replicado em outros contratos.",
+    evidence: null,
+    actionFilter: { client_id: 549577 },
+  },
+  {
+    id: "ins_008",
+    category: "critical",
+    severity: "warning",
+    tabOrigin: "Turnover · Ranking de Clientes",
+    timestamp: "há 3h",
+    title: "Super Laminação com 50% de turnover",
+    narrative: "O contrato Super Laminação teve 14 saídas contra 9 colaboradores ativos no período, indicando rotatividade excepcional. Tempo médio de casa de 206 dias. Vale investigar se é questão de condição local, distância, periculosidade ou supervisão.",
+    evidence: {
+      before: { label: "Ativos", value: "9" },
+      after: { label: "Saídas no período", value: "14 (+55%)" },
+    },
+    actionFilter: { client_id: 549578 },
+  },
+  {
+    id: "ins_009",
+    category: "event",
+    severity: "info",
+    tabOrigin: "Turnover · Ranking de Clientes",
+    timestamp: "há 1d",
+    title: "3 contratos encerrados no período",
+    narrative: "Edifício Alana II, Construtora Tenda e outro contrato tiveram saídas registradas mas zero colaboradores ativos ao final do período. Indica encerramento ou migração de contratos. Considerar revisar o pipeline comercial para entender se foram perdas ou evolução natural de portfólio.",
+    evidence: null,
+    actionFilter: null,
+  },
+  {
+    id: "ins_010",
+    category: "trend",
+    severity: "info",
+    tabOrigin: "Turnover · Ranking de Clientes",
+    timestamp: "há 1d",
+    title: "Quadro corporativo da Vig Eyes é o mais estável",
+    narrative: "O cliente interno Vig Eyes (colaboradores administrativos e sede) tem tempo médio de casa entre 247 e 1.230 dias nas 3 empresas do grupo, muito acima da média operacional. Confirma que a retenção corporativa funciona bem, o desafio está na operação de campo.",
+    evidence: null,
+    actionFilter: { client_id: 549859 },
   },
 ];
