@@ -85,9 +85,9 @@ export default function ScoreQualidadeConfig() {
   const breakdown = useMemo(() => computeFullBreakdown(null, "empresa", local), [local]);
   const classification = useMemo(() => getScoreClassification(breakdown.compositeScore, local), [breakdown.compositeScore, local]);
 
-  // Mock previous trimester score for trend
-  const prevTriScore = 62;
-  const delta = Math.round(breakdown.compositeScore) - prevTriScore;
+  // Real previous trimester score for trend
+  const prevTriScore = useMemo(() => computePrevTriScore(null, "empresa", local), [local]);
+  const delta = Math.round(breakdown.compositeScore) - Math.round(prevTriScore);
 
   const treatFaixas = [
     { label: "< 1 dia", pct: breakdown.treatData.pctUnder1d, grade: local.grade_under_1d },
