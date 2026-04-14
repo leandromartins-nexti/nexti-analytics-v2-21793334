@@ -877,13 +877,13 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   // Headcount por mês – filtrado por entidade selecionada
   const MONTH_LABEL_MAP: Record<string, string> = {
-    "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
-    "2025-07": "jul/25", "2025-08": "ago/25", "2025-09": "set/25",
-    "2025-10": "out/25", "2025-11": "nov/25", "2025-12": "dez/25",
-    "2026-01": "jan/26", "2026-02": "fev/26", "2026-03": "mar/26",
+    "2025-04-01": "abr/25", "2025-05-01": "mai/25", "2025-06-01": "jun/25",
+    "2025-07-01": "jul/25", "2025-08-01": "ago/25", "2025-09-01": "set/25",
+    "2025-10-01": "out/25", "2025-11-01": "nov/25", "2025-12-01": "dez/25",
+    "2026-01-01": "jan/26", "2026-02-01": "fev/26", "2026-03-01": "mar/26",
   };
   const normHcName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
-  const headcountMap = useMemo<Record<string, number>>(() => {
+  const headcountMaps = useMemo<{ active: Record<string, number>; ponto: Record<string, number> }>(() => {
     const hcSources: Record<string, any[]> = {
       empresa: hcEmpresaJson,
       unidade: hcUnNegocioJson,
@@ -901,13 +901,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       );
     }
 
-    // Aggregate by month
-    const byMonth: Record<string, number> = {};
+    const active: Record<string, number> = {};
+    const ponto: Record<string, number> = {};
     filtered.forEach((r: any) => {
-      const label = MONTH_LABEL_MAP[r.competencia] || r.competencia;
-      byMonth[label] = (byMonth[label] || 0) + r.headcount;
+      const label = MONTH_LABEL_MAP[r.reference_month] || r.reference_month;
+      active[label] = (active[label] || 0) + (r.active_headcount ?? 0);
+      ponto[label] = (ponto[label] || 0) + (r.headcount ?? 0);
     });
-    return byMonth;
+    return { active, ponto };
   }, [groupBy, selectedRegional]);
 
   const mesLabelToReferenceMonth = useMemo(() => new Map(ajustesMeses.map((month) => [formatMesLabel(month), month])), []);
@@ -933,10 +934,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     [selectedRegional, groupBy]
   );
   const qualidadeComHeadcount = useMemo(
-    () => qualidadeDetalhado.map(d => ({ ...d, headcount: headcountMap[d.mes] ?? 0 })),
-    [qualidadeDetalhado, headcountMap]
+    () => qualidadeDetalhado.map(d => ({
+      ...d,
+      activeHeadcount: headcountMaps.active[d.mes] ?? 0,
+      hcPonto: headcountMaps.ponto[d.mes] ?? 0,
+    })),
+    [qualidadeDetalhado, headcountMaps]
   );
-  const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.headcount), 1), [qualidadeComHeadcount]);
+  const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.activeHeadcount), 1), [qualidadeComHeadcount]);
   const maxBarTotal = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.registradas + d.justificadas), 1), [qualidadeComHeadcount]);
   // Scale right axis so headcount area top = 10% above tallest bar
   // tallest bar fraction on left axis ≈ 1.0, so headcount must map to ~1.1 of chart
@@ -951,14 +956,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     // But headcount varies per month. Just ensure the area envelope sits above bars.
     // Simple: rightMax = minHeadcount / 1.1 would push all above, but let's use maxHeadcount
     // to keep nice ticks, and scale so area top = 10% above tallest bar visually
-    const minHC = Math.min(...qualidadeComHeadcount.map(d => d.headcount));
-    // The month with tallest bar has bar/leftAutoMax ≈ 1.0
-    // We want that month's hc/rightMax > 1.1 → rightMax < hc_that_month / 1.1
-    // Find the month with max bar total and use its headcount
+    const minHC = Math.min(...qualidadeComHeadcount.map(d => d.activeHeadcount));
     const maxBarMonth = qualidadeComHeadcount.reduce((best, d) => 
       (d.registradas + d.justificadas) > (best.registradas + best.justificadas) ? d : best
     );
-    const hcAtMaxBar = maxBarMonth.headcount;
+    const hcAtMaxBar = maxBarMonth.activeHeadcount;
     // rightMax so that hcAtMaxBar / rightMax ≈ 1.1 (i.e. 110% of chart = above top)
     // But can't go above chart. Instead: the left axis will auto-extend.
     // Let's just set rightMax = maxHeadcount * factor where the area is a background band.
@@ -1243,7 +1245,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             <div className="flex items-center justify-between mb-0.5">
               <div>
                 <h4 className="text-sm font-semibold">Evolução da Qualidade e Headcount</h4>
-                <p className="text-[10px] text-muted-foreground mb-2">Registradas vs Justificadas (barras) · Headcount (área) · clique para filtrar</p>
+                <p className="text-[10px] text-muted-foreground mb-2">Registradas vs Justificadas (barras) · Headcount Ativo (área) · clique para filtrar</p>
               </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
@@ -1264,11 +1266,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   const reg = d?.registradas ?? 0;
                   const jus = d?.justificadas ?? 0;
                   const total = reg + jus;
-                  const hc = d?.headcount ?? 0;
+                  const activeHC = d?.activeHeadcount ?? 0;
+                  const hcPonto = d?.hcPonto ?? 0;
+                  const engagement = activeHC > 0 ? (hcPonto / activeHC) * 100 : 0;
+                  const lowEngagement = engagement > 0 && engagement < 90;
                   return (
                     <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
                       <p className="font-semibold text-foreground">{label}</p>
-                      <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">{total.toLocaleString("pt-BR")}</span></p>
+                      <p className="text-muted-foreground">Marcações: <span className="font-semibold text-foreground">{total.toLocaleString("pt-BR")}</span></p>
                       {[{ name: "Registradas", value: reg, color: "#22c55e" }, { name: "Justificadas", value: jus, color: "#ef4444" }].map(f => (
                         <div key={f.name} className="flex items-center gap-1.5">
                           <span className="w-2.5 h-2.5" style={{ backgroundColor: f.color }} />
@@ -1276,16 +1281,26 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                           <span className="font-medium text-foreground">{`${((f.value / total) * 100).toFixed(0)}% (${f.value.toLocaleString("pt-BR")})`}</span>
                         </div>
                       ))}
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5" style={{ backgroundColor: "#D3D1C7" }} />
-                        <span className="text-muted-foreground">Headcount:</span>
-                        <span className="font-medium text-foreground">{hc}</span>
+                      <div className="border-t border-border/40 pt-1 mt-1 space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5" style={{ backgroundColor: "#D3D1C7" }} />
+                          <span className="text-muted-foreground">Headcount ativo:</span>
+                          <span className="font-medium text-foreground">{activeHC} pessoas</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 bg-transparent" />
+                          <span className="text-muted-foreground">Bateram ponto:</span>
+                          <span className={`font-medium ${lowEngagement ? "text-amber-600" : "text-foreground"}`}>
+                            {hcPonto} ({engagement.toFixed(0)}%)
+                            {lowEngagement && <span className="ml-1" title="Engagement abaixo de 90%">⚠️</span>}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   );
                 }} />
                 {selectedMes && <ReferenceLine yAxisId="left" x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
-                <Area yAxisId="right" type="monotone" dataKey="headcount" fill="#D3D1C7" fillOpacity={0.4} stroke="#D3D1C7" strokeWidth={0} name="Headcount" />
+                <Area yAxisId="right" type="monotone" dataKey="activeHeadcount" fill="#D3D1C7" fillOpacity={0.4} stroke="#D3D1C7" strokeWidth={0} name="Headcount" />
                 <Bar yAxisId="left" dataKey="registradas" stackId="qual" stroke="#22c55e" strokeWidth={1} radius={[0, 0, 0, 0]} name="Registradas">
                   {qualidadeComHeadcount.map((entry, idx) => (
                     <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? "rgba(34,197,94,0.25)" : "rgba(34,197,94,0.65)"} />
@@ -1323,7 +1338,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: "Registradas", type: "square", color: "#22c55e" },
                   { value: "Justificadas", type: "square", color: "#ef4444" },
-                  { value: "Headcount", type: "square", color: "#D3D1C7" },
+                  { value: "Headcount Ativo", type: "square", color: "#D3D1C7" },
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
