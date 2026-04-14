@@ -107,12 +107,35 @@ const sidebarDataByGroup: Record<GroupBy, { nome: string; score: number }[]> = {
 // ══════════════════════════════════════════════════════════════
 // Score helpers
 // ══════════════════════════════════════════════════════════════
-function computeTurnoverScore(turnoverAnual: number): number {
-  if (turnoverAnual < 60) return 95;
-  if (turnoverAnual < 80) return 80;
-  if (turnoverAnual < 100) return 65;
-  if (turnoverAnual < 130) return 45;
-  return 25;
+function notaTurnoverAnual(taxa: number): number {
+  if (taxa < 60) return 100;
+  if (taxa < 80) return 80;
+  if (taxa < 100) return 60;
+  if (taxa < 130) return 30;
+  return 0;
+}
+
+function notaTurnoverVoluntario(taxa: number): number {
+  if (taxa < 30) return 100;
+  if (taxa < 50) return 80;
+  if (taxa < 70) return 60;
+  if (taxa < 90) return 30;
+  return 0;
+}
+
+function notaTurnoverPrecoce(taxa: number): number {
+  if (taxa < 15) return 100;
+  if (taxa < 25) return 80;
+  if (taxa < 35) return 60;
+  if (taxa < 50) return 30;
+  return 0;
+}
+
+function computeTurnoverCompositeScore(anual: number, voluntarioPct: number, precoce: number): number {
+  const nAnual = notaTurnoverAnual(anual);
+  const nVol = notaTurnoverVoluntario(voluntarioPct);
+  const nPrecoce = notaTurnoverPrecoce(precoce);
+  return Math.round(nAnual * 0.5 + nVol * 0.3 + nPrecoce * 0.2);
 }
 
 function getTurnoverFaixa(score: number) {
@@ -149,7 +172,11 @@ export default function TurnoverTab() {
   // KPI calculations
   const turnoverAnual = 43.1;
   const turnoverPrecoce = 38.4;
-  const score = 50;
+  // Calculate voluntary turnover % from decomposition data
+  const totalDeslig = decomposicaoData.reduce((s, d) => s + d.voluntario + d.involuntario + d.fimContrato, 0);
+  const totalVol = decomposicaoData.reduce((s, d) => s + d.voluntario, 0);
+  const turnoverVoluntarioPct = totalDeslig > 0 ? (totalVol / totalDeslig) * 100 : 0;
+  const score = computeTurnoverCompositeScore(turnoverAnual, turnoverVoluntarioPct, turnoverPrecoce);
   const faixa = getTurnoverFaixa(score);
   const melhorOp = sidebarItems.reduce((a, b) => a.score > b.score ? a : b);
   const maiorRisco = sidebarItems.reduce((a, b) => a.score < b.score ? a : b);
@@ -202,8 +229,8 @@ export default function TurnoverTab() {
               <ComposedChart data={turnoverHeadcountData} onClick={handleChartClick}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="mes" tick={xTick} />
-                <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} domain={[0, 15]} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, Math.ceil(maxHC * 1.1)]} />
+                <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={(v: number) => `${v}%`} domain={[0, 15]} ticks={[0, 3, 6, 9, 12, 15]} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, 500]} ticks={[0, 100, 200, 300, 400, 500]} />
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
                   const d = payload[0].payload;
@@ -326,13 +353,13 @@ export default function TurnoverTab() {
                 }} />
                 {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                 {DECOMP_SERIES.map((s, i) => (
-                  <Bar key={s.key} dataKey={s.key} stackId="decomp" name={s.name} radius={i === DECOMP_SERIES.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}>
+                  <Bar key={s.key} dataKey={s.key} stackId="decomp" fill={s.color} name={s.name} radius={i === DECOMP_SERIES.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}>
                     {decomposicaoData.map((entry, idx) => (
                       <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? `${s.color}40` : `${s.color}A6`} />
                     ))}
                   </Bar>
                 ))}
-                <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} />
+                <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={DECOMP_SERIES.map(s => ({ value: s.name, type: "square" as const, color: s.color }))} />
               </BarChart>
             </ResponsiveContainer>
           </div>
