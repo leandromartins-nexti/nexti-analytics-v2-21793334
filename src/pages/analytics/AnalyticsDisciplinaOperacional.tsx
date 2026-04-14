@@ -909,16 +909,36 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   );
   const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.headcount), 1), [qualidadeComHeadcount]);
   const maxBarTotal = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.registradas + d.justificadas), 1), [qualidadeComHeadcount]);
-  // Scale right axis so headcount area always sits visually above bar tops
-  // If bar top = maxBarTotal on left axis, headcount should render at ~70% of chart height
-  // So we set right domain max so that maxHeadcount maps to ~60% of the chart
+  // Scale right axis so headcount area top = 10% above tallest bar
+  // tallest bar fraction on left axis ≈ 1.0, so headcount must map to ~1.1 of chart
+  // headcount / rightMax = maxBarTotal * 1.1 / leftMax ≈ 1.1
+  // → rightMax = headcount / 1.1 (so the area extends to 110% of bar height)
   const rightDomainMax = useMemo(() => {
-    // We want: headcount / rightMax = 0.6 (area fills ~60% from top)
-    // But minimum headcount visual position should be above the tallest bar
-    // tallest bar fraction on left axis ≈ maxBarTotal / leftMax ≈ 1.0
-    // So headcount fraction must be > 1.0 → we scale so headcount sits at 60%
-    return Math.ceil(maxHeadcount * 0.55);
-  }, [maxHeadcount]);
+    // Left axis auto-scales, maxBarTotal ≈ top of chart
+    // We want headcount area to reach 10% above that
+    // Since both axes share chart height: hc_fraction = hc / rightMax, bar_fraction = barTotal / leftMax
+    // For the month with max bars: bar_fraction ≈ 1.0
+    // We want min(hc_fraction) among all months to still be > 1.1 * max(bar_fraction)
+    // But headcount varies per month. Just ensure the area envelope sits above bars.
+    // Simple: rightMax = minHeadcount / 1.1 would push all above, but let's use maxHeadcount
+    // to keep nice ticks, and scale so area top = 10% above tallest bar visually
+    const minHC = Math.min(...qualidadeComHeadcount.map(d => d.headcount));
+    // The month with tallest bar has bar/leftAutoMax ≈ 1.0
+    // We want that month's hc/rightMax > 1.1 → rightMax < hc_that_month / 1.1
+    // Find the month with max bar total and use its headcount
+    const maxBarMonth = qualidadeComHeadcount.reduce((best, d) => 
+      (d.registradas + d.justificadas) > (best.registradas + best.justificadas) ? d : best
+    );
+    const hcAtMaxBar = maxBarMonth.headcount;
+    // rightMax so that hcAtMaxBar / rightMax ≈ 1.1 (i.e. 110% of chart = above top)
+    // But can't go above chart. Instead: the left axis will auto-extend.
+    // Let's just set rightMax = maxHeadcount * factor where the area is a background band.
+    // Simplest correct approach: make both axes share proportional scaling.
+    // rightMax such that: (maxHeadcount / rightMax) = ((maxBarTotal * 1.1) / leftDomainMax)
+    // leftDomainMax ≈ maxBarTotal (auto), so ratio = 1.1
+    // → rightMax = maxHeadcount / 1.1
+    return Math.ceil(maxHeadcount / 1.1);
+  }, [maxHeadcount, qualidadeComHeadcount]);
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
