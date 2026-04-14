@@ -1718,6 +1718,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
       <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
     </div>
+
+    {/* Insights da Qualidade do Ponto */}
+    <QualidadeInsightsSection />
+  </>
   );
 }
 
