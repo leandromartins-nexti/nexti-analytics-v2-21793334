@@ -9,6 +9,7 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import tempoCasaData from "@/data/turnover/tempo-casa-desligados.json";
 import rankingEmpresa from "@/data/turnover/ranking-clientes-turnover-por-empresa.json";
 import rankingUnidade from "@/data/turnover/ranking-clientes-turnover-por-un-negocio.json";
@@ -249,13 +250,7 @@ function computeTurnoverCompositeScore(anual: number, precoce: number): number {
   return Math.round(nAnual * 0.7 + nPrecoce * 0.3);
 }
 
-function getTurnoverFaixa(score: number) {
-  if (score >= 85) return "Excelente";
-  if (score >= 70) return "Bom";
-  if (score >= 55) return "Médio";
-  if (score >= 40) return "Ruim";
-  return "Crítico";
-}
+// getTurnoverFaixa now delegated to getScoreClassification from config
 
 // ══════════════════════════════════════════════════════════════
 // Benchmark helpers
@@ -311,12 +306,12 @@ function getDeltaDisplay(key: "turnover_anual_pct" | "turnover_precoce_90d_pct" 
 // ══════════════════════════════════════════════════════════════
 const COMP_COLORS: Record<string, string> = { success: "#22c55e", warning: "#eab308", critical: "#ef4444" };
 
-function ScoreDecompositionPopover({ score, faixa }: { score: number; faixa: string }) {
+function ScoreDecompositionPopover({ score, faixa, scoreColor }: { score: number; faixa: string; scoreColor: string }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button className="flex flex-col items-center gap-0 cursor-pointer" title="Ver decomposição do score">
-          <ScoreGauge score={score} label={`${score}`} faixa={faixa} />
+          <ScoreGauge score={score} label={`${score}`} faixa={faixa} color={scoreColor} />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" side="bottom" align="start">
@@ -487,8 +482,10 @@ export default function TurnoverTab() {
   // KPI calculations
   const turnoverAnual = 43.1;
   const turnoverPrecoce = 38.4;
+  const { config: scoreConfig } = useScoreConfig();
   const score = computeTurnoverCompositeScore(turnoverAnual, turnoverPrecoce);
-  const faixa = getTurnoverFaixa(score);
+  const scoreClassif = getScoreClassification(score, scoreConfig);
+  const faixa = scoreClassif.label;
   const melhorOp = sidebarItems.reduce((a, b) => a.score > b.score ? a : b);
   const maiorRisco = sidebarItems.reduce((a, b) => a.score < b.score ? a : b);
 
@@ -519,7 +516,7 @@ export default function TurnoverTab() {
         <div className="grid grid-cols-6 gap-3">
           {/* 1. Score with decomposition popover */}
           <ScoreBoard title="Score da Aba" tooltip="Score composto de turnover, calculado a partir do turnover anual, voluntário e precoce. Clique para ver a decomposição.">
-            <ScoreDecompositionPopover score={score} faixa={faixa} />
+            <ScoreDecompositionPopover score={score} faixa={faixa} scoreColor={scoreClassif.color} />
             {(() => {
               const d = getDeltaDisplay("score_aba");
               if (!d) return null;

@@ -205,7 +205,7 @@ export default function ScoreQualidadeConfig() {
 
           {/* Gauge */}
           <div className="flex flex-col items-center gap-1">
-            <ScoreGauge score={Math.round(compositeScore)} label={`${Math.round(compositeScore)}`} faixa={classification.label} />
+            <ScoreGauge score={Math.round(compositeScore)} label={`${Math.round(compositeScore)}`} faixa={classification.label} color={classification.color} />
             <span className={`text-xs font-bold ${classification.text}`}>{classification.label}</span>
           </div>
 

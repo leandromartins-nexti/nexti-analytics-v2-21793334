@@ -987,7 +987,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
         {/* Linha 1: 5 KPI Cards */}
         <div className="grid grid-cols-5 gap-3">
           <ScoreBoard title="Qualidade do Ponto" tooltip="Score composto considerando qualidade das marcações e tempo de tratativa dos ajustes.">
-            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} />
+            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} color={scoreClassif.color} />
           </ScoreBoard>
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
@@ -1528,7 +1528,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
       const bestScore = best ? getItemCompositeScore(best.absenteismo, best.turnover).score : 0;
       const worstScore = worst ? getItemCompositeScore(worst.absenteismo, worst.turnover).score : 0;
       return {
-        score: Math.round(composite.score), taxa: avgTaxa, faixa: classif.label,
+        score: Math.round(composite.score), taxa: avgTaxa, faixa: classif.label, scoreColor: classif.color,
         melhorOperacao: { nome: best?.regional ?? "—", score: Math.round(bestScore) },
         maiorRisco: { nome: worst?.regional ?? "—", score: Math.round(worstScore), indicador: `${worst?.absenteismo ?? 0}% taxa` },
         turnover: `${turnoverAnual}%`,
@@ -1539,7 +1539,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
       const composite = computeAbsCompositeScore(absenteismoMedia, turnoverMedia * 12, absConfig);
       const classif = getAbsScoreClassification(composite.score, absConfig);
       return {
-        score: Math.round(composite.score), taxa: absenteismoMedia, faixa: classif.label,
+        score: Math.round(composite.score), taxa: absenteismoMedia, faixa: classif.label, scoreColor: classif.color,
         melhorOperacao: { nome: "—", score: 0 },
         maiorRisco: { nome: "—", score: 0, indicador: "—" },
         turnover: `${(turnoverMedia * 12).toFixed(1)}%`,
@@ -1550,7 +1550,7 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     const classif = getAbsScoreClassification(composite.score, absConfig);
     return {
       score: Math.round(composite.score), taxa: r.absenteismo,
-      faixa: classif.label,
+      faixa: classif.label, scoreColor: classif.color,
       melhorOperacao: { nome: selectedLabel ?? r.regional, score: Math.round(composite.score) },
       maiorRisco: { nome: selectedLabel ?? r.regional, score: Math.round(composite.score), indicador: `${r.absenteismo}% taxa` },
       turnover: `${turnoverAnual}%`,
@@ -1890,7 +1890,7 @@ ORDER BY a.reference_month, a.headcount DESC;`;
         {/* Linha 1: Score + 4 KPI Cards */}
         <div className="grid grid-cols-5 gap-3">
           <ScoreBoard title="Score da Aba" tooltip="Score composto que combina Absenteísmo e Turnover. Configure pesos e limites em Configuração.">
-            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={activeData.faixa} />
+            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={activeData.faixa} color={activeData.scoreColor} />
           </ScoreBoard>
           <KPIBoard title="Absenteísmo (%)" tooltip="Taxa de ausências sobre o efetivo total no período." value={`${activeData.taxa}%`} valueColor={activeData.taxa <= 4 ? "text-green-600" : activeData.taxa <= 6 ? "text-orange-500" : "text-red-600"} />
           <KPIBoard title="Turnover Anual (%)" tooltip="Taxa anualizada para comparação com benchmarks de mercado. O setor de vigilância e facilities tem média de 40% a 80% ao ano." value={activeData.turnover} valueColor="text-orange-500" />
@@ -1975,6 +1975,7 @@ ORDER BY a.reference_month, a.headcount DESC;`;
 // Sub-aba 3: Movimentações
 // ══════════════════════════════════════════════════════════════
 function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
+  const { config: scoreConfig } = useScoreConfig();
   const activeData = useMemo(() => {
     if (!selectedRegional) return { total: "23.0K", diff: "-18.3%", escala: "14.8K", posto: "8.2K" };
     const r = movimentacoesRegionais.find(x => x.nome === selectedRegional);
@@ -1983,8 +1984,10 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail,
   }, [selectedRegional]);
 
   const totalNum = parseFloat(activeData.total) * 1000;
-  const scoreColor = totalNum <= 15000 ? "text-green-600" : totalNum <= 25000 ? "text-orange-500" : "text-red-600";
-  const scoreFaixa = totalNum <= 15000 ? "Bom" : totalNum <= 25000 ? "Atenção" : "Crítico";
+  const movGaugeScore = Math.max(0, 100 - (totalNum / 30000) * 100);
+  const movClassif = getScoreClassification(Math.round(movGaugeScore), scoreConfig);
+  const scoreColor = movClassif.text;
+  const scoreFaixa = movClassif.label;
   const maxTotal = Math.max(...movimentacoesRegionais.map(r => r.total));
 
   const getMovScore = (total: number) => Math.round(Math.max(0, 100 - (total / maxTotal) * 100));
@@ -2003,7 +2006,7 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail,
               <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Movimentações</p>
               <InfoTip text="Total de trocas de escala e trocas de posto no período. Volume alto indica instabilidade operacional." />
             </div>
-            <ScoreGauge score={Math.max(0, 100 - (totalNum / 30000) * 100)} />
+            <ScoreGauge score={Math.round(movGaugeScore)} color={movClassif.color} />
             <p className={`text-3xl font-bold leading-none -mt-1 ${scoreColor}`}>{activeData.total}</p>
             <p className={`text-xs font-semibold ${scoreColor} mt-0.5`}>{scoreFaixa}</p>
           </div>

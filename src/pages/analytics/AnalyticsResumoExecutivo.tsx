@@ -143,7 +143,8 @@ export default function AnalyticsResumoExecutivo() {
   const activeScore = regionalData?.scoreOperacional ?? resumo.scoreOperacional;
   const activeFaixa = regionalData?.scoreFaixa ?? resumo.scoreFaixa;
   const activeDiff = regionalData?.scoreDiferenca ?? resumoComparativo.scoreDiferenca;
-  const scoreColor = activeScore >= 85 ? "text-green-600" : activeScore >= 70 ? "text-[#FF5722]" : "text-red-600";
+  const scoreClassif = getScoreClassification(activeScore, scoreConfig);
+  const scoreColor = scoreClassif.text;
 
   // Filtered sparkline data
   const filteredSparklines = useMemo(() => {
@@ -207,7 +208,7 @@ export default function AnalyticsResumoExecutivo() {
             {/* ═══ Linha 1: Score Compacto + 4 KPI Cards ═══ */}
             <div className="grid grid-cols-5 gap-3">
               <div data-onboarding="score-operacional"><ScoreBoard title="Score Operacional" tooltip="Índice de saúde da operação calculado a partir de 5 indicadores: qualidade do ponto, absenteísmo, volume de horas extras, movimentações e cobertura efetiva. Pesos configuráveis em Configuração.">
-                <ScoreGauge score={activeScore} label={`${activeScore}`} faixa={activeFaixa} />
+                <ScoreGauge score={activeScore} label={`${activeScore}`} faixa={activeFaixa} color={scoreClassif.color} />
               </ScoreBoard></div>
               <KPIBoard title="Melhor Operação" tooltip="Operação com maior score operacional no período" value={resumo.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${resumo.melhorOperacao.score} · Alta`} />
               <KPIBoard title="Maior Risco" tooltip="Operação com menor score e maior concentração de risco" value={resumo.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${resumo.maiorRisco.score} · ${resumo.maiorRisco.indicador}`} />
