@@ -1,0 +1,281 @@
+/**
+ * Score de Qualidade do Ponto — Computation Engine
+ * 
+ * Uses the correct data sources and formulas:
+ * - Quality: registered_count / clocking_count from headcount JSONs
+ * - Treatment: faixa distribution from composição data
+ * - Pressure: justified_count / (active_headcount × months) from headcount JSONs
+ * - Back-office: qtd_ajustes / (operadores × months) + HE from esforco-tratativa JSONs
+ */
+
+import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
+import {
+  composicaoEmpresaData, composicaoUnidadeData, composicaoAreaData,
+} from "@/lib/ajustesData";
+
+// ── Import JSON data sources ──
+import hcEmpresa from "@/data/qualidade-ponto/headcount-por-empresa.json";
+import hcUnidade from "@/data/qualidade-ponto/headcount-por-un-negocio.json";
+import hcArea from "@/data/qualidade-ponto/headcount-por-area.json";
+import efEmpresa from "@/data/qualidade-ponto/esforco-tratativa-por-empresa.json";
+import efUnidade from "@/data/qualidade-ponto/esforco-tratativa-por-un-negocio.json";
+import efArea from "@/data/qualidade-ponto/esforco-tratativa-por-area.json";
+
+// ── Rolling 3-month window (last 3 complete months before today) ──
+const LAST_3_MONTHS = ["2026-01-01", "2026-02-01", "2026-03-01"];
+const PREV_3_MONTHS = ["2025-10-01", "2025-11-01", "2025-12-01"];
+
+/** Normalize competencia "2026-01" → "2026-01-01" */
+function normComp(comp: string): string {
+  return comp.length === 10 ? comp : comp + "-01";
+}
+
+/** Strip "VIG EYES " prefix for entity name matching */
+function normName(name: string): string {
+  return name.replace(/^VIG EYES\s+/i, "").trim();
+}
+
+/** Check if a normalized name matches (stripping prefix from both sides) */
+function nameMatches(jsonName: string, selectedName: string): boolean {
+  return normName(jsonName) === normName(selectedName);
+}
+
+// ── Headcount data accessor ──
+type HcRow = { reference_month: string; registered_count: number; clocking_count: number; justified_count: number; active_headcount: number; [k: string]: any };
+
+function getHcSource(groupBy: "empresa" | "unidade" | "area"): { data: HcRow[]; nameField: string } {
+  if (groupBy === "area") return { data: hcArea as HcRow[], nameField: "area_name" };
+  if (groupBy === "unidade") return { data: hcUnidade as HcRow[], nameField: "business_unit_name" };
+  return { data: hcEmpresa as HcRow[], nameField: "company_name" };
+}
+
+// ── Esforço-tratativa data accessor ──
+type EfRow = { competencia: string; qtd_ajustes: number; operadores_ativos: number; horas_extras_rateadas: number; [k: string]: any };
+
+function getEfSource(groupBy: "empresa" | "unidade" | "area"): { data: EfRow[]; nameField: string } {
+  if (groupBy === "area") return { data: efArea as EfRow[], nameField: "area_name" };
+  if (groupBy === "unidade") return { data: efUnidade as EfRow[], nameField: "business_unit_name" };
+  return { data: efEmpresa as EfRow[], nameField: "company_name" };
+}
+
+// ═══════════════════════════════════════════════════════
+// 1. QUALITY — registered_count / clocking_count
+// ═══════════════════════════════════════════════════════
+
+export function computeQualityPercentage(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  window: string[] = LAST_3_MONTHS
+): number {
+  const { data, nameField } = getHcSource(groupBy);
+  const rows = data.filter(r => window.includes(r.reference_month));
+  const filtered = selectedName ? rows.filter(r => nameMatches(r[nameField], selectedName)) : rows;
+
+  let totalReg = 0, totalClock = 0;
+  for (const r of filtered) {
+    totalReg += r.registered_count;
+    totalClock += r.clocking_count;
+  }
+
+  return totalClock > 0 ? +((totalReg / totalClock) * 100).toFixed(1) : 100;
+}
+
+// ═══════════════════════════════════════════════════════
+// 2. TREATMENT — weighted faixa distribution
+// ═══════════════════════════════════════════════════════
+
+export function computeTreatmentScore(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  config: ScoreConfig,
+  window: string[] = LAST_3_MONTHS
+): { score: number; pctUnder1d: number; pct1_3d: number; pct3_7d: number; pct7_15d: number; pctOver15d: number } {
+  const source = groupBy === "unidade" ? composicaoUnidadeData : groupBy === "area" ? composicaoAreaData : composicaoEmpresaData;
+  const rows = source.filter(r => window.includes(r.reference_month));
+  const filtered = selectedName ? rows.filter(r => nameMatches(r.company_name, selectedName)) : rows;
+
+  let totalF1 = 0, totalF2 = 0, totalF3 = 0, totalF4 = 0, totalF5 = 0;
+  for (const r of filtered) {
+    totalF1 += r.faixa_ate_1_dia;
+    totalF2 += r.faixa_1_3_dias;
+    totalF3 += r.faixa_3_7_dias;
+    totalF4 += r.faixa_7_15_dias;
+    totalF5 += r.faixa_mais_15_dias;
+  }
+
+  const totalAll = totalF1 + totalF2 + totalF3 + totalF4 + totalF5;
+  if (totalAll === 0) return { score: 100, pctUnder1d: 0, pct1_3d: 0, pct3_7d: 0, pct7_15d: 0, pctOver15d: 0 };
+
+  const pctUnder1d = (totalF1 / totalAll) * 100;
+  const pct1_3d = (totalF2 / totalAll) * 100;
+  const pct3_7d = (totalF3 / totalAll) * 100;
+  const pct7_15d = (totalF4 / totalAll) * 100;
+  const pctOver15d = (totalF5 / totalAll) * 100;
+
+  const score =
+    (pctUnder1d * config.grade_under_1d / 100) +
+    (pct1_3d * config.grade_1_3d / 100) +
+    (pct3_7d * config.grade_3_7d / 100) +
+    (pct7_15d * config.grade_7_15d / 100) +
+    (pctOver15d * config.grade_over_15d / 100);
+
+  return { score: +score.toFixed(1), pctUnder1d, pct1_3d, pct3_7d, pct7_15d, pctOver15d };
+}
+
+// ═══════════════════════════════════════════════════════
+// 3. PRESSURE — justified_count / (active_headcount × months)
+// ═══════════════════════════════════════════════════════
+
+function pressureToGrade(ajustesPerColab: number, config: ScoreConfig): number {
+  if (ajustesPerColab <= 1) return config.grade_pressure_under_1;
+  if (ajustesPerColab <= 2) return config.grade_pressure_1_2;
+  if (ajustesPerColab <= 4) return config.grade_pressure_2_4;
+  if (ajustesPerColab <= 6) return config.grade_pressure_4_6;
+  return config.grade_pressure_over_6;
+}
+
+export function computePressureScore(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  config: ScoreConfig,
+  window: string[] = LAST_3_MONTHS
+): { score: number; ajustesPerColab: number } {
+  const { data, nameField } = getHcSource(groupBy);
+  const rows = data.filter(r => window.includes(r.reference_month));
+  const filtered = selectedName ? rows.filter(r => nameMatches(r[nameField], selectedName)) : rows;
+
+  if (filtered.length === 0) return { score: 100, ajustesPerColab: 0 };
+
+  // Total justified (ajustes) over the window
+  const totalAjustes = filtered.reduce((s, r) => s + r.justified_count, 0);
+
+  // Active headcount: sum per month across entities, then average across months
+  const byMonth = new Map<string, number>();
+  for (const r of filtered) {
+    byMonth.set(r.reference_month, (byMonth.get(r.reference_month) ?? 0) + r.active_headcount);
+  }
+  const monthlyHcValues = Array.from(byMonth.values());
+  const avgActiveHc = monthlyHcValues.length > 0
+    ? monthlyHcValues.reduce((s, v) => s + v, 0) / monthlyHcValues.length
+    : 0;
+
+  const months = window.length;
+  const ajustesPerColab = avgActiveHc > 0 ? totalAjustes / (avgActiveHc * months) : 0;
+  const score = pressureToGrade(ajustesPerColab, config);
+
+  return { score, ajustesPerColab: +ajustesPerColab.toFixed(1) };
+}
+
+// ═══════════════════════════════════════════════════════
+// 4. BACK-OFFICE HEALTH — (ajustes/operador × 50%) + (HE × 50%)
+// ═══════════════════════════════════════════════════════
+
+function boAjustesToGrade(ajustesPerOp: number, config: ScoreConfig): number {
+  if (ajustesPerOp <= 400) return config.grade_bo_under_400;
+  if (ajustesPerOp <= 700) return config.grade_bo_400_700;
+  if (ajustesPerOp <= 1000) return config.grade_bo_700_1000;
+  if (ajustesPerOp <= 1400) return config.grade_bo_1000_1400;
+  return config.grade_bo_over_1400;
+}
+
+export function computeBackofficeScore(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  config: ScoreConfig,
+  window: string[] = LAST_3_MONTHS
+): { score: number; ajustesPerOp: number; hePerOp: number; notaAjustes: number; notaHE: number } {
+  const { data, nameField } = getEfSource(groupBy);
+
+  // Normalize window dates to match competencia format
+  const windowNorm = window.map(w => w.substring(0, 7)); // "2026-01-01" → "2026-01"
+
+  const rows = data.filter(r => windowNorm.includes(normComp(r.competencia).substring(0, 7)));
+  const filtered = selectedName ? rows.filter(r => nameMatches(r[nameField], selectedName)) : rows;
+
+  if (filtered.length === 0) {
+    return { score: 100, ajustesPerOp: 0, hePerOp: 0, notaAjustes: 100, notaHE: 100 };
+  }
+
+  // Total ajustes over the window
+  const totalAjustes = filtered.reduce((s, r) => s + r.qtd_ajustes, 0);
+  // Total HE over the window
+  const totalHE = filtered.reduce((s, r) => s + (r.horas_extras_rateadas ?? 0), 0);
+
+  // Operadores: sum per month across entities, then average across months
+  const byMonth = new Map<string, number>();
+  const heByMonth = new Map<string, number>();
+  for (const r of filtered) {
+    const m = r.competencia.substring(0, 7);
+    byMonth.set(m, (byMonth.get(m) ?? 0) + r.operadores_ativos);
+    heByMonth.set(m, (heByMonth.get(m) ?? 0) + (r.horas_extras_rateadas ?? 0));
+  }
+  const monthlyOps = Array.from(byMonth.values());
+  const avgOps = monthlyOps.length > 0
+    ? monthlyOps.reduce((s, v) => s + v, 0) / monthlyOps.length
+    : 0;
+
+  const months = window.length;
+  const ajustesPerOp = avgOps > 0 ? totalAjustes / (avgOps * months) : 0;
+  const hePerOp = avgOps > 0 ? totalHE / (avgOps * months) : 0;
+
+  const notaAjustes = boAjustesToGrade(ajustesPerOp, config);
+  const notaHE = Math.max(0, 100 - (hePerOp * 2));
+  const score = +(notaAjustes * 0.5 + notaHE * 0.5).toFixed(1);
+
+  return { score, ajustesPerOp: +ajustesPerOp.toFixed(0), hePerOp: +hePerOp.toFixed(1), notaAjustes, notaHE: +notaHE.toFixed(0) };
+}
+
+// ═══════════════════════════════════════════════════════
+// COMPOSITE SCORE
+// ═══════════════════════════════════════════════════════
+
+export function computeCompositeScore(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  config: ScoreConfig,
+  window: string[] = LAST_3_MONTHS
+): number {
+  const qualPct = computeQualityPercentage(selectedName, groupBy, window);
+  const treat = computeTreatmentScore(selectedName, groupBy, config, window);
+  const pressure = computePressureScore(selectedName, groupBy, config, window);
+  const bo = computeBackofficeScore(selectedName, groupBy, config, window);
+  return +((qualPct * config.weight_quality / 100) +
+           (treat.score * config.weight_treatment / 100) +
+           (pressure.score * config.weight_pressure / 100) +
+           (bo.score * config.weight_backoffice / 100)).toFixed(1);
+}
+
+export function computeFullBreakdown(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  config: ScoreConfig,
+  window: string[] = LAST_3_MONTHS
+) {
+  const qualPct = computeQualityPercentage(selectedName, groupBy, window);
+  const treat = computeTreatmentScore(selectedName, groupBy, config, window);
+  const pressure = computePressureScore(selectedName, groupBy, config, window);
+  const bo = computeBackofficeScore(selectedName, groupBy, config, window);
+
+  const qualContrib = +(qualPct * config.weight_quality / 100).toFixed(1);
+  const treatContrib = +(treat.score * config.weight_treatment / 100).toFixed(1);
+  const pressureContrib = +(pressure.score * config.weight_pressure / 100).toFixed(1);
+  const boContrib = +(bo.score * config.weight_backoffice / 100).toFixed(1);
+  const compositeScore = +(qualContrib + treatContrib + pressureContrib + boContrib).toFixed(1);
+
+  return {
+    qualPct, qualContrib,
+    treatScore: treat.score, treatContrib, treatData: treat,
+    pressureScore: pressure.score, pressureContrib, pressureData: pressure,
+    boScore: bo.score, boContrib, boData: bo,
+    compositeScore,
+  };
+}
+
+/** Compute previous trimester score for trend comparison */
+export function computePrevTriScore(
+  selectedName: string | null,
+  groupBy: "empresa" | "unidade" | "area",
+  config: ScoreConfig
+): number {
+  return computeCompositeScore(selectedName, groupBy, config, PREV_3_MONTHS);
+}
