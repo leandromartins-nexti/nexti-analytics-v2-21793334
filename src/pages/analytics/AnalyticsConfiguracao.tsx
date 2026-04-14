@@ -47,6 +47,12 @@ const dataRegistry: MenuEntry[] = [
             columns: evolucaoQualidadeHeadcountColumns,
             source: evolucaoQualidadeHeadcountSource,
           },
+          {
+            id: "evo-tempo-tratativa",
+            chartName: "Evolução do Tempo de Tratativa",
+            columns: evolucaoTempoTratativaColumns,
+            source: evolucaoTempoTratativaSource,
+          },
         ],
       },
     ],
