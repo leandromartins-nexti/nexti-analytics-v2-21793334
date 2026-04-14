@@ -114,10 +114,10 @@ export default function AnalyticsResumoExecutivo() {
 
   // Build real Qualidade do Ponto sparkline card — score per month
   const qualidadeCard = useMemo(() => {
-    // Compute composite score for each month
+    // Use 4-component composite score per month (single-month window)
     const evolucao = ajustesMeses.map(month => {
-      const kpi = getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig, month);
-      return { competencia: formatMesLabel(month), valor: kpi.score };
+      const score = computeCompositeScore(selectedRegional, groupBy as any, scoreConfig, [month]);
+      return { competencia: formatMesLabel(month), valor: score };
     });
     const lastScore = evolucao[evolucao.length - 1]?.valor ?? 0;
     const firstScore = evolucao[0]?.valor ?? 0;
