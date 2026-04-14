@@ -869,12 +869,17 @@ type ContentProps = { selectedRegional: string | null; onRegionalClick: (n: stri
 function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
   const { config: scoreConfig } = useScoreConfig();
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
-  const [chartMode, setChartMode] = useState<ChartMode>("line");
-  const [dataMode, setDataMode] = useState<DataMode>("percent");
   const [tratChartMode, setTratChartMode] = useState<ChartMode>("area");
   const [tratDataMode, setTratDataMode] = useState<DataMode>("percent");
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
+
+  // Headcount por mês (mesma base do Turnover)
+  const headcountMap: Record<string, number> = {
+    "abr/25": 250, "mai/25": 257, "jun/25": 251, "jul/25": 254, "ago/25": 255,
+    "set/25": 446, "out/25": 447, "nov/25": 437, "dez/25": 440, "jan/26": 441,
+    "fev/26": 450, "mar/26": 449,
+  };
 
   const mesLabelToReferenceMonth = useMemo(() => new Map(ajustesMeses.map((month) => [formatMesLabel(month), month])), []);
   const selectedReferenceMonth = useMemo(
@@ -898,7 +903,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     () => aggregateQualidadeEvolucaoDetalhado(selectedRegional, groupBy as any),
     [selectedRegional, groupBy]
   );
-  const showDetalhado = dataMode === "valor";
+  const qualidadeComHeadcount = useMemo(
+    () => qualidadeDetalhado.map(d => ({ ...d, headcount: headcountMap[d.mes] ?? 0 })),
+    [qualidadeDetalhado]
+  );
+  const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.headcount), 1), [qualidadeComHeadcount]);
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
