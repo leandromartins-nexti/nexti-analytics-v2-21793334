@@ -4,6 +4,7 @@ import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySide
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { coberturas } from "@/lib/analytics-mock-data";
 import { getSidebarItems } from "@/lib/ajustesData";
+import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip as RechartsTooltip, Legend, PieChart, Pie, Cell,
@@ -53,8 +54,10 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
     };
   }, [selectedRegional, regionais, kpis, distribuicaoTipoEvento]);
 
-  const scoreColor = getScoreColor(activeData.score);
-  const scoreFaixa = activeData.score >= 80 ? "Bom" : activeData.score >= 70 ? "Atenção" : "Crítico";
+  const { config: scoreConfig } = useScoreConfig();
+  const scoreClassif = getScoreClassification(activeData.score, scoreConfig);
+  const scoreColor = scoreClassif.text;
+  const scoreFaixa = scoreClassif.label;
 
   const handleRegionalClick = (nome: string) => {
     setSelectedRegional(prev => prev === nome ? null : nome);
@@ -74,7 +77,7 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
             <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Score Cobertura</p>
             <InfoTip text="Índice de eficiência de cobertura calculado a partir de: taxa de ausências cobertas, tipo de evento gerado na apuração, tempo médio de reposição e dias de posto descoberto." />
           </div>
-          <ScoreGauge score={activeData.score} />
+          <ScoreGauge score={activeData.score} color={scoreClassif.color} />
           <p className={`text-3xl font-bold leading-none -mt-1 ${scoreColor}`}>{activeData.score}</p>
           <p className={`text-xs font-semibold ${scoreColor} mt-0.5`}>{scoreFaixa}</p>
           <div className="flex items-center justify-center gap-1 mt-1">
