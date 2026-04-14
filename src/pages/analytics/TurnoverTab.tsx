@@ -522,8 +522,8 @@ export default function TurnoverTab() {
   const maxHC = Math.max(...turnoverHeadcountData.map(d => d.headcount));
 
   // KPI delta for descriptive cards
-  const melhorOpAnterior = kpisAnterior.melhor_operacao;
-  const maiorRiscoAnterior = kpisAnterior.maior_risco;
+  const melhorOpAnterior = kpisAnterior.melhor_operacao as any;
+  const maiorRiscoAnterior = kpisAnterior.maior_risco as any;
 
   return (
     <div className="flex flex-1 min-h-0">
