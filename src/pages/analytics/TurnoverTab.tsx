@@ -152,8 +152,63 @@ function getTurnoverFaixa(score: number) {
 }
 
 // ══════════════════════════════════════════════════════════════
-// Component
+// Tempo de Casa Chart
 // ══════════════════════════════════════════════════════════════
+function TempoCasaChart({ groupBy, selectedRegional, onOpenData }: { groupBy: GroupBy; selectedRegional: string | null; onOpenData: () => void }) {
+  const dataset = useMemo(() => getTempoCasaDataset(groupBy, selectedRegional), [groupBy, selectedRegional]);
+  const maxCount = Math.max(...dataset.faixas.map((f: any) => f.count), 1);
+
+  return (
+    <div className="bg-card border rounded-xl p-4 border-border/50">
+      <div className="flex items-center justify-between mb-0.5">
+        <div>
+          <div className="flex items-center gap-1.5">
+            <h4 className="text-sm font-semibold">Tempo de Casa dos Desligados</h4>
+            <InfoTip text="Distribuição dos colaboradores que saíram da empresa no período, agrupados pela faixa de tempo de casa que tinham no momento do desligamento." />
+          </div>
+          <p className="text-[10px] text-muted-foreground mb-2">Em qual faixa de tempo de casa estavam ao sair · clique para filtrar</p>
+        </div>
+        <button onClick={onOpenData} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
+      </div>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={dataset.faixas} layout="vertical" margin={{ top: 5, right: 90, bottom: 5, left: 10 }}>
+          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+          <XAxis type="number" tick={{ fontSize: 10 }} domain={[0, Math.ceil(maxCount * 1.15)]} />
+          <YAxis type="category" dataKey="label" tick={{ fontSize: 10 }} width={110} />
+          <RechartsTooltip content={({ active, payload }) => {
+            if (!active || !payload?.length) return null;
+            const d = payload[0].payload;
+            const rangeDays = TENURE_RANGE_LABELS[d.id] || "";
+            return (
+              <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                <p className="font-semibold text-foreground">{d.label}</p>
+                <p className="text-muted-foreground">{rangeDays}</p>
+                <p className="text-foreground">{d.count} desligamentos · {d.pct}% do total</p>
+                {d.avg_days > 0 && <p className="text-muted-foreground">Média: {d.avg_days} dias</p>}
+              </div>
+            );
+          }} />
+          <Bar dataKey="count" radius={[0, 4, 4, 0]} animationDuration={600}
+            label={({ x, y, width, value, index }: any) => {
+              const faixa = dataset.faixas[index];
+              return (
+                <text x={x + width + 6} y={y + 14} fontSize={10} fill="hsl(var(--foreground))" fontWeight={600}>
+                  {faixa.count} · {faixa.pct}%
+                </text>
+              );
+            }}
+          >
+            {dataset.faixas.map((f: any, i: number) => (
+              <Cell key={f.id} fill={TENURE_COLORS[i]} fillOpacity={0.65} stroke={TENURE_COLORS[i]} strokeOpacity={0.5} strokeWidth={1} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">Total no período: {dataset.total} desligamentos</p>
+    </div>
+  );
+}
+
 export default function TurnoverTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
