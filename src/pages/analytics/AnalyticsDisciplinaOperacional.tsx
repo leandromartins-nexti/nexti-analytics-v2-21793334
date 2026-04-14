@@ -1245,7 +1245,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             <div className="flex items-center justify-between mb-0.5">
               <div>
                 <h4 className="text-sm font-semibold">Evolução da Qualidade e Headcount</h4>
-                <p className="text-[10px] text-muted-foreground mb-2">Registradas vs Justificadas (barras) · Headcount (área) · clique para filtrar</p>
+                <p className="text-[10px] text-muted-foreground mb-2">Registradas vs Justificadas (barras) · Headcount Ativo (área) · clique para filtrar</p>
               </div>
             </div>
             <ResponsiveContainer width="100%" height={280}>
