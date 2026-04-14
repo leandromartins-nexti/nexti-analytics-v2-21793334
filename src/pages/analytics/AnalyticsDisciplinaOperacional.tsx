@@ -22,6 +22,7 @@ import { useAbsenteismoScoreConfig, computeAbsCompositeScore, getAbsScoreClassif
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
+import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSection";
 
 import qpDecomposicaoScore from "@/data/qualidade-ponto/decomposicao-score.json";
 import qpKpisPeriodoAnterior from "@/data/qualidade-ponto/kpis-periodo-anterior.json";
