@@ -1447,11 +1447,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             const areaInsufficient = groupBy === "area" && (rawEsforco.length < 6 || new Set(rawEsforco.map((r: any) => r.area_name)).size < 3);
 
             // Aggregate by competencia (optionally filtered by sidebar selection)
+            // Normalize: strip "VIG EYES " prefix for comparison
+            const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
             const filtered = selectedRegional
               ? rawEsforco.filter((r: any) => {
-                  if (groupBy === "empresa") return String(r.company_id) === selectedRegional || r.company_name === selectedRegional;
-                  if (groupBy === "unidade") return String(r.business_unit_id) === selectedRegional || r.business_unit_name === selectedRegional;
-                  return String(r.area_id) === selectedRegional || r.area_name === selectedRegional;
+                  const selNorm = normName(selectedRegional);
+                  if (groupBy === "empresa") return String(r.company_id) === selectedRegional || normName(r.company_name ?? "") === selNorm;
+                  if (groupBy === "unidade") return String(r.business_unit_id) === selectedRegional || normName(r.business_unit_name ?? "") === selNorm;
+                  return String(r.area_id) === selectedRegional || normName(r.area_name ?? "") === selNorm;
                 })
               : rawEsforco;
 
