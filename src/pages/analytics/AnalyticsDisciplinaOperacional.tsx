@@ -908,6 +908,17 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     [qualidadeDetalhado]
   );
   const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.headcount), 1), [qualidadeComHeadcount]);
+  const maxBarTotal = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.registradas + d.justificadas), 1), [qualidadeComHeadcount]);
+  // Scale right axis so headcount area always sits visually above bar tops
+  // If bar top = maxBarTotal on left axis, headcount should render at ~70% of chart height
+  // So we set right domain max so that maxHeadcount maps to ~60% of the chart
+  const rightDomainMax = useMemo(() => {
+    // We want: headcount / rightMax = 0.6 (area fills ~60% from top)
+    // But minimum headcount visual position should be above the tallest bar
+    // tallest bar fraction on left axis ≈ maxBarTotal / leftMax ≈ 1.0
+    // So headcount fraction must be > 1.0 → we scale so headcount sits at 60%
+    return Math.ceil(maxHeadcount * 0.55);
+  }, [maxHeadcount]);
 
   const tratativaFaixasFiltrada = useMemo(
     () => {
@@ -1197,7 +1208,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
                 }} />
                 <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, Math.ceil(maxHeadcount * 1.3)]} ticks={[0, Math.round(maxHeadcount * 0.33), Math.round(maxHeadcount * 0.66), maxHeadcount]} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, rightDomainMax]} ticks={[0, Math.round(rightDomainMax * 0.33), Math.round(rightDomainMax * 0.66), rightDomainMax]} />
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
                   const d = payload[0]?.payload;
