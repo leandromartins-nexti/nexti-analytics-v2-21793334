@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import {
   ScoreConfig, DEFAULT_CONFIG, useScoreConfig,
-  computeFullBreakdown, getScoreClassification,
+  computeFullBreakdown, computePrevTriScore, getScoreClassification,
 } from "@/contexts/ScoreConfigContext";
 import { toast } from "sonner";
 
