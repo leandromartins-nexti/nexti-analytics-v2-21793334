@@ -11,7 +11,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import {
   ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, Area, ComposedChart,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
-  ScatterChart, Scatter, ZAxis, Cell, LabelList,
+  ScatterChart, Scatter, ZAxis, Cell, LabelList, ReferenceArea,
 } from "recharts";
 import esforcoEmpresa from "@/data/qualidade-ponto/esforco-tratativa-por-empresa.json";
 import esforcoUnNegocio from "@/data/qualidade-ponto/esforco-tratativa-por-un-negocio.json";
@@ -1524,20 +1524,43 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             <p className="text-[10px] text-muted-foreground mb-2">Volume × Qualidade × Tempo de Resposta por operação{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
             <ResponsiveContainer width="100%" height={280}>
               <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+                <defs>
+                  <linearGradient id="matrizSaudeGradient" x1="1" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity={0.20} />
+                    <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.10} />
+                    <stop offset="100%" stopColor="#ef4444" stopOpacity={0.15} />
+                  </linearGradient>
+                </defs>
+                {/* Background gradient rect */}
+                <ReferenceArea x1={qualDomain.xMin} x2={qualDomain.xMax} y1={qualDomain.yMin} y2={qualDomain.yMax} fill="url(#matrizSaudeGradient)" strokeOpacity={0} />
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" dataKey="volume" name="Volume" domain={[qualDomain.xMin, qualDomain.xMax]} tick={{ fontSize: 10 }} tickFormatter={v => `${(v / 1000).toFixed(0)}K`} label={{ value: "Volume de marcações", position: "insideBottom", offset: -5, fontSize: 10 }} />
                 <YAxis type="number" dataKey="qualidade" name="Qualidade" domain={[qualDomain.yMin, qualDomain.yMax]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} label={{ value: "Qualidade (%)", angle: -90, position: "insideLeft", fontSize: 10 }} />
                 <ZAxis type="number" dataKey="headcount" range={[200, 800]} />
                 <ReferenceLine y={70} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
                 <ReferenceLine x={medianVolume} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
+                {/* Corner labels */}
+                <ReferenceArea x1={qualDomain.xMax * 0.75} x2={qualDomain.xMax} y1={qualDomain.yMax * 0.95} y2={qualDomain.yMax} fill="transparent" strokeOpacity={0} label={{ value: "Saudável", position: "insideTopRight", fontSize: 9, fontWeight: 500, fill: "rgba(34,197,94,0.6)" }} />
+                <ReferenceArea x1={qualDomain.xMin} x2={qualDomain.xMax * 0.25} y1={qualDomain.yMin} y2={qualDomain.yMin + (qualDomain.yMax - qualDomain.yMin) * 0.05} fill="transparent" strokeOpacity={0} label={{ value: "Requer atenção", position: "insideBottomLeft", fontSize: 9, fontWeight: 500, fill: "rgba(239,68,68,0.6)" }} />
                 <RechartsTooltip content={({ active, payload }) => {
                   if (!active || !payload?.length) return null;
                   const d = payload[0].payload;
                   const tempoClass = d.tempoMedioDias <= 3 ? "Rápido" : d.tempoMedioDias <= 7 ? "Moderado" : "Lento";
                   const tempoColor = d.tempoMedioDias <= 3 ? "text-green-600" : d.tempoMedioDias <= 7 ? "text-amber-600" : "text-red-600";
-                  const isHighVol = d.volume >= medianVolume;
-                  const isHighQual = d.qualidade >= 70;
-                  const quadrante = isHighVol && isHighQual ? "Escala excelente" : !isHighVol && isHighQual ? "Pequena excelente" : isHighVol && !isHighQual ? "Alto risco" : "Requer atenção";
+                   const isHighVol = d.volume >= medianVolume;
+                   const isHighQual = d.qualidade >= 70;
+                   const isFast = d.tempoMedioDias <= 3;
+                   const isSlow = d.tempoMedioDias > 7;
+                   let quadrante: string;
+                   if (isHighQual && isHighVol) {
+                     quadrante = isFast ? "Escala excelente" : "Escala com atenção";
+                   } else if (isHighQual && !isHighVol) {
+                     quadrante = isFast ? "Pequena excelente" : "Pequena com atenção";
+                   } else if (!isHighQual && isHighVol) {
+                     quadrante = "Alto risco";
+                   } else {
+                     quadrante = "Requer atenção";
+                   }
                   return (
                     <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
                       <p className="font-semibold text-sm">{d.regional}</p>
