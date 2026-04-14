@@ -999,8 +999,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             <p className="text-xl font-bold mt-0.5 truncate" style={{ color: qualClassif.color }}>{activeData.qualidadePct}%</p>
           </div>
           <KPIBoard title="Tempo Médio" tooltip="Tempo médio em dias entre a marcação original e o ajuste pelo operador." value={`${activeData.tempoMedioDias} dias`} valueColor={tempoColor} />
-          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="" subtitle={`Score ${activeData.melhorOperacao.score} · ${melhorClassif.label}`} icon={<span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: melhorClassif.color }} />} />
-          <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="" subtitle={`Score ${activeData.maiorRisco.score} · ${riscoClassif.label}`} icon={<span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: riscoClassif.color }} />} />
+          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueStyle={{ color: melhorClassif.color }} subtitle={`Score ${activeData.melhorOperacao.score} · ${melhorClassif.label}`} subtitleStyle={{ color: melhorClassif.color }} />
+          <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueStyle={{ color: riscoClassif.color }} subtitle={`Score ${activeData.maiorRisco.score} · ${riscoClassif.label}`} subtitleStyle={{ color: riscoClassif.color }} />
         </div>
 
         {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
