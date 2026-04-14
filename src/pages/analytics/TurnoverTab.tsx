@@ -42,9 +42,9 @@ const TENURE_PALETTE = [
   { color: "#ef4444", opacity: 0.75 },  // 30-90 dias — Crítico 75%
   { color: "#eab308", opacity: 1.0 },   // 3-6 meses  — Atenção 100%
   { color: "#eab308", opacity: 0.75 },  // 6-12 meses — Atenção 75%
-  { color: "#22c55e", opacity: 1.0 },   // 1-2 anos   — Saudável 100%
-  { color: "#22c55e", opacity: 0.85 },  // 2-5 anos   — Saudável 85%
-  { color: "#22c55e", opacity: 0.65 },  // 5+ anos    — Saudável 65%
+  { color: "#22c55e", opacity: 0.7 },   // 1-2 anos   — Saudável 70% (mais translúcido)
+  { color: "#22c55e", opacity: 1.0 },   // 2-5 anos   — Saudável 100%
+  { color: "#22c55e", opacity: 1.0 },   // 5+ anos    — Saudável 100%
 ];
 const TENURE_RANGE_LABELS: Record<string, string> = {
   lt30: "0 a 29 dias de casa", "30_90": "30 a 89 dias de casa", "3_6m": "90 a 179 dias de casa",
@@ -208,7 +208,11 @@ function TempoCasaChart({ groupBy, selectedRegional, onOpenData }: { groupBy: Gr
                 </text>
               );
             }}
-            background={{ fill: "hsl(var(--muted))", radius: 4 }}
+            background={({ x, y, width, height, index }: any) => {
+              const faixa = dataset.faixas[index];
+              if (faixa.count > 0) return null;
+              return <rect x={x} y={y} width={width} height={height} rx={4} fill="hsl(var(--muted))" />;
+            }}
           >
             {dataset.faixas.map((f: any, i: number) => {
               const p = TENURE_PALETTE[i];
