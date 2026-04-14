@@ -20,7 +20,8 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 
-
+import qpDecomposicaoScore from "@/data/qualidade-ponto/decomposicao-score.json";
+import qpKpisPeriodoAnterior from "@/data/qualidade-ponto/kpis-periodo-anterior.json";
 function abreviar(nome: string): string {
   const words = nome.replace(/[-–]/g, " ").split(/\s+/).filter(w => w.length > 1);
   if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
