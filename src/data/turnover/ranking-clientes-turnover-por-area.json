@@ -1,0 +1,101 @@
+[
+  {
+    "customer_id": 642,
+    "area_id": null,
+    "area_name": null,
+    "client_id": 549577,
+    "client_name": "PREFEITURA DE SOROCABA",
+    "headcount_atual": 397,
+    "saidas_periodo": 102,
+    "turnover_pct": 19.1,
+    "avg_tenure_days": 274
+  },
+  {
+    "customer_id": 642,
+    "area_id": null,
+    "area_name": null,
+    "client_id": 549574,
+    "client_name": "CONSTRUTORA TENDA S/A",
+    "headcount_atual": 2,
+    "saidas_periodo": 5,
+    "turnover_pct": 71.4,
+    "avg_tenure_days": 213
+  },
+  {
+    "customer_id": 642,
+    "area_id": null,
+    "area_name": null,
+    "client_id": 549859,
+    "client_name": "VIG EYES",
+    "headcount_atual": 9,
+    "saidas_periodo": 1,
+    "turnover_pct": 10.0,
+    "avg_tenure_days": 759
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "client_id": 549578,
+    "client_name": "SUPER LAMINAÇÃO DE FERRO E AÇO IND E COM LTDA",
+    "headcount_atual": 16,
+    "saidas_periodo": 15,
+    "turnover_pct": 41.7,
+    "avg_tenure_days": 274
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "client_id": 549859,
+    "client_name": "VIG EYES",
+    "headcount_atual": 8,
+    "saidas_periodo": 11,
+    "turnover_pct": 47.8,
+    "avg_tenure_days": 228
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "client_id": 549573,
+    "client_name": "CONDOMINO EDIFICIO ALANA II",
+    "headcount_atual": 7,
+    "saidas_periodo": 4,
+    "turnover_pct": 30.8,
+    "avg_tenure_days": 349
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "client_id": 549572,
+    "client_name": "CONDOMÍNIO ADVANCED OFFICES BRIGADEIRO",
+    "headcount_atual": 9,
+    "saidas_periodo": 2,
+    "turnover_pct": 18.2,
+    "avg_tenure_days": 912
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "client_id": 549576,
+    "client_name": "GILBERTO DE ASSIS PIRES",
+    "headcount_atual": 4,
+    "saidas_periodo": 1,
+    "turnover_pct": 20.0,
+    "avg_tenure_days": 1227
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11045,
+    "area_name": "SOROCABA",
+    "client_id": 549577,
+    "client_name": "PREFEITURA DE SOROCABA",
+    "headcount_atual": 15,
+    "saidas_periodo": 8,
+    "turnover_pct": 32.0,
+    "avg_tenure_days": 275
+  }
+]

@@ -1,0 +1,145 @@
+[
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549577,
+    "client_name": "PREFEITURA DE SOROCABA",
+    "headcount_atual": 412,
+    "saidas_periodo": 110,
+    "turnover_pct": 19.7,
+    "avg_tenure_days": 274
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549578,
+    "client_name": "SUPER LAMINAÇÃO DE FERRO E AÇO IND E COM LTDA",
+    "headcount_atual": 9,
+    "saidas_periodo": 14,
+    "turnover_pct": 50.0,
+    "avg_tenure_days": 206
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549859,
+    "client_name": "VIG EYES",
+    "headcount_atual": 13,
+    "saidas_periodo": 5,
+    "turnover_pct": 25.0,
+    "avg_tenure_days": 247
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549573,
+    "client_name": "CONDOMINO EDIFICIO ALANA II",
+    "headcount_atual": 0,
+    "saidas_periodo": 3,
+    "turnover_pct": 100.0,
+    "avg_tenure_days": 324
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549574,
+    "client_name": "CONSTRUTORA TENDA S/A",
+    "headcount_atual": 0,
+    "saidas_periodo": 1,
+    "turnover_pct": 100.0,
+    "avg_tenure_days": 152
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549572,
+    "client_name": "CONDOMÍNIO ADVANCED OFFICES BRIGADEIRO",
+    "headcount_atual": 2,
+    "saidas_periodo": 1,
+    "turnover_pct": 33.3,
+    "avg_tenure_days": 901
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9380,
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "client_id": 549576,
+    "client_name": "GILBERTO DE ASSIS PIRES",
+    "headcount_atual": 4,
+    "saidas_periodo": 1,
+    "turnover_pct": 20.0,
+    "avg_tenure_days": 1227
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "client_id": 549859,
+    "client_name": "VIG EYES",
+    "headcount_atual": 4,
+    "saidas_periodo": 2,
+    "turnover_pct": 33.3,
+    "avg_tenure_days": 711
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9381,
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "client_id": 549578,
+    "client_name": "SUPER LAMINAÇÃO DE FERRO E AÇO IND E COM LTDA",
+    "headcount_atual": 7,
+    "saidas_periodo": 1,
+    "turnover_pct": 12.5,
+    "avg_tenure_days": 1230
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "client_id": 549859,
+    "client_name": "VIG EYES",
+    "headcount_atual": 0,
+    "saidas_periodo": 5,
+    "turnover_pct": 71.4,
+    "avg_tenure_days": 122
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "client_id": 549574,
+    "client_name": "CONSTRUTORA TENDA S/A",
+    "headcount_atual": 6,
+    "saidas_periodo": 4,
+    "turnover_pct": 40.0,
+    "avg_tenure_days": 228
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "client_id": 549572,
+    "client_name": "CONDOMÍNIO ADVANCED OFFICES BRIGADEIRO",
+    "headcount_atual": 6,
+    "saidas_periodo": 1,
+    "turnover_pct": 14.3,
+    "avg_tenure_days": 922
+  },
+  {
+    "customer_id": 642,
+    "company_id": 9379,
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "client_id": 549573,
+    "client_name": "CONDOMINO EDIFICIO ALANA II",
+    "headcount_atual": 7,
+    "saidas_periodo": 1,
+    "turnover_pct": 10.0,
+    "avg_tenure_days": 423
+  }
+]
