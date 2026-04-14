@@ -23,7 +23,7 @@ import hcEmpresaJson from "@/data/qualidade-ponto/headcount-por-empresa.json";
 import hcUnNegocioJson from "@/data/qualidade-ponto/headcount-por-un-negocio.json";
 import hcAreaJson from "@/data/qualidade-ponto/headcount-por-area.json";
 import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao, aggregateQualidadeEvolucaoDetalhado, aggregateQualidadeVolume, getQualidadeKpiSummary, getSidebarItems } from "@/lib/ajustesData";
-import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
+import { useScoreConfig, getScoreClassification, computeCompositeScore } from "@/contexts/ScoreConfigContext";
 import { useAbsenteismoScoreConfig, computeAbsCompositeScore, getAbsScoreClassification } from "@/contexts/AbsenteismoScoreConfigContext";
 
 import ScoreGauge from "@/components/analytics/ScoreGauge";
@@ -990,16 +990,17 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
 
   
-  const scoreClassif = getScoreClassification(activeData.score, scoreConfig);
+  // Use 4-component composite score (3-month window) instead of the 2-component one from getQualidadeKpiSummary
+  const compositeScore = useMemo(() => computeCompositeScore(selectedRegional, groupBy as any, scoreConfig), [selectedRegional, groupBy, scoreConfig]);
+  const scoreClassif = getScoreClassification(compositeScore, scoreConfig);
   const scoreColor = scoreClassif.text;
   const scoreFaixa = scoreClassif.label;
 
   const sidebarItems = useMemo(() => {
-    // Compute composite score per entity using config
     const entities = groupBy === "empresa" ? empresaData : groupBy === "area" ? areaData : unidadeData;
     return entities.map(e => {
-      const summary = getQualidadeKpiSummary(e.nome, groupBy as any, scoreConfig);
-      return { nome: e.nome, score: summary.score };
+      const score = computeCompositeScore(e.nome, groupBy as any, scoreConfig);
+      return { nome: e.nome, score };
     }).sort((a, b) => b.score - a.score);
   }, [groupBy, scoreConfig]);
 
@@ -1131,12 +1132,12 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             <Popover>
               <PopoverTrigger asChild>
                 <button className="flex flex-col items-center gap-0 cursor-pointer" title="Ver decomposição do score">
-                  <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} color={scoreClassif.color} />
+                  <ScoreGauge score={compositeScore} label={`${compositeScore}`} faixa={scoreFaixa} color={scoreClassif.color} />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-0" side="bottom" align="start">
                 <div className="p-3 border-b border-border/50">
-                  <p className="text-sm font-semibold">Como o Score {activeData.score} foi calculado</p>
+                  <p className="text-sm font-semibold">Como o Score {compositeScore} foi calculado</p>
                 </div>
                 <div className="p-3 space-y-3">
                   {qpDecomposicaoScore.componentes.map((comp) => {
@@ -1161,9 +1162,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   })}
                   <div className="border-t border-border/50 pt-2 flex items-center justify-between">
                     <span className="text-xs font-semibold">Score composto</span>
-                    <span className="text-sm font-bold" style={{ color: scoreClassif.color }}>
-                      {activeData.score} ({scoreFaixa})
-                    </span>
+                     <span className="text-sm font-bold" style={{ color: scoreClassif.color }}>
+                       {compositeScore} ({scoreFaixa})
+                     </span>
                   </div>
                 </div>
               </PopoverContent>
