@@ -996,11 +996,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Qualidade</p>
               <InfoTip text="Percentual de marcações registradas corretamente, sem necessidade de ajuste." />
             </div>
-            <p className={`text-xl font-bold mt-0.5 truncate ${qualColor}`}>{activeData.qualidadePct}%</p>
+            <p className="text-xl font-bold mt-0.5 truncate" style={{ color: qualClassif.color }}>{activeData.qualidadePct}%</p>
           </div>
           <KPIBoard title="Tempo Médio" tooltip="Tempo médio em dias entre a marcação original e o ajuste pelo operador." value={`${activeData.tempoMedioDias} dias`} valueColor={tempoColor} />
-          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="text-green-600" subtitle={`Score ${activeData.melhorOperacao.score} · ${activeData.melhorOperacao.score >= 85 ? "Alta" : activeData.melhorOperacao.score >= 70 ? "Média" : "Baixa"}`} />
-          <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="text-red-600" subtitle={`Score ${activeData.maiorRisco.score} · ${activeData.maiorRisco.indicador}`} />
+          <KPIBoard title="Melhor Operação" tooltip="Operação com maior score de qualidade no período" value={activeData.melhorOperacao.nome} valueColor="" subtitle={`Score ${activeData.melhorOperacao.score} · ${melhorClassif.label}`} icon={<span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: melhorClassif.color }} />} />
+          <KPIBoard title="Maior Risco" tooltip="Operação com menor qualidade e maior concentração de risco" value={activeData.maiorRisco.nome} valueColor="" subtitle={`Score ${activeData.maiorRisco.score} · ${riscoClassif.label}`} icon={<span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: riscoClassif.color }} />} />
         </div>
 
         {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
