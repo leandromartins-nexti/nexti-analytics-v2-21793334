@@ -1672,8 +1672,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             const p90Idx = Math.floor(prodValues.length * 0.9);
             const P50 = prodValues[p50Idx] || 100;
             const P90 = prodValues[p90Idx] || 500;
-            const thresholdYellow = Math.round(P50 * 1.5);
-
             const limiteSaudavel = Math.round(P50 * 1.5);
 
             const sobrecargaData = allEntries.map(d => {
