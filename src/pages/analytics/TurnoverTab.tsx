@@ -516,7 +516,7 @@ export default function TurnoverTab() {
         <div className="grid grid-cols-6 gap-3">
           {/* 1. Score with decomposition popover */}
           <ScoreBoard title="Score da Aba" tooltip="Score composto de turnover, calculado a partir do turnover anual, voluntário e precoce. Clique para ver a decomposição.">
-            <ScoreDecompositionPopover score={score} faixa={faixa} />
+            <ScoreDecompositionPopover score={score} faixa={faixa} scoreColor={scoreClassif.color} />
             {(() => {
               const d = getDeltaDisplay("score_aba");
               if (!d) return null;
