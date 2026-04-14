@@ -306,12 +306,12 @@ function getDeltaDisplay(key: "turnover_anual_pct" | "turnover_precoce_90d_pct" 
 // ══════════════════════════════════════════════════════════════
 const COMP_COLORS: Record<string, string> = { success: "#22c55e", warning: "#eab308", critical: "#ef4444" };
 
-function ScoreDecompositionPopover({ score, faixa }: { score: number; faixa: string }) {
+function ScoreDecompositionPopover({ score, faixa, scoreColor }: { score: number; faixa: string; scoreColor: string }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button className="flex flex-col items-center gap-0 cursor-pointer" title="Ver decomposição do score">
-          <ScoreGauge score={score} label={`${score}`} faixa={faixa} />
+          <ScoreGauge score={score} label={`${score}`} faixa={faixa} color={scoreColor} />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" side="bottom" align="start">
@@ -482,8 +482,10 @@ export default function TurnoverTab() {
   // KPI calculations
   const turnoverAnual = 43.1;
   const turnoverPrecoce = 38.4;
+  const { config: scoreConfig } = useScoreConfig();
   const score = computeTurnoverCompositeScore(turnoverAnual, turnoverPrecoce);
-  const faixa = getTurnoverFaixa(score);
+  const scoreClassif = getScoreClassification(score, scoreConfig);
+  const faixa = scoreClassif.label;
   const melhorOp = sidebarItems.reduce((a, b) => a.score > b.score ? a : b);
   const maiorRisco = sidebarItems.reduce((a, b) => a.score < b.score ? a : b);
 
