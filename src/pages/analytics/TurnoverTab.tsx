@@ -487,8 +487,7 @@ export default function TurnoverTab() {
   // KPI calculations
   const turnoverAnual = 43.1;
   const turnoverPrecoce = 38.4;
-  const turnoverVoluntarioPct = 55;
-  const score = computeTurnoverCompositeScore(turnoverAnual, turnoverVoluntarioPct, turnoverPrecoce);
+  const score = computeTurnoverCompositeScore(turnoverAnual, turnoverPrecoce);
   const faixa = getTurnoverFaixa(score);
   const melhorOp = sidebarItems.reduce((a, b) => a.score > b.score ? a : b);
   const maiorRisco = sidebarItems.reduce((a, b) => a.score < b.score ? a : b);
