@@ -29,6 +29,7 @@ import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSe
 
 import qpDecomposicaoScore from "@/data/qualidade-ponto/decomposicao-score.json";
 import qpKpisPeriodoAnterior from "@/data/qualidade-ponto/kpis-periodo-anterior.json";
+import { evolucaoQualidadeHeadcountSource, evolucaoQualidadeHeadcountColumns } from "@/data/chart-sources/evolucao-qualidade-headcount";
 function abreviar(nome: string): string {
   const words = nome.replace(/[-–]/g, " ").split(/\s+/).filter(w => w.length > 1);
   if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
@@ -874,6 +875,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
+  const [chartDataModal, setChartDataModal] = useState<string | null>(null);
 
   // Headcount por mês – filtrado por entidade selecionada
   const MONTH_LABEL_MAP: Record<string, string> = {
@@ -1247,6 +1249,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <h4 className="text-sm font-semibold">Evolução da Qualidade e Headcount</h4>
                 <p className="text-[10px] text-muted-foreground mb-2">Registradas vs Justificadas (barras) · Headcount Ativo (área) · clique para filtrar</p>
               </div>
+              <button onClick={() => setChartDataModal("evoQualidade")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <ComposedChart data={qualidadeComHeadcount} onClick={(e: any) => {
@@ -1675,6 +1678,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       </div>
 
       <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
+
+      <ChartDataModal
+        open={chartDataModal === "evoQualidade"}
+        onClose={() => setChartDataModal(null)}
+        title="Evolução da Qualidade e Headcount"
+        columns={evolucaoQualidadeHeadcountColumns}
+        source={evolucaoQualidadeHeadcountSource}
+        activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
+      />
     </div>
   );
 }

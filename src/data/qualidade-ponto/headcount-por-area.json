@@ -412,10 +412,10 @@
     "area_id": 11043,
     "area_name": "SAO PAULO",
     "reference_month": "2026-03-01",
-    "clocking_count": 2470,
+    "clocking_count": 2486,
     "registered_count": 1902,
-    "justified_count": 422,
-    "quality_percentage": 77.0,
+    "justified_count": 426,
+    "quality_percentage": 76.51,
     "headcount": 53,
     "active_headcount": 52
   },
