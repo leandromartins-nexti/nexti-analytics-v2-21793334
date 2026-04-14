@@ -1975,6 +1975,7 @@ ORDER BY a.reference_month, a.headcount DESC;`;
 // Sub-aba 3: Movimentações
 // ══════════════════════════════════════════════════════════════
 function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail, groupBy, onGroupByChange }: ContentProps) {
+  const { config: scoreConfig } = useScoreConfig();
   const activeData = useMemo(() => {
     if (!selectedRegional) return { total: "23.0K", diff: "-18.3%", escala: "14.8K", posto: "8.2K" };
     const r = movimentacoesRegionais.find(x => x.nome === selectedRegional);
