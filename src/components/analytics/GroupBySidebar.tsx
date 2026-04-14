@@ -250,8 +250,7 @@ export default function GroupBySidebar({
             const itemValue = op.value ?? op.nome;
             const isSelected = selectedRegional === itemValue;
             const isDimmed = selectedRegional && !isSelected;
-            const scoreColor =
-              op.score >= 85 ? "text-green-600" : op.score >= 75 ? "text-orange-500" : "text-red-600";
+            const scoreColor = getScoreClassification(op.score, scoreConfig).text;
             return (
               <div
                 key={itemValue}
