@@ -22,6 +22,7 @@ import { useAbsenteismoScoreConfig, computeAbsCompositeScore, getAbsScoreClassif
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
+import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSection";
 
 import qpDecomposicaoScore from "@/data/qualidade-ponto/decomposicao-score.json";
 import qpKpisPeriodoAnterior from "@/data/qualidade-ponto/kpis-periodo-anterior.json";
@@ -988,6 +989,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const riscoClassif = getScoreClassification(activeData.maiorRisco.score, scoreConfig);
 
   return (
+    <>
     <div className="flex">
       {/* Left: KPI cards + charts */}
       <div className="flex-1 min-w-0 space-y-3 pl-6 pr-4 py-4">
@@ -1717,6 +1719,12 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
       <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
     </div>
+
+    {/* Insights da Qualidade do Ponto */}
+    <div className="px-6">
+      <QualidadeInsightsSection />
+    </div>
+  </>
   );
 }
 
