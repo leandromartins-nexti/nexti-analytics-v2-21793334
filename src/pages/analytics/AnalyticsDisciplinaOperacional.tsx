@@ -23,7 +23,7 @@ import hcEmpresaJson from "@/data/qualidade-ponto/headcount-por-empresa.json";
 import hcUnNegocioJson from "@/data/qualidade-ponto/headcount-por-un-negocio.json";
 import hcAreaJson from "@/data/qualidade-ponto/headcount-por-area.json";
 import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao, aggregateQualidadeEvolucaoDetalhado, aggregateQualidadeVolume, getQualidadeKpiSummary, getSidebarItems } from "@/lib/ajustesData";
-import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
+import { useScoreConfig, getScoreClassification, computeCompositeScore } from "@/contexts/ScoreConfigContext";
 import { useAbsenteismoScoreConfig, computeAbsCompositeScore, getAbsScoreClassification } from "@/contexts/AbsenteismoScoreConfigContext";
 
 import ScoreGauge from "@/components/analytics/ScoreGauge";
