@@ -355,7 +355,7 @@ export default function TurnoverTab() {
                 {DECOMP_SERIES.map((s, i) => (
                   <Bar key={s.key} dataKey={s.key} stackId="decomp" fill={s.color} name={s.name} radius={i === DECOMP_SERIES.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}>
                     {decomposicaoData.map((entry, idx) => (
-                      <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? `${s.color}40` : `${s.color}A6`} />
+                      <Cell key={idx} fill={s.color} fillOpacity={selectedMes && selectedMes !== entry.mes ? 0.25 : 0.85} />
                     ))}
                   </Bar>
                 ))}
