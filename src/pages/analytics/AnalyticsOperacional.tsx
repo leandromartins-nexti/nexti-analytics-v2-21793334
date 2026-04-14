@@ -7,19 +7,15 @@ import { Separator } from "@/components/ui/separator";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { resumo } from "@/lib/analytics-mock-data";
 import { QualidadeTab, AbsenteismoTab, MovimentacoesTab } from "./AnalyticsDisciplinaOperacional";
+import TurnoverTab from "./TurnoverTab";
 import AnalyticsCoberturasContinuidade from "./AnalyticsCoberturasContinuidade";
-import AnalyticsViolacoesTrabalhistas from "./AnalyticsViolacoesTrabalhistas";
-import AnalyticsBancoHoras from "./AnalyticsBancoHoras";
-import AnalyticsOperacoesEstruturas from "./AnalyticsOperacoesEstruturas";
 
 const tabs = [
   { id: "qualidade", label: "Qualidade do Ponto" },
   { id: "absenteismo", label: "Absenteísmo" },
+  { id: "turnover", label: "Turnover" },
   { id: "movimentacoes", label: "Movimentações" },
   { id: "coberturas", label: "Coberturas" },
-  { id: "violacoes", label: "Violações Trabalhistas" },
-  { id: "bancoHoras", label: "Banco de Horas" },
-  { id: "operacoes", label: "Operações e Estruturas" },
 ];
 
 export default function AnalyticsOperacional() {
