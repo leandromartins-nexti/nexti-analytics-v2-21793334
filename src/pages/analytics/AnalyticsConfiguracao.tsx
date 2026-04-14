@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye } from "lucide-react";
+import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info } from "lucide-react";
 import ScoreQualidadeConfig from "./ScoreQualidadeConfig";
 import ScoreAbsenteismoConfig from "./ScoreAbsenteismoConfig";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
+import CompositeChartDataModal from "@/components/analytics/CompositeChartDataModal";
 import type { ChartDataSource } from "@/components/analytics/ChartDataModal";
 
 // Import chart sources
@@ -21,6 +22,8 @@ interface ChartEntry {
   chartName: string;
   columns: { key: string; label: string; format?: (v: any) => string }[];
   source: ChartDataSource;
+  derived?: boolean;
+  derivedSources?: { label: string; source: ChartDataSource; columns: { key: string; label: string; format?: (v: any) => string }[] }[];
 }
 
 interface TabEntry {
@@ -52,6 +55,17 @@ const dataRegistry: MenuEntry[] = [
             chartName: "Evolução do Tempo de Tratativa",
             columns: evolucaoTempoTratativaColumns,
             source: evolucaoTempoTratativaSource,
+          },
+          {
+            id: "matriz-saude",
+            chartName: "Matriz de Saúde Operacional (Qualidade vs Volume)",
+            columns: evolucaoQualidadeHeadcountColumns,
+            source: evolucaoQualidadeHeadcountSource,
+            derived: true,
+            derivedSources: [
+              { label: "Fonte: Evolução da Qualidade e Headcount", source: evolucaoQualidadeHeadcountSource, columns: evolucaoQualidadeHeadcountColumns },
+              { label: "Fonte: Evolução do Tempo de Tratativa", source: evolucaoTempoTratativaSource, columns: evolucaoTempoTratativaColumns },
+            ],
           },
         ],
       },

@@ -1705,6 +1705,25 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
         source={evolucaoTempoTratativaSource}
         activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
       />
+      <CompositeChartDataModal
+        open={chartDataModal === "matrizSaude"}
+        onClose={() => setChartDataModal(null)}
+        title="Matriz de Saúde Operacional"
+        subtitle="Gráfico derivado · consolida dados de 2 fontes"
+        activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
+        sections={[
+          {
+            label: "Fonte: Evolução da Qualidade e Headcount",
+            source: evolucaoQualidadeHeadcountSource,
+            columns: evolucaoQualidadeHeadcountColumns,
+          },
+          {
+            label: "Fonte: Evolução do Tempo de Tratativa",
+            source: evolucaoTempoTratativaSource,
+            columns: evolucaoTempoTratativaColumns,
+          },
+        ]}
+      />
     </div>
   );
 }
