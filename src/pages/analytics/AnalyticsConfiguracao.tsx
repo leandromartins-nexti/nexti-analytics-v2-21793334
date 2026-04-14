@@ -15,6 +15,10 @@ import {
   evolucaoTempoTratativaSource,
   evolucaoTempoTratativaColumns,
 } from "@/data/chart-sources/evolucao-tempo-tratativa";
+import {
+  sobrecargaBackofficeSource,
+  sobrecargaBackofficeColumns,
+} from "@/data/chart-sources/sobrecarga-backoffice";
 
 // ── Registry types ──
 interface ChartEntry {

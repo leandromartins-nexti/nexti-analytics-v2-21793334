@@ -1829,6 +1829,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           },
         ]}
       />
+      <ChartDataModal
+        open={chartDataModal === "sobrecarga"}
+        onClose={() => setChartDataModal(null)}
+        title="Sobrecarga do Back-office"
+        columns={sobrecargaBackofficeColumns}
+        source={sobrecargaBackofficeSource}
+        activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
+      />
     </div>
   );
 }
