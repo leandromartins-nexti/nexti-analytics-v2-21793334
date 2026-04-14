@@ -208,7 +208,7 @@ function TempoCasaChart({ groupBy, selectedRegional, onOpenData }: { groupBy: Gr
                 </text>
               );
             }}
-            background={{ fill: "hsl(var(--muted))", radius: [0, 4, 4, 0] }}
+            background={{ fill: "hsl(var(--muted))", radius: 4 }}
           >
             {dataset.faixas.map((f: any, i: number) => {
               const p = TENURE_PALETTE[i];
