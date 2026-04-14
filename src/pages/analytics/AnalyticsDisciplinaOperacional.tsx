@@ -16,6 +16,9 @@ import {
 import esforcoEmpresa from "@/data/qualidade-ponto/esforco-tratativa-por-empresa.json";
 import esforcoUnNegocio from "@/data/qualidade-ponto/esforco-tratativa-por-un-negocio.json";
 import esforcoArea from "@/data/qualidade-ponto/esforco-tratativa-por-area.json";
+import tratTempoEmpresa from "@/data/qualidade-ponto/tratativa-tempo-por-empresa.json";
+import tratTempoUnidade from "@/data/qualidade-ponto/tratativa-tempo-por-un-negocio.json";
+import tratTempoArea from "@/data/qualidade-ponto/tratativa-tempo-por-area.json";
 import hcEmpresaJson from "@/data/qualidade-ponto/headcount-por-empresa.json";
 import hcUnNegocioJson from "@/data/qualidade-ponto/headcount-por-un-negocio.json";
 import hcAreaJson from "@/data/qualidade-ponto/headcount-por-area.json";
@@ -1009,12 +1012,66 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   const allScatterTratativa = useMemo(() => aggregateAjustes(selectedReferenceMonth, groupBy), [selectedReferenceMonth, groupBy]);
 
+  // Compute tempo_medio_dias per operation from tratativa-tempo JSONs
+  const tempoMedioPorOperacao = useMemo(() => {
+    const tratSources: Record<string, any[]> = {
+      empresa: tratTempoEmpresa,
+      unidade: tratTempoUnidade,
+      area: tratTempoArea,
+    };
+    const raw = tratSources[groupBy] ?? tratTempoEmpresa;
+    const nameField = groupBy === "empresa" ? "company_name" : groupBy === "unidade" ? "business_unit_name" : "area_name";
+    const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
+    
+    // Filter by selected month if applicable
+    const filtered = selectedReferenceMonth
+      ? raw.filter((r: any) => r.reference_month === selectedReferenceMonth)
+      : raw;
+    
+    // Weighted average: SUM(tempo_medio_horas × total_ajustes) / SUM(total_ajustes) / 24
+    const map = new Map<string, { sumHorasXVol: number; sumVol: number }>();
+    filtered.forEach((r: any) => {
+      const name = normName(r[nameField] ?? "");
+      const existing = map.get(name) ?? { sumHorasXVol: 0, sumVol: 0 };
+      existing.sumHorasXVol += (r.tempo_medio_horas ?? 0) * (r.total_ajustes ?? 0);
+      existing.sumVol += (r.total_ajustes ?? 0);
+      map.set(name, existing);
+    });
+    
+    const result = new Map<string, number>();
+    map.forEach((v, k) => {
+      result.set(k, v.sumVol > 0 ? +(v.sumHorasXVol / v.sumVol / 24).toFixed(1) : 0);
+    });
+    return result;
+  }, [groupBy, selectedReferenceMonth]);
+
   const visibleSet = useMemo(() => new Set(visibleNames), [visibleNames]);
-  const chartScatterQual = useMemo(() => allScatter.filter(s => visibleSet.size === 0 || visibleSet.has(s.regional)), [allScatter, visibleSet]);
+  const chartScatterQual = useMemo(() => {
+    const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
+    const base = allScatter.filter(s => visibleSet.size === 0 || visibleSet.has(s.regional));
+    return base.map(s => ({
+      ...s,
+      tempoMedioDias: tempoMedioPorOperacao.get(normName(s.regional)) ?? 5,
+    }));
+  }, [allScatter, visibleSet, tempoMedioPorOperacao]);
   const chartScatterTrat = useMemo(() => {
     if (visibleSet.size > 0) return allScatterTratativa.filter(s => visibleSet.has(s.regional));
     return allScatterTratativa;
   }, [allScatterTratativa, visibleSet]);
+
+  // Clicked/fixed bubble state
+  const [fixedBubble, setFixedBubble] = useState<string | null>(null);
+  
+  // Critical zone badge
+  const criticalCount = useMemo(() => chartScatterQual.filter(d => d.qualidade < 70 && (d.tempoMedioDias > 7 || d.qualidade < 50)).length, [chartScatterQual]);
+
+  // Median volume for reference line
+  const medianVolume = useMemo(() => {
+    if (!chartScatterQual.length) return 170000;
+    const sorted = [...chartScatterQual].sort((a, b) => a.volume - b.volume);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1].volume + sorted[mid].volume) / 2) : sorted[mid].volume;
+  }, [chartScatterQual]);
 
   const avgQualVolume = useMemo(() => chartScatterQual.length ? Math.round(chartScatterQual.reduce((s, d) => s + d.volume, 0) / chartScatterQual.length) : 170000, [chartScatterQual]);
   const avgQualQualidade = useMemo(() => chartScatterQual.length ? +(chartScatterQual.reduce((s, d) => s + d.qualidade, 0) / chartScatterQual.length).toFixed(1) : 85, [chartScatterQual]);
