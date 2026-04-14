@@ -35,7 +35,17 @@ const turnoverHeadcountData = [
 const turnoverMediaAnual = turnoverHeadcountData.reduce((s, d) => s + d.turnover, 0) / turnoverHeadcountData.length;
 
 // Tempo de Casa helpers
-const TENURE_COLORS = ["#ef4444", "#ef4444", "#f97316", "#eab308", "#eab308", "#22c55e", "#22c55e"];
+// Semantic palette: same colors as header KPIs (Maior Risco = red, Melhor Operação = green, Atenção = yellow)
+// Opacity variation: 100% for most severe in category, 75% for less severe
+const TENURE_PALETTE = [
+  { color: "#ef4444", opacity: 1.0 },   // < 30 dias  — Crítico 100%
+  { color: "#ef4444", opacity: 0.75 },  // 30-90 dias — Crítico 75%
+  { color: "#eab308", opacity: 1.0 },   // 3-6 meses  — Atenção 100%
+  { color: "#eab308", opacity: 0.75 },  // 6-12 meses — Atenção 75%
+  { color: "#22c55e", opacity: 1.0 },   // 1-2 anos   — Saudável 100%
+  { color: "#22c55e", opacity: 0.85 },  // 2-5 anos   — Saudável 85%
+  { color: "#22c55e", opacity: 0.65 },  // 5+ anos    — Saudável 65%
+];
 const TENURE_RANGE_LABELS: Record<string, string> = {
   lt30: "0 a 29 dias de casa", "30_90": "30 a 89 dias de casa", "3_6m": "90 a 179 dias de casa",
   "6_12m": "180 a 364 dias de casa", "1_2a": "365 a 729 dias de casa", "2_5a": "730 a 1824 dias de casa",
@@ -191,16 +201,21 @@ function TempoCasaChart({ groupBy, selectedRegional, onOpenData }: { groupBy: Gr
           <Bar dataKey="count" radius={[0, 4, 4, 0]} animationDuration={600}
             label={({ x, y, width, value, index }: any) => {
               const faixa = dataset.faixas[index];
+              const labelX = faixa.count === 0 ? (x + maxCount * 0.02 + 6) : (x + width + 6);
               return (
-                <text x={x + width + 6} y={y + 14} fontSize={10} fill="hsl(var(--foreground))" fontWeight={600}>
+                <text x={labelX} y={y + 14} fontSize={10} fill="hsl(var(--foreground))" fontWeight={600}>
                   {faixa.count} · {faixa.pct}%
                 </text>
               );
             }}
+            background={{ fill: "hsl(var(--muted))", radius: [0, 4, 4, 0] }}
           >
-            {dataset.faixas.map((f: any, i: number) => (
-              <Cell key={f.id} fill={TENURE_COLORS[i]} fillOpacity={0.65} stroke={TENURE_COLORS[i]} strokeOpacity={0.5} strokeWidth={1} />
-            ))}
+            {dataset.faixas.map((f: any, i: number) => {
+              const p = TENURE_PALETTE[i];
+              return (
+                <Cell key={f.id} fill={p.color} fillOpacity={f.count === 0 ? 0 : p.opacity * 0.65} stroke={p.color} strokeOpacity={f.count === 0 ? 0 : p.opacity * 0.5} strokeWidth={1} />
+              );
+            })}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
