@@ -1208,7 +1208,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
                 }} />
                 <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}K` : `${v}`} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, Math.ceil(maxHeadcount * 1.3)]} ticks={[0, Math.round(maxHeadcount * 0.33), Math.round(maxHeadcount * 0.66), maxHeadcount]} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, rightDomainMax]} ticks={[0, Math.round(rightDomainMax * 0.33), Math.round(rightDomainMax * 0.66), rightDomainMax]} />
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
                   const d = payload[0]?.payload;
