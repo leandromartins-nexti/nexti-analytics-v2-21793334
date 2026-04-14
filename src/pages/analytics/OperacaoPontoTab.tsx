@@ -407,9 +407,8 @@ function OperacaoPontoContent({
         items={sidebarItems}
         groupBy={groupBy}
         onGroupByChange={onGroupByChange}
-        selectedItem={selectedRegional}
-        onItemClick={onRegionalClick}
-        scoreConfig={scoreConfig}
+        selectedRegional={selectedRegional}
+        onRegionalClick={onRegionalClick}
       />
     </div>
   );
