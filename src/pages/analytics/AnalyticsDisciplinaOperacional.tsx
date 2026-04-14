@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {
-  ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, Area,
+  ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, Area, ComposedChart,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
   ScatterChart, Scatter, ZAxis, Cell, LabelList,
 } from "recharts";
@@ -1529,8 +1529,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           </div>
 
           {(() => {
-            const THRESHOLD_HEALTHY = 500;
-            const THRESHOLD_CRITICAL = 1000;
             const esforcoSources: Record<string, any[]> = {
               empresa: esforcoEmpresa,
               unidade: esforcoUnNegocio,
@@ -1557,35 +1555,50 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               "2026-01": "jan/26", "2026-02": "fev/26", "2026-03": "mar/26",
             };
 
-            // Aggregate by month
-            const byMonth = new Map<string, { ajustes: number; operadores: number }>();
+            // Aggregate by month (now including horas_extras)
+            const byMonth = new Map<string, { ajustes: number; operadores: number; he: number }>();
             filtered.forEach((r: any) => {
               const m = r.competencia;
-              if (!byMonth.has(m)) byMonth.set(m, { ajustes: 0, operadores: 0 });
+              if (!byMonth.has(m)) byMonth.set(m, { ajustes: 0, operadores: 0, he: 0 });
               const entry = byMonth.get(m)!;
               entry.ajustes += r.qtd_ajustes;
               entry.operadores += r.operadores_ativos;
+              entry.he += (r.horas_extras_rateadas ?? 0);
             });
 
-            const sobrecargaData = Array.from(byMonth.entries())
+            const allEntries = Array.from(byMonth.entries())
               .sort(([a], [b]) => a.localeCompare(b))
-              .map(([m, d]) => {
-                const produtividade = d.operadores > 0 ? Math.round(d.ajustes / d.operadores) : 0;
-                const categoria = produtividade > THRESHOLD_CRITICAL ? "Crítico" : produtividade >= THRESHOLD_HEALTHY ? "Atenção" : "Saudável";
-                const barColor = produtividade > THRESHOLD_CRITICAL ? "#ef4444" : produtividade >= THRESHOLD_HEALTHY ? "#f59e0b" : "#22c55e";
-                return {
-                  mes: MONTH_LABELS[m] || m,
-                  ajustes: d.ajustes,
-                  operadores: d.operadores,
-                  produtividade,
-                  categoria,
-                  barColor,
-                };
-              });
+              .map(([m, d]) => ({
+                mes: MONTH_LABELS[m] || m,
+                ajustes: d.ajustes,
+                operadores: d.operadores,
+                produtividade: d.operadores > 0 ? Math.round(d.ajustes / d.operadores) : 0,
+                he: Math.round(d.he * 10) / 10,
+              }));
+
+            // Percentile-based thresholds from own data
+            const prodValues = allEntries.map(d => d.produtividade).sort((a, b) => a - b);
+            const p50Idx = Math.floor(prodValues.length * 0.5);
+            const p90Idx = Math.floor(prodValues.length * 0.9);
+            const P50 = prodValues[p50Idx] || 100;
+            const P90 = prodValues[p90Idx] || 500;
+            const thresholdYellow = Math.round(P50 * 1.5);
+
+            const sobrecargaData = allEntries.map(d => {
+              const categoria = d.produtividade > P90 ? "Pico crítico" : d.produtividade > thresholdYellow ? "Acima do baseline" : "Saudável";
+              const barColor = d.produtividade > P90 ? "#ef4444" : d.produtividade > thresholdYellow ? "#f59e0b" : "#22c55e";
+              return { ...d, categoria, barColor };
+            });
 
             // Contextual indicators
+            const picoHEEntry = sobrecargaData.reduce((max, d) => d.he > max.he ? d : max, sobrecargaData[0]);
+            const heP50 = (() => {
+              const heVals = sobrecargaData.map(d => d.he).sort((a, b) => a - b);
+              return heVals[Math.floor(heVals.length * 0.5)] || 0;
+            })();
+            const mesesCriticos = sobrecargaData.filter(d => d.produtividade > P90);
+            const heCriticoAcumulada = mesesCriticos.reduce((sum, d) => sum + d.he, 0);
             const picoEntry = sobrecargaData.reduce((max, d) => d.produtividade > max.produtividade ? d : max, sobrecargaData[0]);
-            const mesesCriticos = sobrecargaData.filter(d => d.produtividade > THRESHOLD_CRITICAL).length;
 
             if (areaInsufficient) {
               return (
@@ -1602,37 +1615,43 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   <div>
                     <div className="flex items-center gap-1.5">
                       <h4 className="text-sm font-semibold">Sobrecarga do Back-office</h4>
-                      <InfoTip text="Mostra quantos ajustes cada operador do back-office processou em média por mês. Cor da barra indica a saúde da operação: verde saudável, amarelo atenção, vermelho crítico." />
+                      <InfoTip text="Mostra quantos ajustes cada operador do back-office processou em média por mês e quantas horas extras o time teve. A cor da barra indica se a carga está dentro do normal histórico ou em zona crítica. A linha tracejada mostra horas extras acumuladas, para entender como o time absorveu os picos." />
                     </div>
-                    <p className="text-[10px] text-muted-foreground mb-1">Carga por operador ao mês, com zonas de saúde</p>
+                    <p className="text-[10px] text-muted-foreground mb-1">Carga por operador e horas extras do time por mês</p>
                   </div>
                 </div>
                 {/* Contextual indicators */}
                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground mb-2 flex-wrap">
-                  <span>Baseline saudável: &lt;500 ajustes/pessoa</span>
+                  <span>Baseline (P50): {P50} ajustes/pessoa</span>
                   <span className="mx-0.5">·</span>
-                  <span>Pico: {picoEntry?.mes} ({picoEntry?.produtividade.toLocaleString("pt-BR")})</span>
+                  <span>{Math.round(heP50)}h HE/mês</span>
                   <span className="mx-0.5">·</span>
-                  <span>Meses em zona crítica: {mesesCriticos} de {sobrecargaData.length}</span>
+                  <span>Pico: {picoHEEntry?.mes} ({Math.round(picoHEEntry?.he)}h HE)</span>
+                  <span className="mx-0.5">·</span>
+                  <span>HE acumulada no período crítico: {Math.round(heCriticoAcumulada)}h</span>
                 </div>
                 <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={sobrecargaData} margin={{ top: 24, right: 10, bottom: 0, left: 0 }}>
+                  <ComposedChart data={sobrecargaData} margin={{ top: 24, right: 10, bottom: 0, left: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
-                    <YAxis tick={{ fontSize: 10 }} />
-                    <ReferenceLine y={THRESHOLD_HEALTHY} stroke="#22c55e" strokeDasharray="8 4" strokeWidth={1.5} label={{ value: "Saudável: 500", position: "left", fontSize: 9, fill: "#22c55e" }} />
+                    <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} label={{ value: "HE (h)", angle: 90, position: "insideRight", fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
+                    <ReferenceLine yAxisId="left" y={P50} stroke="#22c55e" strokeDasharray="8 4" strokeWidth={1.5} label={{ value: `Baseline P50`, position: "left", fontSize: 9, fill: "#22c55e" }} />
                     <RechartsTooltip content={({ active, payload, label }) => {
                       if (!active || !payload?.length) return null;
                       const d = payload[0]?.payload;
                       if (!d) return null;
-                      const isCritical = d.categoria === "Crítico";
+                      const isCriticalOrWarning = d.categoria !== "Saudável";
                       return (
                         <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
                           <p className="font-semibold text-foreground">{label}</p>
                           <div className="flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5" style={{ backgroundColor: "hsl(var(--muted-foreground))" }} />
-                            <span className="text-muted-foreground">Volume de ajustes:</span>
-                            <span className="font-medium text-foreground">{d.ajustes.toLocaleString("pt-BR")}</span>
+                            <span className="w-2.5 h-2.5" style={{ backgroundColor: d.barColor }} />
+                            <span className="text-muted-foreground">Ajustes por operador:</span>
+                            <span className="font-medium text-foreground">
+                              {d.produtividade.toLocaleString("pt-BR")}
+                              {isCriticalOrWarning && " ⚠"}
+                            </span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <span className="w-2.5 h-2.5" style={{ backgroundColor: "#3b82f6" }} />
@@ -1640,14 +1659,16 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                             <span className="font-medium text-foreground">{d.operadores}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5" style={{ backgroundColor: d.barColor }} />
-                            <span className="text-muted-foreground">Produtividade:</span>
-                            <span className="font-medium text-foreground">
-                              {d.produtividade.toLocaleString("pt-BR")} ajustes/pessoa
-                              {isCritical && " ⚠"}
-                            </span>
+                            <span className="w-2.5 h-2.5" style={{ backgroundColor: "#8b5cf6" }} />
+                            <span className="text-muted-foreground">Horas extras do time:</span>
+                            <span className="font-medium text-foreground">{d.he.toLocaleString("pt-BR")}h</span>
                           </div>
                           <div className="flex items-center gap-1.5">
+                            <span className="w-2.5 h-2.5" style={{ backgroundColor: "hsl(var(--muted-foreground))" }} />
+                            <span className="text-muted-foreground">Volume total:</span>
+                            <span className="font-medium text-foreground">{d.ajustes.toLocaleString("pt-BR")} ajustes</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 pt-0.5 border-t border-border/50">
                             <span className="w-2.5 h-2.5" style={{ backgroundColor: d.barColor }} />
                             <span className="text-muted-foreground">Classificação:</span>
                             <span className="font-medium" style={{ color: d.barColor }}>{d.categoria}</span>
@@ -1655,14 +1676,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         </div>
                       );
                     }} />
-                    <Bar dataKey="produtividade" radius={[4, 4, 0, 0]} name="Carga por operador">
+                    <Bar yAxisId="left" dataKey="produtividade" radius={[4, 4, 0, 0]} name="Carga por operador">
                       {sobrecargaData.map((entry, idx) => (
                         <Cell key={idx} fill={entry.barColor} fillOpacity={0.75} />
                       ))}
                       <LabelList content={({ x, y, width: w, index }: any) => {
                         const d = sobrecargaData[index];
                         if (!d) return null;
-                        const isCritical = d.categoria === "Crítico";
+                        const isCritical = d.categoria === "Pico crítico";
                         const isPeak = d === picoEntry && isCritical;
                         return (
                           <g>
@@ -1678,13 +1699,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         );
                       }} />
                     </Bar>
-                  </BarChart>
+                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#8b5cf6" }} />
+                  </ComposedChart>
                 </ResponsiveContainer>
                 {/* Legend */}
                 <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
-                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#22c55e", opacity: 0.75 }} /> Saudável (&lt;500)</span>
-                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#f59e0b", opacity: 0.75 }} /> Atenção (500–1.000)</span>
-                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#ef4444", opacity: 0.75 }} /> Crítico (&gt;1.000)</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#22c55e", opacity: 0.75 }} /> Saudável (≤P50×1.5)</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#f59e0b", opacity: 0.75 }} /> Acima do baseline</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#ef4444", opacity: 0.75 }} /> Pico crítico (&gt;P90)</span>
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-0 inline-block border-t-2 border-dashed" style={{ borderColor: "#8b5cf6", width: 12 }} /> HE do time</span>
                 </div>
               </div>
             );

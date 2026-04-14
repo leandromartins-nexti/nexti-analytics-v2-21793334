@@ -190,12 +190,12 @@ export const mockInsights: Insight[] = [
     severity: "critical",
     tabOrigin: "Qualidade do Ponto · Sobrecarga do Back-office",
     timestamp: "há 1h",
-    title: "Back-office processou 9x o volume normal em set/25 sem aumentar a equipe",
+    title: "Back-office absorveu 4.4x o baseline de HE para dar conta do pico",
     narrative:
-      "Em setembro de 2025, com a entrada do contrato POR, o volume de ajustes saltou de 1.669 para 7.889 em um mês (4.7x). A equipe de back-office se manteve entre 6 e 8 operadores, resultando em pico de 1.315 ajustes por pessoa, classificação crítica de sobrecarga. A operação levou 4 meses para normalizar e hoje opera com baseline estável.",
+      "Entre set/25 e fev/26, os operadores do back-office acumularam 878h de horas extras acima do baseline (~59h/mês), pico em nov/25 com 244h. A operação POR respondeu por 92% desse custo. O Supervisor Geral, que concentra 25% dos ajustes, não gera HE registrada por ser cargo sem apuração, o que esconde parte do esforço real absorvido. Insight acionável: revisar carga dos inspetores e considerar contratação ou redistribuição.",
     evidence: {
-      before: { label: "Baseline ago/25", value: "278 ajustes/pessoa" },
-      after: { label: "Pico set/25", value: "1.315 ajustes/pessoa" },
+      before: { label: "Baseline HE ago/25", value: "59h" },
+      after: { label: "Pico HE nov/25", value: "244h (+314%)" },
     },
     actionFilter: null,
   },
