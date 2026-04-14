@@ -1,0 +1,23 @@
+{
+  "vigilancia_facilities": {
+    "label": "Vigilância e Facilities",
+    "turnover_anual_pct": { "excelente": 60, "mediana": 95, "critico": 130 },
+    "turnover_precoce_90d_pct": { "excelente": 20, "mediana": 35, "critico": 55 },
+    "tempo_medio_casa_dias": { "excelente": 540, "mediana": 300, "critico": 150 },
+    "fonte": "ABRAVEST 2024 e pesquisa interna Nexti"
+  },
+  "industria": {
+    "label": "Indústria",
+    "turnover_anual_pct": { "excelente": 15, "mediana": 30, "critico": 55 },
+    "turnover_precoce_90d_pct": { "excelente": 10, "mediana": 20, "critico": 35 },
+    "tempo_medio_casa_dias": { "excelente": 1800, "mediana": 900, "critico": 450 },
+    "fonte": "CNI 2024"
+  },
+  "varejo": {
+    "label": "Varejo",
+    "turnover_anual_pct": { "excelente": 40, "mediana": 70, "critico": 110 },
+    "turnover_precoce_90d_pct": { "excelente": 18, "mediana": 30, "critico": 48 },
+    "tempo_medio_casa_dias": { "excelente": 720, "mediana": 420, "critico": 180 },
+    "fonte": "FECOMERCIO 2024"
+  }
+}
