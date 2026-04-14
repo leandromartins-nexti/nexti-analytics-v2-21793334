@@ -9,6 +9,7 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import tempoCasaData from "@/data/turnover/tempo-casa-desligados.json";
 import rankingEmpresa from "@/data/turnover/ranking-clientes-turnover-por-empresa.json";
 import rankingUnidade from "@/data/turnover/ranking-clientes-turnover-por-un-negocio.json";
