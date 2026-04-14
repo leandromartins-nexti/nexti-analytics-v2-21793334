@@ -877,13 +877,13 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   // Headcount por mês – filtrado por entidade selecionada
   const MONTH_LABEL_MAP: Record<string, string> = {
-    "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
-    "2025-07": "jul/25", "2025-08": "ago/25", "2025-09": "set/25",
-    "2025-10": "out/25", "2025-11": "nov/25", "2025-12": "dez/25",
-    "2026-01": "jan/26", "2026-02": "fev/26", "2026-03": "mar/26",
+    "2025-04-01": "abr/25", "2025-05-01": "mai/25", "2025-06-01": "jun/25",
+    "2025-07-01": "jul/25", "2025-08-01": "ago/25", "2025-09-01": "set/25",
+    "2025-10-01": "out/25", "2025-11-01": "nov/25", "2025-12-01": "dez/25",
+    "2026-01-01": "jan/26", "2026-02-01": "fev/26", "2026-03-01": "mar/26",
   };
   const normHcName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
-  const headcountMap = useMemo<Record<string, number>>(() => {
+  const headcountMaps = useMemo<{ active: Record<string, number>; ponto: Record<string, number> }>(() => {
     const hcSources: Record<string, any[]> = {
       empresa: hcEmpresaJson,
       unidade: hcUnNegocioJson,
@@ -901,13 +901,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       );
     }
 
-    // Aggregate by month
-    const byMonth: Record<string, number> = {};
+    const active: Record<string, number> = {};
+    const ponto: Record<string, number> = {};
     filtered.forEach((r: any) => {
-      const label = MONTH_LABEL_MAP[r.competencia] || r.competencia;
-      byMonth[label] = (byMonth[label] || 0) + r.headcount;
+      const label = MONTH_LABEL_MAP[r.reference_month] || r.reference_month;
+      active[label] = (active[label] || 0) + (r.active_headcount ?? 0);
+      ponto[label] = (ponto[label] || 0) + (r.headcount ?? 0);
     });
-    return byMonth;
+    return { active, ponto };
   }, [groupBy, selectedRegional]);
 
   const mesLabelToReferenceMonth = useMemo(() => new Map(ajustesMeses.map((month) => [formatMesLabel(month), month])), []);
@@ -933,10 +934,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     [selectedRegional, groupBy]
   );
   const qualidadeComHeadcount = useMemo(
-    () => qualidadeDetalhado.map(d => ({ ...d, headcount: headcountMap[d.mes] ?? 0 })),
-    [qualidadeDetalhado, headcountMap]
+    () => qualidadeDetalhado.map(d => ({
+      ...d,
+      activeHeadcount: headcountMaps.active[d.mes] ?? 0,
+      hcPonto: headcountMaps.ponto[d.mes] ?? 0,
+    })),
+    [qualidadeDetalhado, headcountMaps]
   );
-  const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.headcount), 1), [qualidadeComHeadcount]);
+  const maxHeadcount = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.activeHeadcount), 1), [qualidadeComHeadcount]);
   const maxBarTotal = useMemo(() => Math.max(...qualidadeComHeadcount.map(d => d.registradas + d.justificadas), 1), [qualidadeComHeadcount]);
   // Scale right axis so headcount area top = 10% above tallest bar
   // tallest bar fraction on left axis ≈ 1.0, so headcount must map to ~1.1 of chart
