@@ -275,7 +275,7 @@ export default function ScoreAbsenteismoConfig() {
 
           {/* Gauge */}
           <div className="flex flex-col items-center gap-1">
-            <ScoreGauge score={Math.round(composite.score)} label={`${Math.round(composite.score)}`} faixa={classification.label} />
+            <ScoreGauge score={Math.round(composite.score)} label={`${Math.round(composite.score)}`} faixa={classification.label} color={classification.color} />
             <span className={`text-xs font-bold ${classification.text}`}>{classification.label}</span>
           </div>
 

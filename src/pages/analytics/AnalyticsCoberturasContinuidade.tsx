@@ -193,7 +193,8 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
             {regionais.map((op: any) => {
               const isSelected = selectedRegional === op.nome;
               const isDimmed = selectedRegional && !isSelected;
-              const barScoreColor = op.score >= 85 ? "text-green-600" : op.score >= 70 ? "text-orange-500" : "text-red-600";
+              const barScoreClassif = getScoreClassification(op.score, scoreConfig);
+              const barScoreColor = barScoreClassif.text;
               return (
                 <div
                   key={op.nome}

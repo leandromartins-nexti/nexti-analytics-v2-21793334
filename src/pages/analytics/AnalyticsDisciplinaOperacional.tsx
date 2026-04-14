@@ -987,7 +987,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
         {/* Linha 1: 5 KPI Cards */}
         <div className="grid grid-cols-5 gap-3">
           <ScoreBoard title="Qualidade do Ponto" tooltip="Score composto considerando qualidade das marcações e tempo de tratativa dos ajustes.">
-            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} />
+            <ScoreGauge score={activeData.score} label={`${activeData.score}`} faixa={scoreFaixa} color={scoreClassif.color} />
           </ScoreBoard>
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
