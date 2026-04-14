@@ -1,42 +1,33 @@
 {
   "customer_id": 642,
-  "score_composto": 68,
-  "score_label": "Atenção",
+  "score_composto": 78,
+  "score_label": "Bom",
   "componentes": [
     {
       "metrica": "Qualidade das Marcações",
-      "valor_atual": 86.0,
+      "valor_atual": 85.95,
       "unidade": "%",
-      "nota": 86,
-      "peso": 45,
-      "contribuicao": 38.7,
+      "nota": 85.95,
+      "peso": 50,
+      "contribuicao": 42.98,
       "cor_semantica": "success"
     },
     {
       "metrica": "Velocidade de Tratativa",
       "valor_atual": 4.8,
       "unidade": " dias",
-      "nota": 59,
-      "peso": 20,
-      "contribuicao": 11.9,
+      "nota": 59.45,
+      "peso": 30,
+      "contribuicao": 17.84,
       "cor_semantica": "warning"
     },
     {
-      "metrica": "Pressão do Sistema",
-      "valor_atual": 5.0,
-      "unidade": " aj/colab/mês",
-      "nota": 25,
-      "peso": 20,
-      "contribuicao": 5.0,
-      "cor_semantica": "critical"
-    },
-    {
       "metrica": "Saúde do Back-office",
-      "valor_atual": 191,
+      "valor_atual": 260,
       "unidade": " aj/op/mês",
       "nota": 85,
-      "peso": 15,
-      "contribuicao": 12.8,
+      "peso": 20,
+      "contribuicao": 17.0,
       "cor_semantica": "success"
     }
   ]

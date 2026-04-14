@@ -1,11 +1,10 @@
 /**
- * Score de Qualidade do Ponto — Computation Engine
+ * Score de Qualidade do Ponto — Computation Engine (3 componentes)
  * 
- * Uses the correct data sources and formulas:
- * - Quality: registered_count / clocking_count from headcount JSONs
- * - Treatment: faixa distribution from composição data
- * - Pressure: justified_count / (active_headcount × months) from headcount JSONs
- * - Back-office: qtd_ajustes / (operadores × months) + HE from esforco-tratativa JSONs
+ * Components:
+ * 1. Quality: registered_count / clocking_count from headcount JSONs (weight 50%)
+ * 2. Treatment: faixa distribution from composição data (weight 30%)
+ * 3. Back-office: qtd_ajustes / (operadores × months) + HE from esforco-tratativa JSONs (weight 20%)
  */
 
 import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
@@ -123,51 +122,7 @@ export function computeTreatmentScore(
 }
 
 // ═══════════════════════════════════════════════════════
-// 3. PRESSURE — justified_count / (active_headcount × months)
-// ═══════════════════════════════════════════════════════
-
-function pressureToGrade(ajustesPerColab: number, config: ScoreConfig): number {
-  if (ajustesPerColab <= 1) return config.grade_pressure_under_1;
-  if (ajustesPerColab <= 2) return config.grade_pressure_1_2;
-  if (ajustesPerColab <= 4) return config.grade_pressure_2_4;
-  if (ajustesPerColab <= 6) return config.grade_pressure_4_6;
-  return config.grade_pressure_over_6;
-}
-
-export function computePressureScore(
-  selectedName: string | null,
-  groupBy: "empresa" | "unidade" | "area",
-  config: ScoreConfig,
-  window: string[] = LAST_3_MONTHS
-): { score: number; ajustesPerColab: number } {
-  const { data, nameField } = getHcSource(groupBy);
-  const rows = data.filter(r => window.includes(r.reference_month));
-  const filtered = selectedName ? rows.filter(r => nameMatches(r[nameField], selectedName)) : rows;
-
-  if (filtered.length === 0) return { score: 100, ajustesPerColab: 0 };
-
-  // Total justified (ajustes) over the window
-  const totalAjustes = filtered.reduce((s, r) => s + r.justified_count, 0);
-
-  // Active headcount: sum per month across entities, then average across months
-  const byMonth = new Map<string, number>();
-  for (const r of filtered) {
-    byMonth.set(r.reference_month, (byMonth.get(r.reference_month) ?? 0) + r.active_headcount);
-  }
-  const monthlyHcValues = Array.from(byMonth.values());
-  const avgActiveHc = monthlyHcValues.length > 0
-    ? monthlyHcValues.reduce((s, v) => s + v, 0) / monthlyHcValues.length
-    : 0;
-
-  const months = window.length;
-  const ajustesPerColab = avgActiveHc > 0 ? totalAjustes / (avgActiveHc * months) : 0;
-  const score = pressureToGrade(ajustesPerColab, config);
-
-  return { score, ajustesPerColab: +ajustesPerColab.toFixed(1) };
-}
-
-// ═══════════════════════════════════════════════════════
-// 4. BACK-OFFICE HEALTH — (ajustes/operador × 50%) + (HE × 50%)
+// 3. BACK-OFFICE HEALTH — (ajustes/operador × 50%) + (HE × 50%)
 // ═══════════════════════════════════════════════════════
 
 function boAjustesToGrade(ajustesPerOp: number, config: ScoreConfig): number {
@@ -201,22 +156,18 @@ export function computeBackofficeScore(
   // Total HE over the window
   const totalHE = filtered.reduce((s, r) => s + (r.horas_extras_rateadas ?? 0), 0);
 
-  // Operadores: sum per month across entities, then average across months
+  // Operadores: max across months as approximation
   const byMonth = new Map<string, number>();
-  const heByMonth = new Map<string, number>();
   for (const r of filtered) {
     const m = r.competencia.substring(0, 7);
     byMonth.set(m, (byMonth.get(m) ?? 0) + r.operadores_ativos);
-    heByMonth.set(m, (heByMonth.get(m) ?? 0) + (r.horas_extras_rateadas ?? 0));
   }
   const monthlyOps = Array.from(byMonth.values());
-  const avgOps = monthlyOps.length > 0
-    ? monthlyOps.reduce((s, v) => s + v, 0) / monthlyOps.length
-    : 0;
+  const maxOps = monthlyOps.length > 0 ? Math.max(...monthlyOps) : 0;
 
   const months = window.length;
-  const ajustesPerOp = avgOps > 0 ? totalAjustes / (avgOps * months) : 0;
-  const hePerOp = avgOps > 0 ? totalHE / (avgOps * months) : 0;
+  const ajustesPerOp = maxOps > 0 ? totalAjustes / (maxOps * months) : 0;
+  const hePerOp = maxOps > 0 ? totalHE / (maxOps * months) : 0;
 
   const notaAjustes = boAjustesToGrade(ajustesPerOp, config);
   const notaHE = Math.max(0, 100 - (hePerOp * 2));
@@ -226,7 +177,7 @@ export function computeBackofficeScore(
 }
 
 // ═══════════════════════════════════════════════════════
-// COMPOSITE SCORE
+// COMPOSITE SCORE (3 components)
 // ═══════════════════════════════════════════════════════
 
 export function computeCompositeScore(
@@ -237,11 +188,9 @@ export function computeCompositeScore(
 ): number {
   const qualPct = computeQualityPercentage(selectedName, groupBy, window);
   const treat = computeTreatmentScore(selectedName, groupBy, config, window);
-  const pressure = computePressureScore(selectedName, groupBy, config, window);
   const bo = computeBackofficeScore(selectedName, groupBy, config, window);
   return +((qualPct * config.weight_quality / 100) +
            (treat.score * config.weight_treatment / 100) +
-           (pressure.score * config.weight_pressure / 100) +
            (bo.score * config.weight_backoffice / 100)).toFixed(1);
 }
 
@@ -253,19 +202,16 @@ export function computeFullBreakdown(
 ) {
   const qualPct = computeQualityPercentage(selectedName, groupBy, window);
   const treat = computeTreatmentScore(selectedName, groupBy, config, window);
-  const pressure = computePressureScore(selectedName, groupBy, config, window);
   const bo = computeBackofficeScore(selectedName, groupBy, config, window);
 
   const qualContrib = +(qualPct * config.weight_quality / 100).toFixed(1);
   const treatContrib = +(treat.score * config.weight_treatment / 100).toFixed(1);
-  const pressureContrib = +(pressure.score * config.weight_pressure / 100).toFixed(1);
   const boContrib = +(bo.score * config.weight_backoffice / 100).toFixed(1);
-  const compositeScore = +(qualContrib + treatContrib + pressureContrib + boContrib).toFixed(1);
+  const compositeScore = +(qualContrib + treatContrib + boContrib).toFixed(1);
 
   return {
     qualPct, qualContrib,
     treatScore: treat.score, treatContrib, treatData: treat,
-    pressureScore: pressure.score, pressureContrib, pressureData: pressure,
     boScore: bo.score, boContrib, boData: bo,
     compositeScore,
   };
