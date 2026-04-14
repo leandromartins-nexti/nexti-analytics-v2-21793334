@@ -1721,7 +1721,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     </div>
 
     {/* Insights da Qualidade do Ponto */}
-    <QualidadeInsightsSection />
+    <div className="px-6">
+      <QualidadeInsightsSection />
+    </div>
   </>
   );
 }
