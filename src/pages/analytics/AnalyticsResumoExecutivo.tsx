@@ -345,27 +345,6 @@ export default function AnalyticsResumoExecutivo() {
             )}
           </div>
 
-          {/* ═══ KPIs detalhados ═══ */}
-          <div className="grid grid-cols-4 gap-3">
-            <div className="bg-card border border-border/50 rounded-xl p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Qualidade (%)</p>
-              <p className="text-xl font-bold text-foreground">{kpiSummary.qualidadePct}%</p>
-              <p className="text-[11px] text-muted-foreground mt-1">Registradas: {kpiSummary.registradasPct}% · Justificadas: {kpiSummary.ajustadasPct}%</p>
-            </div>
-            <div className="bg-card border border-border/50 rounded-xl p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Tempo Médio Tratativa</p>
-              <p className="text-xl font-bold text-foreground">{kpiSummary.tempoMedioDias} dias</p>
-              <p className="text-[11px] text-muted-foreground mt-1">Até 1 dia: {kpiSummary.ate1DiaPct}% · +15 dias: {kpiSummary.mais15DiaPct}%</p>
-            </div>
-            <div className="bg-card border border-border/50 rounded-xl p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Registradas</p>
-              <p className="text-xl font-bold text-foreground">{kpiSummary.registradas}</p>
-            </div>
-            <div className="bg-card border border-border/50 rounded-xl p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Justificadas</p>
-              <p className="text-xl font-bold text-foreground">{kpiSummary.justificadas}</p>
-            </div>
-          </div>
 
           {/* ═══ CTA Financeiro ═══ */}
           <div className="bg-surface border border-border/50 rounded-xl p-4 flex items-center justify-between">
