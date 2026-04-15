@@ -191,7 +191,7 @@ function MenuSection({ menu }: { menu: MenuEntry }) {
 
 // ── Main Page ──
 const tabs = [
-  { id: "modo-teste", label: "Modo de Teste", icon: Wrench },
+  { id: "clientes", label: "Clientes", icon: Users },
   { id: "base-dados", label: "Base de Dados", icon: Database },
   { id: "scores", label: "Scores", icon: Gauge },
 ];
