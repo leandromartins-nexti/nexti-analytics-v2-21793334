@@ -1,8 +1,6 @@
 import { useState } from "react";
-// TODO: REMOVER EM PRODUÇÃO — TestModeSelector é do modo de teste multi-cliente
-import TestModeSelector from "@/components/analytics/TestModeSelector";
-import CustomerZipImporter from "@/components/analytics/CustomerZipImporter";
-import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info, Wrench } from "lucide-react";
+import ClientManagement from "@/components/analytics/ClientManagement";
+import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info, Users } from "lucide-react";
 import ScoreQualidadeConfig from "./ScoreQualidadeConfig";
 import ScoreAbsenteismoConfig from "./ScoreAbsenteismoConfig";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
@@ -193,13 +191,13 @@ function MenuSection({ menu }: { menu: MenuEntry }) {
 
 // ── Main Page ──
 const tabs = [
-  { id: "modo-teste", label: "Modo de Teste", icon: Wrench },
+  { id: "clientes", label: "Clientes", icon: Users },
   { id: "base-dados", label: "Base de Dados", icon: Database },
   { id: "scores", label: "Scores", icon: Gauge },
 ];
 
 export default function AnalyticsConfiguracao() {
-  const [activeTab, setActiveTab] = useState("modo-teste");
+  const [activeTab, setActiveTab] = useState("clientes");
   const [activeScore, setActiveScore] = useState("qualidade");
 
   const totalCharts = dataRegistry.reduce((acc, m) => acc + m.tabs.reduce((a, t) => a + t.charts.length, 0), 0);
@@ -228,17 +226,9 @@ export default function AnalyticsConfiguracao() {
 
       {/* Content */}
       <div className="flex-1 flex min-h-0">
-        {/* TODO: REMOVER EM PRODUÇÃO — Aba Modo de Teste */}
-        {activeTab === "modo-teste" && (
+        {activeTab === "clientes" && (
           <div className="flex-1 px-6 py-5 overflow-auto">
-            <TestModeSelector />
-            <div className="mt-2">
-              <h2 className="text-lg font-bold text-foreground mb-1">Importador de Dados</h2>
-              <p className="text-xs text-muted-foreground mb-4">
-                Importe um ZIP com a estrutura de dados de um cliente para visualizar seus dashboards.
-              </p>
-              <CustomerZipImporter />
-            </div>
+            <ClientManagement />
           </div>
         )}
 
