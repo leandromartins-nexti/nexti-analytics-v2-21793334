@@ -901,11 +901,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const normHcName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
   const headcountMaps = useMemo<{ active: Record<string, number>; ponto: Record<string, number> }>(() => {
     const hcSources: Record<string, any[]> = {
-      empresa: hcEmpresaJson,
-      unidade: hcUnNegocioJson,
-      area: hcAreaJson,
+      empresa: customerData.hcEmpresa,
+      unidade: customerData.hcUnidade,
+      area: customerData.hcArea,
     };
-    const raw = hcSources[groupBy] ?? hcEmpresaJson;
+    const raw = hcSources[groupBy] ?? customerData.hcEmpresa;
     const nameField = groupBy === "empresa" ? "company_name" : groupBy === "unidade" ? "business_unit_name" : "area_name";
     const idField = groupBy === "empresa" ? "company_id" : groupBy === "unidade" ? "business_unit_id" : "area_id";
 
