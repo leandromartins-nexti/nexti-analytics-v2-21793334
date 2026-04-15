@@ -1,3 +1,7 @@
+import { computeCompositeScore } from "@/lib/scoreComputations";
+import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
+import { DEFAULT_CONFIG } from "@/contexts/ScoreConfigContext";
+
 // Real data: Total de Ajustes por Business Unit × Mês
 export interface AjusteRecord {
   business_unit_id: number;
@@ -879,33 +883,21 @@ export function getQualidadeKpiSummary(
   const registradasPct = totalMarcacoes > 0 ? +((totalReg / totalMarcacoes) * 100).toFixed(1) : 0;
   const ajustadasPct = totalMarcacoes > 0 ? +((totalJust / totalMarcacoes) * 100).toFixed(1) : 0;
 
-  function calcComposite(qPct: number, f1: number, f2: number, f3: number, f4: number, f5: number, tot: number): number {
-    if (!scoreConfig) return Math.round(qPct);
-    const treatScore = tot > 0
-      ? (f1/tot*100*scoreConfig.grade_under_1d/100) + (f2/tot*100*scoreConfig.grade_1_3d/100) + (f3/tot*100*scoreConfig.grade_3_7d/100) + (f4/tot*100*scoreConfig.grade_7_15d/100) + (f5/tot*100*scoreConfig.grade_over_15d/100)
-      : 0;
-    return Math.round((qPct * scoreConfig.weight_quality / 100) + (treatScore * scoreConfig.weight_treatment / 100));
-  }
+  // Use the full 3-component composite score (Quality + Treatment + Back-office)
+  const fullConfig: ScoreConfig = scoreConfig
+    ? { ...DEFAULT_CONFIG, ...scoreConfig }
+    : DEFAULT_CONFIG;
 
-  const score = calcComposite(qualPct, tF1, tF2, tF3, tF4, tF5, tTotal);
+  const score = Math.round(computeCompositeScore(selectedName, groupBy, fullConfig));
 
-  // Per-entity composite for melhor/pior
-  const entityMap = new Map<string, { qualW: number; vol: number; f1: number; f2: number; f3: number; f4: number; f5: number; fTot: number }>();
-  for (const r of filtered) {
-    const e = entityMap.get(r.name);
-    if (e) { e.qualW += r.qualidade * r.total_marcacoes; e.vol += r.total_marcacoes; }
-    else { entityMap.set(r.name, { qualW: r.qualidade * r.total_marcacoes, vol: r.total_marcacoes, f1: 0, f2: 0, f3: 0, f4: 0, f5: 0, fTot: 0 }); }
-  }
-  for (const r of filteredC) {
-    const e = entityMap.get(r.name);
-    if (e) { e.f1 += r.f1; e.f2 += r.f2; e.f3 += r.f3; e.f4 += r.f4; e.f5 += r.f5; e.fTot += r.f1 + r.f2 + r.f3 + r.f4 + r.f5; }
-  }
+  // Per-entity composite for melhor/pior using same 3-component formula
+  const entityNames = new Set<string>();
+  for (const r of filtered) entityNames.add(r.name);
 
   let melhor = { nome: "-", score: 0 };
   let pior = { nome: "-", score: 100, indicador: "" };
-  for (const [name, d] of entityMap) {
-    const q = d.vol > 0 ? d.qualW / d.vol : 0;
-    const cs = calcComposite(q, d.f1, d.f2, d.f3, d.f4, d.f5, d.fTot);
+  for (const name of entityNames) {
+    const cs = Math.round(computeCompositeScore(name, groupBy, fullConfig));
     if (cs > melhor.score) melhor = { nome: name, score: cs };
     if (cs < pior.score) pior = { nome: name, score: cs, indicador: "Baixa qualidade" };
   }
