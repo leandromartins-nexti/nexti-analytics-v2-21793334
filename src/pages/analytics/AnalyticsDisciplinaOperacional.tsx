@@ -1598,10 +1598,31 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 }} />
               </ScatterChart>
             </ResponsiveContainer>
-            <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#22c55e" }} /> Score ≥ 70</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#f59e0b" }} /> Score 55-70</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#ef4444" }} /> Score &lt; 55</span>
+            <div className="flex items-center justify-center gap-3 mt-1 text-[10px]">
+              {[
+                { cat: "green", color: "#22c55e", label: "Score ≥ 70" },
+                { cat: "orange", color: "#f59e0b", label: "Score 55-70" },
+                { cat: "red", color: "#ef4444", label: "Score < 55" },
+              ].map(({ cat, color, label }) => {
+                const active = mapaScoreFilter.has(cat);
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => toggleMapaScoreFilter(cat)}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded-full border transition-all ${
+                      active
+                        ? "border-border/60 text-foreground"
+                        : "border-transparent text-muted-foreground/40 line-through"
+                    }`}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full inline-block transition-opacity"
+                      style={{ backgroundColor: color, opacity: active ? 1 : 0.3 }}
+                    />
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
