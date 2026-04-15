@@ -539,7 +539,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
               </div>
               {d?.hcMes && (
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#9ca3af" }} />
+                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#D3D1C7" }} />
                   <span className="text-muted-foreground">HC Operacional:</span>
                   <span className="font-medium text-foreground">{d.hcMes}</span>
                 </div>
@@ -847,7 +847,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                         ))}
                         {d?.volumeTotal > 0 && (
                           <div className="flex items-center gap-1.5 border-t border-border/30 pt-1 mt-1">
-                            <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#6b7280" }} />
+                            <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#3b82f6" }} />
                             <span className="text-muted-foreground">Volume total:</span>
                             <span className="font-medium text-foreground">{d.volumeTotal.toLocaleString("pt-BR")}h</span>
                           </div>
