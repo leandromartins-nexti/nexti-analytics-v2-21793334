@@ -1,3 +1,7 @@
+import { computeCompositeScore } from "@/lib/scoreComputations";
+import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
+import { DEFAULT_CONFIG } from "@/contexts/ScoreConfigContext";
+
 // Real data: Total de Ajustes por Business Unit × Mês
 export interface AjusteRecord {
   business_unit_id: number;
@@ -879,33 +883,21 @@ export function getQualidadeKpiSummary(
   const registradasPct = totalMarcacoes > 0 ? +((totalReg / totalMarcacoes) * 100).toFixed(1) : 0;
   const ajustadasPct = totalMarcacoes > 0 ? +((totalJust / totalMarcacoes) * 100).toFixed(1) : 0;
 
-  function calcComposite(qPct: number, f1: number, f2: number, f3: number, f4: number, f5: number, tot: number): number {
-    if (!scoreConfig) return Math.round(qPct);
-    const treatScore = tot > 0
-      ? (f1/tot*100*scoreConfig.grade_under_1d/100) + (f2/tot*100*scoreConfig.grade_1_3d/100) + (f3/tot*100*scoreConfig.grade_3_7d/100) + (f4/tot*100*scoreConfig.grade_7_15d/100) + (f5/tot*100*scoreConfig.grade_over_15d/100)
-      : 0;
-    return Math.round((qPct * scoreConfig.weight_quality / 100) + (treatScore * scoreConfig.weight_treatment / 100));
-  }
+  // Use the full 3-component composite score (Quality + Treatment + Back-office)
+  const fullConfig: ScoreConfig = scoreConfig
+    ? { ...DEFAULT_CONFIG, ...scoreConfig }
+    : DEFAULT_CONFIG;
 
-  const score = calcComposite(qualPct, tF1, tF2, tF3, tF4, tF5, tTotal);
+  const score = Math.round(computeCompositeScore(selectedName, groupBy, fullConfig));
 
-  // Per-entity composite for melhor/pior
-  const entityMap = new Map<string, { qualW: number; vol: number; f1: number; f2: number; f3: number; f4: number; f5: number; fTot: number }>();
-  for (const r of filtered) {
-    const e = entityMap.get(r.name);
-    if (e) { e.qualW += r.qualidade * r.total_marcacoes; e.vol += r.total_marcacoes; }
-    else { entityMap.set(r.name, { qualW: r.qualidade * r.total_marcacoes, vol: r.total_marcacoes, f1: 0, f2: 0, f3: 0, f4: 0, f5: 0, fTot: 0 }); }
-  }
-  for (const r of filteredC) {
-    const e = entityMap.get(r.name);
-    if (e) { e.f1 += r.f1; e.f2 += r.f2; e.f3 += r.f3; e.f4 += r.f4; e.f5 += r.f5; e.fTot += r.f1 + r.f2 + r.f3 + r.f4 + r.f5; }
-  }
+  // Per-entity composite for melhor/pior using same 3-component formula
+  const entityNames = new Set<string>();
+  for (const r of filtered) entityNames.add(r.name);
 
   let melhor = { nome: "-", score: 0 };
   let pior = { nome: "-", score: 100, indicador: "" };
-  for (const [name, d] of entityMap) {
-    const q = d.vol > 0 ? d.qualW / d.vol : 0;
-    const cs = calcComposite(q, d.f1, d.f2, d.f3, d.f4, d.f5, d.fTot);
+  for (const name of entityNames) {
+    const cs = Math.round(computeCompositeScore(name, groupBy, fullConfig));
     if (cs > melhor.score) melhor = { nome: name, score: cs };
     if (cs < pior.score) pior = { nome: name, score: cs, indicador: "Baixa qualidade" };
   }
@@ -941,51 +933,24 @@ export function getSidebarItems(
   groupBy: "empresa" | "unidade" | "area",
   scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number }
 ): { nome: string; score: number }[] {
-  // Get per-entity quality
-  type QRow = { name: string; total_marcacoes: number; qualidade: number };
+  const fullConfig: ScoreConfig = scoreConfig
+    ? { ...DEFAULT_CONFIG, ...scoreConfig }
+    : DEFAULT_CONFIG;
+
+  // Get unique entity names
+  type QRow = { name: string };
   let qRows: QRow[];
   if (groupBy === "unidade") {
-    qRows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    qRows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name }));
   } else if (groupBy === "area") {
-    qRows = qualidadeAreaData.map(r => ({ name: r.area_name, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    qRows = qualidadeAreaData.map(r => ({ name: r.area_name }));
   } else {
-    qRows = qualidadeEmpresaData.map(r => ({ name: r.company_name, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    qRows = qualidadeEmpresaData.map(r => ({ name: r.company_name }));
   }
 
-  // Get per-entity composicao (treatment faixas)
-  type CRow = { name: string; f1: number; f2: number; f3: number; f4: number; f5: number };
-  let cRows: CRow[];
-  if (groupBy === "unidade") {
-    cRows = composicaoUnidadeData.map(r => ({ name: r.company_name, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
-  } else if (groupBy === "area") {
-    cRows = composicaoAreaData.map(r => ({ name: r.company_name, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
-  } else {
-    cRows = composicaoEmpresaData.map(r => ({ name: r.company_name, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
-  }
+  const uniqueNames = [...new Set(qRows.map(r => r.name))];
 
-  // Aggregate per entity
-  const entityMap = new Map<string, { qualW: number; vol: number; f1: number; f2: number; f3: number; f4: number; f5: number; fTot: number }>();
-
-  for (const r of qRows) {
-    const e = entityMap.get(r.name);
-    if (e) { e.qualW += r.qualidade * r.total_marcacoes; e.vol += r.total_marcacoes; }
-    else { entityMap.set(r.name, { qualW: r.qualidade * r.total_marcacoes, vol: r.total_marcacoes, f1: 0, f2: 0, f3: 0, f4: 0, f5: 0, fTot: 0 }); }
-  }
-  for (const r of cRows) {
-    const e = entityMap.get(r.name);
-    if (e) { e.f1 += r.f1; e.f2 += r.f2; e.f3 += r.f3; e.f4 += r.f4; e.f5 += r.f5; e.fTot += r.f1 + r.f2 + r.f3 + r.f4 + r.f5; }
-  }
-
-  function calcScore(d: { qualW: number; vol: number; f1: number; f2: number; f3: number; f4: number; f5: number; fTot: number }): number {
-    const qPct = d.vol > 0 ? d.qualW / d.vol : 0;
-    if (!scoreConfig) return Math.round(qPct);
-    const treatScore = d.fTot > 0
-      ? (d.f1/d.fTot*100*scoreConfig.grade_under_1d/100) + (d.f2/d.fTot*100*scoreConfig.grade_1_3d/100) + (d.f3/d.fTot*100*scoreConfig.grade_3_7d/100) + (d.f4/d.fTot*100*scoreConfig.grade_7_15d/100) + (d.f5/d.fTot*100*scoreConfig.grade_over_15d/100)
-      : 0;
-    return Math.round((qPct * scoreConfig.weight_quality / 100) + (treatScore * scoreConfig.weight_treatment / 100));
-  }
-
-  return Array.from(entityMap.entries())
-    .map(([nome, d]) => ({ nome, score: calcScore(d) }))
+  return uniqueNames
+    .map(nome => ({ nome, score: Math.round(computeCompositeScore(nome, groupBy, fullConfig)) }))
     .sort((a, b) => b.score - a.score);
 }
