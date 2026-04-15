@@ -892,10 +892,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
 
   // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
-  const dataSources = useMemo(() => {
-    const { buildDataSources } = require("@/lib/qualidadeDataSources");
-    return buildDataSources(customerData);
-  }, [customerData]);
+  const dataSources = useMemo(() => buildDataSources(customerData), [customerData]);
 
   // Headcount por mês – filtrado por entidade selecionada
   const MONTH_LABEL_MAP: Record<string, string> = {
