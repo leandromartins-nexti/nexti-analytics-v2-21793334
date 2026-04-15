@@ -518,26 +518,50 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       );
     }
 
-    // line (default)
+    // line (default) — ComposedChart to overlay HC line
     return (
-      <LineChart data={data} onClick={handleChartClick}>
+      <ComposedChart data={data} onClick={handleChartClick}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="mes" tick={xTick} />
-        <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} domain={["auto", "auto"]} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-        <RechartsTooltip content={tooltipContent} />
-        {!isValor && <ReferenceLine y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
-        <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={(props: any) => {
+        <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={yFmt} domain={["auto", "auto"]} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+        <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} tickFormatter={v => `${v}`} label={{ value: "HC", angle: 90, position: "insideRight", fontSize: 10, fill: "#9ca3af" }} hide={!data[0]?.hcMes} />
+        <RechartsTooltip content={({ active, payload, label }: any) => {
+          if (!active || !payload?.length) return null;
+          const d = payload[0]?.payload;
+          return (
+            <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+              <p className="font-semibold text-foreground">{label}</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
+                <span className="text-muted-foreground">{isValor ? "Horas perdidas:" : "Taxa:"}</span>
+                <span className="font-medium text-foreground">{isValor ? d?.horas?.toLocaleString("pt-BR") : `${d?.taxa}%`}</span>
+              </div>
+              {d?.hcMes && (
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#9ca3af" }} />
+                  <span className="text-muted-foreground">HC Operacional:</span>
+                  <span className="font-medium text-foreground">{d.hcMes}</span>
+                </div>
+              )}
+            </div>
+          );
+        }} />
+        {!isValor && <ReferenceLine yAxisId="left" y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
+        <Line yAxisId="left" type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={(props: any) => {
           const { cx, cy, payload } = props;
           const isSelected = selectedMes === payload.mes;
-          const isActive = !selectedMes || isSelected;
+          const isActiveD = !selectedMes || isSelected;
           return (
             <g key={payload.mes} className="cursor-pointer">
               {isSelected && <circle cx={cx} cy={cy} r={10} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={1} strokeDasharray="3 2" />}
-              <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? color : isActive ? color : `${color}55`} stroke="#fff" strokeWidth={2} />
+              <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? color : isActiveD ? color : `${color}55`} stroke="#fff" strokeWidth={2} />
             </g>
           );
         }} activeDot={{ r: 6, stroke: color, strokeWidth: 2, fill: "#fff" }} name="Taxa" />
-      </LineChart>
+        {data[0]?.hcMes !== undefined && (
+          <Line yAxisId="right" type="monotone" dataKey="hcMes" stroke="#9ca3af" strokeWidth={1.5} strokeDasharray="6 3" dot={false} name="HC Operacional" />
+        )}
+      </ComposedChart>
     );
   };
 
