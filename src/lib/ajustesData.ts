@@ -613,16 +613,19 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
 }
 
 /** Same aggregation but returns raw registradas + justificadas counts per month */
-export function aggregateQualidadeEvolucaoDetalhado(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; registradas: number; justificadas: number }[] {
+export function aggregateQualidadeEvolucaoDetalhado(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa", sources?: QualidadeDataSources): { mes: string; registradas: number; justificadas: number }[] {
   type QRow = { name: string; reference_month: string; registradas: number; justificadas: number };
   let rows: QRow[];
 
   if (groupBy === "unidade") {
-    rows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const base = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
+    rows = base.map((r: any) => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
   } else if (groupBy === "area") {
-    rows = qualidadeAreaData.map(r => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const base = sources ? sources.qualidade.area : qualidadeAreaData;
+    rows = base.map((r: any) => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
   } else {
-    rows = qualidadeEmpresaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const base = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
+    rows = base.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
   }
 
   const filtered = selectedName ? rows.filter(r => r.name === selectedName) : rows;
