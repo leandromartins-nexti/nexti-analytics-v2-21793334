@@ -534,51 +534,98 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             <button className="cursor-pointer" onClick={() => setScoreDetailOpen(true)} title="Ver decomposição do score">
               <ScoreGauge score={compositeScore} label={`${compositeScore}`} faixa={scoreLabel} color={scoreColor} />
             </button>
+            {(() => {
+              // Variation vs anterior (mock: previous period score was ~25)
+              const anterior = 25;
+              const delta = compositeScore - anterior;
+              const absDelta = Math.abs(delta);
+              const improved = delta > 0;
+              const arrow = delta > 0 ? "↑" : delta < 0 ? "↓" : "—";
+              const dColor = absDelta < 1 ? "text-muted-foreground" : improved ? "text-green-600" : "text-red-600";
+              return (
+                <span className={`text-[9px] flex items-center gap-0.5 -mt-0.5 ${dColor}`}>
+                  {arrow} {Math.round(absDelta)}pp vs {anterior} (ant.)
+                </span>
+              );
+            })()}
           </ScoreBoard>
 
-          {/* 2. HC Operacional */}
-          <KPIBoard
-            title="HC Operacional"
-            tooltip={`De ${MOCK.hcTotalAtivo} ativos (${MOCK.cronicos.length} crônicos)`}
-            value={`${MOCK.hcOperacional}`}
-            valueColor="text-foreground"
-            subtitle={`de ${MOCK.hcTotalAtivo} ativos (${MOCK.cronicos.length} crônicos)`}
-          />
+          {/* 2. Volume Mensal (taxa) */}
+          <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
+            <div className="flex items-center gap-1 mb-2">
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Taxa Absenteísmo</p>
+              <InfoTip text="Taxa de absenteísmo operacional (excluindo planejadas) na última competência." />
+            </div>
+            <p className={`text-xl font-bold mt-0.5 truncate ${latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 6.0 ? "text-orange-500" : "text-red-600"}`}>{latestTaxa}%</p>
+            <p className={`text-[11px] mt-0.5 font-medium ${latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 6.0 ? "text-orange-500" : "text-red-600"}`}>
+              {latestTaxa <= 2.5 ? "Excelente" : latestTaxa <= 4.0 ? "Bom" : latestTaxa <= 6.0 ? "Atenção" : latestTaxa <= 8.0 ? "Ruim" : "Crítico"}
+            </p>
+            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">Mar/2026</span>
+          </div>
 
-          {/* 3. Taxa */}
-          <KPIBoard
-            title="Taxa Absenteísmo"
-            tooltip="Taxa de absenteísmo operacional (excluindo ausências planejadas) na última competência."
-            value={`${latestTaxa}%`}
-            valueColor={latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 4.0 ? "text-orange-500" : "text-red-600"}
-            subtitle="Mar/2026"
-          />
+          {/* 3. Composição (% planejada) */}
+          <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
+            <div className="flex items-center gap-1 mb-2">
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Composição</p>
+              <InfoTip text="Percentual de ausências planejadas sobre o total. Mais planejadas = melhor." />
+            </div>
+            <p className={`text-xl font-bold mt-0.5 truncate ${compScore >= 75 ? "text-green-600" : compScore >= 50 ? "text-orange-500" : "text-red-600"}`}>{composicaoDistribuicao.planejada}%</p>
+            <p className={`text-[11px] mt-0.5 font-medium ${compScore >= 75 ? "text-green-600" : compScore >= 50 ? "text-orange-500" : "text-red-600"}`}>
+              {getScoreLabel(compScore)}
+            </p>
+            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">planejadas</span>
+          </div>
 
-          {/* 4. % Faltas Injustificadas */}
-          <KPIBoard
-            title="% Faltas Injustificadas"
-            tooltip="Percentual de horas de ausência classificadas como 'Falta' (injustificada) sobre o total."
-            value={`${pctFaltasInjustificadas}%`}
-            valueColor={pctFaltasInjustificadas >= 15 ? "text-red-600" : pctFaltasInjustificadas >= 10 ? "text-orange-500" : "text-green-600"}
-          />
+          {/* 4. Maturidade (% planejado) */}
+          <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
+            <div className="flex items-center gap-1 mb-2">
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Maturidade</p>
+              <InfoTip text="Proporção de ausências planejadas vs reativas. Mais planejado = mais maduro." />
+            </div>
+            <p className={`text-xl font-bold mt-0.5 truncate ${matScore.score >= 75 ? "text-green-600" : matScore.score >= 50 ? "text-orange-500" : "text-red-600"}`}>{maturidadeDistribuicao.planejado}%</p>
+            <p className={`text-[11px] mt-0.5 font-medium ${matScore.score >= 75 ? "text-green-600" : matScore.score >= 50 ? "text-orange-500" : "text-red-600"}`}>
+              {matScore.label}
+            </p>
+            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">planejado vs reativo</span>
+          </div>
 
-          {/* 5. % Crônicos */}
-          <KPIBoard
-            title="% Afastados Crônicos"
-            tooltip={`${MOCK.cronicos.length} colaboradores com afastamento INSS prolongado.`}
-            value={`${pctCronicos}%`}
-            valueColor={pctCronicos >= 1 ? "text-orange-500" : "text-green-600"}
-            subtitle={`${MOCK.cronicos.length} colaborador(es)`}
-          />
+          {/* 5. Melhor Operação */}
+          {(() => {
+            const bestEntity = sidebarItems.length > 0 ? sidebarItems[0] : null;
+            const bestScore = bestEntity?.score ?? 0;
+            const bestLabel = getScoreLabel(bestScore);
+            const bestColor = bestScore >= 70 ? "text-green-600" : bestScore >= 50 ? "text-orange-500" : "text-red-600";
+            return (
+              <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
+                <div className="flex items-center gap-1 mb-2">
+                  <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Melhor Operação</p>
+                  <InfoTip text="A operação com menor taxa de absenteísmo (melhor score) no período." />
+                </div>
+                <p className="text-lg font-bold mt-0.5 truncate text-foreground">{bestEntity?.nome ?? "—"}</p>
+                <p className={`text-[11px] mt-0.5 truncate ${bestColor}`}>Score {bestScore} · {bestLabel}</p>
+                <span className="text-[10px] text-muted-foreground mt-0.5">Mantém posição</span>
+              </div>
+            );
+          })()}
 
-          {/* 6. Horas Perdidas */}
-          <KPIBoard
-            title="Horas Perdidas/Mês"
-            tooltip="Horas de ausência não-planejada na última competência."
-            value={formatHoursCompact(horasPerdidaMes)}
-            valueColor="text-red-600"
-            subtitle={`${formatHoursCompact(MOCK.horasPerdidas12meses)} em 12 meses`}
-          />
+          {/* 6. Maior Risco */}
+          {(() => {
+            const worstEntity = sidebarItems.length > 0 ? sidebarItems[sidebarItems.length - 1] : null;
+            const worstScore = worstEntity?.score ?? 0;
+            const worstLabel = getScoreLabel(worstScore);
+            const worstColor = worstScore >= 70 ? "text-green-600" : worstScore >= 50 ? "text-orange-500" : "text-red-600";
+            return (
+              <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
+                <div className="flex items-center gap-1 mb-2">
+                  <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Maior Risco</p>
+                  <InfoTip text="A operação com maior taxa de absenteísmo (pior score). Prioridade alta de ação." />
+                </div>
+                <p className="text-lg font-bold mt-0.5 truncate text-foreground">{worstEntity?.nome ?? "—"}</p>
+                <p className={`text-[11px] mt-0.5 truncate ${worstColor}`}>Score {worstScore} · {worstLabel}</p>
+                <span className="text-[10px] text-muted-foreground mt-0.5">Mantém posição</span>
+              </div>
+            );
+          })()}
         </div>
 
         {/* ── Row 1: Mapa de Operações + Volume Mensal (grid 2 colunas) ── */}
