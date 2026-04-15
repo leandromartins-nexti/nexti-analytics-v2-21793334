@@ -234,29 +234,29 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   // ── Composição chart data (stacked area 100%) ──
   const composicaoChartData = useMemo(() => {
     const raw = groupBy === "empresa" ? composicaoEmpresa : groupBy === "area" ? composicaoArea : composicaoUnNegocio;
-    
-    if (selectedRegional) {
-      const nf = nameField;
-      const filtered = (raw as any[]).filter(d => d[nf] === selectedRegional);
-      if (filtered.length === 0) return [];
-      
-      const total = filtered.reduce((s, d) => s + (d.horas_total ?? 0), 0);
-      const byCategory: Record<string, number> = {};
-      for (const item of filtered) {
-        const cat = CATEGORY_MAP[item.absence_situation_id] ?? "nao_categorizada";
-        byCategory[cat] = (byCategory[cat] ?? 0) + (item.horas_total ?? 0);
-      }
-      return [{ 
-        mes: "mar/26",
-        ...Object.fromEntries(Object.entries(byCategory).map(([k, v]) => [k, total > 0 ? +((v / total) * 100).toFixed(1) : 0])),
-      }];
-    }
+    const nf = nameField;
+    const dates = Object.keys(MESES_LABELS);
 
-    const total = Object.values(composicaoDistribuicao).reduce((a, b) => a + b, 0);
-    return [{
-      mes: "mar/26",
-      ...Object.fromEntries(Object.entries(composicaoDistribuicao).map(([k, v]) => [k, total > 0 ? +((v / total) * 100).toFixed(1) : 0])),
-    }];
+    return dates.map(date => {
+      let items = (raw as any[]).filter(d => d.reference_date === date);
+      if (selectedRegional) {
+        items = items.filter(d => d[nf] === selectedRegional);
+      }
+      const byCategory: Record<string, number> = {};
+      let total = 0;
+      for (const item of items) {
+        const cat = CATEGORY_MAP[item.absence_situation_id] ?? "nao_categorizada";
+        const h = item.horas_total ?? 0;
+        byCategory[cat] = (byCategory[cat] ?? 0) + h;
+        total += h;
+      }
+      return {
+        mes: MESES_LABELS[date],
+        ...Object.fromEntries(
+          CATEGORIES_ORDER.map(cat => [cat, total > 0 ? +((( byCategory[cat] ?? 0) / total) * 100).toFixed(1) : 0])
+        ),
+      };
+    }).filter(d => CATEGORIES_ORDER.some(c => (d as any)[c] > 0));
   }, [groupBy, selectedRegional, nameField]);
 
   // ── Maturidade chart data (stacked area 100%) ──
