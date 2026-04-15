@@ -1102,11 +1102,11 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                   </Bar>
                 ))}
                 {/* Taxa operacional line */}
-                <Line yAxisId="right" type="monotone" dataKey="taxaOperacional" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6", stroke: "#3b82f6", strokeWidth: 0 }} name="Taxa Operacional (%)" />
+                <Line yAxisId="right" type="monotone" dataKey="taxaOperacional" stroke="#2196f3" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#2196f3", stroke: "#2196f3", strokeWidth: 0 }} name="Taxa Operacional (%)" />
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   ...activeV5Cats.map(cat => ({ value: cat.label, type: "square" as const, color: cat.color })),
                   ...(showExcluded ? activeV5ExcludedCats.map(cat => ({ value: `${cat.label} ⊘`, type: "square" as const, color: cat.color })) : []),
-                  { value: "Taxa Operacional", type: "line" as const, color: "#3b82f6" },
+                  { value: "Taxa Operacional", type: "line" as const, color: "#2196f3" },
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
