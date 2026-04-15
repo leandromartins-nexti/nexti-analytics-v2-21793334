@@ -115,11 +115,22 @@ const STORAGE_INDEX_KEY = "nexti_imported_customers";
 
 /** Save imported customer data to localStorage */
 export function saveCustomerToStorage(customer: ImportedCustomer) {
-  // Save data
-  localStorage.setItem(
-    `${STORAGE_KEY_PREFIX}${customer.customerId}`,
-    JSON.stringify(customer)
-  );
+  const dataStr = JSON.stringify(customer);
+  const dataSizeKB = Math.round(dataStr.length / 1024);
+
+  // Save data — catch quota errors
+  try {
+    localStorage.setItem(
+      `${STORAGE_KEY_PREFIX}${customer.customerId}`,
+      dataStr
+    );
+  } catch (e: any) {
+    console.error(`[CustomerZipImporter] Falha ao salvar dados (${dataSizeKB} KB):`, e);
+    throw new Error(
+      `Dados muito grandes para o armazenamento local (${dataSizeKB} KB). ` +
+      `O limite do navegador é ~5 MB. Tente reduzir os datasets do ZIP.`
+    );
+  }
 
   // Update index
   const index = getImportedCustomersIndex();
@@ -135,6 +146,7 @@ export function saveCustomerToStorage(customer: ImportedCustomer) {
     index.push(entry);
   }
   localStorage.setItem(STORAGE_INDEX_KEY, JSON.stringify(index));
+  console.log(`[CustomerZipImporter] Cliente ${customer.customerId} salvo com sucesso (${dataSizeKB} KB)`);
 }
 
 /** Get list of imported customers from localStorage */

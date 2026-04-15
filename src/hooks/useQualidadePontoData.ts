@@ -64,7 +64,13 @@ const DIMENSION_MAP: Record<string, string> = {
 
 function loadFromImported(customerId: number): Partial<QualidadePontoDatasets> | null {
   const customer = loadCustomerFromStorage(customerId);
-  if (!customer) return null;
+  if (!customer) {
+    console.log(`[useQualidadePontoData] Nenhum dado importado para customer ${customerId}`);
+    return null;
+  }
+
+  console.log(`[useQualidadePontoData] Carregando dados importados de ${customer.label} (${customerId})`, 
+    customer.menus.map(m => m.tabs.map(t => `${t.tabSlug}: ${t.charts.map(c => `${c.chartSlug}(${Object.keys(c.dimensions).join(',')})`).join(', ')}`)));
 
   const result: Partial<QualidadePontoDatasets> = {};
 
@@ -73,7 +79,10 @@ function loadFromImported(customerId: number): Partial<QualidadePontoDatasets> |
       if (tab.tabSlug !== "qualidade-ponto") continue;
       for (const chart of tab.charts) {
         const mapping = CHART_TO_DATASET_MAP[chart.chartSlug];
-        if (!mapping) continue;
+        if (!mapping) {
+          console.warn(`[useQualidadePontoData] Chart slug sem mapeamento: "${chart.chartSlug}"`);
+          continue;
+        }
 
         const { datasetPrefix } = mapping;
         if (chart.dimensions.empresa) {
@@ -89,6 +98,7 @@ function loadFromImported(customerId: number): Partial<QualidadePontoDatasets> |
     }
   }
 
+  console.log(`[useQualidadePontoData] Datasets carregados:`, Object.keys(result));
   return Object.keys(result).length > 0 ? result : null;
 }
 
