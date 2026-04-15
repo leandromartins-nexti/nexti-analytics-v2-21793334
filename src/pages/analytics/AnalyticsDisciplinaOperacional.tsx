@@ -1282,10 +1282,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   type MapaDimension = "score" | "qualidade" | "velocidade" | "backoffice";
   const [mapaDimension, setMapaDimension] = useState<MapaDimension>("score");
   const mapaDimensionConfig: Record<MapaDimension, { label: string; yLabel: string; thresholds: [number, number] }> = {
-    score: { label: "Score Composto", yLabel: "Score Operacional", thresholds: [70, 55] },
+    score: { label: "Score Composto", yLabel: "Score Operacional", thresholds: [scoreConfig.threshold_good, scoreConfig.threshold_warning] },
     qualidade: { label: "Qualidade", yLabel: "Qualidade (%)", thresholds: [90, 75] },
-    velocidade: { label: "Velocidade", yLabel: "Nota Velocidade", thresholds: [70, 55] },
-    backoffice: { label: "Back-office", yLabel: "Nota Back-office", thresholds: [70, 55] },
+    velocidade: { label: "Velocidade", yLabel: "Nota Velocidade", thresholds: [scoreConfig.threshold_good, scoreConfig.threshold_warning] },
+    backoffice: { label: "Back-office", yLabel: "Nota Back-office", thresholds: [scoreConfig.threshold_good, scoreConfig.threshold_warning] },
   };
   const activeDimConfig = mapaDimensionConfig[mapaDimension];
   const getMapaBubbleColor = (val: number) => val >= activeDimConfig.thresholds[0] ? "#22c55e" : val >= activeDimConfig.thresholds[1] ? "#f59e0b" : "#ef4444";
@@ -1305,8 +1305,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const riscoClassif = getScoreClassification(activeData.maiorRisco.score, scoreConfig);
 
   const sobrecargaValue = Math.round(fullBreakdown.boData.ajustesPerOp);
-  const sobrecargaClassif = sobrecargaValue <= 400 ? { label: "Saudável", color: "text-green-600" }
-    : sobrecargaValue <= 1000 ? { label: "Atenção", color: "text-orange-500" }
+  const boThresh = scoreConfig.bo_adjustment_thresholds;
+  const sobrecargaClassif = sobrecargaValue <= (boThresh[1] ?? 400) ? { label: "Saudável", color: "text-green-600" }
+    : sobrecargaValue <= (boThresh[2] ?? 700) ? { label: "Atenção", color: "text-orange-500" }
     : { label: "Crítico", color: "text-red-600" };
 
   // Formatting helpers
