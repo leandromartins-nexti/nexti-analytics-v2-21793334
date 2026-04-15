@@ -710,6 +710,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             {renderVolumeChart()}
           </ResponsiveContainer>
         </div>
+        </div>{/* close grid-cols-2 row 1 */}
 
         {/* ── G2 + G3: Composição + Maturidade side by side ── */}
         <div className="grid grid-cols-2 gap-3">
