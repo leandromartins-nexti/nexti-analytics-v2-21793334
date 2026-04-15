@@ -1,6 +1,6 @@
 import {
-  BarChart3, LayoutDashboard, ClipboardList, DollarSign, Target, Gavel, Brain, Settings, Lock,
-  Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, BookOpen, Car, ChevronDown,
+  BarChart3, Lock,
+  Clock, Map, Megaphone, CheckSquare, ArrowLeftRight, Car, ChevronDown,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
