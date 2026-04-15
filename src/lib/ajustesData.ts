@@ -344,8 +344,10 @@ export const composicaoAreaData: ComposicaoFaixaRecord[] = [
 
 /** Aggregate composição faixas by month, optionally filtering by entity name.
  *  groupBy selects the dataset; selectedName filters within it. */
-export function aggregateComposicaoFaixas(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }[] {
-  const source = groupBy === "unidade" ? composicaoUnidadeData : groupBy === "area" ? composicaoAreaData : composicaoEmpresaData;
+export function aggregateComposicaoFaixas(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa", sources?: QualidadeDataSources): { mes: string; ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }[] {
+  const source = sources
+    ? sources.composicao[groupBy]
+    : (groupBy === "unidade" ? composicaoUnidadeData : groupBy === "area" ? composicaoAreaData : composicaoEmpresaData);
   const filtered = selectedName
     ? source.filter(r => r.company_name === selectedName)
     : source;
