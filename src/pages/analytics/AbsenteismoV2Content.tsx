@@ -766,7 +766,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                       stackId="1"
                       fill={CATEGORY_COLORS[cat]}
                       stroke={CATEGORY_COLORS[cat]}
-                      fillOpacity={0.65}
+                      fillOpacity={0.35}
                       strokeWidth={0.5}
                       strokeOpacity={0.5}
                       name={CATEGORY_LABELS[cat]}
