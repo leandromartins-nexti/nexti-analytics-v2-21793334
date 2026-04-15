@@ -9,11 +9,15 @@ export interface ScoreConfig {
   grade_3_7d: number;
   grade_7_15d: number;
   grade_over_15d: number;
-  grade_bo_under_400: number;
-  grade_bo_400_700: number;
-  grade_bo_700_1000: number;
-  grade_bo_1000_1400: number;
-  grade_bo_over_1400: number;
+  // Dynamic BO adjustment thresholds & grades (Part 1.1)
+  bo_adjustment_thresholds: number[];   // e.g. [200, 400, 700, 1000]
+  bo_adjustment_grades: number[];       // e.g. [100, 75, 50, 25, 0] — one more than thresholds
+  // HE multiplier (Part 1.2)
+  he_multiplier: number;
+  // BO sub-component weights (Part 1.3)
+  bo_weight_adjustments: number;
+  bo_weight_overtime: number;
+  // Classification thresholds
   threshold_excellent: number;
   threshold_good: number;
   threshold_warning: number;
@@ -21,24 +25,55 @@ export interface ScoreConfig {
 }
 
 export const DEFAULT_CONFIG: ScoreConfig = {
-  weight_quality: 50,
+  weight_quality: 40,
   weight_treatment: 30,
-  weight_backoffice: 20,
+  weight_backoffice: 30,
   grade_under_1d: 100,
-  grade_1_3d: 75,
-  grade_3_7d: 50,
-  grade_7_15d: 20,
+  grade_1_3d: 70,
+  grade_3_7d: 40,
+  grade_7_15d: 15,
   grade_over_15d: 0,
-  grade_bo_under_400: 100,
-  grade_bo_400_700: 75,
-  grade_bo_700_1000: 50,
-  grade_bo_1000_1400: 25,
-  grade_bo_over_1400: 0,
+  bo_adjustment_thresholds: [200, 400, 700, 1000],
+  bo_adjustment_grades: [100, 75, 50, 25, 0],
+  he_multiplier: 2.5,
+  bo_weight_adjustments: 50,
+  bo_weight_overtime: 50,
   threshold_excellent: 85,
   threshold_good: 70,
   threshold_warning: 55,
   threshold_poor: 40,
 };
+
+/** Migrate old config schema to new schema */
+function migrateConfig(raw: any): ScoreConfig {
+  const cfg = { ...DEFAULT_CONFIG, ...raw };
+
+  // Migrate old fixed BO grade keys to dynamic arrays
+  if (raw.grade_bo_under_400 !== undefined && raw.bo_adjustment_thresholds === undefined) {
+    cfg.bo_adjustment_thresholds = [400, 700, 1000, 1400];
+    cfg.bo_adjustment_grades = [
+      raw.grade_bo_under_400 ?? 100,
+      raw.grade_bo_400_700 ?? 75,
+      raw.grade_bo_700_1000 ?? 50,
+      raw.grade_bo_1000_1400 ?? 25,
+      raw.grade_bo_over_1400 ?? 0,
+    ];
+    // Remove old keys
+    delete cfg.grade_bo_under_400;
+    delete cfg.grade_bo_400_700;
+    delete cfg.grade_bo_700_1000;
+    delete cfg.grade_bo_1000_1400;
+    delete cfg.grade_bo_over_1400;
+  }
+
+  if (cfg.he_multiplier === undefined) cfg.he_multiplier = 2;
+  if (cfg.bo_weight_adjustments === undefined) {
+    cfg.bo_weight_adjustments = 50;
+    cfg.bo_weight_overtime = 50;
+  }
+
+  return cfg;
+}
 
 export function getScoreClassification(score: number, config: ScoreConfig) {
   if (score >= config.threshold_excellent) return { label: "Excelente", color: "#22c55e", bg: "bg-green-100", text: "text-green-600" };
@@ -84,7 +119,7 @@ export function ScoreConfigProvider({ children }: { children: ReactNode }) {
   const [config, setConfig] = useState<ScoreConfig>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
+      if (stored) return migrateConfig(JSON.parse(stored));
     } catch {}
     return DEFAULT_CONFIG;
   });
