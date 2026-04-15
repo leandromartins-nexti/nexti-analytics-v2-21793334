@@ -45,7 +45,7 @@ const MOCK = {
     { person_name: "Maria Santos", dias_afastado: 518, tipo: "Afastamento INSS" },
   ],
   demissoesAbertas: 37,
-  horasPerdidas12meses: 87992,
+  horasPerdidas12meses: 41197,
 };
 
 // Consolidado computed from real JSON data (12 months)
