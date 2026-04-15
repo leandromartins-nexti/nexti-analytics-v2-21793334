@@ -1866,13 +1866,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
             const nameField = groupBy === "empresa" ? "company_name" : groupBy === "unidade" ? "business_unit_name" : "area_name";
             const idField = groupBy === "empresa" ? "company_id" : groupBy === "unidade" ? "business_unit_id" : "area_id";
-            const filtered = selectedRegional
+            let filtered = selectedRegional
               ? rawEsforco.filter((r: any) => {
                   const selNorm = normName(selectedRegional);
                   return String(r[idField]) === selectedRegional || normName(r[nameField] ?? "") === selNorm;
                 })
               : rawEsforco;
-            console.log("[Sobrecarga] groupBy:", groupBy, "selectedRegional:", selectedRegional, "rawEsforco length:", rawEsforco.length, "filtered length:", filtered.length, "sample names:", rawEsforco.slice(0, 3).map((r: any) => r[nameField]));
+            const sobrecargaFallback = selectedRegional && filtered.length === 0 && rawEsforco.length > 0;
+            if (sobrecargaFallback) filtered = rawEsforco;
 
             const MONTH_LABELS: Record<string, string> = {
               "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
@@ -1935,7 +1936,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       <h4 className="text-sm font-semibold">Sobrecarga do Back-office</h4>
                       <InfoTip text="Mostra quantos ajustes cada operador do back-office processou em média por mês e quantas horas extras o time teve. A cor da barra indica se a carga está dentro do normal histórico ou em zona crítica. A linha tracejada mostra horas extras acumuladas, para entender como o time absorveu os picos." />
                     </div>
-                    <p className="text-[10px] text-muted-foreground mb-1">Carga de ajustes e HE por operador. Linha tracejada azul = HE total do time.</p>
+                    <p className="text-[10px] text-muted-foreground mb-1">
+                      Carga de ajustes e HE por operador. Linha tracejada azul = HE total do time.
+                      {sobrecargaFallback && <span className="ml-1 text-amber-600 font-medium">(dados consolidados — sem granularidade por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "unidade" : "área"})</span>}
+                    </p>
                   </div>
                   <button onClick={() => setChartDataModal("sobrecarga")} className="text-muted-foreground hover:text-foreground transition-colors" title="Ver dados do gráfico">
                     <Database className="w-4 h-4" />
