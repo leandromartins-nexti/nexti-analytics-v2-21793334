@@ -4,12 +4,16 @@
  * 6 BigNumbers: Score, HC Operacional, Taxa, % Faltas Injustificadas, % Crônicos, Horas Perdidas/Mês
  * 3 Charts: Volume Mensal (line), Composição (stacked area 100%), Maturidade (stacked area 100%)
  * Data source: static JSON from src/data/customers/642/absenteismo/
+ * 
+ * Conventions applied:
+ * - Mapa de Operação as first component below BigNumbers
+ * - Score Detail Panel (Dialog) on click instead of Popover
  */
 import { useState, useMemo, useCallback } from "react";
 import {
   ResponsiveContainer, LineChart, Line, AreaChart, Area, ComposedChart,
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ReferenceLine,
-  Cell, Bar,
+  Cell, Bar, ScatterChart, Scatter, ZAxis, ReferenceArea,
 } from "recharts";
 import { Database } from "lucide-react";
 import ChartModeToggle from "@/components/analytics/ChartModeToggle";
@@ -19,7 +23,7 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 // ── Static JSON imports ──
 import volumeEmpresa from "@/data/customers/642/absenteismo/volume-mensal-por-empresa.json";
@@ -129,6 +133,17 @@ function computeMaturidadeScore(dist: typeof maturidadeDistribuicao): { score: n
   return { score: 0, label: "Crítico" };
 }
 
+/** Compute entity-level absenteísmo score using the same formula as the composite */
+function computeEntityScore(entityRows: any[], nameField: string, entityName: string): number {
+  // Volume score from average taxa
+  const totalHoras = entityRows.reduce((s, r) => s + (r.horas_ausencia ?? 0), 0);
+  const totalHC = entityRows.reduce((s, r) => s + (r.headcount ?? r.hcMes ?? 0), 0);
+  const avgTaxa = totalHC > 0 ? (totalHoras / totalHC) * 100 : 0;
+  const volScore = computeVolumeScore(avgTaxa).score;
+  // Simplified: use 70% volume, 30% placeholder for composition/maturity
+  return Math.round(volScore * 0.7 + 50 * 0.3);
+}
+
 function getScoreColor(score: number): string {
   if (score >= 85) return "#22c55e";
   if (score >= 70) return "#84cc16";
@@ -172,11 +187,21 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   const [volumeDataMode, setVolumeDataMode] = useState<DataMode>("percent");
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
   const [visibleNames, setVisibleNames] = useState<string[]>([]);
+  const [scoreDetailOpen, setScoreDetailOpen] = useState(false);
+  const [fixedBubble, setFixedBubble] = useState<string | null>(null);
+  const [mapaScoreFilter, setMapaScoreFilter] = useState<Set<string>>(() => new Set(["green", "orange", "red"]));
+
+  const toggleMapaScoreFilter = useCallback((cat: string) => {
+    setMapaScoreFilter(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) { if (next.size > 1) next.delete(cat); } else { next.add(cat); }
+      return next;
+    });
+  }, []);
 
   // ── Data by dimension ──
   const volumeByDim = useMemo(() => {
     const raw = groupBy === "empresa" ? volumeEmpresa : groupBy === "area" ? volumeArea : volumeUnNegocio;
-    const nameField = groupBy === "empresa" ? "company_name" : groupBy === "area" ? "area_name" : "business_unit_name";
     return raw as Array<Record<string, any>>;
   }, [groupBy]);
 
@@ -185,7 +210,6 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   // Build volume chart data
   const volumeChartData = useMemo(() => {
     if (selectedRegional) {
-      // filter to selected entity
       const filtered = volumeByDim.filter(d => d[nameField] === selectedRegional);
       return Object.keys(MESES_LABELS).map(date => {
         const row = filtered.find(d => d.reference_date === date);
@@ -194,7 +218,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           horas: row?.horas_ausencia ?? 0,
           eventos: row?.qtd_eventos ?? 0,
           pessoas: row?.pessoas_ausentes ?? 0,
-          taxa: 0, // will compute below
+          taxa: 0,
         };
       });
     }
@@ -209,8 +233,6 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
 
   // ── Composição chart data (stacked area 100%) ──
   const composicaoChartData = useMemo(() => {
-    // Composição data is only for mar/2026, so we show as a single snapshot
-    // For time series we use maturidade data which has 12 months
     const raw = groupBy === "empresa" ? composicaoEmpresa : groupBy === "area" ? composicaoArea : composicaoUnNegocio;
     
     if (selectedRegional) {
@@ -230,7 +252,6 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       }];
     }
 
-    // Consolidated
     const total = Object.values(composicaoDistribuicao).reduce((a, b) => a + b, 0);
     return [{
       mes: "mar/26",
@@ -238,13 +259,12 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     }];
   }, [groupBy, selectedRegional, nameField]);
 
-  // ── Maturidade chart data (stacked area 100%) ── uses time series from area (12 months)
+  // ── Maturidade chart data (stacked area 100%) ──
   const maturidadeChartData = useMemo(() => {
     const raw = groupBy === "empresa" ? maturidadeEmpresa : groupBy === "area" ? maturidadeArea : maturidadeUnNegocio;
     const nf = nameField;
     const dates = Object.keys(MESES_LABELS);
     
-    // Maturidade area has full 12m data, empresa/un only mar/2026
     const hasTimeSeries = (raw as any[]).some(d => d.reference_date !== "2026-03-01");
     
     if (hasTimeSeries) {
@@ -264,7 +284,6 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       });
     }
     
-    // Single month snapshot
     let filtered = raw as any[];
     if (selectedRegional) filtered = filtered.filter(d => d[nf] === selectedRegional);
     
@@ -316,6 +335,62 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     })).sort((a, b) => b.score - a.score);
   }, [groupBy, nameField]);
 
+  // ── Mapa de Operações data (Convention 1) ──
+  const visibleSet = useMemo(() => new Set(visibleNames), [visibleNames]);
+
+  const mapaOperacoesData = useMemo(() => {
+    const raw = groupBy === "empresa" ? volumeEmpresa : groupBy === "area" ? volumeArea : volumeUnNegocio;
+    const nf = nameField;
+    const entities = new Map<string, { horas: number; headcount: number; count: number }>();
+
+    for (const row of raw as any[]) {
+      const name = row[nf];
+      if (!entities.has(name)) entities.set(name, { horas: 0, headcount: 0, count: 0 });
+      const e = entities.get(name)!;
+      e.horas += row.horas_ausencia ?? 0;
+      e.headcount = Math.max(e.headcount, row.pessoas_ausentes ?? row.headcount ?? 0);
+      e.count++;
+    }
+
+    const maxHoras = Math.max(...[...entities.values()].map(e => e.horas), 1);
+
+    return [...entities.entries()]
+      .filter(([nome]) => visibleSet.size === 0 || visibleSet.has(nome))
+      .map(([nome, data]) => {
+        const score = Math.round(Math.max(0, 100 - (data.horas / maxHoras) * 100));
+        const bubbleColor = score >= 70 ? "#22c55e" : score >= 50 ? "#f59e0b" : "#ef4444";
+        return {
+          regional: nome,
+          headcount: data.headcount || Math.round(data.count * 10),
+          score,
+          classifLabel: getScoreLabel(score),
+          bubbleColor,
+        };
+      });
+  }, [groupBy, nameField, visibleSet]);
+
+  const medianHeadcount = useMemo(() => {
+    if (!mapaOperacoesData.length) return 100;
+    const sorted = [...mapaOperacoesData].sort((a, b) => a.headcount - b.headcount);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1].headcount + sorted[mid].headcount) / 2) : sorted[mid].headcount;
+  }, [mapaOperacoesData]);
+
+  const mapaDomain = useMemo(() => {
+    if (!mapaOperacoesData.length) return { xMin: 0, xMax: 600, yMin: 0, yMax: 110, xTicks: [0, 100, 200, 300, 400, 500, 600] };
+    const hcs = mapaOperacoesData.map(d => d.headcount);
+    const maxHc = Math.max(...hcs);
+    const niceSteps = [50, 100, 150, 200, 250, 500];
+    const raw = maxHc * 1.15;
+    const step = niceSteps.find(s => Math.ceil(raw / s) <= 6) || Math.ceil(raw / 6 / 50) * 50;
+    const xMax = Math.ceil(raw / step) * step || 600;
+    const xMin = -Math.round(xMax * 0.05);
+    const xTicks = Array.from({ length: 7 }, (_, i) => Math.round((xMax / 6) * i));
+    return { xMin, xMax, yMin: 0, yMax: 110, xTicks };
+  }, [mapaOperacoesData]);
+
+  const criticalCount = useMemo(() => mapaOperacoesData.filter(d => d.score < 50 && d.headcount > medianHeadcount).length, [mapaOperacoesData, medianHeadcount]);
+
   // ── Chart interactions ──
   const handleChartClick = (e: any) => {
     if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
@@ -329,14 +404,62 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
 
   const mediaTaxa = volumeConsolidado.reduce((s, d) => s + d.taxa, 0) / volumeConsolidado.length;
 
+  // ── Score breakdown data for detail panel ──
+  const scoreBreakdownComponents = [
+    {
+      metrica: "Volume",
+      peso: 50,
+      valor_atual: `${latestTaxa}%`,
+      nota: volScore.score,
+      faixa: volScore.label,
+      contribuicao: Math.round(volScore.score * 0.5),
+      cor_semantica: volScore.score >= 75 ? "success" : volScore.score >= 50 ? "warning" : "critical",
+      descricao: "Taxa de absenteísmo operacional (excluindo planejadas). Quanto menor, melhor.",
+    },
+    {
+      metrica: "Composição",
+      peso: 30,
+      valor_atual: `${composicaoDistribuicao.planejada}% planej.`,
+      nota: compScore,
+      faixa: getScoreLabel(compScore),
+      contribuicao: Math.round(compScore * 0.3),
+      cor_semantica: compScore >= 75 ? "success" : compScore >= 50 ? "warning" : "critical",
+      descricao: "Distribuição das ausências por categoria. Mais planejadas = melhor.",
+    },
+    {
+      metrica: "Maturidade",
+      peso: 20,
+      valor_atual: `${maturidadeDistribuicao.planejado}% planej.`,
+      nota: matScore.score,
+      faixa: matScore.label,
+      contribuicao: Math.round(matScore.score * 0.2),
+      cor_semantica: matScore.score >= 75 ? "success" : matScore.score >= 50 ? "warning" : "critical",
+      descricao: "Proporção de ausências planejadas vs reativas. Mais planejado = mais maduro.",
+    },
+  ];
+
   // ── Render volume chart ──
   const renderVolumeChart = () => {
     const isValor = volumeDataMode === "valor";
     const dataKey = isValor ? "horas" : "taxa";
     const yFmt = (v: number) => isValor ? formatHoursCompact(v) : `${v}%`;
     const color = "#ef4444";
-
     const data = volumeChartData;
+
+    const tooltipContent = ({ active, payload, label }: any) => {
+      if (!active || !payload?.length) return null;
+      const d = payload[0].payload;
+      return (
+        <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+          <p className="font-semibold text-foreground">{label}</p>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
+            <span className="text-muted-foreground">{isValor ? "Horas perdidas:" : "Taxa:"}</span>
+            <span className="font-medium text-foreground">{isValor ? d.horas?.toLocaleString("pt-BR") : `${d.taxa}%`}</span>
+          </div>
+        </div>
+      );
+    };
 
     if (volumeChartMode === "bar") {
       return (
@@ -344,25 +467,12 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="mes" tick={xTick} />
           <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-          <RechartsTooltip content={({ active, payload, label }) => {
-            if (!active || !payload?.length) return null;
-            const d = payload[0].payload;
-            return (
-              <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1">
-                <p className="font-semibold text-foreground">{label}</p>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
-                  <span className="text-muted-foreground">{isValor ? "Horas perdidas:" : "Taxa:"}</span>
-                  <span className="font-medium text-foreground">{isValor ? d.horas?.toLocaleString("pt-BR") : `${d.taxa}%`}</span>
-                </div>
-              </div>
-            );
-          }} />
+          <RechartsTooltip content={tooltipContent} />
           {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
           {!isValor && <ReferenceLine y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
           <Bar dataKey={dataKey} radius={[4, 4, 0, 0]}>
             {data.map((entry, idx) => (
-              <Cell key={idx} fill={selectedMes && selectedMes !== entry.mes ? `${color}40` : `${color}A6`} />
+              <Cell key={idx} fill={selectedMes && selectedMes !== (entry as any).mes ? `${color}40` : `${color}A6`} />
             ))}
           </Bar>
         </ComposedChart>
@@ -375,20 +485,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="mes" tick={xTick} />
           <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-          <RechartsTooltip content={({ active, payload, label }) => {
-            if (!active || !payload?.length) return null;
-            const d = payload[0].payload;
-            return (
-              <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1">
-                <p className="font-semibold text-foreground">{label}</p>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
-                  <span className="text-muted-foreground">{isValor ? "Horas perdidas:" : "Taxa:"}</span>
-                  <span className="font-medium text-foreground">{isValor ? d.horas?.toLocaleString("pt-BR") : `${d.taxa}%`}</span>
-                </div>
-              </div>
-            );
-          }} />
+          <RechartsTooltip content={tooltipContent} />
           {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
           {!isValor && <ReferenceLine y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
           <Area type="monotone" dataKey={dataKey} stroke={color} fill={`${color}${selectedMes ? "33" : "59"}`} fillOpacity={1} />
@@ -402,20 +499,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="mes" tick={xTick} />
         <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} domain={["auto", "auto"]} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-        <RechartsTooltip content={({ active, payload, label }) => {
-          if (!active || !payload?.length) return null;
-          const d = payload[0].payload;
-          return (
-            <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1">
-              <p className="font-semibold text-foreground">{label}</p>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
-                <span className="text-muted-foreground">{isValor ? "Horas perdidas:" : "Taxa:"}</span>
-                <span className="font-medium text-foreground">{isValor ? d.horas?.toLocaleString("pt-BR") : `${d.taxa}%`}</span>
-              </div>
-            </div>
-          );
-        }} />
+        <RechartsTooltip content={tooltipContent} />
         {!isValor && <ReferenceLine y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
         <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={(props: any) => {
           const { cx, cy, payload } = props;
@@ -439,36 +523,11 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       <div className="flex-1 min-w-0 space-y-3 pl-6 pr-4 py-4">
         {/* ── BigNumbers (6 cards) ── */}
         <div className="grid grid-cols-6 gap-3">
-          {/* 1. Score */}
-          <ScoreBoard title="Score Absenteísmo" tooltip="Score composto: Volume (50%) + Composição (30%) + Maturidade (20%)">
-            <Popover>
-              <PopoverTrigger asChild>
-                <button className="cursor-pointer">
-                  <ScoreGauge score={compositeScore} label={`${compositeScore}`} faixa={scoreLabel} color={scoreColor} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-64 text-xs space-y-2">
-                <p className="font-semibold">Decomposição do Score</p>
-                <div className="space-y-1.5">
-                  <div className="flex justify-between">
-                    <span>Volume (50%)</span>
-                    <span className="font-medium">{volScore.score} — {volScore.label}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Composição (30%)</span>
-                    <span className="font-medium">{compScore}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Maturidade (20%)</span>
-                    <span className="font-medium">{matScore.score} — {matScore.label}</span>
-                  </div>
-                  <div className="border-t pt-1 flex justify-between font-semibold">
-                    <span>Composto</span>
-                    <span>{compositeScore} — {scoreLabel}</span>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+          {/* 1. Score — Convention 2: click opens Dialog, not Popover */}
+          <ScoreBoard title="Score Absenteísmo" tooltip="Score composto: Volume (50%) + Composição (30%) + Maturidade (20%). Clique para detalhes.">
+            <button className="cursor-pointer" onClick={() => setScoreDetailOpen(true)} title="Ver decomposição do score">
+              <ScoreGauge score={compositeScore} label={`${compositeScore}`} faixa={scoreLabel} color={scoreColor} />
+            </button>
           </ScoreBoard>
 
           {/* 2. HC Operacional */}
@@ -514,6 +573,121 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             valueColor="text-red-600"
             subtitle={`${formatHoursCompact(MOCK.horasPerdidas12meses)} em 12 meses`}
           />
+        </div>
+
+        {/* ── Convention 1: Mapa de Operações (first component after BigNumbers) ── */}
+        <div className={`bg-card border rounded-xl p-4 ${selectedRegional ? "border-[#FF5722]/30" : "border-border/50"}`}>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-1.5">
+              <h4 className="text-sm font-semibold">Mapa de Operações</h4>
+              <InfoTip text="Cada bolha é uma operação. Posição horizontal mostra o headcount (escala). Posição vertical mostra o Score de Absenteísmo (saúde). Cor da bolha reforça a classificação." />
+            </div>
+            <div className="flex items-center gap-1.5">
+              {criticalCount > 0 && (
+                <span className="text-[10px] font-medium bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
+                  {criticalCount} crítica{criticalCount > 1 ? "s" : ""}
+                </span>
+              )}
+              <button onClick={() => setChartDataModal("mapaOperacoes")} className="p-1 rounded hover:bg-muted/60 transition-colors" title="Ver dados">
+                <Database className="w-3.5 h-3.5 text-muted-foreground" />
+              </button>
+            </div>
+          </div>
+          <p className="text-[10px] text-muted-foreground mb-2">
+            Headcount × Score Absenteísmo · uma bolha por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área"}{selectedMes ? ` · ${selectedMes}` : " · consolidado"}
+          </p>
+          <ResponsiveContainer width="100%" height={280}>
+            <ScatterChart margin={{ top: 5, right: 50, bottom: 10, left: 0 }}>
+              <defs>
+                <linearGradient id="mapaAbsGradient" x1="1" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.20} />
+                  <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.10} />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity={0.15} />
+                </linearGradient>
+              </defs>
+              <ReferenceArea x1={mapaDomain.xMin} x2={mapaDomain.xMax} y1={mapaDomain.yMin} y2={mapaDomain.yMax} fill="url(#mapaAbsGradient)" strokeOpacity={0} />
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" dataKey="headcount" name="Headcount" domain={[mapaDomain.xMin, mapaDomain.xMax]} ticks={mapaDomain.xTicks} tick={{ fontSize: 10 }} label={{ value: "Headcount", position: "insideBottom", offset: -5, fontSize: 10 }} />
+              <YAxis type="number" dataKey="score" name="Score Absenteísmo" domain={[mapaDomain.yMin, mapaDomain.yMax]} ticks={[0, 25, 50, 75, 100]} tick={{ fontSize: 10 }} label={{ value: "Score Absenteísmo", angle: -90, position: "insideLeft", fontSize: 10 }} />
+              <ZAxis type="number" range={[150, 150]} />
+              <ReferenceLine y={70} stroke="#22c55e" strokeWidth={1.5} strokeDasharray="8 4" label={({ viewBox }: any) => {
+                const { y, width, x } = viewBox || {};
+                const rightEdge = (x ?? 0) + (width ?? 0);
+                return (
+                  <g>
+                    <text x={rightEdge + 4} y={(y ?? 0) - 4} fontSize={8} fill="#22c55e" fontWeight={500} textAnchor="start">Limite</text>
+                    <text x={rightEdge + 4} y={(y ?? 0) + 6} fontSize={8} fill="#22c55e" fontWeight={500} textAnchor="start">saudável</text>
+                  </g>
+                );
+              }} />
+              <RechartsTooltip content={({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                const d = payload[0].payload;
+                const groupLabel = groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área";
+                return (
+                  <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                    <p className="font-semibold text-sm">{d.regional}</p>
+                    <p className="text-muted-foreground text-[10px]">{groupLabel}</p>
+                    <hr className="border-border/50" />
+                    <p>Score: <span className="font-bold" style={{ color: d.bubbleColor }}>{d.score}</span> · {d.classifLabel}</p>
+                    <p>Headcount: <span className="font-medium">{d.headcount}</span></p>
+                  </div>
+                );
+              }} />
+              <Scatter data={mapaOperacoesData.filter(d => {
+                const cat = d.score >= 70 ? "green" : d.score >= 50 ? "orange" : "red";
+                return mapaScoreFilter.has(cat);
+              })} shape={(props: any) => {
+                const { cx, cy, payload } = props;
+                const r = 14;
+                const isFixed = fixedBubble === payload.regional;
+                const isSelected = !selectedRegional || selectedRegional === payload.regional;
+                const hasFilter = !!selectedRegional;
+                const opacity = isFixed ? 0.85 : isSelected ? 0.75 : 0.45;
+                const clean = payload.regional.replace(/^VIG\s*EYES\s*/i, "").trim();
+                const abbr = clean ? clean.slice(0, 3).toUpperCase() : payload.regional.slice(0, 3).toUpperCase();
+                return (
+                  <g
+                    onClick={() => {
+                      setFixedBubble(prev => prev === payload.regional ? null : payload.regional);
+                      onRegionalClick(payload.regional);
+                    }}
+                    onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.regional); }}
+                    className="cursor-pointer"
+                  >
+                    <circle cx={cx} cy={cy} r={r} fill={payload.bubbleColor} fillOpacity={opacity}
+                      stroke={isFixed && hasFilter ? "#FF5722" : payload.bubbleColor}
+                      strokeWidth={isFixed && hasFilter ? 2 : 1}
+                      strokeDasharray={isFixed && hasFilter ? "4 3" : "none"}
+                    />
+                    <text x={cx} y={cy - 3} textAnchor="middle" fontSize={8} fontWeight={700} fill="#fff" dominantBaseline="middle">{abbr}</text>
+                    <text x={cx} y={cy + 6} textAnchor="middle" fontSize={7} fontWeight={600} fill="#fff" dominantBaseline="middle">{payload.score}</text>
+                  </g>
+                );
+              }} />
+            </ScatterChart>
+          </ResponsiveContainer>
+          <div className="flex items-center justify-center gap-3 mt-1 text-[10px]">
+            {[
+              { cat: "green", color: "#22c55e", label: "≥ 70" },
+              { cat: "orange", color: "#f59e0b", label: "50-70" },
+              { cat: "red", color: "#ef4444", label: "< 50" },
+            ].map(({ cat, color, label }) => {
+              const active = mapaScoreFilter.has(cat);
+              return (
+                <button
+                  key={cat}
+                  onClick={() => toggleMapaScoreFilter(cat)}
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full border transition-all ${
+                    active ? "border-border/60 text-foreground" : "border-transparent text-muted-foreground/40 line-through"
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full inline-block transition-opacity" style={{ backgroundColor: color, opacity: active ? 1 : 0.3 }} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── G1: Volume Mensal ── */}
@@ -679,6 +853,50 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
         onPagedItemsChange={setVisibleNames}
       />
 
+      {/* ── Convention 2: Score Detail Panel (Dialog) ── */}
+      <Dialog open={scoreDetailOpen} onOpenChange={setScoreDetailOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base">Decomposição do Score de Absenteísmo</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-center">
+              <ScoreGauge score={compositeScore} label={`${compositeScore}`} faixa={scoreLabel} color={scoreColor} />
+            </div>
+
+            <div className="space-y-3">
+              {scoreBreakdownComponents.map((comp) => {
+                const COMP_COLORS: Record<string, string> = { success: "#22c55e", warning: "#eab308", critical: "#ef4444" };
+                const barColor = COMP_COLORS[comp.cor_semantica] || "#6b7280";
+                const barWidth = Math.max(comp.contribuicao / Math.max(compositeScore, 1) * 100, 4);
+                return (
+                  <div key={comp.metrica} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium">{comp.metrica}</span>
+                      <span className="text-[10px] text-muted-foreground">peso {comp.peso}%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span>{comp.valor_atual} → Nota {comp.nota}</span>
+                      <span className="font-semibold">{comp.contribuicao} pts</span>
+                    </div>
+                    <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${barWidth}%`, backgroundColor: barColor }} />
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">{comp.descricao}</p>
+                  </div>
+                );
+              })}
+              <div className="border-t border-border/50 pt-3 flex items-center justify-between">
+                <span className="text-xs font-semibold">Score composto</span>
+                <span className="text-sm font-bold" style={{ color: scoreColor }}>
+                  {compositeScore} ({scoreLabel})
+                </span>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Data modals */}
       <ChartDataModal
         open={chartDataModal === "volume"}
@@ -710,6 +928,18 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           { key: "mes", label: "Competência" },
           { key: "1_planejado", label: "Planejado (%)", format: (v: number) => `${v}%` },
           { key: "2_reativo", label: "Reativo (%)", format: (v: number) => `${v}%` },
+        ]}
+      />
+      <ChartDataModal
+        open={chartDataModal === "mapaOperacoes"}
+        onClose={() => setChartDataModal(null)}
+        title="Mapa de Operações — Dados"
+        data={mapaOperacoesData}
+        columns={[
+          { key: "regional", label: "Operação" },
+          { key: "headcount", label: "Headcount" },
+          { key: "score", label: "Score" },
+          { key: "classifLabel", label: "Classificação" },
         ]}
       />
     </div>
