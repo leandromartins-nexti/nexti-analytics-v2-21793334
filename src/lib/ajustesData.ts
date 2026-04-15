@@ -536,11 +536,12 @@ export const qualidadeAreaData: QualidadeAreaRecord[] = [
 /** Aggregate quality evolution by month, optionally filtering by entity name.
  *  Uses quality_percentage directly (weighted by volume) for empresa groupBy,
  *  and registradas/(registradas+justificadas) for other groupings. */
-export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; value: number }[] {
+export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa", sources?: QualidadeDataSources): { mes: string; value: number }[] {
   if (groupBy === "empresa") {
+    const baseData = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
     const filtered = selectedName
-      ? qualidadeEmpresaData.filter(r => r.company_name === selectedName)
-      : qualidadeEmpresaData;
+      ? baseData.filter((r: any) => r.company_name === selectedName)
+      : baseData;
 
     const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
     for (const r of filtered) {
@@ -562,9 +563,10 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
   }
 
   if (groupBy === "unidade") {
+    const baseData = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
     const filtered = selectedName
-      ? qualidadeUnidadeData.filter(r => r.business_unit_name === selectedName)
-      : qualidadeUnidadeData;
+      ? baseData.filter((r: any) => r.business_unit_name === selectedName)
+      : baseData;
 
     const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
     for (const r of filtered) {
@@ -586,9 +588,10 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
   }
 
   // For area, use weighted average like empresa/unidade
+  const baseData = sources ? sources.qualidade.area : qualidadeAreaData;
   const filtered = selectedName
-    ? qualidadeAreaData.filter(r => r.area_name === selectedName)
-    : qualidadeAreaData;
+    ? baseData.filter((r: any) => r.area_name === selectedName)
+    : baseData;
 
   const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
   for (const r of filtered) {
