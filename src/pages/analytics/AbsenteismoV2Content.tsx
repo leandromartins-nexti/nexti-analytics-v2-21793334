@@ -313,7 +313,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   const [scoreDetailOpen, setScoreDetailOpen] = useState(false);
   const [fixedBubble, setFixedBubble] = useState<string | null>(null);
   const [mapaScoreFilter, setMapaScoreFilter] = useState<Set<string>>(() => new Set(["green", "orange", "red"]));
-
+  const [showExcluded, setShowExcluded] = useState(false);
   // Config-aware score helpers (closures over absConfig)
   const computeEntityScore = useCallback((entityName: string, gb: GroupBy, nf: string): number => {
     const normalizedEntity = normalizeEntityName(entityName);
