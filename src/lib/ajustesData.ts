@@ -709,12 +709,14 @@ export interface QualidadeVolumeScatterPoint {
  */
 export function aggregateQualidadeVolume(
   selectedMonth: string | null = null,
-  groupBy: "empresa" | "unidade" | "area" = "empresa"
+  groupBy: "empresa" | "unidade" | "area" = "empresa",
+  sources?: QualidadeDataSources
 ): QualidadeVolumeScatterPoint[] {
   if (groupBy === "unidade") {
+    const baseData = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
     const filtered = selectedMonth
-      ? qualidadeUnidadeData.filter(r => r.reference_month === selectedMonth)
-      : qualidadeUnidadeData;
+      ? baseData.filter((r: any) => r.reference_month === selectedMonth)
+      : baseData;
 
     const map = new Map<string, { volume: number; qualWeighted: number; headcount: number }>();
     for (const r of filtered) {
