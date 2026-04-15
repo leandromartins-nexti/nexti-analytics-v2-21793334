@@ -912,6 +912,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                 {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
+                  const d = payload[0]?.payload;
                   return (
                     <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
                       <p className="font-semibold text-foreground">{label}</p>
@@ -922,6 +923,13 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                           <span className="font-medium text-foreground">{typeof p.value === "number" ? `${p.value.toFixed(1)}%` : p.value}</span>
                         </div>
                       ))}
+                      {d?.pctFalta > 0 && (
+                        <div className="flex items-center gap-1.5 border-t border-border/30 pt-1 mt-1">
+                          <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#dc2626" }} />
+                          <span className="text-muted-foreground">% Falta crua:</span>
+                          <span className="font-medium text-foreground">{d.pctFalta}%</span>
+                        </div>
+                      )}
                     </div>
                   );
                 }} />
@@ -931,13 +939,6 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                     const dimmed = selectedMes && selectedMes !== (entry as any).mes;
                     return <Cell key={idx} fill={dimmed ? "rgba(34,197,94,0.45)" : "rgba(34,197,94,0.75)"} stroke={isActive ? "#FF5722" : "#22c55e"} strokeWidth={isActive ? 2 : 1} strokeDasharray={isActive ? "4 3" : "none"} />;
                   })}
-                  <LabelList content={({ x, y, width, height, index }: any) => {
-                    const d = maturidadeChartData[index];
-                    if (!d) return null;
-                    const val = (d as any)["1_planejado"] ?? 0;
-                    if (val < 5 || (height ?? 0) < 14) return null;
-                    return <text x={(x ?? 0) + (width ?? 0) / 2} y={(y ?? 0) + (height ?? 0) / 2 + 3} textAnchor="middle" fontSize={9} fill="#fff" fontWeight={600}>{`${val.toFixed(0)}%`}</text>;
-                  }} />
                 </Bar>
                 <Bar dataKey="2_reativo" stackId="1" radius={[4, 4, 0, 0]} name="Reativo">
                   {maturidadeChartData.map((entry, idx) => {
@@ -945,17 +946,12 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                     const dimmed = selectedMes && selectedMes !== (entry as any).mes;
                     return <Cell key={idx} fill={dimmed ? "rgba(239,68,68,0.45)" : "rgba(239,68,68,0.75)"} stroke={isActive ? "#FF5722" : "#ef4444"} strokeWidth={isActive ? 2 : 1} strokeDasharray={isActive ? "4 3" : "none"} />;
                   })}
-                  <LabelList content={({ x, y, width, height, index }: any) => {
-                    const d = maturidadeChartData[index];
-                    if (!d) return null;
-                    const val = (d as any)["2_reativo"] ?? 0;
-                    if (val < 5 || (height ?? 0) < 14) return null;
-                    return <text x={(x ?? 0) + (width ?? 0) / 2} y={(y ?? 0) + (height ?? 0) / 2 + 3} textAnchor="middle" fontSize={9} fill="#fff" fontWeight={600}>{`${val.toFixed(0)}%`}</text>;
-                  }} />
                 </Bar>
+                <Line type="monotone" dataKey="pctFalta" stroke="#dc2626" strokeWidth={1.5} strokeDasharray="6 3" dot={{ r: 3, fill: "#dc2626", stroke: "#fff", strokeWidth: 1 }} name="% Falta crua" />
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: `Planejado ${maturidadeDistribuicao.planejado}%`, type: "square" as const, color: MATURIDADE_COLORS["1_planejado"] },
                   { value: `Reativo ${maturidadeDistribuicao.reativo}%`, type: "square" as const, color: MATURIDADE_COLORS["2_reativo"] },
+                  { value: "% Falta crua", type: "plainline" as const, color: "#dc2626" },
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
