@@ -1730,19 +1730,24 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       <CompositeChartDataModal
         open={chartDataModal === "matrizSaude"}
         onClose={() => setChartDataModal(null)}
-        title="Matriz de Saúde Operacional"
-        subtitle="Gráfico derivado · consolida dados de 2 fontes"
+        title="Mapa de Operações"
+        subtitle="Gráfico de síntese · consolida dados de 3 fontes (Score = Qualidade + Tratativa + Back-office)"
         activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
         sections={[
           {
-            label: "Fonte: Evolução da Qualidade e Headcount",
+            label: "Fonte 1: Evolução da Qualidade e Headcount",
             source: evolucaoQualidadeHeadcountSource,
             columns: evolucaoQualidadeHeadcountColumns,
           },
           {
-            label: "Fonte: Evolução do Tempo de Tratativa",
+            label: "Fonte 2: Evolução do Tempo de Tratativa",
             source: evolucaoTempoTratativaSource,
             columns: evolucaoTempoTratativaColumns,
+          },
+          {
+            label: "Fonte 3: Sobrecarga do Back-office",
+            source: sobrecargaBackofficeSource,
+            columns: sobrecargaBackofficeColumns,
           },
         ]}
       />
