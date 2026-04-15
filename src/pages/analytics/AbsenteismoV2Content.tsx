@@ -221,6 +221,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           eventos: row?.qtd_eventos ?? 0,
           pessoas: row?.pessoas_ausentes ?? 0,
           taxa: 0,
+          hcMes: row?.pessoas_ausentes ?? 0,
         };
       });
     }
