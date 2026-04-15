@@ -15,6 +15,8 @@ import ROIConfigV3 from "./pages/ROIConfigV3";
 import NotFound from "./pages/NotFound";
 import { ScoreConfigProvider } from "./contexts/ScoreConfigContext";
 import { AbsenteismoScoreConfigProvider } from "./contexts/AbsenteismoScoreConfigContext";
+// TODO: REMOVER EM PRODUÇÃO — CustomerProvider é do modo de teste multi-cliente
+import { CustomerProvider } from "./contexts/CustomerContext";
 
 // Analytics V1 pages
 import AnalyticsResumoExecutivo from "./pages/analytics/AnalyticsResumoExecutivo";
@@ -30,6 +32,8 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    {/* TODO: REMOVER EM PRODUÇÃO — CustomerProvider é do modo de teste */}
+    <CustomerProvider>
     <ScoreConfigProvider>
     <AbsenteismoScoreConfigProvider>
       <TooltipProvider>
@@ -64,6 +68,7 @@ const App = () => (
       </TooltipProvider>
     </AbsenteismoScoreConfigProvider>
     </ScoreConfigProvider>
+    </CustomerProvider>
   </QueryClientProvider>
 );
 
