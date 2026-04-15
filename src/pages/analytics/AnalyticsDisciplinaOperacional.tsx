@@ -26,7 +26,7 @@ import hcEmpresaJson from "@/data/qualidade-ponto/headcount-por-empresa.json";
 import hcUnNegocioJson from "@/data/qualidade-ponto/headcount-por-un-negocio.json";
 import hcAreaJson from "@/data/qualidade-ponto/headcount-por-area.json";
 import { aggregateAjustes, ajustesMeses, formatMesLabel, ajustesUnidades, ajustesAreas, ajustesEmpresas, aggregateComposicaoFaixas, aggregateQualidadeEvolucao, aggregateQualidadeEvolucaoDetalhado, aggregateQualidadeVolume, getQualidadeKpiSummary, getSidebarItems } from "@/lib/ajustesData";
-import { useScoreConfig, getScoreClassification, computeCompositeScore } from "@/contexts/ScoreConfigContext";
+import { useScoreConfig, getScoreClassification, computeCompositeScore, computeFullBreakdown } from "@/contexts/ScoreConfigContext";
 import { useAbsenteismoScoreConfig, computeAbsCompositeScore, getAbsScoreClassification } from "@/contexts/AbsenteismoScoreConfigContext";
 
 import ScoreGauge from "@/components/analytics/ScoreGauge";
@@ -1051,35 +1051,49 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [groupBy, selectedReferenceMonth]);
 
   const visibleSet = useMemo(() => new Set(visibleNames), [visibleNames]);
-  const chartScatterQual = useMemo(() => {
+  // ── Mapa de Operações data: Headcount × Score per entity ──
+  const mapaOperacoesData = useMemo(() => {
     const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
     const base = allScatter.filter(s => visibleSet.size === 0 || visibleSet.has(s.regional));
-    return base.map(s => ({
-      ...s,
-      tempoMedioDias: tempoMedioPorOperacao.get(normName(s.regional)) ?? 5,
-    }));
-  }, [allScatter, visibleSet, tempoMedioPorOperacao]);
+    return base.map(s => {
+      const breakdown = computeFullBreakdown(s.regional, groupBy as any, scoreConfig);
+      const score = Math.round(breakdown.compositeScore);
+      const classif = getScoreClassification(score, scoreConfig);
+      const bubbleColor = score >= 70 ? "#22c55e" : score >= 55 ? "#f59e0b" : "#ef4444";
+      return {
+        regional: s.regional,
+        headcount: s.headcount,
+        score,
+        qualidade: Math.round(breakdown.qualPct),
+        velocidade: Math.round(breakdown.treatScore),
+        backoffice: Math.round(breakdown.boScore),
+        classifLabel: classif.label,
+        bubbleColor,
+      };
+    });
+  }, [allScatter, visibleSet, groupBy, scoreConfig]);
+
+  const medianHeadcount = useMemo(() => {
+    if (!mapaOperacoesData.length) return 100;
+    const sorted = [...mapaOperacoesData].sort((a, b) => a.headcount - b.headcount);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1].headcount + sorted[mid].headcount) / 2) : sorted[mid].headcount;
+  }, [mapaOperacoesData]);
+
+  const mapaDomain = useMemo(() => {
+    if (!mapaOperacoesData.length) return { xMin: 0, xMax: 500, yMin: 0, yMax: 100 };
+    const hcs = mapaOperacoesData.map(d => d.headcount);
+    const maxHc = Math.max(...hcs);
+    return { xMin: 0, xMax: Math.ceil(maxHc * 1.15), yMin: 0, yMax: 100 };
+  }, [mapaOperacoesData]);
+
+  // Critical zone: Score < 55 AND Headcount > median
+  const criticalCount = useMemo(() => mapaOperacoesData.filter(d => d.score < 55 && d.headcount > medianHeadcount).length, [mapaOperacoesData, medianHeadcount]);
+
   const chartScatterTrat = useMemo(() => {
     if (visibleSet.size > 0) return allScatterTratativa.filter(s => visibleSet.has(s.regional));
     return allScatterTratativa;
   }, [allScatterTratativa, visibleSet]);
-
-  // Clicked/fixed bubble state
-  const [fixedBubble, setFixedBubble] = useState<string | null>(null);
-  
-  // Critical zone badge
-  const criticalCount = useMemo(() => chartScatterQual.filter(d => d.qualidade < 70 && (d.tempoMedioDias > 7 || d.qualidade < 50)).length, [chartScatterQual]);
-
-  // Median volume for reference line
-  const medianVolume = useMemo(() => {
-    if (!chartScatterQual.length) return 170000;
-    const sorted = [...chartScatterQual].sort((a, b) => a.volume - b.volume);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1].volume + sorted[mid].volume) / 2) : sorted[mid].volume;
-  }, [chartScatterQual]);
-
-  const avgQualVolume = useMemo(() => chartScatterQual.length ? Math.round(chartScatterQual.reduce((s, d) => s + d.volume, 0) / chartScatterQual.length) : 170000, [chartScatterQual]);
-  const avgQualQualidade = useMemo(() => chartScatterQual.length ? +(chartScatterQual.reduce((s, d) => s + d.qualidade, 0) / chartScatterQual.length).toFixed(1) : 85, [chartScatterQual]);
   const avgTratVolume = useMemo(() => chartScatterTrat.length ? Math.round(chartScatterTrat.reduce((s, d) => s + d.volume, 0) / chartScatterTrat.length) : 170000, [chartScatterTrat]);
   const avgTratDias = useMemo(() => chartScatterTrat.length ? +(chartScatterTrat.reduce((s, d) => s + d.dias, 0) / chartScatterTrat.length).toFixed(1) : 4.5, [chartScatterTrat]);
 
@@ -1100,14 +1114,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     return { min: paddedMin, max: paddedMax };
   };
 
-  const qualDomain = useMemo(() => {
-    if (!chartScatterQual.length) return { xMin: 0, xMax: 300000, yMin: 70, yMax: 100 };
-    const xs = chartScatterQual.map(d => d.volume);
-    const ys = chartScatterQual.map(d => d.qualidade);
-    const x = padDomain(Math.min(...xs), Math.max(...xs), true);
-    const y = padDomain(Math.min(...ys), Math.max(...ys));
-    return { xMin: x.min, xMax: x.max, yMin: y.min, yMax: y.max };
-  }, [chartScatterQual]);
+  // fixedBubble for Mapa de Operações click-to-label
+  const [fixedBubble, setFixedBubble] = useState<string | null>(null);
 
   const tratDomain = useMemo(() => {
     if (!chartScatterTrat.length) return { xMin: 0, xMax: 300000, yMin: 1, yMax: 7 };
@@ -1305,8 +1313,105 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           </UITooltip>
         </div>
 
-        {/* Row 1: Evolução Qualidade + Tempo Médio Tratativa */}
+        {/* Row 1: Mapa de Operações + Evolução da Qualidade e Headcount */}
         <div className="grid grid-cols-2 gap-3">
+          {/* Mapa de Operações (scatter: Headcount × Score) */}
+          <div data-onboarding="scatter-qualidade" className={`bg-card border rounded-xl p-4 ${selectedRegional ? "border-[#FF5722]/30" : "border-border/50"}`}>
+            <div className="flex items-center justify-between mb-0.5">
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-sm font-semibold">Mapa de Operações</h4>
+                <InfoTip text="Cada bolha é uma operação. Posição horizontal mostra o headcount (escala da operação). Posição vertical mostra o Score Operacional (saúde). Cor da bolha reforça a classificação do score. Operações no canto superior direito têm alta escala e estão saudáveis. Operações no canto inferior direito têm alta escala mas estão com problemas, alta prioridade de ação." />
+              </div>
+              <div className="flex items-center gap-1">
+                {criticalCount > 0 && (
+                  <span className="text-[10px] font-medium bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
+                    {criticalCount} operação{criticalCount > 1 ? "ões" : ""} em zona crítica
+                  </span>
+                )}
+                <button onClick={() => setChartDataModal("matrizSaude")} className="p-1 rounded hover:bg-muted/60 transition-colors" title="Ver dados">
+                  <Database className="w-3.5 h-3.5 text-muted-foreground" />
+                </button>
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground mb-2">Headcount × Score · uma bolha por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área"}{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
+            <ResponsiveContainer width="100%" height={280}>
+              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+                <defs>
+                  <linearGradient id="mapaOperacoesGradient" x1="1" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity={0.20} />
+                    <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.10} />
+                    <stop offset="100%" stopColor="#ef4444" stopOpacity={0.15} />
+                  </linearGradient>
+                </defs>
+                <ReferenceArea x1={mapaDomain.xMin} x2={mapaDomain.xMax} y1={mapaDomain.yMin} y2={mapaDomain.yMax} fill="url(#mapaOperacoesGradient)" strokeOpacity={0} />
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" dataKey="headcount" name="Headcount" domain={[mapaDomain.xMin, mapaDomain.xMax]} tick={{ fontSize: 10 }} label={{ value: "Headcount", position: "insideBottom", offset: -5, fontSize: 10 }} />
+                <YAxis type="number" dataKey="score" name="Score" domain={[mapaDomain.yMin, mapaDomain.yMax]} tick={{ fontSize: 10 }} label={{ value: "Score Operacional", angle: -90, position: "insideLeft", fontSize: 10 }} />
+                <ZAxis type="number" range={[250, 250]} />
+                <ReferenceLine y={70} stroke="#22c55e" strokeWidth={1} strokeDasharray="5 3" label={{ value: "Limite de Score saudável: 70", position: "right", fontSize: 9, fill: "#22c55e" }} />
+                <ReferenceArea x1={mapaDomain.xMax * 0.75} x2={mapaDomain.xMax} y1={95} y2={100} fill="transparent" strokeOpacity={0} label={{ value: "Escala produtiva", position: "insideTopRight", fontSize: 9, fontWeight: 500, fill: "rgba(34,197,94,0.6)" }} />
+                <ReferenceArea x1={mapaDomain.xMin} x2={mapaDomain.xMax * 0.25} y1={0} y2={5} fill="transparent" strokeOpacity={0} label={{ value: "Baixa performance", position: "insideBottomLeft", fontSize: 9, fontWeight: 500, fill: "rgba(239,68,68,0.6)" }} />
+                <RechartsTooltip content={({ active, payload }) => {
+                  if (!active || !payload?.length) return null;
+                  const d = payload[0].payload;
+                  const isHighHc = d.headcount > medianHeadcount;
+                  const isHighScore = d.score >= 70;
+                  const quadrante = isHighHc && isHighScore ? "Alta escala saudável"
+                    : isHighHc && !isHighScore ? "Alta escala em risco"
+                    : !isHighHc && isHighScore ? "Pequena escala saudável"
+                    : "Pequena escala em risco";
+                  const groupLabel = groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área";
+                  return (
+                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+                      <p className="font-semibold text-sm">{d.regional}</p>
+                      <p className="text-muted-foreground text-[10px]">{groupLabel}</p>
+                      <hr className="border-border/50" />
+                      <p>Score: <span className="font-bold" style={{ color: d.bubbleColor }}>{d.score}</span> · {d.classifLabel}</p>
+                      <hr className="border-border/50" />
+                      <p>Headcount: <span className="font-medium">{d.headcount}</span> pessoas</p>
+                      <p>Qualidade: <span className="font-medium">{d.qualidade}%</span></p>
+                      <p>Velocidade: <span className="font-medium">nota {d.velocidade}</span></p>
+                      <p>Saúde do Back-office: <span className="font-medium">nota {d.backoffice}</span></p>
+                      <hr className="border-border/50" />
+                      <p className="text-muted-foreground">Quadrante: <span className="font-medium text-foreground">{quadrante}</span></p>
+                    </div>
+                  );
+                }} />
+                <Scatter data={mapaOperacoesData} shape={(props: any) => {
+                  const { cx, cy, payload } = props;
+                  const r = 16;
+                  const isFixed = fixedBubble === payload.regional;
+                  const isSelected = !selectedRegional || selectedRegional === payload.regional;
+                  const opacity = isFixed ? 0.85 : isSelected ? 0.7 : 0.15;
+                  const strokeW = isFixed ? 2.5 : isSelected ? 1.5 : 0.5;
+                  return (
+                    <g
+                      onClick={() => {
+                        setFixedBubble(prev => prev === payload.regional ? null : payload.regional);
+                        onRegionalClick(payload.regional);
+                      }}
+                      onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.regional); }}
+                      className="cursor-pointer"
+                    >
+                      <circle cx={cx} cy={cy} r={r} fill={payload.bubbleColor} fillOpacity={opacity} stroke={isFixed ? "#1e293b" : payload.bubbleColor} strokeWidth={strokeW} />
+                      {isFixed && (
+                        <text x={cx} y={cy - r - 4} textAnchor="middle" fontSize={9} fontWeight={700} fill="#374151">
+                          {payload.regional.split(/\s+/)[0]?.slice(0, 8) || abreviar(payload.regional)}
+                        </text>
+                      )}
+                    </g>
+                  );
+                }} />
+              </ScatterChart>
+            </ResponsiveContainer>
+            <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#22c55e" }} /> Score ≥ 70</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#f59e0b" }} /> Score 55-70</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#ef4444" }} /> Score &lt; 55</span>
+            </div>
+          </div>
+
+          {/* Evolução da Qualidade e Headcount */}
           <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
             <div className="flex items-center justify-between mb-0.5">
               <div>
@@ -1410,214 +1515,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-
-          {(() => {
-            const FAIXAS = [
-              { key: "ate1d", name: "Até 1 dia", color: "#22c55e", rgba: "34,197,94" },
-              { key: "de1a3d", name: "1–3 dias", color: "#84cc16", rgba: "132,204,22" },
-              { key: "de3a7d", name: "3–7 dias", color: "#eab308", rgba: "234,179,8" },
-              { key: "de7a15d", name: "7–15 dias", color: "#f97316", rgba: "249,115,22" },
-              { key: "mais15d", name: "+15 dias", color: "#ef4444", rgba: "239,68,68" },
-            ];
-            // Compute weighted avg tempo (days) per month from faixa midpoints
-            const FAIXA_MIDPOINTS: Record<string, number> = { ate1d: 0.5, de1a3d: 2, de3a7d: 5, de7a15d: 11, mais15d: 20 };
-            const tratData = tratativaFaixasFiltrada.map(d => {
-              const tempoDias = d.total > 0
-                ? +(Object.keys(FAIXA_MIDPOINTS).reduce((sum, k) => sum + (d[k as keyof typeof d] as number) * FAIXA_MIDPOINTS[k], 0) / d.total).toFixed(1)
-                : 0;
-              return {
-                mes: d.mes,
-                ate1d: (d.ate1d / d.total) * 100,
-                de1a3d: (d.de1a3d / d.total) * 100,
-                de3a7d: (d.de3a7d / d.total) * 100,
-                de7a15d: (d.de7a15d / d.total) * 100,
-                mais15d: (d.mais15d / d.total) * 100,
-                tempoDias,
-                _raw: d,
-              };
-            });
-            const maxTempo = Math.max(...tratData.map(d => d.tempoDias), 1);
-            const tratClick = (e: any) => {
-              if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
-            };
-            const tratXTick = (props: any) => {
-              const { x, y, payload } = props;
-              const isActive = selectedMes === payload.value;
-              return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
-            };
-            const tratTooltip = ({ active, payload, label }: any) => {
-              if (!active || !payload?.length) return null;
-              const d = payload[0]?.payload;
-              const raw = d?._raw;
-              if (!raw) return null;
-              return (
-                <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
-                  <p className="font-semibold text-foreground">{label}</p>
-                  <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">{raw.total.toLocaleString("pt-BR")}</span></p>
-                  {FAIXAS.map(f => {
-                    const abs = raw[f.key as keyof typeof raw] as number;
-                    const pct = ((abs / raw.total) * 100).toFixed(0);
-                    return (
-                      <div key={f.key} className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5" style={{ backgroundColor: f.color }} />
-                        <span className="text-muted-foreground">{f.name}:</span>
-                        <span className="font-medium text-foreground">{pct}% ({abs.toLocaleString("pt-BR")})</span>
-                      </div>
-                    );
-                  })}
-                  <div className="flex items-center gap-1.5 pt-0.5 border-t border-border/40">
-                    <span className="w-2.5 h-0 border-t-2 border-dashed" style={{ borderColor: "#3b82f6" }} />
-                    <span className="text-muted-foreground">Tempo médio:</span>
-                    <span className="font-medium text-foreground">{d.tempoDias} dias</span>
-                  </div>
-                </div>
-              );
-            };
-            return (
-            <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
-              <div className="flex items-center justify-between mb-0.5">
-                <div>
-                  <h4 className="text-sm font-semibold">Evolução do Tempo de Tratativa</h4>
-                  <p className="text-[10px] text-muted-foreground mb-2">Evolução mensal da distribuição por faixa · linha azul = tempo médio (dias)</p>
-                </div>
-                <button onClick={() => setChartDataModal("evoTratativa")} className="p-1.5 rounded-md hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors" title="Ver dados e query">
-                  <Database className="w-4 h-4" />
-                </button>
-              </div>
-              <ResponsiveContainer width="100%" height={280}>
-                <ComposedChart data={tratData} onClick={tratClick}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="mes" tick={tratXTick} />
-                  <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={v => `${Math.round(v)}%`} domain={[0, 100]} label={{ value: "Distribuição por faixa (%)", angle: -90, position: "insideLeft", style: { fontSize: 9, fill: "hsl(var(--muted-foreground))" }, offset: 5 }} />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, Math.ceil(maxTempo * 1.3)]} label={{ value: "Tempo médio (dias)", angle: 90, position: "insideRight", style: { fontSize: 9, fill: "hsl(var(--muted-foreground))" }, offset: 5 }} />
-                  <RechartsTooltip content={tratTooltip} />
-                  {selectedMes && <ReferenceLine yAxisId="left" x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
-                  {FAIXAS.map(f => (
-                    <Area yAxisId="left" key={f.key} type="monotone" dataKey={f.key} stackId="1" stroke={f.color} fill={`rgba(${f.rgba},${selectedMes ? 0.2 : 0.35})`} fillOpacity={1} name={f.name} />
-                  ))}
-                  <Line yAxisId="right" type="monotone" dataKey="tempoDias" name="Tempo médio" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
-                  <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
-                    ...FAIXAS.map(f => ({ value: f.name, type: "square" as const, color: f.color })),
-                    { value: "Tempo médio (dias)", type: "line" as const, color: "#3b82f6" },
-                  ]} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-            );
-          })()}
         </div>
 
-        {/* Row 2: Scatter charts */}
+        {/* Row 2: Evolução do Tempo de Tratativa + Sobrecarga do Back-office */}
         <div className="grid grid-cols-2 gap-3">
-          <div data-onboarding="scatter-qualidade" className={`bg-card border rounded-xl p-4 ${selectedRegional ? "border-[#FF5722]/30" : "border-border/50"}`}>
-            <div className="flex items-center justify-between mb-0.5">
-              <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-semibold">Matriz de Saúde Operacional</h4>
-                <InfoTip text="Cada bolha é uma operação. Posição indica volume e qualidade, tamanho é headcount, cor é tempo médio de tratativa. Use os quadrantes para identificar operações saudáveis e operações em risco." />
-              </div>
-              <div className="flex items-center gap-1">
-                {criticalCount > 0 && (
-                  <span className="text-[10px] font-medium bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
-                    {criticalCount} operação{criticalCount > 1 ? "ões" : ""} em zona crítica
-                  </span>
-                )}
-                <button onClick={() => setChartDataModal("matrizSaude")} className="p-1 rounded hover:bg-muted/60 transition-colors" title="Ver dados">
-                  <Database className="w-3.5 h-3.5 text-muted-foreground" />
-                </button>
-              </div>
-            </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Volume × Qualidade × Tempo de Resposta por operação{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
-            <ResponsiveContainer width="100%" height={280}>
-              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-                <defs>
-                  <linearGradient id="matrizSaudeGradient" x1="1" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#22c55e" stopOpacity={0.20} />
-                    <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.10} />
-                    <stop offset="100%" stopColor="#ef4444" stopOpacity={0.15} />
-                  </linearGradient>
-                </defs>
-                {/* Background gradient rect */}
-                <ReferenceArea x1={qualDomain.xMin} x2={qualDomain.xMax} y1={qualDomain.yMin} y2={qualDomain.yMax} fill="url(#matrizSaudeGradient)" strokeOpacity={0} />
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="volume" name="Volume" domain={[qualDomain.xMin, qualDomain.xMax]} tick={{ fontSize: 10 }} tickFormatter={v => `${(v / 1000).toFixed(0)}K`} label={{ value: "Volume de marcações", position: "insideBottom", offset: -5, fontSize: 10 }} />
-                <YAxis type="number" dataKey="qualidade" name="Qualidade" domain={[qualDomain.yMin, qualDomain.yMax]} tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} label={{ value: "Qualidade (%)", angle: -90, position: "insideLeft", fontSize: 10 }} />
-                <ZAxis type="number" dataKey="headcount" range={[200, 800]} />
-                <ReferenceLine y={70} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
-                <ReferenceLine x={medianVolume} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />
-                {/* Corner labels */}
-                <ReferenceArea x1={qualDomain.xMax * 0.75} x2={qualDomain.xMax} y1={qualDomain.yMax * 0.95} y2={qualDomain.yMax} fill="transparent" strokeOpacity={0} label={{ value: "Saudável", position: "insideTopRight", fontSize: 9, fontWeight: 500, fill: "rgba(34,197,94,0.6)" }} />
-                <ReferenceArea x1={qualDomain.xMin} x2={qualDomain.xMax * 0.25} y1={qualDomain.yMin} y2={qualDomain.yMin + (qualDomain.yMax - qualDomain.yMin) * 0.05} fill="transparent" strokeOpacity={0} label={{ value: "Requer atenção", position: "insideBottomLeft", fontSize: 9, fontWeight: 500, fill: "rgba(239,68,68,0.6)" }} />
-                <RechartsTooltip content={({ active, payload }) => {
-                  if (!active || !payload?.length) return null;
-                  const d = payload[0].payload;
-                  const tempoClass = d.tempoMedioDias <= 3 ? "Rápido" : d.tempoMedioDias <= 7 ? "Moderado" : "Lento";
-                  const tempoColor = d.tempoMedioDias <= 3 ? "text-green-600" : d.tempoMedioDias <= 7 ? "text-amber-600" : "text-red-600";
-                   const isHighVol = d.volume >= medianVolume;
-                   const isHighQual = d.qualidade >= 70;
-                   const isFast = d.tempoMedioDias <= 3;
-                   const isSlow = d.tempoMedioDias > 7;
-                   let quadrante: string;
-                   if (isHighQual && isHighVol) {
-                     quadrante = isFast ? "Escala excelente" : "Escala com atenção";
-                   } else if (isHighQual && !isHighVol) {
-                     quadrante = isFast ? "Pequena excelente" : "Pequena com atenção";
-                   } else if (!isHighQual && isHighVol) {
-                     quadrante = "Alto risco";
-                   } else {
-                     quadrante = "Requer atenção";
-                   }
-                  return (
-                    <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
-                      <p className="font-semibold text-sm">{d.regional}</p>
-                      <div className="border-t pt-1 space-y-0.5">
-                        <p>Volume: <span className="font-medium">{d.volume.toLocaleString("pt-BR")}</span> marcações</p>
-                        <p>Qualidade: <span className="font-medium">{d.qualidade}%</span></p>
-                        <p>Headcount: <span className="font-medium">{d.headcount}</span> pessoas</p>
-                        <p>Tempo médio: <span className={`font-medium ${tempoColor}`}>{d.tempoMedioDias}d</span> · {tempoClass}</p>
-                      </div>
-                      <div className="border-t pt-1">
-                        <p className="text-muted-foreground">Quadrante: <span className="font-medium text-foreground">{quadrante}</span></p>
-                      </div>
-                    </div>
-                  );
-                }} />
-                <Scatter data={chartScatterQual} shape={(props: any) => {
-                  const { cx, cy, payload } = props;
-                  const r = Math.max(8, Math.sqrt(payload.headcount) * 0.8);
-                  const fill = payload.tempoMedioDias <= 3 ? "#22c55e" : payload.tempoMedioDias <= 7 ? "#f59e0b" : "#ef4444";
-                  const isFixed = fixedBubble === payload.regional;
-                  const isSelected = !selectedRegional || selectedRegional === payload.regional;
-                  const opacity = isFixed ? 0.85 : isSelected ? 0.7 : 0.15;
-                  const strokeW = isFixed ? 2.5 : isSelected ? 1.5 : 0.5;
-                  return (
-                    <g
-                      onClick={() => {
-                        setFixedBubble(prev => prev === payload.regional ? null : payload.regional);
-                        onRegionalClick(payload.regional);
-                      }}
-                      onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.regional); }}
-                      className="cursor-pointer"
-                    >
-                      <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={opacity} stroke={isFixed ? "#1e293b" : fill} strokeWidth={strokeW} />
-                      {isFixed && (
-                        <text x={cx} y={cy - r - 4} textAnchor="middle" fontSize={9} fontWeight={700} fill="#374151">
-                          {payload.regional.split(/\s+/)[0]?.slice(0, 8) || abreviar(payload.regional)}
-                        </text>
-                      )}
-                    </g>
-                  );
-                }} />
-              </ScatterChart>
-            </ResponsiveContainer>
-            {/* Legend */}
-            <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 inline-block" /> até 3d</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> 3-7d</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500 inline-block" /> acima de 7d</span>
-              <span className="text-muted-foreground/60">·</span>
-              <span>Tamanho da bolha = headcount</span>
-            </div>
-          </div>
 
           {(() => {
             const sobrecargaSources: Record<string, any[]> = {
@@ -1829,19 +1730,24 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       <CompositeChartDataModal
         open={chartDataModal === "matrizSaude"}
         onClose={() => setChartDataModal(null)}
-        title="Matriz de Saúde Operacional"
-        subtitle="Gráfico derivado · consolida dados de 2 fontes"
+        title="Mapa de Operações"
+        subtitle="Gráfico de síntese · consolida dados de 3 fontes (Score = Qualidade + Tratativa + Back-office)"
         activeGroupBy={groupBy as "empresa" | "unidade" | "area"}
         sections={[
           {
-            label: "Fonte: Evolução da Qualidade e Headcount",
+            label: "Fonte 1: Evolução da Qualidade e Headcount",
             source: evolucaoQualidadeHeadcountSource,
             columns: evolucaoQualidadeHeadcountColumns,
           },
           {
-            label: "Fonte: Evolução do Tempo de Tratativa",
+            label: "Fonte 2: Evolução do Tempo de Tratativa",
             source: evolucaoTempoTratativaSource,
             columns: evolucaoTempoTratativaColumns,
+          },
+          {
+            label: "Fonte 3: Sobrecarga do Back-office",
+            source: sobrecargaBackofficeSource,
+            columns: sobrecargaBackofficeColumns,
           },
         ]}
       />
