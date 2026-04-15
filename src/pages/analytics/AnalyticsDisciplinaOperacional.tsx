@@ -1231,7 +1231,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     const raw = maxHc * 1.15;
     const step = niceSteps.find(s => Math.ceil(raw / s) <= 6) || Math.ceil(raw / 6 / 50) * 50;
     const xMax = Math.ceil(raw / step) * step;
-    return { xMin: 0, xMax, yMin: 0, yMax: 110 };
+    const xMin = -Math.round(xMax * 0.05);
+    const xTicks = Array.from({ length: 7 }, (_, i) => Math.round((xMax / 6) * i));
+    return { xMin, xMax, yMin: 0, yMax: 110, xTicks };
   }, [mapaOperacoesData]);
 
   // Critical zone: Score < 55 AND Headcount > median
@@ -1503,7 +1505,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 </defs>
                 <ReferenceArea x1={mapaDomain.xMin} x2={mapaDomain.xMax} y1={mapaDomain.yMin} y2={mapaDomain.yMax} fill="url(#mapaOperacoesGradient)" strokeOpacity={0} />
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="headcount" name="Headcount" domain={[mapaDomain.xMin, mapaDomain.xMax]} tickCount={7} tick={{ fontSize: 10 }} label={{ value: "Headcount", position: "insideBottom", offset: -5, fontSize: 10 }} />
+                <XAxis type="number" dataKey="headcount" name="Headcount" domain={[mapaDomain.xMin, mapaDomain.xMax]} ticks={mapaDomain.xTicks} tick={{ fontSize: 10 }} label={{ value: "Headcount", position: "insideBottom", offset: -5, fontSize: 10 }} />
                 <YAxis type="number" dataKey="score" name="Score" domain={[mapaDomain.yMin, mapaDomain.yMax]} ticks={[0, 25, 50, 75, 100]} tick={{ fontSize: 10 }} label={{ value: "Score Operacional", angle: -90, position: "insideLeft", fontSize: 10 }} />
                 <ZAxis type="number" range={[150, 150]} />
                 <ReferenceLine y={70} stroke="#22c55e" strokeWidth={1.5} strokeDasharray="8 4" label={({ viewBox }: any) => {
