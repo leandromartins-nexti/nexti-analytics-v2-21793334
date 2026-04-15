@@ -46,6 +46,11 @@ import composicaoEmpresa from "@/data/customers/642/absenteismo/composicao-por-e
 import composicaoUnNegocio from "@/data/customers/642/absenteismo/composicao-por-un-negocio.json";
 import composicaoArea from "@/data/customers/642/absenteismo/composicao-por-area.json";
 import maturidadeEmpresa from "@/data/customers/642/absenteismo/maturidade-por-empresa.json";
+
+// V5 composição data (granular categories)
+import compV5Empresa from "@/data/customers/642/absenteismo/composicao-v5-por-empresa.json";
+import compV5UnNegocio from "@/data/customers/642/absenteismo/composicao-v5-por-un-negocio.json";
+import compV5Area from "@/data/customers/642/absenteismo/composicao-v5-por-area.json";
 import maturidadeUnNegocio from "@/data/customers/642/absenteismo/maturidade-por-un-negocio.json";
 import maturidadeArea from "@/data/customers/642/absenteismo/maturidade-por-area.json";
 
@@ -129,6 +134,39 @@ const MATURIDADE_LABELS: Record<string, string> = {
 };
 
 const CATEGORIES_ORDER = ["planejada", "saude", "operacional", "nao_categorizada", "falta"];
+
+// ── V5 Composição operational categories (10) with default weights ──
+const V5_OPERATIONAL_CATS = [
+  { key: "falta_nao_justificada_h", label: "Falta não justificada", peso: 100, color: "#dc2626" },
+  { key: "disciplinar_h", label: "Disciplinar", peso: 100, color: "#ef4444" },
+  { key: "saida_meio_h", label: "Saída intermediária", peso: 70, color: "#ea580c" },
+  { key: "saida_antecipada_h", label: "Saída antecipada", peso: 65, color: "#f97316" },
+  { key: "atraso_h", label: "Atraso", peso: 60, color: "#f59e0b" },
+  { key: "parcial_generico_h", label: "Parcial genérica", peso: 50, color: "#eab308" },
+  { key: "atestado_h", label: "Atestado médico", peso: 40, color: "#3b82f6" },
+  { key: "inss_h", label: "INSS (afastamento)", peso: 30, color: "#06b6d4" },
+  { key: "acidente_h", label: "Acidente de trabalho", peso: 20, color: "#14b8a6" },
+  { key: "licenca_legal_h", label: "Licença legal", peso: 20, color: "#22c55e" },
+] as const;
+
+const V5_EXCLUDED_CATS = [
+  { key: "ferias_h", label: "Férias", color: "#d1d5db" },
+  { key: "abono_h", label: "Abono", color: "#e5e7eb" },
+  { key: "falta_programada_h", label: "Falta programada", color: "#f3f4f6" },
+] as const;
+
+/** Sub-Score Composição v5: weighted average of operational categories */
+function computeV5ComposicaoScore(rows: Array<Record<string, any>>): { subScore: number; pesoMedio: number } {
+  let somaPonderada = 0;
+  let somaHoras = 0;
+  for (const cat of V5_OPERATIONAL_CATS) {
+    const horas = rows.reduce((s, r) => s + (Number(r[cat.key]) || 0), 0);
+    somaPonderada += horas * cat.peso;
+    somaHoras += horas;
+  }
+  const pesoMedio = somaHoras > 0 ? somaPonderada / somaHoras : 0;
+  return { subScore: Math.round(100 - pesoMedio), pesoMedio: Math.round(pesoMedio * 10) / 10 };
+}
 
 // Taxa calculada = horas_ausencia_nao_planejada(mar/26) / (HC_entity * horas_previstas_mes) * 100
 // Valores pré-calculados com horas_previstas_mes = 220 (default vigilância)
@@ -275,7 +313,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   const [scoreDetailOpen, setScoreDetailOpen] = useState(false);
   const [fixedBubble, setFixedBubble] = useState<string | null>(null);
   const [mapaScoreFilter, setMapaScoreFilter] = useState<Set<string>>(() => new Set(["green", "orange", "red"]));
-
+  const [showExcluded, setShowExcluded] = useState(false);
   // Config-aware score helpers (closures over absConfig)
   const computeEntityScore = useCallback((entityName: string, gb: GroupBy, nf: string): number => {
     const normalizedEntity = normalizeEntityName(entityName);
@@ -334,7 +372,70 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     }));
   }, [selectedRegional, volumeByDim, nameField, absConfig.horas_previstas_mes]);
 
-  // ── Composição chart data (stacked area 100%) ──
+  // ── V5 Composição chart data (stacked bars by operational category + taxa line) ──
+  const compV5ChartData = useMemo(() => {
+    const raw = (groupBy === "empresa" ? compV5Empresa : groupBy === "area" ? compV5Area : compV5UnNegocio) as Array<Record<string, any>>;
+    const dimNameField = groupBy === "empresa" ? "dim_name" : "dim_name";
+    const dates = Object.keys(MESES_LABELS);
+
+    return dates.map(date => {
+      let items = raw.filter(d => d.reference_date === date);
+      if (selectedRegional) {
+        const normalizedSel = normalizeEntityName(selectedRegional);
+        items = items.filter(d => normalizeEntityName(String(d.dim_name ?? "")) === normalizedSel);
+      }
+      if (items.length === 0) return null;
+
+      // Sum operational categories
+      const row: Record<string, any> = { mes: MESES_LABELS[date] };
+      let somaOp = 0;
+      for (const cat of V5_OPERATIONAL_CATS) {
+        const v = items.reduce((s, r) => s + (Number(r[cat.key]) || 0), 0);
+        row[cat.key] = +v.toFixed(1);
+        somaOp += v;
+      }
+      // Excluded categories
+      for (const cat of V5_EXCLUDED_CATS) {
+        const v = items.reduce((s, r) => s + (Number(r[cat.key]) || 0), 0);
+        row[cat.key] = +v.toFixed(1);
+      }
+      // Taxa operacional: somaOp / (somaRegular + somaDebito)
+      const somaRegular = items.reduce((s, r) => s + (Number(r.regular_h) || 0), 0);
+      const somaDebito = items.reduce((s, r) => s + (Number(r.debit_total_h) || 0), 0);
+      const denom = somaRegular + somaDebito;
+      row.taxaOperacional = denom > 0 ? +((somaOp / denom) * 100).toFixed(2) : 0;
+      row.somaOperacional = +somaOp.toFixed(1);
+      row.hcMes = Math.max(...items.map(r => Number(r.hc_mes) || 0));
+
+      return row;
+    }).filter(Boolean) as Array<Record<string, any>>;
+  }, [groupBy, selectedRegional]);
+
+  // V5 composição sub-score (period total)
+  const compV5Score = useMemo(() => {
+    const raw = (groupBy === "empresa" ? compV5Empresa : groupBy === "area" ? compV5Area : compV5UnNegocio) as Array<Record<string, any>>;
+    let items = raw;
+    if (selectedRegional) {
+      const normalizedSel = normalizeEntityName(selectedRegional);
+      items = items.filter(d => normalizeEntityName(String(d.dim_name ?? "")) === normalizedSel);
+    }
+    return computeV5ComposicaoScore(items);
+  }, [groupBy, selectedRegional]);
+
+  // Active v5 categories (those with hours > 0 in the period)
+  const activeV5Cats = useMemo(() => {
+    return V5_OPERATIONAL_CATS.filter(cat =>
+      compV5ChartData.some(d => (d[cat.key] as number) > 0)
+    );
+  }, [compV5ChartData]);
+
+  const activeV5ExcludedCats = useMemo(() => {
+    return V5_EXCLUDED_CATS.filter(cat =>
+      compV5ChartData.some(d => (d[cat.key] as number) > 0)
+    );
+  }, [compV5ChartData]);
+
+
   const composicaoChartData = useMemo(() => {
     const raw = groupBy === "empresa" ? composicaoEmpresa : groupBy === "area" ? composicaoArea : composicaoUnNegocio;
     const nf = nameField;
@@ -898,24 +999,110 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           </div>
         </div>
 
-        {/* G1: Evolução da Taxa de Absenteísmo */}
+        {/* G1: Composição do Absenteísmo (v5 — stacked bars + taxa line) */}
         <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
           <div className="flex items-center justify-between mb-0.5">
             <div>
               <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-semibold">Evolução da Taxa de Absenteísmo</h4>
-                <InfoTip text="Quanto a operação está perdendo para ausência. Taxa = horas não-planejadas / (HC × jornada mensal)." />
+                <h4 className="text-sm font-semibold">Composição do Absenteísmo</h4>
+                <InfoTip text={`Mix ponderado por peso. Sub-Score Composição: ${compV5Score.subScore} (peso médio ${compV5Score.pesoMedio}). Cada categoria tem um peso operacional — quanto maior, mais grave.`} />
               </div>
-              <p className="text-[10px] text-muted-foreground mb-2">Taxa mensal · linha cinza = HC operacional · clique para filtrar competência</p>
+              <p className="text-[10px] text-muted-foreground mb-2">Barras = horas por categoria · linha = taxa operacional · clique para filtrar competência</p>
             </div>
             <div className="flex items-center gap-1">
-              <button onClick={() => setChartDataModal("volume")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
-              <ChartModeToggle dataMode={volumeDataMode} onDataModeChange={setVolumeDataMode} chartMode={volumeChartMode} onChartModeChange={setVolumeChartMode} />
+              <button
+                onClick={() => setShowExcluded(prev => !prev)}
+                className={`text-[10px] px-2 py-1 rounded-md border transition-colors ${showExcluded ? "bg-muted border-border text-foreground" : "border-border/40 text-muted-foreground hover:bg-muted/50"}`}
+                title={showExcluded ? "Ocultar ausências não computadas" : "Mostrar ausências não computadas (férias, abono)"}
+              >
+                {showExcluded ? "Ocultar excluídas" : "Mostrar excluídas"}
+              </button>
+              <button onClick={() => setChartDataModal("compV5")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={280}>
-            {renderVolumeChart()}
-          </ResponsiveContainer>
+          {compV5ChartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={280}>
+              <ComposedChart data={compV5ChartData} onClick={handleChartClick}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="mes" tick={xTick} />
+                <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={v => `${v}h`} label={{ value: "Horas", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} tickFormatter={v => `${v}%`} label={{ value: "Taxa Operacional (%)", angle: 90, position: "insideRight", fontSize: 10, fill: "#9ca3af" }} />
+                {selectedMes && <ReferenceLine yAxisId="left" x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
+                <RechartsTooltip content={({ active, payload, label }) => {
+                  if (!active || !payload?.length) return null;
+                  const d = payload[0]?.payload;
+                  return (
+                    <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1 max-w-xs">
+                      <p className="font-semibold text-foreground">{label}</p>
+                      {activeV5Cats.map(cat => {
+                        const v = Number(d?.[cat.key]) || 0;
+                        if (v === 0) return null;
+                        return (
+                          <div key={cat.key} className="flex items-center gap-1.5">
+                            <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: cat.color }} />
+                            <span className="text-muted-foreground truncate">{cat.label}:</span>
+                            <span className="font-medium text-foreground">{v.toLocaleString("pt-BR")}h</span>
+                            <span className="text-muted-foreground/60 text-[10px]">(peso {cat.peso})</span>
+                          </div>
+                        );
+                      })}
+                      {showExcluded && activeV5ExcludedCats.map(cat => {
+                        const v = Number(d?.[cat.key]) || 0;
+                        if (v === 0) return null;
+                        return (
+                          <div key={cat.key} className="flex items-center gap-1.5 opacity-50">
+                            <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: cat.color }} />
+                            <span className="text-muted-foreground truncate">{cat.label}:</span>
+                            <span className="font-medium text-foreground">{v.toLocaleString("pt-BR")}h</span>
+                            <span className="text-muted-foreground/60 text-[10px]">(fora do score)</span>
+                          </div>
+                        );
+                      })}
+                      <div className="border-t border-border/30 pt-1 mt-1 flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: "#6366f1" }} />
+                        <span className="text-muted-foreground">Taxa operacional:</span>
+                        <span className="font-medium text-foreground">{d?.taxaOperacional}%</span>
+                      </div>
+                    </div>
+                  );
+                }} />
+                {/* Stacked bars for operational categories */}
+                {activeV5Cats.map((cat, catIdx) => (
+                  <Bar key={cat.key} dataKey={cat.key} stackId="op" yAxisId="left"
+                    radius={catIdx === activeV5Cats.length - 1 && !showExcluded ? [4, 4, 0, 0] : [0, 0, 0, 0]}
+                    name={cat.label}
+                  >
+                    {compV5ChartData.map((entry, idx) => {
+                      const dimmed = selectedMes && selectedMes !== entry.mes;
+                      const isActive = selectedMes && selectedMes === entry.mes;
+                      return <Cell key={idx} fill={cat.color} fillOpacity={dimmed ? 0.2 : 0.65} stroke={isActive ? "#FF5722" : cat.color} strokeOpacity={0.4} strokeWidth={isActive ? 2 : 0.5} strokeDasharray={isActive ? "4 3" : "none"} />;
+                    })}
+                  </Bar>
+                ))}
+                {/* Excluded categories (if toggled on) */}
+                {showExcluded && activeV5ExcludedCats.map((cat, catIdx) => (
+                  <Bar key={cat.key} dataKey={cat.key} stackId="op" yAxisId="left"
+                    radius={catIdx === activeV5ExcludedCats.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
+                    name={cat.label}
+                  >
+                    {compV5ChartData.map((entry, idx) => {
+                      const dimmed = selectedMes && selectedMes !== entry.mes;
+                      return <Cell key={idx} fill={cat.color} fillOpacity={dimmed ? 0.15 : 0.35} stroke={cat.color} strokeOpacity={0.3} strokeWidth={0.5} />;
+                    })}
+                  </Bar>
+                ))}
+                {/* Taxa operacional line */}
+                <Line yAxisId="right" type="monotone" dataKey="taxaOperacional" stroke="#6366f1" strokeWidth={2} dot={{ r: 3, fill: "#6366f1", stroke: "#fff", strokeWidth: 1 }} name="Taxa Operacional (%)" />
+                <Legend iconType="square" iconSize={8} wrapperStyle={{ fontSize: 9, paddingTop: 8 }} payload={[
+                  ...activeV5Cats.map(cat => ({ value: cat.label, type: "square" as const, color: cat.color })),
+                  ...(showExcluded ? activeV5ExcludedCats.map(cat => ({ value: `${cat.label} ⊘`, type: "square" as const, color: cat.color })) : []),
+                  { value: "Taxa Operacional", type: "line" as const, color: "#6366f1" },
+                ]} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[280px] flex items-center justify-center text-sm text-muted-foreground">Sem dados de composição</div>
+          )}
         </div>
         </div>{/* close grid-cols-2 row 1 */}
 
@@ -1189,6 +1376,17 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           { key: "headcount", label: "Headcount" },
           { key: "score", label: "Score" },
           { key: "classifLabel", label: "Classificação" },
+        ]}
+      />
+      <ChartDataModal
+        open={chartDataModal === "compV5"}
+        onClose={() => setChartDataModal(null)}
+        title="Composição do Absenteísmo — Dados"
+        data={compV5ChartData}
+        columns={[
+          { key: "mes", label: "Competência" },
+          ...activeV5Cats.map(cat => ({ key: cat.key, label: cat.label, format: (v: number) => `${v}h` })),
+          { key: "taxaOperacional", label: "Taxa Op. (%)", format: (v: number) => `${v}%` },
         ]}
       />
     </div>
