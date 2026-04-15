@@ -1,7 +1,8 @@
 import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import { AlertTriangle, Trophy, Lightbulb, Activity, ArrowRight, Link2, RotateCcw } from "lucide-react";
-import { qualidadeInsights, categoryConfig, type QualidadeInsight } from "@/data/qualidadeInsightsData";
+import { getInsightsForCustomer, categoryConfig, type QualidadeInsight } from "@/data/qualidadeInsightsData";
 import { useDismissedInsights } from "@/hooks/useDismissedInsights";
+import { useCustomer } from "@/contexts/CustomerContext";
 import InsightDetailModal from "./InsightDetailModal";
 
 const iconMap = {
