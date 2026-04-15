@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+import AbsenteismoV2Content from "./AbsenteismoV2Content";
 // TODO: REMOVER EM PRODUÇÃO — useCustomer é do modo de teste multi-cliente
 import { useCustomer } from "@/contexts/CustomerContext";
 import { useQualidadePontoData } from "@/hooks/useQualidadePontoData";
@@ -2781,7 +2782,7 @@ export function AbsenteismoTab() {
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
   return (
     <CustomerAwareTab tabId="absenteismo">
-      <AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
+      <AbsenteismoV2Content selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
       <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
     </CustomerAwareTab>
   );
