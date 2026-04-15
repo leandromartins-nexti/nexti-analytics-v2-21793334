@@ -441,7 +441,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
         score,
       };
     }).sort((a, b) => b.score - a.score);
-  }, [groupBy, nameField]);
+  }, [groupBy, nameField, computeEntityScore]);
 
   // ── Mapa de Operações data (Convention 1) ──
   const visibleSet = useMemo(() => new Set(visibleNames), [visibleNames]);
@@ -471,7 +471,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           bubbleColor,
         };
       });
-  }, [groupBy, nameField, visibleSet]);
+  }, [groupBy, nameField, visibleSet, computeEntityScore, absConfig]);
 
   const medianHeadcount = useMemo(() => {
     if (!mapaOperacoesData.length) return 100;
