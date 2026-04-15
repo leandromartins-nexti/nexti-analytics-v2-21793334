@@ -197,7 +197,7 @@ const tabs = [
 ];
 
 export default function AnalyticsConfiguracao() {
-  const [activeTab, setActiveTab] = useState("modo-teste");
+  const [activeTab, setActiveTab] = useState("clientes");
   const [activeScore, setActiveScore] = useState("qualidade");
 
   const totalCharts = dataRegistry.reduce((acc, m) => acc + m.tabs.reduce((a, t) => a + t.charts.length, 0), 0);
