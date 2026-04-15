@@ -900,11 +900,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const normHcName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
   const headcountMaps = useMemo<{ active: Record<string, number>; ponto: Record<string, number> }>(() => {
     const hcSources: Record<string, any[]> = {
-      empresa: customerData.hcEmpresa,
-      unidade: customerData.hcUnidade,
-      area: customerData.hcArea,
+      empresa: Array.isArray(customerData.hcEmpresa) ? customerData.hcEmpresa : [],
+      unidade: Array.isArray(customerData.hcUnidade) ? customerData.hcUnidade : [],
+      area: Array.isArray(customerData.hcArea) ? customerData.hcArea : [],
     };
-    const raw = hcSources[groupBy] ?? customerData.hcEmpresa;
+    const raw = hcSources[groupBy] ?? [];
     const nameField = groupBy === "empresa" ? "company_name" : groupBy === "unidade" ? "business_unit_name" : "area_name";
     const idField = groupBy === "empresa" ? "company_id" : groupBy === "unidade" ? "business_unit_id" : "area_id";
 
@@ -924,7 +924,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       ponto[label] = (ponto[label] || 0) + (r.headcount ?? 0);
     });
     return { active, ponto };
-  }, [groupBy, selectedRegional]);
+  }, [groupBy, selectedRegional, customerData]);
 
   const mesLabelToReferenceMonth = useMemo(() => new Map(ajustesMeses.map((month) => [formatMesLabel(month), month])), []);
   const selectedReferenceMonth = useMemo(
@@ -1024,11 +1024,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   // Compute tempo_medio_dias per operation from tratativa-tempo JSONs
   const tempoMedioPorOperacao = useMemo(() => {
     const tratSources: Record<string, any[]> = {
-      empresa: customerData.tratTempoEmpresa,
-      unidade: customerData.tratTempoUnidade,
-      area: customerData.tratTempoArea,
+      empresa: Array.isArray(customerData.tratTempoEmpresa) ? customerData.tratTempoEmpresa : [],
+      unidade: Array.isArray(customerData.tratTempoUnidade) ? customerData.tratTempoUnidade : [],
+      area: Array.isArray(customerData.tratTempoArea) ? customerData.tratTempoArea : [],
     };
-    const raw = tratSources[groupBy] ?? customerData.tratTempoEmpresa;
+    const raw = tratSources[groupBy] ?? [];
     const nameField = groupBy === "empresa" ? "company_name" : groupBy === "unidade" ? "business_unit_name" : "area_name";
     const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
     
@@ -1052,7 +1052,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       result.set(k, v.sumVol > 0 ? +(v.sumHorasXVol / v.sumVol / 24).toFixed(1) : 0);
     });
     return result;
-  }, [groupBy, selectedReferenceMonth]);
+  }, [groupBy, selectedReferenceMonth, customerData]);
 
   const visibleSet = useMemo(() => new Set(visibleNames), [visibleNames]);
   // ── Mapa de Operações data: Headcount × Score per entity ──
@@ -1653,11 +1653,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
           {(() => {
             const sobrecargaSources: Record<string, any[]> = {
-              empresa: customerData.sobrecargaEmpresa,
-              unidade: customerData.sobrecargaUnidade,
-              area: customerData.sobrecargaArea,
+              empresa: Array.isArray(customerData.sobrecargaEmpresa) ? customerData.sobrecargaEmpresa : [],
+              unidade: Array.isArray(customerData.sobrecargaUnidade) ? customerData.sobrecargaUnidade : [],
+              area: Array.isArray(customerData.sobrecargaArea) ? customerData.sobrecargaArea : [],
             };
-            const rawEsforco = sobrecargaSources[groupBy] ?? customerData.sobrecargaEmpresa;
+            const rawEsforco = sobrecargaSources[groupBy] ?? [];
 
             // Check area insufficiency
             const areaInsufficient = groupBy === "area" && (rawEsforco.length < 6 || new Set(rawEsforco.map((r: any) => r.area_name)).size < 3);
