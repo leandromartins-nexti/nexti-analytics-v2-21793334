@@ -1,7 +1,8 @@
 import { useState } from "react";
 // TODO: REMOVER EM PRODUÇÃO — TestModeSelector é do modo de teste multi-cliente
 import TestModeSelector from "@/components/analytics/TestModeSelector";
-import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info } from "lucide-react";
+import CustomerZipImporter from "@/components/analytics/CustomerZipImporter";
+import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info, Wrench } from "lucide-react";
 import ScoreQualidadeConfig from "./ScoreQualidadeConfig";
 import ScoreAbsenteismoConfig from "./ScoreAbsenteismoConfig";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
@@ -192,22 +193,19 @@ function MenuSection({ menu }: { menu: MenuEntry }) {
 
 // ── Main Page ──
 const tabs = [
+  { id: "modo-teste", label: "Modo de Teste", icon: Wrench },
   { id: "base-dados", label: "Base de Dados", icon: Database },
   { id: "scores", label: "Scores", icon: Gauge },
 ];
 
 export default function AnalyticsConfiguracao() {
-  const [activeTab, setActiveTab] = useState("base-dados");
+  const [activeTab, setActiveTab] = useState("modo-teste");
   const [activeScore, setActiveScore] = useState("qualidade");
 
   const totalCharts = dataRegistry.reduce((acc, m) => acc + m.tabs.reduce((a, t) => a + t.charts.length, 0), 0);
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
-      {/* TODO: REMOVER EM PRODUÇÃO — Seção "Modo de Teste" */}
-      <div className="px-6 pt-5">
-        <TestModeSelector />
-      </div>
       {/* Tab bar */}
       <div className="bg-white border-b border-border px-6">
         <div className="flex gap-6">
@@ -230,6 +228,20 @@ export default function AnalyticsConfiguracao() {
 
       {/* Content */}
       <div className="flex-1 flex min-h-0">
+        {/* TODO: REMOVER EM PRODUÇÃO — Aba Modo de Teste */}
+        {activeTab === "modo-teste" && (
+          <div className="flex-1 px-6 py-5 overflow-auto">
+            <TestModeSelector />
+            <div className="mt-2">
+              <h2 className="text-lg font-bold text-foreground mb-1">Importador de Dados</h2>
+              <p className="text-xs text-muted-foreground mb-4">
+                Importe um ZIP com a estrutura de dados de um cliente para visualizar seus dashboards.
+              </p>
+              <CustomerZipImporter />
+            </div>
+          </div>
+        )}
+
         {activeTab === "base-dados" && (
           <div className="flex-1 px-6 py-5">
             <div className="mb-4 flex items-center justify-between">
