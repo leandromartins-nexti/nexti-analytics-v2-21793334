@@ -299,7 +299,8 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   }, [groupBy, selectedRegional, nameField]);
 
   // ── Score computation ──
-  const latestTaxa = volumeConsolidado[volumeConsolidado.length - 1].taxa;
+  const lastEntry = volumeConsolidado[volumeConsolidado.length - 1];
+  const latestTaxa = lastEntry.pessoas_ausentes > 0 ? +((lastEntry.horas_ausencia_nao_planejada / (lastEntry.pessoas_ausentes * 200)) * 100).toFixed(2) : 0;
   const volScore = computeVolumeScore(latestTaxa);
   const compScore = computeComposicaoScore(composicaoDistribuicao);
   const matScore = computeMaturidadeScore(maturidadeDistribuicao);
@@ -402,7 +403,10 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
   };
 
-  const mediaTaxa = volumeConsolidado.reduce((s, d) => s + d.taxa, 0) / volumeConsolidado.length;
+  const mediaTaxa = volumeConsolidado.reduce((s, d) => {
+    const t = d.pessoas_ausentes > 0 ? (d.horas_ausencia_nao_planejada / (d.pessoas_ausentes * 200)) * 100 : 0;
+    return s + t;
+  }, 0) / volumeConsolidado.length;
 
   // ── Score breakdown data for detail panel ──
   const scoreBreakdownComponents = [
