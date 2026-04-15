@@ -1,4 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+// TODO: REMOVER EM PRODUÇÃO — useCustomer é do modo de teste multi-cliente
+import { useCustomer } from "@/contexts/CustomerContext";
+import NoDataPlaceholder from "@/components/analytics/NoDataPlaceholder";
 import { Info, TrendingUp, TrendingDown, Minus as MinusIcon, Eraser, AlertTriangle, ArrowUpRight, ArrowDownRight, X, ExternalLink, Search, ArrowUpDown, LineChartIcon, BarChart3, AreaChartIcon, Percent, Hash, Database, Lock, ArrowUp, ArrowDown } from "lucide-react";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
 import CompositeChartDataModal from "@/components/analytics/CompositeChartDataModal";
@@ -2549,6 +2552,28 @@ function MovimentacoesContent({ selectedRegional, onRegionalClick, onItemDetail,
 }
 
 // ── Exported standalone tab wrappers ──
+// TODO: REMOVER EM PRODUÇÃO — wrapper para mostrar estado vazio quando cliente sem dados
+function CustomerAwareTab({ children, tabId }: { children: React.ReactNode; tabId: string }) {
+  const { customerId, customerLabel, customers } = useCustomer();
+  const customer = customers.find(c => c.customer_id === customerId);
+  const hasData = customer?.tabs_available?.includes(tabId) ?? false;
+
+  if (!hasData) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-12">
+        <div className="text-center space-y-4 max-w-md">
+          <NoDataPlaceholder height={200} />
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">{customerLabel}</span> ainda não possui dados para esta aba.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
 export function QualidadeTab() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
   const [detailRegional, setDetailRegional] = useState<string | null>(null);
@@ -2556,10 +2581,10 @@ export function QualidadeTab() {
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
   return (
-    <>
+    <CustomerAwareTab tabId="qualidade-ponto">
       <QualidadeContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
       <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
-    </>
+    </CustomerAwareTab>
   );
 }
 
@@ -2570,10 +2595,10 @@ export function AbsenteismoTab() {
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
   return (
-    <>
+    <CustomerAwareTab tabId="absenteismo">
       <AbsenteismoContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
       <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
-    </>
+    </CustomerAwareTab>
   );
 }
 
@@ -2584,9 +2609,9 @@ export function MovimentacoesTab() {
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
   return (
-    <>
+    <CustomerAwareTab tabId="movimentacoes">
       <MovimentacoesContent selectedRegional={selectedRegional} onRegionalClick={handleRegionalClick} onItemDetail={setDetailRegional} groupBy={groupBy} onGroupByChange={handleGroupByChange} />
       <RegionalDetailModal regional={detailRegional} open={!!detailRegional} onClose={() => setDetailRegional(null)} />
-    </>
+    </CustomerAwareTab>
   );
 }
