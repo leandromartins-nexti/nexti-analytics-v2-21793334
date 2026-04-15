@@ -1,6 +1,7 @@
 import { computeCompositeScore } from "@/lib/scoreComputations";
 import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
 import { DEFAULT_CONFIG } from "@/contexts/ScoreConfigContext";
+import type { QualidadeDataSources } from "@/lib/qualidadeDataSources";
 
 // Real data: Total de Ajustes por Business Unit × Mês
 export interface AjusteRecord {
@@ -176,16 +177,18 @@ export interface AjusteScatterPoint {
 
 /** Aggregate raw data into scatter points. If month is null, consolidate all months.
  *  groupBy selects which dataset to use: "unidade" (default) or "area". */
-export function aggregateAjustes(selectedMonth: string | null, groupBy: "unidade" | "area" | "empresa" = "unidade"): AjusteScatterPoint[] {
-  const source = groupBy === "area" ? ajustesAreaData : groupBy === "empresa" ? ajustesEmpresaData : ajustesUnidadeData;
+export function aggregateAjustes(selectedMonth: string | null, groupBy: "unidade" | "area" | "empresa" = "unidade", sources?: QualidadeDataSources): AjusteScatterPoint[] {
+  const source = sources
+    ? sources.ajustes[groupBy]
+    : (groupBy === "area" ? ajustesAreaData : groupBy === "empresa" ? ajustesEmpresaData : ajustesUnidadeData);
   const filtered = selectedMonth
-    ? source.filter(r => r.reference_month === selectedMonth)
+    ? source.filter((r: any) => r.reference_month === selectedMonth)
     : source;
 
   const byBU = new Map<number, { name: string; totalVolume: number; weightedDias: number; maxHeadcount: number }>();
 
   for (const r of filtered) {
-    if (r.tempo_medio_dias == null) continue; // skip null tempo
+    if (r.tempo_medio_dias == null) continue;
     const existing = byBU.get(r.business_unit_id);
     if (existing) {
       existing.totalVolume += r.volume_marcacoes;
@@ -341,8 +344,10 @@ export const composicaoAreaData: ComposicaoFaixaRecord[] = [
 
 /** Aggregate composição faixas by month, optionally filtering by entity name.
  *  groupBy selects the dataset; selectedName filters within it. */
-export function aggregateComposicaoFaixas(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }[] {
-  const source = groupBy === "unidade" ? composicaoUnidadeData : groupBy === "area" ? composicaoAreaData : composicaoEmpresaData;
+export function aggregateComposicaoFaixas(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa", sources?: QualidadeDataSources): { mes: string; ate1d: number; de1a3d: number; de3a7d: number; de7a15d: number; mais15d: number; total: number }[] {
+  const source = sources
+    ? sources.composicao[groupBy]
+    : (groupBy === "unidade" ? composicaoUnidadeData : groupBy === "area" ? composicaoAreaData : composicaoEmpresaData);
   const filtered = selectedName
     ? source.filter(r => r.company_name === selectedName)
     : source;
@@ -531,11 +536,12 @@ export const qualidadeAreaData: QualidadeAreaRecord[] = [
 /** Aggregate quality evolution by month, optionally filtering by entity name.
  *  Uses quality_percentage directly (weighted by volume) for empresa groupBy,
  *  and registradas/(registradas+justificadas) for other groupings. */
-export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; value: number }[] {
+export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa", sources?: QualidadeDataSources): { mes: string; value: number }[] {
   if (groupBy === "empresa") {
+    const baseData = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
     const filtered = selectedName
-      ? qualidadeEmpresaData.filter(r => r.company_name === selectedName)
-      : qualidadeEmpresaData;
+      ? baseData.filter((r: any) => r.company_name === selectedName)
+      : baseData;
 
     const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
     for (const r of filtered) {
@@ -557,9 +563,10 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
   }
 
   if (groupBy === "unidade") {
+    const baseData = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
     const filtered = selectedName
-      ? qualidadeUnidadeData.filter(r => r.business_unit_name === selectedName)
-      : qualidadeUnidadeData;
+      ? baseData.filter((r: any) => r.business_unit_name === selectedName)
+      : baseData;
 
     const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
     for (const r of filtered) {
@@ -581,9 +588,10 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
   }
 
   // For area, use weighted average like empresa/unidade
+  const baseData = sources ? sources.qualidade.area : qualidadeAreaData;
   const filtered = selectedName
-    ? qualidadeAreaData.filter(r => r.area_name === selectedName)
-    : qualidadeAreaData;
+    ? baseData.filter((r: any) => r.area_name === selectedName)
+    : baseData;
 
   const byMonth = new Map<string, { qualWeighted: number; volume: number }>();
   for (const r of filtered) {
@@ -605,16 +613,19 @@ export function aggregateQualidadeEvolucao(selectedName: string | null, groupBy:
 }
 
 /** Same aggregation but returns raw registradas + justificadas counts per month */
-export function aggregateQualidadeEvolucaoDetalhado(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa"): { mes: string; registradas: number; justificadas: number }[] {
+export function aggregateQualidadeEvolucaoDetalhado(selectedName: string | null, groupBy: "empresa" | "unidade" | "area" = "empresa", sources?: QualidadeDataSources): { mes: string; registradas: number; justificadas: number }[] {
   type QRow = { name: string; reference_month: string; registradas: number; justificadas: number };
   let rows: QRow[];
 
   if (groupBy === "unidade") {
-    rows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const base = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
+    rows = base.map((r: any) => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
   } else if (groupBy === "area") {
-    rows = qualidadeAreaData.map(r => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const base = sources ? sources.qualidade.area : qualidadeAreaData;
+    rows = base.map((r: any) => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
   } else {
-    rows = qualidadeEmpresaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
+    const base = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
+    rows = base.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas }));
   }
 
   const filtered = selectedName ? rows.filter(r => r.name === selectedName) : rows;
@@ -698,12 +709,14 @@ export interface QualidadeVolumeScatterPoint {
  */
 export function aggregateQualidadeVolume(
   selectedMonth: string | null = null,
-  groupBy: "empresa" | "unidade" | "area" = "empresa"
+  groupBy: "empresa" | "unidade" | "area" = "empresa",
+  sources?: QualidadeDataSources
 ): QualidadeVolumeScatterPoint[] {
   if (groupBy === "unidade") {
+    const baseData = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
     const filtered = selectedMonth
-      ? qualidadeUnidadeData.filter(r => r.reference_month === selectedMonth)
-      : qualidadeUnidadeData;
+      ? baseData.filter((r: any) => r.reference_month === selectedMonth)
+      : baseData;
 
     const map = new Map<string, { volume: number; qualWeighted: number; headcount: number }>();
     for (const r of filtered) {
@@ -729,9 +742,10 @@ export function aggregateQualidadeVolume(
   }
 
   if (groupBy === "area") {
+    const baseData = sources ? sources.qualidade.area : qualidadeAreaData;
     const filtered = selectedMonth
-      ? qualidadeAreaData.filter(r => r.reference_month === selectedMonth)
-      : qualidadeAreaData;
+      ? baseData.filter((r: any) => r.reference_month === selectedMonth)
+      : baseData;
 
     const map = new Map<string, { volume: number; qualWeighted: number; headcount: number }>();
     for (const r of filtered) {
@@ -757,9 +771,10 @@ export function aggregateQualidadeVolume(
   }
 
   // Default: empresa
+  const baseEmpData = sources ? sources.volume.empresa : qualidadeVolumeEmpresaData;
   const filtered = selectedMonth
-    ? qualidadeVolumeEmpresaData.filter(r => r.reference_month === selectedMonth)
-    : qualidadeVolumeEmpresaData;
+    ? baseEmpData.filter((r: any) => r.reference_month === selectedMonth)
+    : baseEmpData;
 
   const map = new Map<string, { volume: number; qualWeighted: number; headcount: number }>();
 
@@ -801,7 +816,8 @@ export function getQualidadeKpiSummary(
   selectedName: string | null,
   groupBy: "empresa" | "unidade" | "area" = "empresa",
   scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number },
-  selectedMonth?: string | null
+  selectedMonth?: string | null,
+  sources?: QualidadeDataSources
 ): {
   score: number;
   diff: string;
@@ -820,26 +836,32 @@ export function getQualidadeKpiSummary(
   let rows: Row[];
 
   if (groupBy === "unidade") {
-    rows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    const base = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
+    rows = base.map((r: any) => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
   } else if (groupBy === "area") {
-    rows = qualidadeAreaData.map(r => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    const base = sources ? sources.qualidade.area : qualidadeAreaData;
+    rows = base.map((r: any) => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
   } else {
-    rows = qualidadeEmpresaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    const base = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
+    rows = base.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
   }
 
   // Composicao data for treatment score per entity
   type CRow = { name: string; reference_month: string; f1: number; f2: number; f3: number; f4: number; f5: number };
   let cRows: CRow[];
+  const compEmp = sources ? sources.composicao.empresa : composicaoEmpresaData;
+  const compUni = sources ? sources.composicao.unidade : composicaoUnidadeData;
+  const compArea = sources ? sources.composicao.area : composicaoAreaData;
   if (groupBy === "unidade") {
-    cRows = composicaoUnidadeData.map(r => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
+    cRows = compUni.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   } else if (groupBy === "area") {
-    cRows = composicaoAreaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
+    cRows = compArea.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   } else {
-    cRows = composicaoEmpresaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
+    cRows = compEmp.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   }
 
   // Ajustes data for tempo medio
-  const ajustesSource = groupBy === "unidade" ? ajustesUnidadeData : groupBy === "area" ? ajustesAreaData : ajustesEmpresaData;
+  const ajustesSource = sources ? sources.ajustes[groupBy] : (groupBy === "unidade" ? ajustesUnidadeData : groupBy === "area" ? ajustesAreaData : ajustesEmpresaData);
 
   // Apply month filter
   const monthFilterRows = selectedMonth ? rows.filter(r => r.reference_month === selectedMonth) : rows;
@@ -888,7 +910,7 @@ export function getQualidadeKpiSummary(
     ? { ...DEFAULT_CONFIG, ...scoreConfig }
     : DEFAULT_CONFIG;
 
-  const score = Math.round(computeCompositeScore(selectedName, groupBy, fullConfig));
+  const score = Math.round(computeCompositeScore(selectedName, groupBy, fullConfig, undefined, sources));
 
   // Per-entity composite for melhor/pior using same 3-component formula
   const entityNames = new Set<string>();
@@ -897,7 +919,7 @@ export function getQualidadeKpiSummary(
   let melhor = { nome: "-", score: 0 };
   let pior = { nome: "-", score: 100, indicador: "" };
   for (const name of entityNames) {
-    const cs = Math.round(computeCompositeScore(name, groupBy, fullConfig));
+    const cs = Math.round(computeCompositeScore(name, groupBy, fullConfig, undefined, sources));
     if (cs > melhor.score) melhor = { nome: name, score: cs };
     if (cs < pior.score) pior = { nome: name, score: cs, indicador: "Baixa qualidade" };
   }
@@ -931,7 +953,8 @@ export function getQualidadeKpiSummary(
 
 export function getSidebarItems(
   groupBy: "empresa" | "unidade" | "area",
-  scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number }
+  scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number },
+  sources?: QualidadeDataSources
 ): { nome: string; score: number }[] {
   const fullConfig: ScoreConfig = scoreConfig
     ? { ...DEFAULT_CONFIG, ...scoreConfig }
@@ -941,16 +964,19 @@ export function getSidebarItems(
   type QRow = { name: string };
   let qRows: QRow[];
   if (groupBy === "unidade") {
-    qRows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name }));
+    const base = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
+    qRows = base.map((r: any) => ({ name: r.business_unit_name }));
   } else if (groupBy === "area") {
-    qRows = qualidadeAreaData.map(r => ({ name: r.area_name }));
+    const base = sources ? sources.qualidade.area : qualidadeAreaData;
+    qRows = base.map((r: any) => ({ name: r.area_name }));
   } else {
-    qRows = qualidadeEmpresaData.map(r => ({ name: r.company_name }));
+    const base = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
+    qRows = base.map((r: any) => ({ name: r.company_name }));
   }
 
   const uniqueNames = [...new Set(qRows.map(r => r.name))];
 
   return uniqueNames
-    .map(nome => ({ nome, score: Math.round(computeCompositeScore(nome, groupBy, fullConfig)) }))
+    .map(nome => ({ nome, score: Math.round(computeCompositeScore(nome, groupBy, fullConfig, undefined, sources)) }))
     .sort((a, b) => b.score - a.score);
 }

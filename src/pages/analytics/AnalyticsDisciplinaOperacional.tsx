@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 // TODO: REMOVER EM PRODUÇÃO — useCustomer é do modo de teste multi-cliente
 import { useCustomer } from "@/contexts/CustomerContext";
 import { useQualidadePontoData } from "@/hooks/useQualidadePontoData";
+import { buildDataSources } from "@/lib/qualidadeDataSources";
 import NoDataPlaceholder from "@/components/analytics/NoDataPlaceholder";
 import { Info, TrendingUp, TrendingDown, Minus as MinusIcon, Eraser, AlertTriangle, ArrowUpRight, ArrowDownRight, X, ExternalLink, Search, ArrowUpDown, LineChartIcon, BarChart3, AreaChartIcon, Percent, Hash, Database, Lock, ArrowUp, ArrowDown } from "lucide-react";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
@@ -890,6 +891,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
 
+  // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
+  const dataSources = useMemo(() => buildDataSources(customerData), [customerData]);
+
   // Headcount por mês – filtrado por entidade selecionada
   const MONTH_LABEL_MAP: Record<string, string> = {
     "2025-04-01": "abr/25", "2025-05-01": "mai/25", "2025-06-01": "jun/25",
@@ -933,20 +937,20 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   );
 
   const activeData = useMemo(() => {
-    return getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig, selectedReferenceMonth);
-  }, [selectedRegional, groupBy, scoreConfig, selectedReferenceMonth]);
+    return getQualidadeKpiSummary(selectedRegional, groupBy as any, scoreConfig, selectedReferenceMonth, dataSources);
+  }, [selectedRegional, groupBy, scoreConfig, selectedReferenceMonth, dataSources]);
 
   const qualidadeEvolucaoReal = useMemo(
-    () => aggregateQualidadeEvolucao(selectedRegional, groupBy as any),
-    [selectedRegional, groupBy]
+    () => aggregateQualidadeEvolucao(selectedRegional, groupBy as any, dataSources),
+    [selectedRegional, groupBy, dataSources]
   );
   const qualidadeMedia = useMemo(
     () => qualidadeEvolucaoReal.length ? +(qualidadeEvolucaoReal.reduce((s, d) => s + d.value, 0) / qualidadeEvolucaoReal.length).toFixed(1) : 85,
     [qualidadeEvolucaoReal]
   );
   const qualidadeDetalhado = useMemo(
-    () => aggregateQualidadeEvolucaoDetalhado(selectedRegional, groupBy as any),
-    [selectedRegional, groupBy]
+    () => aggregateQualidadeEvolucaoDetalhado(selectedRegional, groupBy as any, dataSources),
+    [selectedRegional, groupBy, dataSources]
   );
   const qualidadeComHeadcount = useMemo(
     () => qualidadeDetalhado.map(d => ({
@@ -989,9 +993,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const tratativaFaixasFiltrada = useMemo(
     () => {
       const nameFilter = selectedRegional || null;
-      return aggregateComposicaoFaixas(nameFilter, groupBy as any);
+      return aggregateComposicaoFaixas(nameFilter, groupBy as any, dataSources);
     },
-    [groupBy, selectedRegional]
+    [groupBy, selectedRegional, dataSources]
   );
   const tratativaMediaTotal = useMemo(() => tratativaFaixasFiltrada.length ? tratativaFaixasFiltrada.reduce((s, d) => s + d.total, 0) / tratativaFaixasFiltrada.length : 0, [tratativaFaixasFiltrada]);
 
@@ -999,27 +1003,23 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   
   // Use 4-component composite score (3-month window) instead of the 2-component one from getQualidadeKpiSummary
-  const compositeScore = useMemo(() => computeCompositeScore(selectedRegional, groupBy as any, scoreConfig), [selectedRegional, groupBy, scoreConfig]);
+  const compositeScore = useMemo(() => computeCompositeScore(selectedRegional, groupBy as any, scoreConfig, undefined, dataSources), [selectedRegional, groupBy, scoreConfig, dataSources]);
   const scoreClassif = getScoreClassification(compositeScore, scoreConfig);
   const scoreColor = scoreClassif.text;
   const scoreFaixa = scoreClassif.label;
 
   const sidebarItems = useMemo(() => {
-    const entities = groupBy === "empresa" ? empresaData : groupBy === "area" ? areaData : unidadeData;
-    return entities.map(e => {
-      const score = computeCompositeScore(e.nome, groupBy as any, scoreConfig);
-      return { nome: e.nome, score };
-    }).sort((a, b) => b.score - a.score);
-  }, [groupBy, scoreConfig]);
+    return getSidebarItems(groupBy as any, scoreConfig, dataSources);
+  }, [groupBy, scoreConfig, dataSources]);
 
   const allScatter = useMemo(() => {
-    if (groupBy === "empresa") return aggregateQualidadeVolume(selectedReferenceMonth, "empresa");
-    if (groupBy === "unidade") return aggregateQualidadeVolume(selectedReferenceMonth, "unidade");
-    if (groupBy === "area") return aggregateQualidadeVolume(selectedReferenceMonth, "area");
+    if (groupBy === "empresa") return aggregateQualidadeVolume(selectedReferenceMonth, "empresa", dataSources);
+    if (groupBy === "unidade") return aggregateQualidadeVolume(selectedReferenceMonth, "unidade", dataSources);
+    if (groupBy === "area") return aggregateQualidadeVolume(selectedReferenceMonth, "area", dataSources);
     return scatterQualidade;
-  }, [groupBy, selectedReferenceMonth]);
+  }, [groupBy, selectedReferenceMonth, dataSources]);
 
-  const allScatterTratativa = useMemo(() => aggregateAjustes(selectedReferenceMonth, groupBy), [selectedReferenceMonth, groupBy]);
+  const allScatterTratativa = useMemo(() => aggregateAjustes(selectedReferenceMonth, groupBy, dataSources), [selectedReferenceMonth, groupBy, dataSources]);
 
   // Compute tempo_medio_dias per operation from tratativa-tempo JSONs
   const tempoMedioPorOperacao = useMemo(() => {
