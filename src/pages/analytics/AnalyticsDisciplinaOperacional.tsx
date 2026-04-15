@@ -1132,7 +1132,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [chartScatterTrat]);
 
   const qualClassif = getScoreClassification(Math.round(activeData.qualidadePct), scoreConfig);
-  const tempoColor = activeData.tempoMedioDias < 3 ? "text-green-600" : activeData.tempoMedioDias <= 7 ? "text-orange-500" : "text-red-600";
   const melhorClassif = getScoreClassification(activeData.melhorOperacao.score, scoreConfig);
   const riscoClassif = getScoreClassification(activeData.maiorRisco.score, scoreConfig);
 
