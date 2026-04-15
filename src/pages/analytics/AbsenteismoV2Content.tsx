@@ -262,11 +262,27 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     }).filter(d => CATEGORIES_ORDER.some(c => (d as any)[c] > 0));
   }, [groupBy, selectedRegional, nameField]);
 
-  // ── Maturidade chart data (stacked area 100%) ──
+  // ── Maturidade chart data (stacked area 100%) + % falta crua from composição ──
   const maturidadeChartData = useMemo(() => {
     const raw = groupBy === "empresa" ? maturidadeEmpresa : groupBy === "area" ? maturidadeArea : maturidadeUnNegocio;
+    const compRaw = groupBy === "empresa" ? composicaoEmpresa : groupBy === "area" ? composicaoArea : composicaoUnNegocio;
     const nf = nameField;
     const dates = Object.keys(MESES_LABELS);
+
+    // Compute % falta crua per month from composição data
+    const faltaPctByMonth: Record<string, number> = {};
+    for (const date of dates) {
+      let items = (compRaw as any[]).filter(d => d.reference_date === date);
+      if (selectedRegional) items = items.filter(d => d[nf] === selectedRegional);
+      let faltaH = 0, totalH = 0;
+      for (const item of items) {
+        const cat = CATEGORY_MAP[item.absence_situation_id] ?? "nao_categorizada";
+        const h = item.horas_total ?? 0;
+        if (cat === "falta") faltaH += h;
+        totalH += h;
+      }
+      faltaPctByMonth[date] = totalH > 0 ? +((faltaH / totalH) * 100).toFixed(1) : 0;
+    }
     
     const hasTimeSeries = (raw as any[]).some(d => d.reference_date !== "2026-03-01");
     
@@ -283,6 +299,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           mes: MESES_LABELS[date],
           "1_planejado": totalHoras > 0 ? +((planejadoHoras / totalHoras) * 100).toFixed(1) : 0,
           "2_reativo": totalHoras > 0 ? +((reativoHoras / totalHoras) * 100).toFixed(1) : 0,
+          pctFalta: faltaPctByMonth[date] ?? 0,
         };
       });
     }
@@ -298,6 +315,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       mes: "mar/26",
       "1_planejado": totalHoras > 0 ? +((planejadoHoras / totalHoras) * 100).toFixed(1) : 0,
       "2_reativo": totalHoras > 0 ? +((reativoHoras / totalHoras) * 100).toFixed(1) : 0,
+      pctFalta: faltaPctByMonth["2026-03-01"] ?? 0,
     }];
   }, [groupBy, selectedRegional, nameField]);
 
