@@ -3,6 +3,33 @@
     "customer_id": 642,
     "area_id": 11043,
     "area_name": "SAO PAULO",
+    "reference_date": "2025-03-01",
+    "qtd_eventos": 140,
+    "horas_ausencia": 1000.3,
+    "pessoas_ausentes": 20
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11045,
+    "area_name": "SOROCABA",
+    "reference_date": "2025-03-01",
+    "qtd_eventos": 17,
+    "horas_ausencia": 194.0,
+    "pessoas_ausentes": 2
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11046,
+    "area_name": "PIRACICABA",
+    "reference_date": "2025-03-01",
+    "qtd_eventos": 14,
+    "horas_ausencia": 155.0,
+    "pessoas_ausentes": 3
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
     "reference_date": "2025-04-01",
     "qtd_eventos": 104,
     "horas_ausencia": 893.9,
