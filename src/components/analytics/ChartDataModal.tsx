@@ -87,7 +87,7 @@ export default function ChartDataModal({ open, onClose, title, data, columns, sq
 
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
-      <DialogContent className="max-w-[75vw] max-h-[75vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-[75vw] max-h-[75vh] max-md:max-w-full max-md:max-h-full max-md:h-full max-md:rounded-none flex flex-col p-0 gap-0">
         <DialogHeader className="px-5 pt-5 pb-0">
           <DialogTitle className="text-base font-semibold">{title}</DialogTitle>
         </DialogHeader>
