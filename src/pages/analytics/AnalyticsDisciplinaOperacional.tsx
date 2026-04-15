@@ -1278,6 +1278,18 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       return next;
     });
   }, []);
+  // Mapa dimension selector
+  type MapaDimension = "score" | "qualidade" | "velocidade" | "backoffice";
+  const [mapaDimension, setMapaDimension] = useState<MapaDimension>("score");
+  const mapaDimensionConfig: Record<MapaDimension, { label: string; yLabel: string; thresholds: [number, number] }> = {
+    score: { label: "Score Composto", yLabel: "Score Operacional", thresholds: [70, 55] },
+    qualidade: { label: "Qualidade", yLabel: "Qualidade (%)", thresholds: [90, 75] },
+    velocidade: { label: "Velocidade", yLabel: "Nota Velocidade", thresholds: [70, 55] },
+    backoffice: { label: "Back-office", yLabel: "Nota Back-office", thresholds: [70, 55] },
+  };
+  const activeDimConfig = mapaDimensionConfig[mapaDimension];
+  const getMapaBubbleColor = (val: number) => val >= activeDimConfig.thresholds[0] ? "#22c55e" : val >= activeDimConfig.thresholds[1] ? "#f59e0b" : "#ef4444";
+  const getMapaVal = (d: any): number => d[mapaDimension] ?? d.score;
 
   const tratDomain = useMemo(() => {
     if (!chartScatterTrat.length) return { xMin: 0, xMax: 300000, yMin: 1, yMax: 7 };
@@ -1496,7 +1508,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <InfoTip text="Cada bolha é uma operação. Posição horizontal mostra o headcount (escala da operação). Posição vertical mostra o Score Operacional (saúde). Cor da bolha reforça a classificação do score. Operações no canto superior direito têm alta escala e estão saudáveis. Operações no canto inferior direito têm alta escala mas estão com problemas, alta prioridade de ação." />
               </div>
               <div className="flex items-center gap-1">
-                {criticalCount > 0 && (
+                {criticalCount > 0 && mapaDimension === "score" && (
                   <span className="text-[10px] font-medium bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
                     {criticalCount} operação{criticalCount > 1 ? "ões" : ""} em zona crítica
                   </span>
@@ -1506,7 +1518,24 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 </button>
               </div>
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Headcount × Score · uma bolha por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área"}{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] text-muted-foreground">Headcount × {activeDimConfig.yLabel} · uma bolha por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área"}{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
+              <div className="flex items-center gap-0.5 bg-muted/40 rounded-lg p-0.5">
+                {(Object.entries(mapaDimensionConfig) as [MapaDimension, typeof activeDimConfig][]).map(([key, cfg]) => (
+                  <button
+                    key={key}
+                    onClick={() => setMapaDimension(key)}
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-medium transition-all ${
+                      mapaDimension === key
+                        ? "bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {cfg.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <ResponsiveContainer width="100%" height={280}>
               <ScatterChart margin={{ top: 5, right: 50, bottom: 10, left: 0 }}>
                 <defs>
@@ -1519,9 +1548,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <ReferenceArea x1={mapaDomain.xMin} x2={mapaDomain.xMax} y1={mapaDomain.yMin} y2={mapaDomain.yMax} fill="url(#mapaOperacoesGradient)" strokeOpacity={0} />
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" dataKey="headcount" name="Headcount" domain={[mapaDomain.xMin, mapaDomain.xMax]} ticks={mapaDomain.xTicks} tick={{ fontSize: 10 }} label={{ value: "Headcount", position: "insideBottom", offset: -5, fontSize: 10 }} />
-                <YAxis type="number" dataKey="score" name="Score" domain={[mapaDomain.yMin, mapaDomain.yMax]} ticks={[0, 25, 50, 75, 100]} tick={{ fontSize: 10 }} label={{ value: "Score Operacional", angle: -90, position: "insideLeft", fontSize: 10 }} />
+                <YAxis type="number" dataKey={mapaDimension} name={activeDimConfig.yLabel} domain={[mapaDomain.yMin, mapaDomain.yMax]} ticks={[0, 25, 50, 75, 100]} tick={{ fontSize: 10 }} label={{ value: activeDimConfig.yLabel, angle: -90, position: "insideLeft", fontSize: 10 }} />
                 <ZAxis type="number" range={[150, 150]} />
-                <ReferenceLine y={70} stroke="#22c55e" strokeWidth={1.5} strokeDasharray="8 4" label={({ viewBox }: any) => {
+                <ReferenceLine y={activeDimConfig.thresholds[0]} stroke="#22c55e" strokeWidth={1.5} strokeDasharray="8 4" label={({ viewBox }: any) => {
                   const { y, width, x } = viewBox || {};
                   const rightEdge = (x ?? 0) + (width ?? 0);
                   return (
@@ -1560,17 +1589,19 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   );
                 }} />
                 <Scatter data={mapaOperacoesData.filter((d: any) => {
-                  const cat = d.score >= 70 ? "green" : d.score >= 55 ? "orange" : "red";
+                  const val = getMapaVal(d);
+                  const cat = val >= activeDimConfig.thresholds[0] ? "green" : val >= activeDimConfig.thresholds[1] ? "orange" : "red";
                   return mapaScoreFilter.has(cat);
                 })} shape={(props: any) => {
                   const { cx, cy, payload } = props;
                   const r = 14;
+                  const val = getMapaVal(payload);
+                  const dynColor = getMapaBubbleColor(val);
                   const isFixed = fixedBubble === payload.regional;
                   const isSelected = !selectedRegional || selectedRegional === payload.regional;
                    const hasFilter = !!selectedRegional;
                    const opacity = isFixed ? 0.85 : isSelected ? 0.75 : 0.45;
                    const textColor = "#fff";
-                   // 3-letter abbreviation like sidebar
                    const clean = payload.regional.replace(/^VIG\s*EYES\s*/i, "").trim();
                    const abbr = clean ? clean.slice(0, 3).toUpperCase() : payload.regional.slice(0, 3).toUpperCase();
                    return (
@@ -1582,8 +1613,8 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                        onContextMenu={(e: any) => { e.preventDefault(); e.stopPropagation(); onItemDetail?.(payload.regional); }}
                        className="cursor-pointer"
                      >
-                       <circle cx={cx} cy={cy} r={r} fill={payload.bubbleColor} fillOpacity={opacity}
-                         stroke={isFixed && hasFilter ? "#FF5722" : payload.bubbleColor}
+                       <circle cx={cx} cy={cy} r={r} fill={dynColor} fillOpacity={opacity}
+                         stroke={isFixed && hasFilter ? "#FF5722" : dynColor}
                          strokeWidth={isFixed && hasFilter ? 2 : 1}
                          strokeDasharray={isFixed && hasFilter ? "4 3" : "none"}
                        />
@@ -1591,7 +1622,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                           {abbr}
                         </text>
                         <text x={cx} y={cy + 6} textAnchor="middle" fontSize={7} fontWeight={600} fill={textColor} dominantBaseline="middle">
-                          {payload.score}
+                          {val}
                        </text>
                     </g>
                   );
@@ -1600,9 +1631,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             </ResponsiveContainer>
             <div className="flex items-center justify-center gap-3 mt-1 text-[10px]">
               {[
-                { cat: "green", color: "#22c55e", label: "Score ≥ 70" },
-                { cat: "orange", color: "#f59e0b", label: "Score 55-70" },
-                { cat: "red", color: "#ef4444", label: "Score < 55" },
+                { cat: "green", color: "#22c55e", label: `≥ ${activeDimConfig.thresholds[0]}` },
+                { cat: "orange", color: "#f59e0b", label: `${activeDimConfig.thresholds[1]}-${activeDimConfig.thresholds[0]}` },
+                { cat: "red", color: "#ef4444", label: `< ${activeDimConfig.thresholds[1]}` },
               ].map(({ cat, color, label }) => {
                 const active = mapaScoreFilter.has(cat);
                 return (
