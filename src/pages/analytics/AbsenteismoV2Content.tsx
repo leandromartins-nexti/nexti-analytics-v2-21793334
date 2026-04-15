@@ -226,8 +226,8 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       mes: MESES_LABELS[d.reference_date],
       horas: d.horas_ausencia_nao_planejada,
       horasTotal: d.horas_ausencia_total,
-      taxa: d.taxa,
-      hcMes: d.hcMes,
+      taxa: d.pessoas_ausentes > 0 ? +((d.horas_ausencia_nao_planejada / (d.pessoas_ausentes * 200)) * 100).toFixed(2) : 0,
+      hcMes: d.pessoas_ausentes,
     }));
   }, [selectedRegional, volumeByDim, nameField]);
 
