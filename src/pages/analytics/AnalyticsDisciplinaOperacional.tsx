@@ -1081,10 +1081,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [mapaOperacoesData]);
 
   const mapaDomain = useMemo(() => {
-    if (!mapaOperacoesData.length) return { xMin: 0, xMax: 500, yMin: 0, yMax: 100 };
+    if (!mapaOperacoesData.length) return { xMin: 0, xMax: 600, yMin: 0, yMax: 100 };
     const hcs = mapaOperacoesData.map(d => d.headcount);
     const maxHc = Math.max(...hcs);
-    return { xMin: 0, xMax: Math.ceil(maxHc * 1.15), yMin: 0, yMax: 100 };
+    // Round up to nearest multiple of 6 so ticks are always evenly spaced
+    const niceSteps = [50, 100, 150, 200, 250, 500];
+    const raw = maxHc * 1.15;
+    const step = niceSteps.find(s => Math.ceil(raw / s) <= 6) || Math.ceil(raw / 6 / 50) * 50;
+    const xMax = Math.ceil(raw / step) * step;
+    return { xMin: 0, xMax, yMin: 0, yMax: 100 };
   }, [mapaOperacoesData]);
 
   // Critical zone: Score < 55 AND Headcount > median
