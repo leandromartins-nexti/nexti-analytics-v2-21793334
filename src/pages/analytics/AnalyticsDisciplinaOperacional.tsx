@@ -2181,26 +2181,30 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
 
   const getItemCompositeScore = useCallback((absTaxa: number, turnoverMensal: number) => {
     const turnoverAnual = turnoverMensal * 12;
-    return computeAbsCompositeScore(absTaxa, turnoverAnual, absConfig);
+    const volScore = computeVolumeScore(absTaxa, absConfig);
+    const turnScore = computeTurnoverScore(turnoverAnual, absConfig);
+    // Legacy: use volume weight for abs, composição weight for turnover
+    const score = Math.round(volScore * 0.65 + turnScore * 0.35);
+    return score;
   }, [absConfig]);
 
   const activeData = useMemo(() => {
     if (!selectedRegional) {
       const sorted = [...allScatterData].sort((a, b) => {
-        const sa = getItemCompositeScore(a.absenteismo, a.turnover).score;
-        const sb = getItemCompositeScore(b.absenteismo, b.turnover).score;
+        const sa = getItemCompositeScore(a.absenteismo, a.turnover);
+        const sb = getItemCompositeScore(b.absenteismo, b.turnover);
         return sb - sa;
       });
       const best = sorted[0];
       const worst = sorted[sorted.length - 1];
       const avgTaxa = absenteismoMedia;
       const turnoverAnual = +(turnoverMedia * 12).toFixed(1);
-      const composite = computeAbsCompositeScore(avgTaxa, turnoverAnual, absConfig);
-      const classif = getAbsScoreClassification(composite.score, absConfig);
-      const bestScore = best ? getItemCompositeScore(best.absenteismo, best.turnover).score : 0;
-      const worstScore = worst ? getItemCompositeScore(worst.absenteismo, worst.turnover).score : 0;
+      const compositeVal = getItemCompositeScore(avgTaxa, turnoverMedia);
+      const classif = getAbsScoreClassification(compositeVal, absConfig);
+      const bestScore = best ? getItemCompositeScore(best.absenteismo, best.turnover) : 0;
+      const worstScore = worst ? getItemCompositeScore(worst.absenteismo, worst.turnover) : 0;
       return {
-        score: Math.round(composite.score), taxa: avgTaxa, faixa: classif.label, scoreColor: classif.color,
+        score: compositeVal, taxa: avgTaxa, faixa: classif.label, scoreColor: classif.color,
         melhorOperacao: { nome: best?.regional ?? "—", score: Math.round(bestScore) },
         maiorRisco: { nome: worst?.regional ?? "—", score: Math.round(worstScore), indicador: `${worst?.absenteismo ?? 0}% taxa` },
         turnover: `${turnoverAnual}%`,
@@ -2208,23 +2212,23 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     }
     const r = allScatterData.find(x => ((x as any).entityId ?? x.regional) === selectedRegional);
     if (!r) {
-      const composite = computeAbsCompositeScore(absenteismoMedia, turnoverMedia * 12, absConfig);
-      const classif = getAbsScoreClassification(composite.score, absConfig);
+      const compositeVal = getItemCompositeScore(absenteismoMedia, turnoverMedia);
+      const classif = getAbsScoreClassification(compositeVal, absConfig);
       return {
-        score: Math.round(composite.score), taxa: absenteismoMedia, faixa: classif.label, scoreColor: classif.color,
+        score: compositeVal, taxa: absenteismoMedia, faixa: classif.label, scoreColor: classif.color,
         melhorOperacao: { nome: "—", score: 0 },
         maiorRisco: { nome: "—", score: 0, indicador: "—" },
         turnover: `${(turnoverMedia * 12).toFixed(1)}%`,
       };
     }
     const turnoverAnual = +(r.turnover * 12).toFixed(1);
-    const composite = computeAbsCompositeScore(r.absenteismo, turnoverAnual, absConfig);
-    const classif = getAbsScoreClassification(composite.score, absConfig);
+    const compositeVal = getItemCompositeScore(r.absenteismo, r.turnover);
+    const classif = getAbsScoreClassification(compositeVal, absConfig);
     return {
-      score: Math.round(composite.score), taxa: r.absenteismo,
+      score: compositeVal, taxa: r.absenteismo,
       faixa: classif.label, scoreColor: classif.color,
-      melhorOperacao: { nome: selectedLabel ?? r.regional, score: Math.round(composite.score) },
-      maiorRisco: { nome: selectedLabel ?? r.regional, score: Math.round(composite.score), indicador: `${r.absenteismo}% taxa` },
+      melhorOperacao: { nome: selectedLabel ?? r.regional, score: compositeVal },
+      maiorRisco: { nome: selectedLabel ?? r.regional, score: compositeVal, indicador: `${r.absenteismo}% taxa` },
       turnover: `${turnoverAnual}%`,
     };
   }, [selectedRegional, selectedLabel, allScatterData, absConfig, getItemCompositeScore]);
@@ -2239,14 +2243,14 @@ function AbsenteismoContent({ selectedRegional, onRegionalClick, onItemDetail, g
     return [...getItems()]
       .map(e => {
         const cs = getItemCompositeScore(e.absenteismo, e.turnover);
-        return { nome: e.regional, value: labelToId[e.regional as keyof typeof labelToId] ?? e.regional, score: Math.round(cs.score) };
+        return { nome: e.regional, value: labelToId[e.regional as keyof typeof labelToId] ?? e.regional, score: Math.round(cs) };
       })
       .sort((a, b) => b.score - a.score);
   }, [groupBy, labelToIdByGroup, absConfig, getItemCompositeScore]);
 
   // Scatter color helpers using composite score
   const getAbsTurnoverColor = (abs: number, turn: number) => {
-    const cs = getItemCompositeScore(abs, turn).score;
+    const cs = getItemCompositeScore(abs, turn);
     if (cs >= 70) return "#22c55e";
     if (cs >= 55) return "#f97316";
     return "#ef4444";
