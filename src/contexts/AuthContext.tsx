@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import defaultUsersJson from "@/data/users.json";
 
 export interface AppUser {
   id: number;
@@ -6,6 +7,10 @@ export interface AppUser {
   client: string;
   name: string;
   role: string;
+}
+
+interface StoredUser extends AppUser {
+  password: string;
 }
 
 interface AuthContextType {
@@ -19,7 +24,6 @@ interface AuthContextType {
 const AUTH_STORAGE_KEY = "nexti_auth_user";
 const USERS_STORAGE_KEY = "nexti_users_db";
 
-// Password: min 8 chars, uppercase, lowercase, special char
 export function validatePassword(password: string): string | null {
   if (password.length < 8) return "A senha deve ter pelo menos 8 caracteres";
   if (!/[A-Z]/.test(password)) return "A senha deve conter pelo menos uma letra maiúscula";
@@ -28,18 +32,17 @@ export function validatePassword(password: string): string | null {
   return null;
 }
 
-function loadUsers(): AppUser & { password: string }[] {
+function loadUsers(): StoredUser[] {
   try {
     const stored = localStorage.getItem(USERS_STORAGE_KEY);
     if (stored) return JSON.parse(stored);
   } catch {}
-  // Seed from built-in JSON
-  const defaultUsers = require("@/data/users.json").users;
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(defaultUsers));
-  return defaultUsers;
+  const seed = defaultUsersJson.users as StoredUser[];
+  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(seed));
+  return seed;
 }
 
-function saveUsers(users: any[]) {
+function saveUsers(users: StoredUser[]) {
   localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
 }
 
@@ -95,13 +98,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const maxId = users.reduce((max, u) => Math.max(max, u.id), 0);
-    const newUser = {
+    const newUser: StoredUser = {
       id: maxId + 1,
       username: username.toLowerCase(),
       password,
       client,
       name,
-      role: "user" as const,
+      role: "user",
     };
     users.push(newUser);
     saveUsers(users);
