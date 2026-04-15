@@ -861,7 +861,7 @@ export function getQualidadeKpiSummary(
   }
 
   // Ajustes data for tempo medio
-  const ajustesSource = groupBy === "unidade" ? ajustesUnidadeData : groupBy === "area" ? ajustesAreaData : ajustesEmpresaData;
+  const ajustesSource = sources ? sources.ajustes[groupBy] : (groupBy === "unidade" ? ajustesUnidadeData : groupBy === "area" ? ajustesAreaData : ajustesEmpresaData);
 
   // Apply month filter
   const monthFilterRows = selectedMonth ? rows.filter(r => r.reference_month === selectedMonth) : rows;
@@ -910,7 +910,7 @@ export function getQualidadeKpiSummary(
     ? { ...DEFAULT_CONFIG, ...scoreConfig }
     : DEFAULT_CONFIG;
 
-  const score = Math.round(computeCompositeScore(selectedName, groupBy, fullConfig));
+  const score = Math.round(computeCompositeScore(selectedName, groupBy, fullConfig, undefined, sources));
 
   // Per-entity composite for melhor/pior using same 3-component formula
   const entityNames = new Set<string>();
