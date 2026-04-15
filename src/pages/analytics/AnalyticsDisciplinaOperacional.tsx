@@ -1866,14 +1866,12 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
             const nameField = groupBy === "empresa" ? "company_name" : groupBy === "unidade" ? "business_unit_name" : "area_name";
             const idField = groupBy === "empresa" ? "company_id" : groupBy === "unidade" ? "business_unit_id" : "area_id";
-            let filtered = selectedRegional
+            const filtered = selectedRegional
               ? rawEsforco.filter((r: any) => {
                   const selNorm = normName(selectedRegional);
                   return String(r[idField]) === selectedRegional || normName(r[nameField] ?? "") === selNorm;
                 })
               : rawEsforco;
-            const sobrecargaFallback = selectedRegional && filtered.length === 0 && rawEsforco.length > 0;
-            if (sobrecargaFallback) filtered = rawEsforco;
 
             const MONTH_LABELS: Record<string, string> = {
               "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
@@ -1938,7 +1936,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                     </div>
                     <p className="text-[10px] text-muted-foreground mb-1">
                       Carga de ajustes e HE por operador. Linha tracejada azul = HE total do time.
-                      {sobrecargaFallback && <span className="ml-1 text-amber-600 font-medium">(dados consolidados — sem granularidade por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "unidade" : "área"})</span>}
                     </p>
                   </div>
                   <button onClick={() => setChartDataModal("sobrecarga")} className="text-muted-foreground hover:text-foreground transition-colors" title="Ver dados do gráfico">
