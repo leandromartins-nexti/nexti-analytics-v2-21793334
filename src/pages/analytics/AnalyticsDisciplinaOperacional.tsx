@@ -1051,35 +1051,49 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [groupBy, selectedReferenceMonth]);
 
   const visibleSet = useMemo(() => new Set(visibleNames), [visibleNames]);
-  const chartScatterQual = useMemo(() => {
+  // ── Mapa de Operações data: Headcount × Score per entity ──
+  const mapaOperacoesData = useMemo(() => {
     const normName = (n: string) => n.replace(/^VIG\s*EYES\s*/i, "").trim().toUpperCase();
     const base = allScatter.filter(s => visibleSet.size === 0 || visibleSet.has(s.regional));
-    return base.map(s => ({
-      ...s,
-      tempoMedioDias: tempoMedioPorOperacao.get(normName(s.regional)) ?? 5,
-    }));
-  }, [allScatter, visibleSet, tempoMedioPorOperacao]);
+    return base.map(s => {
+      const breakdown = computeFullBreakdown(s.regional, groupBy as any, scoreConfig);
+      const score = Math.round(breakdown.compositeScore);
+      const classif = getScoreClassification(score, scoreConfig);
+      const bubbleColor = score >= 70 ? "#22c55e" : score >= 55 ? "#f59e0b" : "#ef4444";
+      return {
+        regional: s.regional,
+        headcount: s.headcount,
+        score,
+        qualidade: Math.round(breakdown.qualPct),
+        velocidade: Math.round(breakdown.treatScore),
+        backoffice: Math.round(breakdown.boScore),
+        classifLabel: classif.label,
+        bubbleColor,
+      };
+    });
+  }, [allScatter, visibleSet, groupBy, scoreConfig]);
+
+  const medianHeadcount = useMemo(() => {
+    if (!mapaOperacoesData.length) return 100;
+    const sorted = [...mapaOperacoesData].sort((a, b) => a.headcount - b.headcount);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1].headcount + sorted[mid].headcount) / 2) : sorted[mid].headcount;
+  }, [mapaOperacoesData]);
+
+  const mapaDomain = useMemo(() => {
+    if (!mapaOperacoesData.length) return { xMin: 0, xMax: 500, yMin: 0, yMax: 100 };
+    const hcs = mapaOperacoesData.map(d => d.headcount);
+    const maxHc = Math.max(...hcs);
+    return { xMin: 0, xMax: Math.ceil(maxHc * 1.15), yMin: 0, yMax: 100 };
+  }, [mapaOperacoesData]);
+
+  // Critical zone: Score < 55 AND Headcount > median
+  const criticalCount = useMemo(() => mapaOperacoesData.filter(d => d.score < 55 && d.headcount > medianHeadcount).length, [mapaOperacoesData, medianHeadcount]);
+
   const chartScatterTrat = useMemo(() => {
     if (visibleSet.size > 0) return allScatterTratativa.filter(s => visibleSet.has(s.regional));
     return allScatterTratativa;
   }, [allScatterTratativa, visibleSet]);
-
-  // Clicked/fixed bubble state
-  const [fixedBubble, setFixedBubble] = useState<string | null>(null);
-  
-  // Critical zone badge
-  const criticalCount = useMemo(() => chartScatterQual.filter(d => d.qualidade < 70 && (d.tempoMedioDias > 7 || d.qualidade < 50)).length, [chartScatterQual]);
-
-  // Median volume for reference line
-  const medianVolume = useMemo(() => {
-    if (!chartScatterQual.length) return 170000;
-    const sorted = [...chartScatterQual].sort((a, b) => a.volume - b.volume);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1].volume + sorted[mid].volume) / 2) : sorted[mid].volume;
-  }, [chartScatterQual]);
-
-  const avgQualVolume = useMemo(() => chartScatterQual.length ? Math.round(chartScatterQual.reduce((s, d) => s + d.volume, 0) / chartScatterQual.length) : 170000, [chartScatterQual]);
-  const avgQualQualidade = useMemo(() => chartScatterQual.length ? +(chartScatterQual.reduce((s, d) => s + d.qualidade, 0) / chartScatterQual.length).toFixed(1) : 85, [chartScatterQual]);
   const avgTratVolume = useMemo(() => chartScatterTrat.length ? Math.round(chartScatterTrat.reduce((s, d) => s + d.volume, 0) / chartScatterTrat.length) : 170000, [chartScatterTrat]);
   const avgTratDias = useMemo(() => chartScatterTrat.length ? +(chartScatterTrat.reduce((s, d) => s + d.dias, 0) / chartScatterTrat.length).toFixed(1) : 4.5, [chartScatterTrat]);
 
