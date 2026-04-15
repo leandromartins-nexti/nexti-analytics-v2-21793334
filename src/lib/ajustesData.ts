@@ -177,16 +177,18 @@ export interface AjusteScatterPoint {
 
 /** Aggregate raw data into scatter points. If month is null, consolidate all months.
  *  groupBy selects which dataset to use: "unidade" (default) or "area". */
-export function aggregateAjustes(selectedMonth: string | null, groupBy: "unidade" | "area" | "empresa" = "unidade"): AjusteScatterPoint[] {
-  const source = groupBy === "area" ? ajustesAreaData : groupBy === "empresa" ? ajustesEmpresaData : ajustesUnidadeData;
+export function aggregateAjustes(selectedMonth: string | null, groupBy: "unidade" | "area" | "empresa" = "unidade", sources?: QualidadeDataSources): AjusteScatterPoint[] {
+  const source = sources
+    ? sources.ajustes[groupBy]
+    : (groupBy === "area" ? ajustesAreaData : groupBy === "empresa" ? ajustesEmpresaData : ajustesUnidadeData);
   const filtered = selectedMonth
-    ? source.filter(r => r.reference_month === selectedMonth)
+    ? source.filter((r: any) => r.reference_month === selectedMonth)
     : source;
 
   const byBU = new Map<number, { name: string; totalVolume: number; weightedDias: number; maxHeadcount: number }>();
 
   for (const r of filtered) {
-    if (r.tempo_medio_dias == null) continue; // skip null tempo
+    if (r.tempo_medio_dias == null) continue;
     const existing = byBU.get(r.business_unit_id);
     if (existing) {
       existing.totalVolume += r.volume_marcacoes;
