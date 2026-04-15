@@ -1278,6 +1278,18 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       return next;
     });
   }, []);
+  // Mapa dimension selector
+  type MapaDimension = "score" | "qualidade" | "velocidade" | "backoffice";
+  const [mapaDimension, setMapaDimension] = useState<MapaDimension>("score");
+  const mapaDimensionConfig: Record<MapaDimension, { label: string; yLabel: string; thresholds: [number, number] }> = {
+    score: { label: "Score Composto", yLabel: "Score Operacional", thresholds: [70, 55] },
+    qualidade: { label: "Qualidade", yLabel: "Qualidade (%)", thresholds: [90, 75] },
+    velocidade: { label: "Velocidade", yLabel: "Nota Velocidade", thresholds: [70, 55] },
+    backoffice: { label: "Back-office", yLabel: "Nota Back-office", thresholds: [70, 55] },
+  };
+  const activeDimConfig = mapaDimensionConfig[mapaDimension];
+  const getMapaBubbleColor = (val: number) => val >= activeDimConfig.thresholds[0] ? "#22c55e" : val >= activeDimConfig.thresholds[1] ? "#f59e0b" : "#ef4444";
+  const getMapaVal = (d: any): number => d[mapaDimension] ?? d.score;
 
   const tratDomain = useMemo(() => {
     if (!chartScatterTrat.length) return { xMin: 0, xMax: 300000, yMin: 1, yMax: 7 };
