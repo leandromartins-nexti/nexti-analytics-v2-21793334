@@ -135,6 +135,39 @@ const MATURIDADE_LABELS: Record<string, string> = {
 
 const CATEGORIES_ORDER = ["planejada", "saude", "operacional", "nao_categorizada", "falta"];
 
+// ── V5 Composição operational categories (10) with default weights ──
+const V5_OPERATIONAL_CATS = [
+  { key: "falta_nao_justificada_h", label: "Falta não justificada", peso: 100, color: "#dc2626" },
+  { key: "disciplinar_h", label: "Disciplinar", peso: 100, color: "#ef4444" },
+  { key: "saida_meio_h", label: "Saída intermediária", peso: 70, color: "#ea580c" },
+  { key: "saida_antecipada_h", label: "Saída antecipada", peso: 65, color: "#f97316" },
+  { key: "atraso_h", label: "Atraso", peso: 60, color: "#f59e0b" },
+  { key: "parcial_generico_h", label: "Parcial genérica", peso: 50, color: "#eab308" },
+  { key: "atestado_h", label: "Atestado médico", peso: 40, color: "#3b82f6" },
+  { key: "inss_h", label: "INSS (afastamento)", peso: 30, color: "#06b6d4" },
+  { key: "acidente_h", label: "Acidente de trabalho", peso: 20, color: "#14b8a6" },
+  { key: "licenca_legal_h", label: "Licença legal", peso: 20, color: "#22c55e" },
+] as const;
+
+const V5_EXCLUDED_CATS = [
+  { key: "ferias_h", label: "Férias", color: "#d1d5db" },
+  { key: "abono_h", label: "Abono", color: "#e5e7eb" },
+  { key: "falta_programada_h", label: "Falta programada", color: "#f3f4f6" },
+] as const;
+
+/** Sub-Score Composição v5: weighted average of operational categories */
+function computeV5ComposicaoScore(rows: Array<Record<string, any>>): { subScore: number; pesoMedio: number } {
+  let somaPonderada = 0;
+  let somaHoras = 0;
+  for (const cat of V5_OPERATIONAL_CATS) {
+    const horas = rows.reduce((s, r) => s + (Number(r[cat.key]) || 0), 0);
+    somaPonderada += horas * cat.peso;
+    somaHoras += horas;
+  }
+  const pesoMedio = somaHoras > 0 ? somaPonderada / somaHoras : 0;
+  return { subScore: Math.round(100 - pesoMedio), pesoMedio: Math.round(pesoMedio * 10) / 10 };
+}
+
 // Taxa calculada = horas_ausencia_nao_planejada(mar/26) / (HC_entity * horas_previstas_mes) * 100
 // Valores pré-calculados com horas_previstas_mes = 220 (default vigilância)
 // PORTARIA: 5411h / (310*220) = 7.93%  |  SEG PAT: 491h / (98*220) = 2.28%  |  TERC: 411h / (76*220) = 2.46%
