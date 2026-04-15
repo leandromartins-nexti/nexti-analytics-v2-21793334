@@ -523,7 +523,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   };
 
   const mediaTaxa = volumeConsolidado.reduce((s, d) => {
-    const t = d.pessoas_ausentes > 0 ? (d.horas_ausencia_nao_planejada / (d.pessoas_ausentes * 200)) * 100 : 0;
+    const t = d.hcMes > 0 ? (d.horas_ausencia_nao_planejada / (d.hcMes * hPrev)) * 100 : 0;
     return s + t;
   }, 0) / volumeConsolidado.length;
 
@@ -703,7 +703,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             {(() => {
               const prevTaxa = (() => {
                 const prev = volumeConsolidado[volumeConsolidado.length - 2];
-                return prev && prev.pessoas_ausentes > 0 ? +((prev.horas_ausencia_nao_planejada / (prev.pessoas_ausentes * 200)) * 100).toFixed(2) : null;
+                return prev && prev.hcMes > 0 ? +((prev.horas_ausencia_nao_planejada / (prev.hcMes * hPrev)) * 100).toFixed(2) : null;
               })();
               if (prevTaxa === null) return <span className="text-[10px] mt-1 text-muted-foreground">sem histórico</span>;
               const d = +(latestTaxa - prevTaxa).toFixed(1);
