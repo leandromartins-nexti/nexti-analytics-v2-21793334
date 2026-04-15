@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,17 @@ const WEIGHT_LABELS: Record<string, string> = {
 
 const WEIGHT_KEYS = ["weight_quality", "weight_treatment", "weight_backoffice"] as const;
 
+/** Generate dynamic labels for BO adjustment thresholds */
+function boThresholdLabels(thresholds: number[]): string[] {
+  const labels: string[] = [];
+  labels.push(`Até ${thresholds[0]}`);
+  for (let i = 1; i < thresholds.length; i++) {
+    labels.push(`${thresholds[i - 1]} a ${thresholds[i]}`);
+  }
+  labels.push(`Mais de ${thresholds[thresholds.length - 1]}`);
+  return labels;
+}
+
 export default function ScoreQualidadeConfig() {
   const { config, setConfig, saveConfig, resetToDefault } = useScoreConfig();
   const [local, setLocal] = useState<ScoreConfig>(config);
@@ -59,10 +70,10 @@ export default function ScoreQualidadeConfig() {
 
   useEffect(() => { setLocal(config); }, [config]);
 
-  const update = (partial: Partial<ScoreConfig>) => {
+  const update = useCallback((partial: Partial<ScoreConfig>) => {
     setLocal(prev => ({ ...prev, ...partial }));
     setDirty(true);
-  };
+  }, []);
 
   const handleSave = async () => {
     setConfig(local);
@@ -90,6 +101,7 @@ export default function ScoreQualidadeConfig() {
   };
 
   const weightSum = local.weight_quality + local.weight_treatment + local.weight_backoffice;
+  const boWeightSum = local.bo_weight_adjustments + local.bo_weight_overtime;
 
   // Live preview
   const breakdown = useMemo(() => computeFullBreakdown(null, "empresa", local), [local]);
@@ -109,13 +121,23 @@ export default function ScoreQualidadeConfig() {
 
   const componentColors = ["#22c55e", "#3b82f6", "#8b5cf6"];
 
+  const boLabels = boThresholdLabels(local.bo_adjustment_thresholds);
+  const heExamples = useMemo(() => {
+    const m = local.he_multiplier;
+    return [
+      { he: 0, nota: 100 },
+      { he: Math.round(50 / m), nota: 50 },
+      { he: Math.round(100 / m), nota: 0 },
+    ];
+  }, [local.he_multiplier]);
+
   return (
     <div className="grid grid-cols-2 gap-6">
       {/* Left: Configuration */}
       <div className="space-y-6">
         {/* Block 1: Weights (3 components) */}
         <div className="bg-card border border-border/50 rounded-xl p-5 space-y-4">
-          <h3 className="text-sm font-bold text-foreground">Peso dos Componentes</h3>
+          <h3 className="text-sm font-bold text-foreground">Configure os pesos dos 3 componentes</h3>
 
           <div className="space-y-3">
             {WEIGHT_KEYS.map((key) => (
@@ -175,52 +197,110 @@ export default function ScoreQualidadeConfig() {
         </div>
 
         {/* Block 3: Back-office Health */}
-        <div className="bg-card border border-border/50 rounded-xl p-5 space-y-4">
+        <div className="bg-card border border-border/50 rounded-xl p-5 space-y-5">
           <div>
             <h3 className="text-sm font-bold text-foreground">Saúde do Back-office</h3>
-            <p className="text-[10px] text-muted-foreground mt-0.5">Componente composto por 2 subcomponentes com peso igual. Calculado sobre a média móvel dos últimos 3 meses</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Componente composto por 2 subcomponentes. Calculado sobre a média móvel dos últimos 3 meses</p>
           </div>
 
-          {/* Formula highlight */}
-          <div className="bg-muted/40 rounded-lg px-3 py-2 text-[11px] font-mono text-foreground/80 border border-border/30">
-            Nota = (Nota de Ajustes/Operador × 50%) + (Nota de HE/Operador × 50%)
-          </div>
-
-          {/* Sub A: Ajustes per operator */}
-          <div className="space-y-2">
-            <h4 className="text-xs font-semibold text-foreground">Subcomponente A — Ajustes por Operador (configurável)</h4>
+          {/* BO Composition weights */}
+          <div className="bg-muted/30 border border-border/30 rounded-lg p-4 space-y-3">
+            <h4 className="text-xs font-semibold text-foreground">Composição da Saúde do Back-office</h4>
             <div className="space-y-2">
-              {([
-                { label: "Até 400", key: "grade_bo_under_400" as const },
-                { label: "400 a 700", key: "grade_bo_400_700" as const },
-                { label: "700 a 1.000", key: "grade_bo_700_1000" as const },
-                { label: "1.000 a 1.400", key: "grade_bo_1000_1400" as const },
-                { label: "Mais de 1.400", key: "grade_bo_over_1400" as const },
-              ]).map(({ label, key }) => (
-                <div key={key} className="flex items-center gap-3">
-                  <span className="text-xs text-foreground w-28 shrink-0">{label}</span>
-                  <Input
-                    type="number" min={0} max={100}
-                    value={local[key]}
-                    onChange={(e) => update({ [key]: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
-                    className="w-16 h-8 text-xs text-center"
-                  />
-                  <div className="flex-1"><GradeBar value={local[key]} /></div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-foreground">Peso — Ajustes/Operador</span>
+                <span className="text-xs font-bold text-foreground">{local.bo_weight_adjustments}%</span>
+              </div>
+              <Slider
+                value={[local.bo_weight_adjustments]}
+                onValueChange={([v]) => update({ bo_weight_adjustments: v, bo_weight_overtime: 100 - v })}
+                max={100} step={5}
+                className="w-full"
+              />
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-foreground">Peso — HE/Operador</span>
+                <span className="text-xs font-bold text-foreground">{local.bo_weight_overtime}%</span>
+              </div>
+              <Slider
+                value={[local.bo_weight_overtime]}
+                onValueChange={([v]) => update({ bo_weight_overtime: v, bo_weight_adjustments: 100 - v })}
+                max={100} step={5}
+                className="w-full"
+              />
+              <p className={`text-[10px] ${boWeightSum === 100 ? "text-muted-foreground" : "text-red-500 font-semibold"}`}>
+                Atual: {boWeightSum}% {boWeightSum !== 100 && "(deve somar 100%)"}
+              </p>
+            </div>
+            <div className="bg-muted/40 rounded-lg px-3 py-2 text-[11px] font-mono text-foreground/80 border border-border/30">
+              Nota = (Nota Ajustes × {local.bo_weight_adjustments}%) + (Nota HE × {local.bo_weight_overtime}%)
+            </div>
+          </div>
+
+          {/* Sub A: Ajustes per operator — editable thresholds + grades */}
+          <div className="space-y-3">
+            <div>
+              <h4 className="text-xs font-semibold text-foreground">Subcomponente A — Ajustes por Operador</h4>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Ajuste tanto os limites quanto as notas de cada faixa.</p>
+            </div>
+            <div className="space-y-2">
+              {local.bo_adjustment_grades.map((grade, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className="text-xs text-foreground w-32 shrink-0">{boLabels[idx]}</span>
+                  {/* Editable threshold (except first and last which are derived) */}
+                  {idx < local.bo_adjustment_thresholds.length && (
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-muted-foreground">Lim:</span>
+                      <Input
+                        type="number" min={0} max={99999}
+                        value={local.bo_adjustment_thresholds[idx]}
+                        onChange={(e) => {
+                          const newThresholds = [...local.bo_adjustment_thresholds];
+                          newThresholds[idx] = Math.max(0, parseInt(e.target.value) || 0);
+                          update({ bo_adjustment_thresholds: newThresholds });
+                        }}
+                        className="w-16 h-7 text-xs text-center"
+                      />
+                    </div>
+                  )}
+                  {idx >= local.bo_adjustment_thresholds.length && <div className="w-[76px]" />}
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] text-muted-foreground">Nota:</span>
+                    <Input
+                      type="number" min={0} max={100}
+                      value={grade}
+                      onChange={(e) => {
+                        const newGrades = [...local.bo_adjustment_grades];
+                        newGrades[idx] = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                        update({ bo_adjustment_grades: newGrades });
+                      }}
+                      className="w-16 h-7 text-xs text-center"
+                    />
+                  </div>
+                  <div className="flex-1"><GradeBar value={grade} /></div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Sub B: HE per operator (fixed linear) */}
-          <div className="space-y-2">
-            <h4 className="text-xs font-semibold text-foreground">Subcomponente B — Horas Extras por Operador (escala linear fixa)</h4>
+          {/* Sub B: HE per operator — editable multiplier */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold text-foreground">Subcomponente B — Horas Extras por Operador</h4>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-foreground">Multiplicador HE</span>
+              <Input
+                type="number" min={1} max={5} step={0.1}
+                value={local.he_multiplier}
+                onChange={(e) => update({ he_multiplier: Math.min(5, Math.max(1, parseFloat(e.target.value) || 2.5)) })}
+                className="w-20 h-8 text-xs text-center"
+              />
+            </div>
             <div className="bg-muted/40 rounded-lg px-3 py-2 text-[11px] font-mono text-foreground/80 border border-border/30">
-              Escala linear de 0 a 50h/mês · Fórmula: nota = MAX(0, 100 − (HE × 2))
+              nota = MAX(0, 100 − (HE × {local.he_multiplier}))
             </div>
             <div className="text-[10px] text-muted-foreground space-y-0.5 pl-1">
-              <p>• 0h/mês: 100 pontos</p>
-              <p>• 25h/mês: 50 pontos</p>
-              <p>• 50h/mês ou mais: 0 pontos</p>
+              {heExamples.map((ex) => (
+                <p key={ex.he}>• {ex.he}h/mês: {ex.nota} pontos</p>
+              ))}
             </div>
           </div>
         </div>
@@ -292,7 +372,6 @@ export default function ScoreQualidadeConfig() {
 
           {/* 3 Component breakdown */}
           <div className="space-y-3 border-t border-border/30 pt-4">
-            {/* Quality */}
             <ComponentRow 
               name="Qualidade das Marcações" 
               score={breakdown.qualPct} 
@@ -301,7 +380,6 @@ export default function ScoreQualidadeConfig() {
               color={componentColors[0]}
               context={`${breakdown.qualPct}% dos registros`}
             />
-            {/* Treatment */}
             <ComponentRow 
               name="Velocidade de Tratativa" 
               score={breakdown.treatScore} 
@@ -310,14 +388,13 @@ export default function ScoreQualidadeConfig() {
               color={componentColors[1]}
               context="Baseado na distribuição abaixo"
             />
-            {/* Back-office */}
             <ComponentRow 
               name="Saúde do Back-office" 
               score={breakdown.boScore} 
               weight={local.weight_backoffice} 
               contrib={breakdown.boContrib} 
               color={componentColors[2]}
-              context={`Ajustes: ${breakdown.boData.notaAjustes} pts · HE: ${breakdown.boData.notaHE} pts · Média 3m`}
+              context={`Ajustes: ${breakdown.boData.notaAjustes} pts (${local.bo_weight_adjustments}%) · HE: ${breakdown.boData.notaHE} pts (${local.bo_weight_overtime}%)`}
             />
 
             <div className="flex items-center justify-between border-t border-border/30 pt-2">

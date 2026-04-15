@@ -2,9 +2,9 @@
  * Score de Qualidade do Ponto — Computation Engine (3 componentes)
  * 
  * Components:
- * 1. Quality: registered_count / clocking_count from headcount JSONs (weight 50%)
- * 2. Treatment: faixa distribution from composição data (weight 30%)
- * 3. Back-office: qtd_ajustes / (operadores × months) + HE from esforco-tratativa JSONs (weight 20%)
+ * 1. Quality: registered_count / clocking_count from headcount JSONs (weight configurable)
+ * 2. Treatment: faixa distribution from composição data (weight configurable)
+ * 3. Back-office: dynamic thresholds for ajustes + configurable HE multiplier (weight configurable)
  */
 
 import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
@@ -137,15 +137,20 @@ export function computeTreatmentScore(
 }
 
 // ═══════════════════════════════════════════════════════
-// 3. BACK-OFFICE HEALTH — (ajustes/operador × 50%) + (HE × 50%)
+// 3. BACK-OFFICE HEALTH — dynamic thresholds + HE multiplier
 // ═══════════════════════════════════════════════════════
 
+/** Map ajustes/op to grade using dynamic thresholds from config */
 function boAjustesToGrade(ajustesPerOp: number, config: ScoreConfig): number {
-  if (ajustesPerOp <= 400) return config.grade_bo_under_400;
-  if (ajustesPerOp <= 700) return config.grade_bo_400_700;
-  if (ajustesPerOp <= 1000) return config.grade_bo_700_1000;
-  if (ajustesPerOp <= 1400) return config.grade_bo_1000_1400;
-  return config.grade_bo_over_1400;
+  const thresholds = config.bo_adjustment_thresholds;
+  const grades = config.bo_adjustment_grades;
+  
+  // thresholds = [T0, T1, T2, T3], grades = [G0, G1, G2, G3, G4]
+  // ≤ T0 → G0, T0< x ≤T1 → G1, ..., > T3 → G4
+  for (let i = 0; i < thresholds.length; i++) {
+    if (ajustesPerOp <= thresholds[i]) return grades[i];
+  }
+  return grades[grades.length - 1];
 }
 
 export function computeBackofficeScore(
@@ -157,9 +162,7 @@ export function computeBackofficeScore(
 ): { score: number; ajustesPerOp: number; hePerOp: number; notaAjustes: number; notaHE: number } {
   const { data, nameField } = getEfSource(groupBy, sources);
 
-  // Normalize window dates to match competencia format
-  const windowNorm = window.map(w => w.substring(0, 7)); // "2026-01-01" → "2026-01"
-
+  const windowNorm = window.map(w => w.substring(0, 7));
   const rows = data.filter(r => windowNorm.includes(normComp(r.competencia).substring(0, 7)));
   const filtered = selectedName ? rows.filter(r => nameMatches(r[nameField], selectedName)) : rows;
 
@@ -167,12 +170,9 @@ export function computeBackofficeScore(
     return { score: 100, ajustesPerOp: 0, hePerOp: 0, notaAjustes: 100, notaHE: 100 };
   }
 
-  // Total ajustes over the window
   const totalAjustes = filtered.reduce((s, r) => s + r.qtd_ajustes, 0);
-  // Total HE over the window
   const totalHE = filtered.reduce((s, r) => s + (r.horas_extras_rateadas ?? 0), 0);
 
-  // Operadores: max across months as approximation
   const byMonth = new Map<string, number>();
   for (const r of filtered) {
     const m = r.competencia.substring(0, 7);
@@ -186,8 +186,12 @@ export function computeBackofficeScore(
   const hePerOp = maxOps > 0 ? totalHE / (maxOps * months) : 0;
 
   const notaAjustes = boAjustesToGrade(ajustesPerOp, config);
-  const notaHE = Math.max(0, 100 - (hePerOp * 2));
-  const score = Math.round(notaAjustes * 0.5 + notaHE * 0.5);
+  const heMultiplier = config.he_multiplier ?? 2;
+  const notaHE = Math.max(0, 100 - (hePerOp * heMultiplier));
+
+  const wAdj = (config.bo_weight_adjustments ?? 50) / 100;
+  const wOT = (config.bo_weight_overtime ?? 50) / 100;
+  const score = Math.round(notaAjustes * wAdj + notaHE * wOT);
 
   return { score, ajustesPerOp: +ajustesPerOp.toFixed(0), hePerOp: +hePerOp.toFixed(1), notaAjustes: Math.round(notaAjustes), notaHE: Math.round(notaHE) };
 }

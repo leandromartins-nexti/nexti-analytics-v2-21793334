@@ -1201,7 +1201,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       const breakdown = computeFullBreakdown(s.regional, groupBy as any, scoreConfig, undefined, dataSources);
       const score = Math.round(breakdown.compositeScore);
       const classif = getScoreClassification(score, scoreConfig);
-      const bubbleColor = score >= 70 ? "#22c55e" : score >= 55 ? "#f59e0b" : "#ef4444";
+      const bubbleColor = score >= scoreConfig.threshold_good ? "#22c55e" : score >= scoreConfig.threshold_warning ? "#f59e0b" : "#ef4444";
       return {
         regional: s.regional,
         headcount: s.headcount,
@@ -1237,7 +1237,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [mapaOperacoesData]);
 
   // Critical zone: Score < 55 AND Headcount > median
-  const criticalCount = useMemo(() => mapaOperacoesData.filter(d => d.score < 55 && d.headcount > medianHeadcount).length, [mapaOperacoesData, medianHeadcount]);
+  const criticalCount = useMemo(() => mapaOperacoesData.filter(d => d.score < scoreConfig.threshold_warning && d.headcount > medianHeadcount).length, [mapaOperacoesData, medianHeadcount, scoreConfig.threshold_warning]);
 
   const chartScatterTrat = useMemo(() => {
     if (visibleSet.size > 0) return allScatterTratativa.filter(s => visibleSet.has(s.regional));
@@ -1282,10 +1282,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   type MapaDimension = "score" | "qualidade" | "velocidade" | "backoffice";
   const [mapaDimension, setMapaDimension] = useState<MapaDimension>("score");
   const mapaDimensionConfig: Record<MapaDimension, { label: string; yLabel: string; thresholds: [number, number] }> = {
-    score: { label: "Score Composto", yLabel: "Score Operacional", thresholds: [70, 55] },
+    score: { label: "Score Composto", yLabel: "Score Operacional", thresholds: [scoreConfig.threshold_good, scoreConfig.threshold_warning] },
     qualidade: { label: "Qualidade", yLabel: "Qualidade (%)", thresholds: [90, 75] },
-    velocidade: { label: "Velocidade", yLabel: "Nota Velocidade", thresholds: [70, 55] },
-    backoffice: { label: "Back-office", yLabel: "Nota Back-office", thresholds: [70, 55] },
+    velocidade: { label: "Velocidade", yLabel: "Nota Velocidade", thresholds: [scoreConfig.threshold_good, scoreConfig.threshold_warning] },
+    backoffice: { label: "Back-office", yLabel: "Nota Back-office", thresholds: [scoreConfig.threshold_good, scoreConfig.threshold_warning] },
   };
   const activeDimConfig = mapaDimensionConfig[mapaDimension];
   const getMapaBubbleColor = (val: number) => val >= activeDimConfig.thresholds[0] ? "#22c55e" : val >= activeDimConfig.thresholds[1] ? "#f59e0b" : "#ef4444";
@@ -1305,8 +1305,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const riscoClassif = getScoreClassification(activeData.maiorRisco.score, scoreConfig);
 
   const sobrecargaValue = Math.round(fullBreakdown.boData.ajustesPerOp);
-  const sobrecargaClassif = sobrecargaValue <= 400 ? { label: "Saudável", color: "text-green-600" }
-    : sobrecargaValue <= 1000 ? { label: "Atenção", color: "text-orange-500" }
+  const boThresh = scoreConfig.bo_adjustment_thresholds;
+  const sobrecargaClassif = sobrecargaValue <= (boThresh[1] ?? 400) ? { label: "Saudável", color: "text-green-600" }
+    : sobrecargaValue <= (boThresh[2] ?? 700) ? { label: "Atenção", color: "text-orange-500" }
     : { label: "Crítico", color: "text-red-600" };
 
   // Formatting helpers
@@ -1434,7 +1435,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
               <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Sobrecarga</p>
-              <InfoTip text={`Sobrecarga do Back-office\n─────────────────\nCarga média de ajustes processados por operador do back-office.\n\nJanela: média dos últimos 3 meses.\n\nCálculo: total de ajustes ÷ (operadores × 3 meses)\n\nAtual ${sobrecargaValue} aj/op/mês\n\nLimites:\n  Saudável: até 400 aj/operador/mês\n  Atenção: 401 a 1.000\n  Crítico: acima de 1.000`} />
+              <InfoTip text={`Sobrecarga do Back-office\n─────────────────\nCarga média de ajustes processados por operador do back-office.\n\nJanela: média dos últimos 3 meses.\n\nCálculo: total de ajustes ÷ (operadores × 3 meses)\n\nAtual ${sobrecargaValue} aj/op/mês\n\nLimites:\n  Saudável: até ${boThresh[1] ?? 400} aj/operador/mês\n  Atenção: ${(boThresh[1] ?? 400) + 1} a ${boThresh[2] ?? 700}\n  Crítico: acima de ${boThresh[2] ?? 700}`} />
             </div>
             <p className="text-xl font-bold mt-0.5 truncate text-foreground">{sobrecargaValue}</p>
             <p className={`text-[11px] mt-0.5 font-medium ${sobrecargaClassif.color}`}>{sobrecargaClassif.label}</p>
@@ -1559,7 +1560,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   if (!active || !payload?.length) return null;
                   const d = payload[0].payload;
                   const isHighHc = d.headcount > medianHeadcount;
-                  const isHighScore = d.score >= 70;
+                  const isHighScore = d.score >= scoreConfig.threshold_good;
                   const quadrante = isHighHc && isHighScore ? "Alta escala saudável"
                     : isHighHc && !isHighScore ? "Alta escala em risco"
                     : !isHighHc && isHighScore ? "Pequena escala saudável"
