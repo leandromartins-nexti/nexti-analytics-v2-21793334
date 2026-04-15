@@ -332,7 +332,7 @@ export default function AnalyticsResumoExecutivo() {
                 <div className="w-2" />
                 <span className="min-w-[140px]" />
                 <span className="min-w-[45px]" />
-                <span className="min-w-[70px]" />
+                
                 <span className="min-w-[65px]" />
                 <div className="flex-1 min-w-[120px] flex justify-between">
                   {sparklineCards[0].evolucao.map((pt) => (
