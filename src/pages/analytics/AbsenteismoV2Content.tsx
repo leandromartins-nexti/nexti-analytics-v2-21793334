@@ -871,7 +871,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                       })}
                     </Bar>
                   ))}
-                  <Line yAxisId="right" type="monotone" dataKey="volumeTotal" stroke="#3b82f6" strokeWidth={1.5} strokeDasharray="6 3" dot={false} name="Volume Total (h)" />
+                  <Line yAxisId="right" type="monotone" dataKey="volumeTotal" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6", stroke: "#fff", strokeWidth: 1.5 }} name="Volume Total (h)" />
                   <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                     ...CATEGORIES_ORDER.filter(cat => composicaoChartData.some(d => (d as any)[cat] > 0)).map(cat => ({
                       value: `${CATEGORY_LABELS[cat]} ${composicaoDistribuicao[cat as keyof typeof composicaoDistribuicao] ?? 0}%`,
