@@ -816,7 +816,8 @@ export function getQualidadeKpiSummary(
   selectedName: string | null,
   groupBy: "empresa" | "unidade" | "area" = "empresa",
   scoreConfig?: { weight_quality: number; weight_treatment: number; grade_under_1d: number; grade_1_3d: number; grade_3_7d: number; grade_7_15d: number; grade_over_15d: number },
-  selectedMonth?: string | null
+  selectedMonth?: string | null,
+  sources?: QualidadeDataSources
 ): {
   score: number;
   diff: string;
@@ -835,22 +836,28 @@ export function getQualidadeKpiSummary(
   let rows: Row[];
 
   if (groupBy === "unidade") {
-    rows = qualidadeUnidadeData.map(r => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    const base = sources ? sources.qualidade.unidade : qualidadeUnidadeData;
+    rows = base.map((r: any) => ({ name: r.business_unit_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
   } else if (groupBy === "area") {
-    rows = qualidadeAreaData.map(r => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    const base = sources ? sources.qualidade.area : qualidadeAreaData;
+    rows = base.map((r: any) => ({ name: r.area_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
   } else {
-    rows = qualidadeEmpresaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
+    const base = sources ? sources.qualidade.empresa : qualidadeEmpresaData;
+    rows = base.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, registradas: r.registradas, justificadas: r.justificadas, total_marcacoes: r.total_marcacoes, qualidade: r.qualidade_percentual }));
   }
 
   // Composicao data for treatment score per entity
   type CRow = { name: string; reference_month: string; f1: number; f2: number; f3: number; f4: number; f5: number };
   let cRows: CRow[];
+  const compEmp = sources ? sources.composicao.empresa : composicaoEmpresaData;
+  const compUni = sources ? sources.composicao.unidade : composicaoUnidadeData;
+  const compArea = sources ? sources.composicao.area : composicaoAreaData;
   if (groupBy === "unidade") {
-    cRows = composicaoUnidadeData.map(r => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
+    cRows = compUni.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   } else if (groupBy === "area") {
-    cRows = composicaoAreaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
+    cRows = compArea.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   } else {
-    cRows = composicaoEmpresaData.map(r => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
+    cRows = compEmp.map((r: any) => ({ name: r.company_name, reference_month: r.reference_month, f1: r.faixa_ate_1_dia, f2: r.faixa_1_3_dias, f3: r.faixa_3_7_dias, f4: r.faixa_7_15_dias, f5: r.faixa_mais_15_dias }));
   }
 
   // Ajustes data for tempo medio
