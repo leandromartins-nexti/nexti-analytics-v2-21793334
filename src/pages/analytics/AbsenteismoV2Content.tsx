@@ -80,10 +80,10 @@ const CATEGORY_MAP: Record<number, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   planejada: "#22c55e",
-  saude: "#84cc16",
-  operacional: "#f59e0b",
+  saude: "#3b82f6",
+  operacional: "#8b5cf6",
   falta: "#ef4444",
-  nao_categorizada: "#f97316",
+  nao_categorizada: "#9ca3af",
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -221,6 +221,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           eventos: row?.qtd_eventos ?? 0,
           pessoas: row?.pessoas_ausentes ?? 0,
           taxa: 0,
+          hcMes: row?.pessoas_ausentes ?? 0,
         };
       });
     }
@@ -254,6 +255,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       }
       return {
         mes: MESES_LABELS[date],
+        volumeTotal: total,
         ...Object.fromEntries(
           CATEGORIES_ORDER.map(cat => [cat, total > 0 ? +((( byCategory[cat] ?? 0) / total) * 100).toFixed(1) : 0])
         ),
@@ -261,11 +263,27 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     }).filter(d => CATEGORIES_ORDER.some(c => (d as any)[c] > 0));
   }, [groupBy, selectedRegional, nameField]);
 
-  // ── Maturidade chart data (stacked area 100%) ──
+  // ── Maturidade chart data (stacked area 100%) + % falta crua from composição ──
   const maturidadeChartData = useMemo(() => {
     const raw = groupBy === "empresa" ? maturidadeEmpresa : groupBy === "area" ? maturidadeArea : maturidadeUnNegocio;
+    const compRaw = groupBy === "empresa" ? composicaoEmpresa : groupBy === "area" ? composicaoArea : composicaoUnNegocio;
     const nf = nameField;
     const dates = Object.keys(MESES_LABELS);
+
+    // Compute % falta crua per month from composição data
+    const faltaPctByMonth: Record<string, number> = {};
+    for (const date of dates) {
+      let items = (compRaw as any[]).filter(d => d.reference_date === date);
+      if (selectedRegional) items = items.filter(d => d[nf] === selectedRegional);
+      let faltaH = 0, totalH = 0;
+      for (const item of items) {
+        const cat = CATEGORY_MAP[item.absence_situation_id] ?? "nao_categorizada";
+        const h = item.horas_total ?? 0;
+        if (cat === "falta") faltaH += h;
+        totalH += h;
+      }
+      faltaPctByMonth[date] = totalH > 0 ? +((faltaH / totalH) * 100).toFixed(1) : 0;
+    }
     
     const hasTimeSeries = (raw as any[]).some(d => d.reference_date !== "2026-03-01");
     
@@ -282,6 +300,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           mes: MESES_LABELS[date],
           "1_planejado": totalHoras > 0 ? +((planejadoHoras / totalHoras) * 100).toFixed(1) : 0,
           "2_reativo": totalHoras > 0 ? +((reativoHoras / totalHoras) * 100).toFixed(1) : 0,
+          pctFalta: faltaPctByMonth[date] ?? 0,
         };
       });
     }
@@ -297,6 +316,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       mes: "mar/26",
       "1_planejado": totalHoras > 0 ? +((planejadoHoras / totalHoras) * 100).toFixed(1) : 0,
       "2_reativo": totalHoras > 0 ? +((reativoHoras / totalHoras) * 100).toFixed(1) : 0,
+      pctFalta: faltaPctByMonth["2026-03-01"] ?? 0,
     }];
   }, [groupBy, selectedRegional, nameField]);
 
@@ -499,26 +519,50 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       );
     }
 
-    // line (default)
+    // line (default) — ComposedChart to overlay HC line
     return (
-      <LineChart data={data} onClick={handleChartClick}>
+      <ComposedChart data={data} onClick={handleChartClick}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="mes" tick={xTick} />
-        <YAxis tick={{ fontSize: 10 }} tickFormatter={yFmt} domain={["auto", "auto"]} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-        <RechartsTooltip content={tooltipContent} />
-        {!isValor && <ReferenceLine y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
-        <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={(props: any) => {
+        <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={yFmt} domain={["auto", "auto"]} label={{ value: isValor ? "Horas" : "Taxa (%)", angle: -90, position: "insideLeft", fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+        <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} tickFormatter={v => `${v}`} label={{ value: "HC", angle: 90, position: "insideRight", fontSize: 10, fill: "#9ca3af" }} hide={!data[0]?.hcMes} />
+        <RechartsTooltip content={({ active, payload, label }: any) => {
+          if (!active || !payload?.length) return null;
+          const d = payload[0]?.payload;
+          return (
+            <div className="bg-card border border-border rounded-lg p-2.5 shadow-md text-xs space-y-1">
+              <p className="font-semibold text-foreground">{label}</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
+                <span className="text-muted-foreground">{isValor ? "Horas perdidas:" : "Taxa:"}</span>
+                <span className="font-medium text-foreground">{isValor ? d?.horas?.toLocaleString("pt-BR") : `${d?.taxa}%`}</span>
+              </div>
+              {d?.hcMes && (
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#9ca3af" }} />
+                  <span className="text-muted-foreground">HC Operacional:</span>
+                  <span className="font-medium text-foreground">{d.hcMes}</span>
+                </div>
+              )}
+            </div>
+          );
+        }} />
+        {!isValor && <ReferenceLine yAxisId="left" y={mediaTaxa} stroke="#C8860A99" strokeWidth={1.5} strokeDasharray="8 4" />}
+        <Line yAxisId="left" type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={(props: any) => {
           const { cx, cy, payload } = props;
           const isSelected = selectedMes === payload.mes;
-          const isActive = !selectedMes || isSelected;
+          const isActiveD = !selectedMes || isSelected;
           return (
             <g key={payload.mes} className="cursor-pointer">
               {isSelected && <circle cx={cx} cy={cy} r={10} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={1} strokeDasharray="3 2" />}
-              <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? color : isActive ? color : `${color}55`} stroke="#fff" strokeWidth={2} />
+              <circle cx={cx} cy={cy} r={isSelected ? 6 : 4} fill={isSelected ? color : isActiveD ? color : `${color}55`} stroke="#fff" strokeWidth={2} />
             </g>
           );
         }} activeDot={{ r: 6, stroke: color, strokeWidth: 2, fill: "#fff" }} name="Taxa" />
-      </LineChart>
+        {data[0]?.hcMes !== undefined && (
+          <Line yAxisId="right" type="monotone" dataKey="hcMes" stroke="#9ca3af" strokeWidth={1.5} strokeDasharray="6 3" dot={false} name="HC Operacional" />
+        )}
+      </ComposedChart>
     );
   };
 
@@ -529,19 +573,17 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       <div className="flex-1 min-w-0 space-y-3 pl-6 pr-4 py-4">
         {/* ── BigNumbers (6 cards) ── */}
         <div className="grid grid-cols-6 gap-3">
-          {/* 1. Score — Convention 2: click opens Dialog, not Popover */}
+          {/* 1. Score Operacional Absenteísmo */}
           <ScoreBoard title="Score Absenteísmo" tooltip="Score composto: Volume (50%) + Composição (30%) + Maturidade (20%). Clique para detalhes.">
             <button className="cursor-pointer" onClick={() => setScoreDetailOpen(true)} title="Ver decomposição do score">
               <ScoreGauge score={compositeScore} label={`${compositeScore}`} faixa={scoreLabel} color={scoreColor} />
             </button>
             {(() => {
-              // Variation vs anterior (mock: previous period score was ~25)
               const anterior = 25;
               const delta = compositeScore - anterior;
               const absDelta = Math.abs(delta);
-              const improved = delta > 0;
-              const arrow = delta > 0 ? "↑" : delta < 0 ? "↓" : "—";
-              const dColor = absDelta < 1 ? "text-muted-foreground" : improved ? "text-green-600" : "text-red-600";
+              const arrow = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
+              const dColor = absDelta < 1 ? "text-muted-foreground" : delta > 0 ? "text-green-600" : "text-red-600";
               return (
                 <span className={`text-[9px] flex items-center gap-0.5 -mt-0.5 ${dColor}`}>
                   {arrow} {Math.round(absDelta)}pp vs {anterior} (ant.)
@@ -550,7 +592,18 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             })()}
           </ScoreBoard>
 
-          {/* 2. Volume Mensal (taxa) */}
+          {/* 2. Headcount Operacional */}
+          <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
+            <div className="flex items-center gap-1 mb-2">
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">HC Operacional</p>
+              <InfoTip text="Headcount operacional ativo no período. Crônicos = afastados > 180 dias." />
+            </div>
+            <p className="text-xl font-bold mt-0.5 truncate text-foreground">{MOCK.hcOperacional} <span className="text-sm font-normal text-muted-foreground">/ {MOCK.hcTotalAtivo}</span></p>
+            <p className="text-[11px] mt-0.5 font-medium text-orange-500">{MOCK.cronicos.length} crônico{MOCK.cronicos.length !== 1 ? "s" : ""}</p>
+            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">→ vs 480 (ant.)</span>
+          </div>
+
+          {/* 3. Taxa de Absenteísmo Operacional */}
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
               <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Taxa Absenteísmo</p>
@@ -558,74 +611,62 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             </div>
             <p className={`text-xl font-bold mt-0.5 truncate ${latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 6.0 ? "text-orange-500" : "text-red-600"}`}>{latestTaxa}%</p>
             <p className={`text-[11px] mt-0.5 font-medium ${latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 6.0 ? "text-orange-500" : "text-red-600"}`}>
-              {latestTaxa <= 2.5 ? "Excelente" : latestTaxa <= 4.0 ? "Bom" : latestTaxa <= 6.0 ? "Atenção" : latestTaxa <= 8.0 ? "Ruim" : "Crítico"}
+              {volScore.label}
             </p>
-            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">Mar/2026</span>
+            {(() => {
+              const prevTaxa = (() => {
+                const prev = volumeConsolidado[volumeConsolidado.length - 2];
+                return prev && prev.pessoas_ausentes > 0 ? +((prev.horas_ausencia_nao_planejada / (prev.pessoas_ausentes * 200)) * 100).toFixed(2) : null;
+              })();
+              if (prevTaxa === null) return <span className="text-[10px] mt-1 text-muted-foreground">sem histórico</span>;
+              const d = +(latestTaxa - prevTaxa).toFixed(1);
+              const arrow = d > 0 ? "↑" : d < 0 ? "↓" : "→";
+              const dColor = Math.abs(d) < 0.1 ? "text-muted-foreground" : d > 0 ? "text-red-600" : "text-green-600";
+              return <span className={`text-[10px] flex items-center gap-0.5 mt-1 ${dColor}`}>{arrow} {Math.abs(d).toFixed(1)}pp vs {prevTaxa}% (ant.)</span>;
+            })()}
           </div>
 
-          {/* 3. Composição (% planejada) */}
+          {/* 4. % Faltas Injustificadas */}
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
-              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Composição</p>
-              <InfoTip text="Percentual de ausências planejadas sobre o total. Mais planejadas = melhor." />
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">% Faltas Injustif.</p>
+              <InfoTip text="Percentual de horas de falta injustificada sobre o total de ausências." />
             </div>
-            <p className={`text-xl font-bold mt-0.5 truncate ${compScore >= 75 ? "text-green-600" : compScore >= 50 ? "text-orange-500" : "text-red-600"}`}>{composicaoDistribuicao.planejada}%</p>
-            <p className={`text-[11px] mt-0.5 font-medium ${compScore >= 75 ? "text-green-600" : compScore >= 50 ? "text-orange-500" : "text-red-600"}`}>
-              {getScoreLabel(compScore)}
+            <p className={`text-xl font-bold mt-0.5 truncate ${pctFaltasInjustificadas >= 15 ? "text-red-600" : pctFaltasInjustificadas >= 10 ? "text-orange-500" : "text-green-600"}`}>{pctFaltasInjustificadas}%</p>
+            <p className={`text-[11px] mt-0.5 font-medium ${pctFaltasInjustificadas >= 15 ? "text-red-600" : pctFaltasInjustificadas >= 10 ? "text-orange-500" : "text-green-600"}`}>
+              {pctFaltasInjustificadas >= 15 ? "Crítico" : pctFaltasInjustificadas >= 10 ? "Atenção" : "Bom"}
             </p>
-            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">planejadas</span>
+            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-red-600">↑ 2pp vs 15% (ant.)</span>
           </div>
 
-          {/* 4. Maturidade (% planejado) */}
+          {/* 5. % Afastados Crônicos */}
+          <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col cursor-pointer" onClick={() => setScoreDetailOpen(true)}>
+            <div className="flex items-center gap-1 mb-2">
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">% Crônicos</p>
+              <InfoTip text="Percentual de colaboradores com afastamento > 180 dias. Clique para ver lista." />
+            </div>
+            <p className={`text-xl font-bold mt-0.5 truncate ${pctCronicos >= 1 ? "text-red-600" : "text-green-600"}`}>{pctCronicos}%</p>
+            <p className="text-[11px] mt-0.5 font-medium text-muted-foreground">{MOCK.cronicos.length} colaborador{MOCK.cronicos.length !== 1 ? "es" : ""}</p>
+            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">→ vs 0.4% (ant.)</span>
+          </div>
+
+          {/* 6. Horas Perdidas/Mês */}
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
-              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Maturidade</p>
-              <InfoTip text="Proporção de ausências planejadas vs reativas. Mais planejado = mais maduro." />
+              <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Horas Perdidas/Mês</p>
+              <InfoTip text="Horas de ausência não-planejada na última competência. Subtítulo = acumulado 12 meses." />
             </div>
-            <p className={`text-xl font-bold mt-0.5 truncate ${matScore.score >= 75 ? "text-green-600" : matScore.score >= 50 ? "text-orange-500" : "text-red-600"}`}>{maturidadeDistribuicao.planejado}%</p>
-            <p className={`text-[11px] mt-0.5 font-medium ${matScore.score >= 75 ? "text-green-600" : matScore.score >= 50 ? "text-orange-500" : "text-red-600"}`}>
-              {matScore.label}
-            </p>
-            <span className="text-[10px] flex items-center gap-0.5 mt-1 text-muted-foreground">planejado vs reativo</span>
+            <p className="text-xl font-bold mt-0.5 truncate text-red-600">{formatHoursCompact(horasPerdidaMes)}</p>
+            <p className="text-[11px] mt-0.5 font-medium text-muted-foreground">{formatHoursCompact(MOCK.horasPerdidas12meses)} em 12m</p>
+            {(() => {
+              const prevHoras = volumeConsolidado.length >= 2 ? volumeConsolidado[volumeConsolidado.length - 2].horas_ausencia_nao_planejada : null;
+              if (prevHoras === null) return <span className="text-[10px] mt-1 text-muted-foreground">sem histórico</span>;
+              const d = horasPerdidaMes - prevHoras;
+              const arrow = d > 0 ? "↑" : d < 0 ? "↓" : "→";
+              const dColor = Math.abs(d) < 50 ? "text-muted-foreground" : d > 0 ? "text-red-600" : "text-green-600";
+              return <span className={`text-[10px] flex items-center gap-0.5 mt-1 ${dColor}`}>{arrow} {Math.abs(d).toLocaleString("pt-BR")}h vs {formatHoursCompact(prevHoras)} (ant.)</span>;
+            })()}
           </div>
-
-          {/* 5. Melhor Operação */}
-          {(() => {
-            const bestEntity = sidebarItems.length > 0 ? sidebarItems[0] : null;
-            const bestScore = bestEntity?.score ?? 0;
-            const bestLabel = getScoreLabel(bestScore);
-            const bestColor = bestScore >= 70 ? "text-green-600" : bestScore >= 50 ? "text-orange-500" : "text-red-600";
-            return (
-              <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
-                <div className="flex items-center gap-1 mb-2">
-                  <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Melhor Operação</p>
-                  <InfoTip text="A operação com menor taxa de absenteísmo (melhor score) no período." />
-                </div>
-                <p className="text-lg font-bold mt-0.5 truncate text-foreground">{bestEntity?.nome ?? "—"}</p>
-                <p className={`text-[11px] mt-0.5 truncate ${bestColor}`}>Score {bestScore} · {bestLabel}</p>
-                <span className="text-[10px] text-muted-foreground mt-0.5">Mantém posição</span>
-              </div>
-            );
-          })()}
-
-          {/* 6. Maior Risco */}
-          {(() => {
-            const worstEntity = sidebarItems.length > 0 ? sidebarItems[sidebarItems.length - 1] : null;
-            const worstScore = worstEntity?.score ?? 0;
-            const worstLabel = getScoreLabel(worstScore);
-            const worstColor = worstScore >= 70 ? "text-green-600" : worstScore >= 50 ? "text-orange-500" : "text-red-600";
-            return (
-              <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
-                <div className="flex items-center gap-1 mb-2">
-                  <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Maior Risco</p>
-                  <InfoTip text="A operação com maior taxa de absenteísmo (pior score). Prioridade alta de ação." />
-                </div>
-                <p className="text-lg font-bold mt-0.5 truncate text-foreground">{worstEntity?.nome ?? "—"}</p>
-                <p className={`text-[11px] mt-0.5 truncate ${worstColor}`}>Score {worstScore} · {worstLabel}</p>
-                <span className="text-[10px] text-muted-foreground mt-0.5">Mantém posição</span>
-              </div>
-            );
-          })()}
         </div>
 
         {/* ── Row 1: Mapa de Operações + Volume Mensal (grid 2 colunas) ── */}
@@ -744,15 +785,15 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           </div>
         </div>
 
-        {/* G1: Volume Mensal */}
+        {/* G1: Evolução da Taxa de Absenteísmo */}
         <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
           <div className="flex items-center justify-between mb-0.5">
             <div>
               <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-semibold">Volume Mensal</h4>
+                <h4 className="text-sm font-semibold">Evolução da Taxa de Absenteísmo</h4>
                 <InfoTip text="Quanto a operação está perdendo para ausência. Taxa = horas não-planejadas / (HC × jornada mensal)." />
               </div>
-              <p className="text-[10px] text-muted-foreground mb-2">Por competência · clique para filtrar</p>
+              <p className="text-[10px] text-muted-foreground mb-2">Taxa mensal · linha cinza = HC operacional · clique para filtrar competência</p>
             </div>
             <div className="flex items-center gap-1">
               <button onClick={() => setChartDataModal("volume")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
@@ -767,16 +808,16 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
 
         {/* ── G2 + G3: Composição + Maturidade side by side ── */}
         <div className="grid grid-cols-2 gap-3">
-          {/* G2: Composição */}
+          {/* G2: Composição das Ausências por Tipo */}
           <div className="bg-card border border-border/50 rounded-xl p-4">
             <div className="flex items-center justify-between mb-0.5">
               <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-semibold">Composição</h4>
+                <h4 className="text-sm font-semibold">Composição das Ausências por Tipo</h4>
                 <InfoTip text="Por que estão faltando. Distribuição de horas de ausência por categoria semântica." />
               </div>
               <button onClick={() => setChartDataModal("composicao")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Mar/2026 · % sobre total de horas</p>
+            <p className="text-[10px] text-muted-foreground mb-2">Evolução mensal · % sobre total de horas · linha = volume absoluto</p>
             {composicaoChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <ComposedChart data={composicaoChartData} onClick={(e: any) => {
@@ -788,10 +829,12 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                     const isActive = selectedMes === payload.value;
                     return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
                   }} />
-                  <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} tickFormatter={v => `${v}%`} label={{ value: "Distribuição (%)", angle: -90, position: "insideLeft", style: { fontSize: 10, fill: "hsl(var(--muted-foreground))" }, offset: 0 }} />
-                  {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
+                  <YAxis yAxisId="left" tick={{ fontSize: 10 }} domain={[0, 100]} tickFormatter={v => `${v}%`} label={{ value: "Distribuição (%)", angle: -90, position: "insideLeft", style: { fontSize: 10, fill: "hsl(var(--muted-foreground))" }, offset: 0 }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} tickFormatter={v => formatHoursCompact(v)} label={{ value: "Volume (h)", angle: 90, position: "insideRight", style: { fontSize: 10, fill: "#9ca3af" }, offset: 0 }} />
+                  {selectedMes && <ReferenceLine yAxisId="left" x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                   <RechartsTooltip content={({ active, payload, label }) => {
                     if (!active || !payload?.length) return null;
+                    const d = payload[0]?.payload;
                     return (
                       <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
                         <p className="font-semibold text-foreground">{label}</p>
@@ -802,6 +845,13 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                             <span className="font-medium text-foreground">{typeof p.value === "number" ? `${p.value.toFixed(1)}%` : p.value}</span>
                           </div>
                         ))}
+                        {d?.volumeTotal > 0 && (
+                          <div className="flex items-center gap-1.5 border-t border-border/30 pt-1 mt-1">
+                            <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#6b7280" }} />
+                            <span className="text-muted-foreground">Volume total:</span>
+                            <span className="font-medium text-foreground">{d.volumeTotal.toLocaleString("pt-BR")}h</span>
+                          </div>
+                        )}
                       </div>
                     );
                   }} />
@@ -810,6 +860,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                       key={cat}
                       dataKey={cat}
                       stackId="1"
+                      yAxisId="left"
                       radius={catIdx === arr.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
                       name={CATEGORY_LABELS[cat]}
                     >
@@ -818,26 +869,17 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                         const dimmed = selectedMes && selectedMes !== (entry as any).mes;
                         return <Cell key={idx} fill={dimmed ? `${CATEGORY_COLORS[cat]}73` : `${CATEGORY_COLORS[cat]}BF`} stroke={isActive ? "#FF5722" : CATEGORY_COLORS[cat]} strokeWidth={isActive ? 2 : 1} strokeDasharray={isActive ? "4 3" : "none"} />;
                       })}
-                      <LabelList content={({ x, y, width, height, index }: any) => {
-                        const d = composicaoChartData[index];
-                        if (!d) return null;
-                        const val = (d as any)[cat] ?? 0;
-                        if (val < 5 || (height ?? 0) < 14) return null;
-                        return (
-                          <text x={(x ?? 0) + (width ?? 0) / 2} y={(y ?? 0) + (height ?? 0) / 2 + 3} textAnchor="middle" fontSize={9} fill="#fff" fontWeight={600}>
-                            {`${val.toFixed(0)}%`}
-                          </text>
-                        );
-                      }} />
                     </Bar>
                   ))}
-                  <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={
-                    CATEGORIES_ORDER.filter(cat => composicaoChartData.some(d => (d as any)[cat] > 0)).map(cat => ({
+                  <Line yAxisId="right" type="monotone" dataKey="volumeTotal" stroke="#6b7280" strokeWidth={1.5} strokeDasharray="6 3" dot={false} name="Volume Total (h)" />
+                  <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
+                    ...CATEGORIES_ORDER.filter(cat => composicaoChartData.some(d => (d as any)[cat] > 0)).map(cat => ({
                       value: `${CATEGORY_LABELS[cat]} ${composicaoDistribuicao[cat as keyof typeof composicaoDistribuicao] ?? 0}%`,
                       type: "square" as const,
                       color: CATEGORY_COLORS[cat],
-                    }))
-                  } />
+                    })),
+                    { value: "Volume Total", type: "plainline" as const, color: "#6b7280" },
+                  ]} />
                 </ComposedChart>
               </ResponsiveContainer>
             ) : (
@@ -846,16 +888,16 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
 
           </div>
 
-          {/* G3: Maturidade */}
+          {/* G3: Maturidade da Gestão (Planejado vs Reativo) */}
           <div className="bg-card border border-border/50 rounded-xl p-4">
             <div className="flex items-center justify-between mb-0.5">
               <div className="flex items-center gap-1.5">
-                <h4 className="text-sm font-semibold">Maturidade</h4>
+                <h4 className="text-sm font-semibold">Maturidade da Gestão</h4>
                 <InfoTip text="Como tratam as ausências. Planejado = férias, licenças, abonos. Reativo = faltas, atestados de última hora." />
               </div>
               <button onClick={() => setChartDataModal("maturidade")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">{maturidadeChartData.length > 1 ? "Evolução mensal" : "Mar/2026"} · % sobre total</p>
+            <p className="text-[10px] text-muted-foreground mb-2">Evolução mensal · % planejado vs reativo · linha vermelha = % falta crua</p>
             <ResponsiveContainer width="100%" height={280}>
               <ComposedChart data={maturidadeChartData} onClick={(e: any) => {
                 if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
@@ -870,6 +912,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                 {selectedMes && <ReferenceLine x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
+                  const d = payload[0]?.payload;
                   return (
                     <div className="bg-white border rounded-lg p-2.5 shadow-md text-xs space-y-1">
                       <p className="font-semibold text-foreground">{label}</p>
@@ -880,6 +923,13 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                           <span className="font-medium text-foreground">{typeof p.value === "number" ? `${p.value.toFixed(1)}%` : p.value}</span>
                         </div>
                       ))}
+                      {d?.pctFalta > 0 && (
+                        <div className="flex items-center gap-1.5 border-t border-border/30 pt-1 mt-1">
+                          <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#dc2626" }} />
+                          <span className="text-muted-foreground">% Falta crua:</span>
+                          <span className="font-medium text-foreground">{d.pctFalta}%</span>
+                        </div>
+                      )}
                     </div>
                   );
                 }} />
@@ -889,13 +939,6 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                     const dimmed = selectedMes && selectedMes !== (entry as any).mes;
                     return <Cell key={idx} fill={dimmed ? "rgba(34,197,94,0.45)" : "rgba(34,197,94,0.75)"} stroke={isActive ? "#FF5722" : "#22c55e"} strokeWidth={isActive ? 2 : 1} strokeDasharray={isActive ? "4 3" : "none"} />;
                   })}
-                  <LabelList content={({ x, y, width, height, index }: any) => {
-                    const d = maturidadeChartData[index];
-                    if (!d) return null;
-                    const val = (d as any)["1_planejado"] ?? 0;
-                    if (val < 5 || (height ?? 0) < 14) return null;
-                    return <text x={(x ?? 0) + (width ?? 0) / 2} y={(y ?? 0) + (height ?? 0) / 2 + 3} textAnchor="middle" fontSize={9} fill="#fff" fontWeight={600}>{`${val.toFixed(0)}%`}</text>;
-                  }} />
                 </Bar>
                 <Bar dataKey="2_reativo" stackId="1" radius={[4, 4, 0, 0]} name="Reativo">
                   {maturidadeChartData.map((entry, idx) => {
@@ -903,17 +946,12 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                     const dimmed = selectedMes && selectedMes !== (entry as any).mes;
                     return <Cell key={idx} fill={dimmed ? "rgba(239,68,68,0.45)" : "rgba(239,68,68,0.75)"} stroke={isActive ? "#FF5722" : "#ef4444"} strokeWidth={isActive ? 2 : 1} strokeDasharray={isActive ? "4 3" : "none"} />;
                   })}
-                  <LabelList content={({ x, y, width, height, index }: any) => {
-                    const d = maturidadeChartData[index];
-                    if (!d) return null;
-                    const val = (d as any)["2_reativo"] ?? 0;
-                    if (val < 5 || (height ?? 0) < 14) return null;
-                    return <text x={(x ?? 0) + (width ?? 0) / 2} y={(y ?? 0) + (height ?? 0) / 2 + 3} textAnchor="middle" fontSize={9} fill="#fff" fontWeight={600}>{`${val.toFixed(0)}%`}</text>;
-                  }} />
                 </Bar>
+                <Line type="monotone" dataKey="pctFalta" stroke="#dc2626" strokeWidth={1.5} strokeDasharray="6 3" dot={{ r: 3, fill: "#dc2626", stroke: "#fff", strokeWidth: 1 }} name="% Falta crua" />
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: `Planejado ${maturidadeDistribuicao.planejado}%`, type: "square" as const, color: MATURIDADE_COLORS["1_planejado"] },
                   { value: `Reativo ${maturidadeDistribuicao.reativo}%`, type: "square" as const, color: MATURIDADE_COLORS["2_reativo"] },
+                  { value: "% Falta crua", type: "plainline" as const, color: "#dc2626" },
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
