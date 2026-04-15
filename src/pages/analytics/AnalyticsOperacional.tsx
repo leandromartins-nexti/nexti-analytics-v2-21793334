@@ -11,14 +11,9 @@ import { resumo } from "@/lib/analytics-mock-data";
 import { QualidadeTab, AbsenteismoTab, MovimentacoesTab } from "./AnalyticsDisciplinaOperacional";
 import TurnoverTab from "./TurnoverTab";
 import AnalyticsCoberturasContinuidade from "./AnalyticsCoberturasContinuidade";
+import { OPERACIONAL_SUB_TABS } from "@/config/analytics-tabs";
 
-const tabs = [
-  { id: "qualidade", label: "Qualidade do Ponto" },
-  { id: "absenteismo", label: "Absenteísmo" },
-  { id: "turnover", label: "Turnover" },
-  { id: "movimentacoes", label: "Movimentações" },
-  { id: "coberturas", label: "Coberturas" },
-];
+const tabs = OPERACIONAL_SUB_TABS.map(t => ({ id: t.id, label: t.label }));
 
 export default function AnalyticsOperacional() {
   const navigate = useNavigate();
