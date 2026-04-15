@@ -1265,6 +1265,19 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   // fixedBubble for Mapa de Operações click-to-label
   const [fixedBubble, setFixedBubble] = useState<string | null>(null);
+  // Score category filter for Mapa de Operações
+  const [mapaScoreFilter, setMapaScoreFilter] = useState<Set<string>>(() => new Set(["green", "orange", "red"]));
+  const toggleMapaScoreFilter = useCallback((cat: string) => {
+    setMapaScoreFilter(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) {
+        if (next.size > 1) next.delete(cat);
+      } else {
+        next.add(cat);
+      }
+      return next;
+    });
+  }, []);
 
   const tratDomain = useMemo(() => {
     if (!chartScatterTrat.length) return { xMin: 0, xMax: 300000, yMin: 1, yMax: 7 };
