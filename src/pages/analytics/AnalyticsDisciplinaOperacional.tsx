@@ -1777,7 +1777,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         </div>
                       );
                     }} />
-                    <Bar yAxisId="left" dataKey="produtividade" radius={[4, 4, 0, 0]} name="Carga por operador">
+                    <Bar yAxisId="left" dataKey="produtividade" radius={[4, 4, 0, 0]} name="Carga por operador" strokeWidth={1}>
                       {sobrecargaData.map((entry, idx) => {
                         const dimmed = selectedMes && selectedMes !== entry.mes;
                         const baseColor = entry.barColor;
