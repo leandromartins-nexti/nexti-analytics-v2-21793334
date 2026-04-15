@@ -334,6 +334,8 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   const pctFaltasInjustificadas = composicaoDistribuicao.falta;
   const pctCronicos = +((MOCK.cronicos.length / MOCK.hcOperacional) * 100).toFixed(1);
   const horasPerdidaMes = volumeConsolidado[volumeConsolidado.length - 1].horas_ausencia_nao_planejada;
+  const pctMaturidade = maturidadeDistribuicao.planejado;
+  const matFaixa = computeMaturidadeScore(maturidadeDistribuicao);
 
   // ── Sidebar items ──
   const sidebarItems = useMemo(() => {
