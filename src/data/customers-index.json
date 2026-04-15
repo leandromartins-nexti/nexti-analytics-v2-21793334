@@ -1,0 +1,9 @@
+{
+  "customers": [
+    {
+      "customer_id": 642,
+      "label": "Cliente 642",
+      "tabs_available": ["qualidade-ponto"]
+    }
+  ]
+}
