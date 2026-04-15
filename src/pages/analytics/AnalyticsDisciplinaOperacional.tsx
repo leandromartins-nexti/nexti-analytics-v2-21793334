@@ -838,9 +838,9 @@ export default function AnalyticsDisciplinaOperacional({ embedded }: { embedded?
 
   const content = (
     <div className="flex flex-1 min-h-0">
-      <div className="flex-1 min-w-0 pl-6 py-4 space-y-3 overflow-y-auto">
+      <div className="flex-1 min-w-0 overflow-y-auto">
         {/* Sub-tab toggle */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 pl-6 pt-4 pb-3">
           {subTabs.map(t => (
             <button
               key={t.id}
