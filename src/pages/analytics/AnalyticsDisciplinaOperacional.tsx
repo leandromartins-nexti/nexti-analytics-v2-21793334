@@ -1508,7 +1508,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <InfoTip text="Cada bolha é uma operação. Posição horizontal mostra o headcount (escala da operação). Posição vertical mostra o Score Operacional (saúde). Cor da bolha reforça a classificação do score. Operações no canto superior direito têm alta escala e estão saudáveis. Operações no canto inferior direito têm alta escala mas estão com problemas, alta prioridade de ação." />
               </div>
               <div className="flex items-center gap-1">
-                {criticalCount > 0 && (
+                {criticalCount > 0 && mapaDimension === "score" && (
                   <span className="text-[10px] font-medium bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
                     {criticalCount} operação{criticalCount > 1 ? "ões" : ""} em zona crítica
                   </span>
@@ -1518,7 +1518,24 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 </button>
               </div>
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">Headcount × Score · uma bolha por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área"}{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] text-muted-foreground">Headcount × {activeDimConfig.yLabel} · uma bolha por {groupBy === "empresa" ? "empresa" : groupBy === "unidade" ? "un. negócio" : "área"}{selectedMes ? ` · ${selectedMes}` : " · consolidado"}</p>
+              <div className="flex items-center gap-0.5 bg-muted/40 rounded-lg p-0.5">
+                {(Object.entries(mapaDimensionConfig) as [MapaDimension, typeof activeDimConfig][]).map(([key, cfg]) => (
+                  <button
+                    key={key}
+                    onClick={() => setMapaDimension(key)}
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-medium transition-all ${
+                      mapaDimension === key
+                        ? "bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {cfg.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <ResponsiveContainer width="100%" height={280}>
               <ScatterChart margin={{ top: 5, right: 50, bottom: 10, left: 0 }}>
                 <defs>
