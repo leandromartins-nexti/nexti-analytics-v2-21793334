@@ -1710,7 +1710,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                     }} />
                     <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
                     <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} label={{ value: "HE (h)", angle: 90, position: "insideRight", fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
-                    <ReferenceLine yAxisId="left" y={limiteSaudavel} stroke="#22c55e" strokeDasharray="5 3" strokeWidth={1.2} label={{ value: `Limite saudável: ${limiteSaudavel} aj/operador`, position: "left", fontSize: 9, fill: "#22c55e" }} />
+                    <ReferenceLine yAxisId="left" y={limiteSaudavel} stroke="#22c55e" strokeDasharray="5 3" strokeWidth={1.2} label={({ viewBox }: any) => {
+                      const { x, y } = viewBox || {};
+                      return (
+                        <g>
+                          <text x={(x ?? 0) + 4} y={(y ?? 0) - 6} fontSize={9} fill="#22c55e" fontWeight={500}>Limite saudável</text>
+                          <text x={(x ?? 0) + 4} y={(y ?? 0) + 6} fontSize={9} fill="#22c55e" fontWeight={500}>{limiteSaudavel} aj/operador</text>
+                        </g>
+                      );
+                    }} />
                     {selectedMes && <ReferenceLine yAxisId="left" x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                     <RechartsTooltip content={({ active, payload, label }) => {
                       if (!active || !payload?.length) return null;
