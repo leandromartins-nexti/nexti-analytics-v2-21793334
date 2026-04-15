@@ -1067,7 +1067,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                       })}
                       {d?.taxaOperacional > 0 && (
                         <div className="flex items-center gap-1.5 border-t border-border/30 pt-1 mt-1">
-                          <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#3b82f6" }} />
+                          <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: "#2196f3" }} />
                           <span className="text-muted-foreground">Taxa operacional:</span>
                           <span className="font-medium text-foreground">{d.taxaOperacional}%</span>
                         </div>
@@ -1102,11 +1102,11 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
                   </Bar>
                 ))}
                 {/* Taxa operacional line */}
-                <Line yAxisId="right" type="monotone" dataKey="taxaOperacional" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6", stroke: "#3b82f6", strokeWidth: 0 }} name="Taxa Operacional (%)" />
+                <Line yAxisId="right" type="monotone" dataKey="taxaOperacional" stroke="#2196f3" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#2196f3", stroke: "#2196f3", strokeWidth: 0 }} name="Taxa Operacional (%)" />
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   ...activeV5Cats.map(cat => ({ value: cat.label, type: "square" as const, color: cat.color })),
                   ...(showExcluded ? activeV5ExcludedCats.map(cat => ({ value: `${cat.label} ⊘`, type: "square" as const, color: cat.color })) : []),
-                  { value: "Taxa Operacional", type: "line" as const, color: "#3b82f6" },
+                  { value: "Taxa Operacional", type: "line" as const, color: "#2196f3" },
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
