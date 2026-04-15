@@ -5,8 +5,7 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import customersIndex from "@/data/customers-index.json";
 import { getImportedCustomersIndex, loadChartDataFromStorage } from "@/components/analytics/CustomerZipImporter";
-import type { CustomerEntry } from "@/components/analytics/CustomerZipImporter";
-
+import type { CustomerEntry } from "@/types/customer";
 export type { CustomerEntry };
 
 interface CustomerContextType {

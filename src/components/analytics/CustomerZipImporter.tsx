@@ -5,7 +5,8 @@ import { useState, useCallback } from "react";
 import JSZip from "jszip";
 import { Upload, FileArchive, Check, AlertTriangle, Trash2, ChevronDown, ChevronRight, Database, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCustomer, type CustomerEntry } from "@/contexts/CustomerContext";
+import { useCustomer } from "@/contexts/CustomerContext";
+import type { CustomerEntry } from "@/types/customer";
 import { toast } from "sonner";
 
 // ── Mapping from ZIP folder/file names to internal slugs ──
