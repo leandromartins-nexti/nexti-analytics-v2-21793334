@@ -408,19 +408,20 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   // ── Score computation ──
   const lastEntry = volumeConsolidado[volumeConsolidado.length - 1];
   const latestTaxa = lastEntry.pessoas_ausentes > 0 ? +((lastEntry.horas_ausencia_nao_planejada / (lastEntry.pessoas_ausentes * 200)) * 100).toFixed(2) : 0;
-  const volScore = computeVolumeScore(latestTaxa);
-  const compScore = computeComposicaoScore(composicaoDistribuicao);
-  const matScore = computeMaturidadeScore(maturidadeDistribuicao);
-  const compositeScore = Math.round(volScore.score * 0.5 + compScore * 0.3 + matScore.score * 0.2);
-  const scoreColor = getScoreColor(compositeScore);
-  const scoreLabel = getScoreLabel(compositeScore);
+  const volScore = computeVolumeScoreCtx(latestTaxa, absConfig);
+  const compScore = computeComposicaoScoreCtx(composicaoDistribuicao, absConfig);
+  const matScoreVal = computeMaturidadeScoreCtx(maturidadeDistribuicao.planejado, absConfig);
+  const compositeScore = computeAbsCompositeScore(volScore, compScore, matScoreVal, absConfig);
+  const scoreClassif = getAbsScoreClassification(compositeScore, absConfig);
+  const scoreColor = scoreClassif.color;
+  const scoreLabel = scoreClassif.label;
 
   // BigNumbers
   const pctFaltasInjustificadas = composicaoDistribuicao.falta;
   const pctCronicos = +((MOCK.cronicos.length / MOCK.hcOperacional) * 100).toFixed(1);
   const horasPerdidaMes = volumeConsolidado[volumeConsolidado.length - 1].horas_ausencia_nao_planejada;
   const pctMaturidade = maturidadeDistribuicao.planejado;
-  const matFaixa = computeMaturidadeScore(maturidadeDistribuicao);
+  const matFaixa = { score: matScoreVal, label: getMaturidadeScoreLabel(matScoreVal) };
 
   // ── Sidebar items ──
   const sidebarItems = useMemo(() => {
