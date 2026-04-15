@@ -1435,7 +1435,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
           <div className="bg-card border border-border/50 rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col">
             <div className="flex items-center gap-1 mb-2">
               <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">Sobrecarga</p>
-              <InfoTip text={`Sobrecarga do Back-office\n─────────────────\nCarga média de ajustes processados por operador do back-office.\n\nJanela: média dos últimos 3 meses.\n\nCálculo: total de ajustes ÷ (operadores × 3 meses)\n\nAtual ${sobrecargaValue} aj/op/mês\n\nLimites:\n  Saudável: até 400 aj/operador/mês\n  Atenção: 401 a 1.000\n  Crítico: acima de 1.000`} />
+              <InfoTip text={`Sobrecarga do Back-office\n─────────────────\nCarga média de ajustes processados por operador do back-office.\n\nJanela: média dos últimos 3 meses.\n\nCálculo: total de ajustes ÷ (operadores × 3 meses)\n\nAtual ${sobrecargaValue} aj/op/mês\n\nLimites:\n  Saudável: até ${boThresh[1] ?? 400} aj/operador/mês\n  Atenção: ${(boThresh[1] ?? 400) + 1} a ${boThresh[2] ?? 700}\n  Crítico: acima de ${boThresh[2] ?? 700}`} />
             </div>
             <p className="text-xl font-bold mt-0.5 truncate text-foreground">{sobrecargaValue}</p>
             <p className={`text-[11px] mt-0.5 font-medium ${sobrecargaClassif.color}`}>{sobrecargaClassif.label}</p>
