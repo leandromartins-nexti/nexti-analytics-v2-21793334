@@ -1631,9 +1631,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             </ResponsiveContainer>
             <div className="flex items-center justify-center gap-3 mt-1 text-[10px]">
               {[
-                { cat: "green", color: "#22c55e", label: "Score ≥ 70" },
-                { cat: "orange", color: "#f59e0b", label: "Score 55-70" },
-                { cat: "red", color: "#ef4444", label: "Score < 55" },
+                { cat: "green", color: "#22c55e", label: `≥ ${activeDimConfig.thresholds[0]}` },
+                { cat: "orange", color: "#f59e0b", label: `${activeDimConfig.thresholds[1]}-${activeDimConfig.thresholds[0]}` },
+                { cat: "red", color: "#ef4444", label: `< ${activeDimConfig.thresholds[1]}` },
               ].map(({ cat, color, label }) => {
                 const active = mapaScoreFilter.has(cat);
                 return (
