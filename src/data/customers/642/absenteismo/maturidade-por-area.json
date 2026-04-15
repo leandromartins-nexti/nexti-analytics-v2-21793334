@@ -3,6 +3,46 @@
     "customer_id": 642,
     "area_id": 11046,
     "area_name": "PIRACICABA",
+    "reference_date": "2025-03-01",
+    "categoria": "1_planejado",
+    "qtd_eventos": 14,
+    "horas_total": 155.0,
+    "pessoas_distintas": 3
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "reference_date": "2025-03-01",
+    "categoria": "1_planejado",
+    "qtd_eventos": 85,
+    "horas_total": 671.3,
+    "pessoas_distintas": 18
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11043,
+    "area_name": "SAO PAULO",
+    "reference_date": "2025-03-01",
+    "categoria": "2_reativo",
+    "qtd_eventos": 55,
+    "horas_total": 329.0,
+    "pessoas_distintas": 5
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11045,
+    "area_name": "SOROCABA",
+    "reference_date": "2025-03-01",
+    "categoria": "1_planejado",
+    "qtd_eventos": 17,
+    "horas_total": 194.0,
+    "pessoas_distintas": 2
+  },
+  {
+    "customer_id": 642,
+    "area_id": 11046,
+    "area_name": "PIRACICABA",
     "reference_date": "2025-04-01",
     "categoria": "1_planejado",
     "qtd_eventos": 4,

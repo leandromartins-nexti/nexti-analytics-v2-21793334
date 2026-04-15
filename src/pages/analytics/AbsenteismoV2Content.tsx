@@ -45,29 +45,29 @@ const MOCK = {
     { person_name: "Maria Santos", dias_afastado: 518, tipo: "Afastamento INSS" },
   ],
   demissoesAbertas: 37,
-  horasPerdidas12meses: 41310,
+  horasPerdidas12meses: 41197,
 };
 
-// Consolidado from spec
+// Consolidado computed from real JSON data (12 months)
 const volumeConsolidado = [
-  { reference_date: "2025-04-01", horas_ausencia_total: 3023, horas_ausencia_nao_planejada: 1206, hcMes: 245, taxa: 2.46 },
-  { reference_date: "2025-05-01", horas_ausencia_total: 3514, horas_ausencia_nao_planejada: 1448, hcMes: 251, taxa: 2.88 },
-  { reference_date: "2025-06-01", horas_ausencia_total: 2561, horas_ausencia_nao_planejada: 729, hcMes: 250, taxa: 1.46 },
-  { reference_date: "2025-07-01", horas_ausencia_total: 2790, horas_ausencia_nao_planejada: 1018, hcMes: 263, taxa: 1.94 },
-  { reference_date: "2025-08-01", horas_ausencia_total: 2677, horas_ausencia_nao_planejada: 1036, hcMes: 258, taxa: 2.01 },
-  { reference_date: "2025-09-01", horas_ausencia_total: 2433, horas_ausencia_nao_planejada: 953, hcMes: 440, taxa: 1.08 },
-  { reference_date: "2025-10-01", horas_ausencia_total: 2843, horas_ausencia_nao_planejada: 1119, hcMes: 461, taxa: 1.21 },
-  { reference_date: "2025-11-01", horas_ausencia_total: 3787, horas_ausencia_nao_planejada: 1592, hcMes: 466, taxa: 1.71 },
-  { reference_date: "2025-12-01", horas_ausencia_total: 4416, horas_ausencia_nao_planejada: 1822, hcMes: 471, taxa: 1.93 },
-  { reference_date: "2026-01-01", horas_ausencia_total: 4656, horas_ausencia_nao_planejada: 2031, hcMes: 475, taxa: 2.14 },
-  { reference_date: "2026-02-01", horas_ausencia_total: 4373, horas_ausencia_nao_planejada: 1891, hcMes: 478, taxa: 1.98 },
-  { reference_date: "2026-03-01", horas_ausencia_total: 4121, horas_ausencia_nao_planejada: 1690, hcMes: 484, taxa: 1.74 },
+  { reference_date: "2025-04-01", horas_ausencia_total: 5122, horas_ausencia_nao_planejada: 3023, qtd_eventos: 493, pessoas_ausentes: 92 },
+  { reference_date: "2025-05-01", horas_ausencia_total: 5881, horas_ausencia_nao_planejada: 3514, qtd_eventos: 571, pessoas_ausentes: 99 },
+  { reference_date: "2025-06-01", horas_ausencia_total: 5293, horas_ausencia_nao_planejada: 2561, qtd_eventos: 498, pessoas_ausentes: 90 },
+  { reference_date: "2025-07-01", horas_ausencia_total: 5661, horas_ausencia_nao_planejada: 2790, qtd_eventos: 559, pessoas_ausentes: 106 },
+  { reference_date: "2025-08-01", horas_ausencia_total: 4870, horas_ausencia_nao_planejada: 2677, qtd_eventos: 485, pessoas_ausentes: 86 },
+  { reference_date: "2025-09-01", horas_ausencia_total: 5013, horas_ausencia_nao_planejada: 2433, qtd_eventos: 458, pessoas_ausentes: 92 },
+  { reference_date: "2025-10-01", horas_ausencia_total: 10199, horas_ausencia_nao_planejada: 2844, qtd_eventos: 1042, pessoas_ausentes: 252 },
+  { reference_date: "2025-11-01", horas_ausencia_total: 9358, horas_ausencia_nao_planejada: 3787, qtd_eventos: 964, pessoas_ausentes: 269 },
+  { reference_date: "2025-12-01", horas_ausencia_total: 10857, horas_ausencia_nao_planejada: 4416, qtd_eventos: 1164, pessoas_ausentes: 255 },
+  { reference_date: "2026-01-01", horas_ausencia_total: 8961, horas_ausencia_nao_planejada: 4657, qtd_eventos: 945, pessoas_ausentes: 252 },
+  { reference_date: "2026-02-01", horas_ausencia_total: 11466, horas_ausencia_nao_planejada: 4374, qtd_eventos: 1236, pessoas_ausentes: 259 },
+  { reference_date: "2026-03-01", horas_ausencia_total: 6313, horas_ausencia_nao_planejada: 4121, qtd_eventos: 658, pessoas_ausentes: 149 },
 ];
 
-// Composição distribution from spec (mar/2026)
-const composicaoDistribuicao = { planejada: 45, saude: 35, operacional: 1, falta: 19, nao_categorizada: 0 };
+// Composição distribution from real data (mar/2026)
+const composicaoDistribuicao = { planejada: 35, saude: 47, operacional: 1, falta: 17, nao_categorizada: 0 };
 
-// Maturidade distribution from spec (mar/2026)
+// Maturidade distribution from real data (mar/2026)
 const maturidadeDistribuicao = { planejado: 83, reativo: 17 };
 
 // ── Absence category mapping (spec section 3) ──
@@ -226,8 +226,8 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       mes: MESES_LABELS[d.reference_date],
       horas: d.horas_ausencia_nao_planejada,
       horasTotal: d.horas_ausencia_total,
-      taxa: d.taxa,
-      hcMes: d.hcMes,
+      taxa: d.pessoas_ausentes > 0 ? +((d.horas_ausencia_nao_planejada / (d.pessoas_ausentes * 200)) * 100).toFixed(2) : 0,
+      hcMes: d.pessoas_ausentes,
     }));
   }, [selectedRegional, volumeByDim, nameField]);
 
@@ -299,7 +299,8 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   }, [groupBy, selectedRegional, nameField]);
 
   // ── Score computation ──
-  const latestTaxa = volumeConsolidado[volumeConsolidado.length - 1].taxa;
+  const lastEntry = volumeConsolidado[volumeConsolidado.length - 1];
+  const latestTaxa = lastEntry.pessoas_ausentes > 0 ? +((lastEntry.horas_ausencia_nao_planejada / (lastEntry.pessoas_ausentes * 200)) * 100).toFixed(2) : 0;
   const volScore = computeVolumeScore(latestTaxa);
   const compScore = computeComposicaoScore(composicaoDistribuicao);
   const matScore = computeMaturidadeScore(maturidadeDistribuicao);
@@ -402,7 +403,10 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
     return <text x={x} y={y + 12} textAnchor="middle" fontSize={10} fill={isActive ? "#FF5722" : "hsl(var(--muted-foreground))"} fontWeight={isActive ? 700 : 400}>{payload.value}</text>;
   };
 
-  const mediaTaxa = volumeConsolidado.reduce((s, d) => s + d.taxa, 0) / volumeConsolidado.length;
+  const mediaTaxa = volumeConsolidado.reduce((s, d) => {
+    const t = d.pessoas_ausentes > 0 ? (d.horas_ausencia_nao_planejada / (d.pessoas_ausentes * 200)) * 100 : 0;
+    return s + t;
+  }, 0) / volumeConsolidado.length;
 
   // ── Score breakdown data for detail panel ──
   const scoreBreakdownComponents = [

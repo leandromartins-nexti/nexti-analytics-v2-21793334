@@ -3,6 +3,33 @@
     "customer_id": 642,
     "business_unit_id": 17518,
     "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "reference_date": "2025-03-01",
+    "qtd_eventos": 407,
+    "horas_ausencia": 4155.7,
+    "pessoas_ausentes": 77
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17517,
+    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "reference_date": "2025-03-01",
+    "qtd_eventos": 59,
+    "horas_ausencia": 397.8,
+    "pessoas_ausentes": 8
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17519,
+    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "reference_date": "2025-03-01",
+    "qtd_eventos": 31,
+    "horas_ausencia": 311.9,
+    "pessoas_ausentes": 9
+  },
+  {
+    "customer_id": 642,
+    "business_unit_id": 17518,
+    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
     "reference_date": "2025-04-01",
     "qtd_eventos": 406,
     "horas_ausencia": 4420.2,
