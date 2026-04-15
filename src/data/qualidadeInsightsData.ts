@@ -1,16 +1,28 @@
+export interface InsightEvidence {
+  before: { label: string; value: string };
+  after: { label: string; value: string };
+}
+
+export interface InsightModal {
+  diagnosis: string;
+  evidence: Array<{ label: string; value: string; context?: string }>;
+  action_plan: string[];
+  related_cards: string[];
+}
+
 export interface QualidadeInsight {
   id: string;
   category: "risk" | "achievement" | "opportunity" | "event";
   severity: "critical" | "high" | "medium" | "info" | "success";
   title: string;
   narrative: string;
-  evidence: { before: { label: string; value: string }; after: { label: string; value: string } } | null;
+  evidence: InsightEvidence | null;
   action: string;
   actionFilter?: Record<string, string | number>;
   crossRef?: { targetId: string; label: string };
+  modal?: InsightModal;
 }
 
-// Import from customer-specific JSON (empty for now)
 import insightsJson from "@/data/customers/642/qualidade-ponto/insights.json";
 export const qualidadeInsights: QualidadeInsight[] = insightsJson as QualidadeInsight[];
 
