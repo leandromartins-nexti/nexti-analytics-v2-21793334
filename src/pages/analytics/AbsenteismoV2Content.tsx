@@ -691,7 +691,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           </div>
         </div>
 
-        {/* ── G1: Volume Mensal (inside Row 1 grid) ── */}
+        {/* G1: Volume Mensal */}
         <div className={`bg-card border rounded-xl p-4 ${selectedMes ? "border-[#FF5722]/30" : "border-border/50"}`}>
           <div className="flex items-center justify-between mb-0.5">
             <div>
