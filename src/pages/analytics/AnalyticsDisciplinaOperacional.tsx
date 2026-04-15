@@ -890,6 +890,12 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
 
+  // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
+  const dataSources = useMemo(() => {
+    const { buildDataSources } = require("@/lib/qualidadeDataSources");
+    return buildDataSources(customerData);
+  }, [customerData]);
+
   // Headcount por mês – filtrado por entidade selecionada
   const MONTH_LABEL_MAP: Record<string, string> = {
     "2025-04-01": "abr/25", "2025-05-01": "mai/25", "2025-06-01": "jun/25",
