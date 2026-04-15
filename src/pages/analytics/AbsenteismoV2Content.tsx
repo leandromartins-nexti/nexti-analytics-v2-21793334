@@ -254,6 +254,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
       }
       return {
         mes: MESES_LABELS[date],
+        volumeTotal: total,
         ...Object.fromEntries(
           CATEGORIES_ORDER.map(cat => [cat, total > 0 ? +((( byCategory[cat] ?? 0) / total) * 100).toFixed(1) : 0])
         ),
