@@ -1534,14 +1534,19 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 const faixas = tratativaFaixasFiltrada;
                 return faixas.map(d => {
                   const total = d.total || 1;
+                  // Use floor for first 4 faixas, remainder goes to last to ensure sum = 100
+                  const raw = [d.ate1d, d.de1a3d, d.de3a7d, d.de7a15d, d.mais15d].map(v => (v / total) * 100);
+                  const floored = raw.map(v => Math.floor(v));
+                  const remainder = 100 - floored.reduce((s, v) => s + v, 0);
+                  // Distribute remainder to largest fractional parts
+                  const fracs = raw.map((v, i) => ({ i, frac: v - floored[i] })).sort((a, b) => b.frac - a.frac);
+                  for (let j = 0; j < remainder; j++) floored[fracs[j].i]++;
+                  // Weighted average time in days: midpoints 0.5, 2, 5, 11, 20
+                  const tempoMedio = Math.round(((d.ate1d * 0.5 + d.de1a3d * 2 + d.de3a7d * 5 + d.de7a15d * 11 + d.mais15d * 20) / total) * 10) / 10;
                   return {
                     mes: d.mes,
-                    ate1d: Math.round((d.ate1d / total) * 100),
-                    de1a3d: Math.round((d.de1a3d / total) * 100),
-                    de3a7d: Math.round((d.de3a7d / total) * 100),
-                    de7a15d: Math.round((d.de7a15d / total) * 100),
-                    mais15d: Math.round((d.mais15d / total) * 100),
-                    tempoMedio: tratativaMediaTotal > 0 ? Math.round(d.total / (tratativaFaixasFiltrada.length || 1) * 10) / 10 : 0,
+                    ate1d: floored[0], de1a3d: floored[1], de3a7d: floored[2], de7a15d: floored[3], mais15d: floored[4],
+                    tempoMedio,
                   };
                 });
               })()} onClick={(e: any) => {
@@ -1558,6 +1563,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 {selectedMes && <ReferenceLine yAxisId="left" x={selectedMes} stroke="#FF5722" strokeWidth={2} strokeDasharray="4 3" />}
                 <RechartsTooltip content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null;
+                  const d = payload[0]?.payload;
                   const faixaColors: Record<string, string> = { ate1d: "#22c55e", de1a3d: "#84cc16", de3a7d: "#f59e0b", de7a15d: "#f97316", mais15d: "#ef4444" };
                   const faixaLabels: Record<string, string> = { ate1d: "≤1 dia", de1a3d: "1-3 dias", de3a7d: "3-7 dias", de7a15d: "7-15 dias", mais15d: ">15 dias" };
                   return (
@@ -1573,6 +1579,11 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                           </div>
                         );
                       })}
+                      <div className="border-t border-border/40 pt-1 mt-1 flex items-center gap-1.5">
+                        <span className="w-2.5 h-0 border-t-2 border-dashed" style={{ borderColor: "#3b82f6" }} />
+                        <span className="text-muted-foreground">Tempo médio:</span>
+                        <span className="font-medium text-foreground">{d?.tempoMedio ?? 0} dias</span>
+                      </div>
                     </div>
                   );
                 }} />
@@ -1581,12 +1592,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <Area yAxisId="left" type="monotone" dataKey="de3a7d" stackId="faixa" fill="#f59e0b" fillOpacity={0.65} stroke="#f59e0b" strokeWidth={0} name="3-7 dias" />
                 <Area yAxisId="left" type="monotone" dataKey="de7a15d" stackId="faixa" fill="#f97316" fillOpacity={0.65} stroke="#f97316" strokeWidth={0} name="7-15 dias" />
                 <Area yAxisId="left" type="monotone" dataKey="mais15d" stackId="faixa" fill="#ef4444" fillOpacity={0.65} stroke="#ef4444" strokeWidth={0} name=">15 dias" />
+                <Line yAxisId="right" type="monotone" dataKey="tempoMedio" name="Tempo médio" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: "≤1 dia", type: "square" as const, color: "#22c55e" },
                   { value: "1-3 dias", type: "square" as const, color: "#84cc16" },
                   { value: "3-7 dias", type: "square" as const, color: "#f59e0b" },
                   { value: "7-15 dias", type: "square" as const, color: "#f97316" },
                   { value: ">15 dias", type: "square" as const, color: "#ef4444" },
+                  { value: "Tempo médio", type: "line" as const, color: "#3b82f6" },
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
