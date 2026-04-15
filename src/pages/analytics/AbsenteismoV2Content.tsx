@@ -226,63 +226,9 @@ function computeEntityMaturidadeDistribution(
   };
 }
 
-// ── Score computation (spec section 2 & 5) ──
-function computeVolumeScore(taxa: number): { score: number; label: string } {
-  if (taxa <= 2.5) return { score: 100, label: "Excelente" };
-  if (taxa <= 4.0) return { score: 75, label: "Bom" };
-  if (taxa <= 6.0) return { score: 50, label: "Atenção" };
-  if (taxa <= 8.0) return { score: 25, label: "Ruim" };
-  return { score: 0, label: "Crítico" };
-}
-
-function computeComposicaoScore(dist: typeof composicaoDistribuicao): number {
-  const weights: Record<string, number> = { planejada: 100, saude: 80, operacional: 60, nao_categorizada: 50, falta: 0 };
-  const total = Object.values(dist).reduce((a, b) => a + b, 0);
-  if (total === 0) return 0;
-  let weighted = 0;
-  for (const [cat, pct] of Object.entries(dist)) {
-    weighted += (pct / total) * (weights[cat] ?? 50);
-  }
-  return Math.round(weighted);
-}
-
-function computeMaturidadeScore(dist: typeof maturidadeDistribuicao): { score: number; label: string } {
-  const pctPlanejado = dist.planejado;
-  if (pctPlanejado >= 95) return { score: 100, label: "Excelente" };
-  if (pctPlanejado >= 85) return { score: 75, label: "Bom" };
-  if (pctPlanejado >= 70) return { score: 50, label: "Atenção" };
-  if (pctPlanejado >= 50) return { score: 25, label: "Ruim" };
-  return { score: 0, label: "Crítico" };
-}
-
-/** Compute entity-level absenteísmo score using the same formula as the tab */
-function computeEntityScore(entityName: string, groupBy: GroupBy, nameField: string): number {
-  const normalizedEntity = normalizeEntityName(entityName);
-  const taxaEntry = Object.entries(REAL_TAXA_BY_GROUP[groupBy]).find(([label]) => normalizeEntityName(label) === normalizedEntity);
-  const taxa = taxaEntry?.[1] ?? 0;
-  const volScore = computeVolumeScore(taxa).score;
-  const composicao = computeEntityComposicaoDistribution(entityName, groupBy, nameField);
-  const maturidade = computeEntityMaturidadeDistribution(entityName, groupBy, nameField);
-  const compScore = computeComposicaoScore(composicao);
-  const matScore = computeMaturidadeScore(maturidade).score;
-  return Math.round(volScore * 0.5 + compScore * 0.3 + matScore * 0.2);
-}
-
-function getScoreColor(score: number): string {
-  if (score >= 85) return "#22c55e";
-  if (score >= 70) return "#84cc16";
-  if (score >= 50) return "#f97316";
-  if (score >= 25) return "#ef4444";
-  return "#dc2626";
-}
-
-function getScoreLabel(score: number): string {
-  if (score >= 85) return "Excelente";
-  if (score >= 70) return "Bom";
-  if (score >= 50) return "Atenção";
-  if (score >= 25) return "Ruim";
-  return "Crítico";
-}
+// Score functions now delegate to config-based context functions.
+// They are called inside the component with the config from useAbsenteismoScoreConfig().
+// See computeVolumeScoreCtx, computeComposicaoScoreCtx, computeMaturidadeScoreCtx in the context.
 
 // ── Helpers ──
 const MESES_LABELS: Record<string, string> = {
