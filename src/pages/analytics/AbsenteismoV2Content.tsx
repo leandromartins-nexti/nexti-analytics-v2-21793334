@@ -467,7 +467,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
           regional: nome,
           headcount: data.headcount || 10,
           score,
-          classifLabel: getScoreLabel(score),
+          classifLabel: getAbsScoreClassification(score, absConfig).label,
           bubbleColor,
         };
       });
@@ -512,35 +512,36 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
   }, 0) / volumeConsolidado.length;
 
   // ── Score breakdown data for detail panel ──
+  const volScoreLabel = getVolumeScoreLabel(volScore);
   const scoreBreakdownComponents = [
     {
       metrica: "Volume",
-      peso: 50,
+      peso: absConfig.peso_volume,
       valor_atual: `${latestTaxa}%`,
-      nota: volScore.score,
-      faixa: volScore.label,
-      contribuicao: Math.round(volScore.score * 0.5),
-      cor_semantica: volScore.score >= 75 ? "success" : volScore.score >= 50 ? "warning" : "critical",
+      nota: volScore,
+      faixa: volScoreLabel,
+      contribuicao: Math.round(volScore * absConfig.peso_volume / 100),
+      cor_semantica: volScore >= 75 ? "success" : volScore >= 50 ? "warning" : "critical",
       descricao: "Taxa de absenteísmo operacional (excluindo planejadas). Quanto menor, melhor.",
     },
     {
       metrica: "Composição",
-      peso: 30,
+      peso: absConfig.peso_composicao,
       valor_atual: `${composicaoDistribuicao.planejada}% planej.`,
       nota: compScore,
-      faixa: getScoreLabel(compScore),
-      contribuicao: Math.round(compScore * 0.3),
+      faixa: getAbsScoreClassification(compScore, absConfig).label,
+      contribuicao: Math.round(compScore * absConfig.peso_composicao / 100),
       cor_semantica: compScore >= 75 ? "success" : compScore >= 50 ? "warning" : "critical",
       descricao: "Distribuição das ausências por categoria. Mais planejadas = melhor.",
     },
     {
       metrica: "Maturidade",
-      peso: 20,
+      peso: absConfig.peso_maturidade,
       valor_atual: `${maturidadeDistribuicao.planejado}% planej.`,
-      nota: matScore.score,
-      faixa: matScore.label,
-      contribuicao: Math.round(matScore.score * 0.2),
-      cor_semantica: matScore.score >= 75 ? "success" : matScore.score >= 50 ? "warning" : "critical",
+      nota: matScoreVal,
+      faixa: getMaturidadeScoreLabel(matScoreVal),
+      contribuicao: Math.round(matScoreVal * absConfig.peso_maturidade / 100),
+      cor_semantica: matScoreVal >= 75 ? "success" : matScoreVal >= 50 ? "warning" : "critical",
       descricao: "Proporção de ausências planejadas vs reativas. Mais planejado = mais maduro.",
     },
   ];
@@ -681,7 +682,7 @@ export default function AbsenteismoV2Content({ selectedRegional, onRegionalClick
             </div>
             <p className={`text-xl font-bold mt-0.5 truncate ${latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 6.0 ? "text-orange-500" : "text-red-600"}`} title={`Horas perdidas no mês: ${formatHoursCompact(horasPerdidaMes)} · Acumulado 12m: ${formatHoursCompact(MOCK.horasPerdidas12meses)}`}>{latestTaxa}%</p>
             <p className={`text-[11px] mt-0.5 font-medium ${latestTaxa <= 2.5 ? "text-green-600" : latestTaxa <= 6.0 ? "text-orange-500" : "text-red-600"}`}>
-              {volScore.label}
+              {volScoreLabel}
             </p>
             {(() => {
               const prevTaxa = (() => {
