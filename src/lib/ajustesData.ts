@@ -1,6 +1,7 @@
 import { computeCompositeScore } from "@/lib/scoreComputations";
 import type { ScoreConfig } from "@/contexts/ScoreConfigContext";
 import { DEFAULT_CONFIG } from "@/contexts/ScoreConfigContext";
+import type { QualidadeDataSources } from "@/lib/qualidadeDataSources";
 
 // Real data: Total de Ajustes por Business Unit × Mês
 export interface AjusteRecord {
