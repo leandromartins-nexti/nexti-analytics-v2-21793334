@@ -93,24 +93,8 @@ function computeTempoMedioDiasByWindow(
 // ── Re-export GroupBy from shared component ──
 import GroupBySidebar, { type GroupBy, groupByOptions } from "@/components/analytics/GroupBySidebar";
 
-// ── Sidebar data from real JSON ──
-const empresaData = getSidebarItems("empresa").map(e => ({
-  ...e,
-  qualidade: e.score,
-  tendencia: e.score >= 88 ? "melhorando" as const : e.score >= 75 ? "estavel" as const : "piorando" as const,
-}));
-
-const areaData = getSidebarItems("area").map(e => ({
-  ...e,
-  qualidade: e.score,
-  tendencia: e.score >= 88 ? "melhorando" as const : e.score >= 85 ? "estavel" as const : "piorando" as const,
-}));
-
-const unidadeData = getSidebarItems("unidade").map(e => ({
-  ...e,
-  qualidade: e.score,
-  tendencia: e.score >= 88 ? "melhorando" as const : e.score >= 85 ? "estavel" as const : "piorando" as const,
-}));
+// ── Sidebar data is now computed dynamically inside components via dataSources ──
+// (removed static module-level getSidebarItems calls that always fell back to customer 642)
 
 // ── Generate scatter-compatible data from any entity list ──
 function toScatterData(items: { nome: string; qualidade: number; score: number }[]) {
@@ -137,8 +121,7 @@ function toScatterData(items: { nome: string; qualidade: number; score: number }
     };
   });
 }
-const empresaScatter = toScatterData(empresaData);
-const areaScatter = toScatterData(areaData);
+// empresaScatter and areaScatter are now computed dynamically inside components
 
 // ── Scatter data (source of truth for all 30 regionals) ──
 const scatterQualidade = [
