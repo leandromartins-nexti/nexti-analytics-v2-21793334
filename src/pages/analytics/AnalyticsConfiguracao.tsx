@@ -228,6 +228,20 @@ export default function AnalyticsConfiguracao() {
 
       {/* Content */}
       <div className="flex-1 flex min-h-0">
+        {/* TODO: REMOVER EM PRODUÇÃO — Aba Modo de Teste */}
+        {activeTab === "modo-teste" && (
+          <div className="flex-1 px-6 py-5 overflow-auto">
+            <TestModeSelector />
+            <div className="mt-2">
+              <h2 className="text-lg font-bold text-foreground mb-1">Importador de Dados</h2>
+              <p className="text-xs text-muted-foreground mb-4">
+                Importe um ZIP com a estrutura de dados de um cliente para visualizar seus dashboards.
+              </p>
+              <CustomerZipImporter />
+            </div>
+          </div>
+        )}
+
         {activeTab === "base-dados" && (
           <div className="flex-1 px-6 py-5">
             <div className="mb-4 flex items-center justify-between">
