@@ -91,7 +91,7 @@ export default function AnalyticsResumoExecutivo() {
 
   // KPI summary from real JSON
   const kpiSummary = useMemo(
-    () => getQualidadeKpiSummary(selectedRegional, groupBy, scoreConfig, sources),
+    () => getQualidadeKpiSummary(selectedRegional, groupBy, scoreConfig, null, sources),
     [selectedRegional, groupBy, scoreConfig, sources]
   );
 
