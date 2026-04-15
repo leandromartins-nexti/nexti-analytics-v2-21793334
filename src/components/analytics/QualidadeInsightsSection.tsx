@@ -1,7 +1,8 @@
 import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import { AlertTriangle, Trophy, Lightbulb, Activity, ArrowRight, Link2, RotateCcw } from "lucide-react";
-import { qualidadeInsights, categoryConfig, type QualidadeInsight } from "@/data/qualidadeInsightsData";
+import { getInsightsForCustomer, categoryConfig, type QualidadeInsight } from "@/data/qualidadeInsightsData";
 import { useDismissedInsights } from "@/hooks/useDismissedInsights";
+import { useCustomer } from "@/contexts/CustomerContext";
 import InsightDetailModal from "./InsightDetailModal";
 
 const iconMap = {
@@ -15,7 +16,9 @@ const severityOrder: Record<string, number> = {
 const categories: Array<QualidadeInsight["category"]> = ["risk", "achievement", "opportunity", "event"];
 
 export default function QualidadeInsightsSection() {
-  const { dismissed, dismiss, restore } = useDismissedInsights("642_qualidade");
+  const { customerId } = useCustomer();
+  const qualidadeInsights = useMemo(() => getInsightsForCustomer(customerId), [customerId]);
+  const { dismissed, dismiss, restore } = useDismissedInsights(`${customerId}_qualidade`);
   const [fadingOut, setFadingOut] = useState<string | null>(null);
   const [selectedInsight, setSelectedInsight] = useState<QualidadeInsight | null>(null);
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
