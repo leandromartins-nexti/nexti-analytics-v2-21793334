@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useAuth, StoredUser, validatePassword } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -308,32 +308,36 @@ export default function UserManagementTab() {
         <TabsContent value="pending" className="space-y-2 mt-4">
           {pendingUsers.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum cadastro pendente.</p>}
           {pendingUsers.map((u) => (
-            <UserRow key={u.id} u={u} actions={
-              <>
-                <Button size="sm" variant="default" className="gap-1" onClick={() => handleApprove(u)}>
-                  <Check className="h-3.5 w-3.5" /> Aprovar
-                </Button>
-                <Button size="sm" variant="destructive" className="gap-1" onClick={() => handleReject(u)}>
-                  <X className="h-3.5 w-3.5" /> Recusar
-                </Button>
-              </>
-            } />
+            <React.Fragment key={u.id}>
+              {renderUserRow(u,
+                <>
+                  <Button size="sm" variant="default" className="gap-1" onClick={() => handleApprove(u)}>
+                    <Check className="h-3.5 w-3.5" /> Aprovar
+                  </Button>
+                  <Button size="sm" variant="destructive" className="gap-1" onClick={() => handleReject(u)}>
+                    <X className="h-3.5 w-3.5" /> Recusar
+                  </Button>
+                </>
+              )}
+            </React.Fragment>
           ))}
         </TabsContent>
 
         <TabsContent value="rejected" className="space-y-2 mt-4">
           {rejectedUsers.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum cadastro recusado.</p>}
           {rejectedUsers.map((u) => (
-            <UserRow key={u.id} u={u} actions={
-              <>
-                <Button size="sm" variant="outline" className="gap-1" onClick={() => handleApprove(u)}>
-                  <Check className="h-3.5 w-3.5" /> Reativar
-                </Button>
-                <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => handleDelete(u)}>
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </>
-            } />
+            <React.Fragment key={u.id}>
+              {renderUserRow(u,
+                <>
+                  <Button size="sm" variant="outline" className="gap-1" onClick={() => handleApprove(u)}>
+                    <Check className="h-3.5 w-3.5" /> Reativar
+                  </Button>
+                  <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => handleDelete(u)}>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </>
+              )}
+            </React.Fragment>
           ))}
         </TabsContent>
       </Tabs>
