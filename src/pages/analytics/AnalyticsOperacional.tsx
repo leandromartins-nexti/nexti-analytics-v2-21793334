@@ -65,8 +65,8 @@ export default function AnalyticsOperacional() {
         </div>
       </div>
 
-      <div className="bg-white border-b border-border px-6">
-        <div className="flex gap-2">
+      <div className="bg-white border-b border-border px-2 sm:px-6 overflow-x-auto">
+        <div className="flex gap-1 sm:gap-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -74,14 +74,15 @@ export default function AnalyticsOperacional() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-40 py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
+                title={tab.label}
+                className={`flex-1 sm:w-40 sm:flex-none py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
                   isActive
                     ? "border-[#FF5722] text-[#FF5722]"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                {tab.label}
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             );
           })}
