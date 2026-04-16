@@ -311,12 +311,12 @@ export default function AnalyticsResumoExecutivo() {
           {/* ═══ Linha 2: Indicadores — lista vertical com sparklines inline ═══ */}
           <div className="bg-card border border-border/50 rounded-xl" data-onboarding="sparkline-table">
             {/* Header */}
-            <div className="flex items-center gap-4 px-4 py-2 border-b border-border/40 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+            <div className="flex items-center gap-2 sm:gap-4 px-3 sm:px-4 py-2 border-b border-border/40 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
               <div className="w-2" />
-              <span className="min-w-[140px]">Indicador</span>
+              <span className="flex-1 sm:flex-none sm:min-w-[140px]">Indicador</span>
               <span className="min-w-[45px] text-center">Score</span>
-              <span className="min-w-[65px] text-center">Variação</span>
-              <div className="flex-1 min-w-[120px]" />
+              <span className="min-w-[55px] sm:min-w-[65px] text-center">Variação</span>
+              <div className="hidden sm:block flex-1 sm:min-w-[120px]" />
             </div>
             <div className="divide-y divide-border/40">
               {sparklineCards.map((card) => {
