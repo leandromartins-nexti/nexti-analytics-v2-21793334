@@ -7,5 +7,5 @@ const tabs = [
 ];
 
 export default function AnalyticsCompliance() {
-  return <AnalyticsLockedSection sectionName="Compliance Avançado" sectionId="compliance" tabs={tabs} />;
+  return <AnalyticsLockedSection sectionName="Compliance" sectionId="compliance" tabs={tabs} />;
 }
