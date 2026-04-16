@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { PrimeFilterProvider } from "@/contexts/PrimeFilterContext";
 import { FloatingActionMenu } from "@/components/layout/FloatingActionMenu";
@@ -39,6 +39,7 @@ const DashboardLayout = () => {
             <div className="flex-1 flex flex-col">
               <header className="h-12 flex items-center justify-between border-b border-border bg-card px-4">
                 <div className="flex items-center gap-3">
+                  <SidebarTrigger className="md:hidden" />
                   {canSwitchClient && (
                     <Select
                       value={activeClientValue}
