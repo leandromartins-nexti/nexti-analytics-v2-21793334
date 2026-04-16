@@ -12,6 +12,7 @@ import ExecutiveV2 from "./pages/ExecutiveV2";
 import AnalyticsV3 from "./pages/AnalyticsV3";
 import ROIConfig from "./pages/ROIConfig";
 import ROIConfigV3 from "./pages/ROIConfigV3";
+import UserManagement from "./pages/UserManagement";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import { ScoreConfigProvider } from "./contexts/ScoreConfigContext";
@@ -50,6 +51,7 @@ function ProtectedRoutes() {
               <Route path="/analytics-v3" element={<AnalyticsV3 />} />
               <Route path="/roi-config" element={<ROIConfig />} />
               <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
+              <Route path="/user-management" element={<UserManagement />} />
 
               {/* Analytics V1 — 2-level menu */}
               <Route path="/analytics" element={<AnalyticsResumoExecutivo />} />

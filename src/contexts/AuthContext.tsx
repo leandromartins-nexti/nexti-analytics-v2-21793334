@@ -1,15 +1,18 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import defaultUsersJson from "@/data/users.json";
 
+export type UserStatus = "active" | "pending" | "rejected";
+
 export interface AppUser {
   id: number;
   username: string;
   client: string;
   name: string;
   role: string;
+  status: UserStatus;
 }
 
-interface StoredUser extends AppUser {
+export interface StoredUser extends AppUser {
   password: string;
 }
 
@@ -19,6 +22,10 @@ interface AuthContextType {
   login: (username: string, password: string) => { success: boolean; error?: string };
   register: (username: string, password: string, name: string, client: string) => { success: boolean; error?: string };
   logout: () => void;
+  getUsers: () => StoredUser[];
+  approveUser: (id: number) => void;
+  rejectUser: (id: number) => void;
+  deleteUser: (id: number) => void;
 }
 
 const AUTH_STORAGE_KEY = "nexti_auth_user";
@@ -37,7 +44,10 @@ function loadUsers(): StoredUser[] {
     const stored = localStorage.getItem(USERS_STORAGE_KEY);
     if (stored) return JSON.parse(stored);
   } catch {}
-  const seed = defaultUsersJson.users as StoredUser[];
+  const seed = (defaultUsersJson.users as any[]).map((u) => ({
+    ...u,
+    status: u.status || "active",
+  })) as StoredUser[];
   localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(seed));
   return seed;
 }
@@ -60,6 +70,10 @@ const AuthContext = createContext<AuthContextType>({
   login: () => ({ success: false }),
   register: () => ({ success: false }),
   logout: () => {},
+  getUsers: () => [],
+  approveUser: () => {},
+  rejectUser: () => {},
+  deleteUser: () => {},
 });
 
 export function useAuth() {
@@ -68,6 +82,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(() => getStoredUser());
+  const [, setTick] = useState(0);
 
   const login = useCallback((username: string, password: string) => {
     const users = loadUsers();
@@ -75,6 +90,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password
     );
     if (!found) return { success: false, error: "Usuário ou senha inválidos" };
+    if (found.status === "pending") return { success: false, error: "Seu cadastro ainda está aguardando aprovação" };
+    if (found.status === "rejected") return { success: false, error: "Seu cadastro foi recusado. Entre em contato com o administrador" };
 
     const appUser: AppUser = {
       id: found.id,
@@ -82,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       client: found.client,
       name: found.name,
       role: found.role,
+      status: found.status,
     };
     setUser(appUser);
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(appUser));
@@ -105,20 +123,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       client,
       name,
       role: "user",
+      status: "pending",
     };
     users.push(newUser);
     saveUsers(users);
 
-    const appUser: AppUser = {
-      id: newUser.id,
-      username: newUser.username,
-      client: newUser.client,
-      name: newUser.name,
-      role: newUser.role,
-    };
-    setUser(appUser);
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(appUser));
-    return { success: true };
+    return { success: true, error: undefined };
   }, []);
 
   const logout = useCallback(() => {
@@ -126,8 +136,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(AUTH_STORAGE_KEY);
   }, []);
 
+  const getUsers = useCallback(() => loadUsers(), []);
+
+  const approveUser = useCallback((id: number) => {
+    const users = loadUsers();
+    const idx = users.findIndex((u) => u.id === id);
+    if (idx >= 0) {
+      users[idx].status = "active";
+      saveUsers(users);
+      setTick((t) => t + 1);
+    }
+  }, []);
+
+  const rejectUser = useCallback((id: number) => {
+    const users = loadUsers();
+    const idx = users.findIndex((u) => u.id === id);
+    if (idx >= 0) {
+      users[idx].status = "rejected";
+      saveUsers(users);
+      setTick((t) => t + 1);
+    }
+  }, []);
+
+  const deleteUser = useCallback((id: number) => {
+    let users = loadUsers();
+    users = users.filter((u) => u.id !== id);
+    saveUsers(users);
+    setTick((t) => t + 1);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, register, logout, getUsers, approveUser, rejectUser, deleteUser }}>
       {children}
     </AuthContext.Provider>
   );
