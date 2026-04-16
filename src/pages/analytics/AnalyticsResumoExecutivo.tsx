@@ -21,6 +21,11 @@ import volumeEmpresa from "@/data/customers/642/absenteismo/volume-mensal-por-em
 import compV5Empresa from "@/data/customers/642/absenteismo/composicao-v5-por-empresa.json";
 import maturidadeEmpresa from "@/data/customers/642/absenteismo/maturidade-por-empresa.json";
 import {
+  useNextiScoreConfig,
+  computeNextiScore,
+  getNextiScoreClassification,
+} from "@/contexts/NextiScoreConfigContext";
+import {
   Filter, Eraser, DollarSign, CheckCircle,
 } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
