@@ -6,7 +6,8 @@
       "password": "Admin@123",
       "client": "nexti",
       "name": "Administrador Nexti",
-      "role": "admin"
+      "role": "admin",
+      "status": "active"
     },
     {
       "id": 2,
@@ -14,7 +15,8 @@
       "password": "Orseg@123",
       "client": "orsegups",
       "name": "Operador Orsegups",
-      "role": "user"
+      "role": "user",
+      "status": "active"
     },
     {
       "id": 3,
@@ -22,7 +24,8 @@
       "password": "Atitude@123",
       "client": "atitudeservicos",
       "name": "Operador Atitude",
-      "role": "user"
+      "role": "user",
+      "status": "active"
     },
     {
       "id": 4,
@@ -30,7 +33,8 @@
       "password": "Vigeyes@123",
       "client": "vigeyes",
       "name": "Operador VigEyes",
-      "role": "user"
+      "role": "user",
+      "status": "active"
     }
   ]
 }
