@@ -1,0 +1,34 @@
+{
+  "score_label": "Bom",
+  "componentes": [
+    {
+      "unidade": "%",
+      "contribuicao": 42.3,
+      "cor_semantica": "success",
+      "nota": 84.59,
+      "peso": 50,
+      "valor_atual": 84.59,
+      "metrica": "Qualidade das Marcações"
+    },
+    {
+      "unidade": " dias",
+      "contribuicao": 22.84,
+      "cor_semantica": "success",
+      "nota": 76.12,
+      "peso": 30,
+      "valor_atual": 2.85,
+      "metrica": "Velocidade de Tratativa"
+    },
+    {
+      "unidade": " aj/op/mês",
+      "contribuicao": 18.5,
+      "cor_semantica": "success",
+      "nota": 92,
+      "peso": 20,
+      "valor_atual": 222,
+      "metrica": "Saúde do Back-office"
+    }
+  ],
+  "score_composto": 84,
+  "customer_id": 1
+}

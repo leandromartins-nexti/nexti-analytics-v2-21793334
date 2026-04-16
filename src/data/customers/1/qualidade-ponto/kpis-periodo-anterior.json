@@ -1,0 +1,49 @@
+{
+  "kpis": {
+    "maior_risco": {
+      "mudanca_label": "",
+      "mudou": false,
+      "anterior": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA",
+      "atual": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA"
+    },
+    "tempo_medio_dias": {
+      "delta": -0.75,
+      "direcao": "up",
+      "anterior": 4.25,
+      "atual": 3.5
+    },
+    "melhor_operacao": {
+      "mudanca_label": "",
+      "mudou": false,
+      "anterior": "ORSEGUPS SEGURANÇA E VIGILANCIA",
+      "atual": "ORSEGUPS SEGURANÇA E VIGILANCIA"
+    },
+    "score_aba": {
+      "delta": 4,
+      "direcao": "up",
+      "anterior": 76,
+      "atual": 79
+    },
+    "qualidade_pct": {
+      "delta": 1.15,
+      "direcao": "down",
+      "anterior": 78.75,
+      "atual": 79.91
+    },
+    "sobrecarga_bo": {
+      "delta": -146,
+      "direcao": "down",
+      "anterior": 368,
+      "atual": 222
+    }
+  },
+  "periodo_anterior": {
+    "fim": "2025-04-01",
+    "inicio": "2024-04-01"
+  },
+  "periodo_atual": {
+    "fim": "2026-04-01",
+    "inicio": "2025-04-01"
+  },
+  "customer_id": 1
+}
