@@ -89,6 +89,7 @@ export default function AnalyticsResumoExecutivo() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
+  const { config: absConfig } = useAbsenteismoScoreConfig();
 
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
