@@ -293,7 +293,7 @@ export default function AnalyticsResumoExecutivo() {
           {/* ═══ Linha 1: Score Compacto + 4 KPI Cards ═══ */}
           <div className="grid grid-cols-5 gap-3">
             <div data-onboarding="score-operacional">
-              <ScoreBoard title="Score Operacional" tooltip="Score composto calculado pela média dos últimos 3 meses, combinando qualidade das marcações, velocidade de tratativa e saúde do back-office.">
+              <ScoreBoard title="Score Nexti" tooltip="Score consolidado da operação, calculado pela média ponderada dos sub-scores de Ponto e Absenteísmo. Configure os pesos em Configuração → Scores → Score Nexti.">
                 <ScoreGauge score={activeScore} label={`${activeScore}`} faixa={scoreClassif.label} color={scoreClassif.color} />
               </ScoreBoard>
             </div>
