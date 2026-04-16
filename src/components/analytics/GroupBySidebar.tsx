@@ -42,7 +42,9 @@ export default function GroupBySidebar({
   pageSize = 25,
 }: GroupBySidebarProps) {
   const { config: scoreConfig } = useScoreConfig();
+  const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortBy, setSortBy] = useState<"score" | "nome">("score");
