@@ -1,72 +1,36 @@
 import { useState } from "react";
-import { useAuth, validatePassword } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Eye, EyeOff, LogIn, UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, LogIn, AlertCircle } from "lucide-react";
 import nextiLogo from "@/assets/nexti-logo.png";
 
 export default function Login() {
-  const { login, register } = useAuth();
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [client, setClient] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const [successMsg, setSuccessMsg] = useState("");
-
-  const passwordChecks = [
-    { label: "Mínimo 8 caracteres", ok: password.length >= 8 },
-    { label: "Letra maiúscula", ok: /[A-Z]/.test(password) },
-    { label: "Letra minúscula", ok: /[a-z]/.test(password) },
-    { label: "Caractere especial (!@#$...)", ok: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) },
-  ];
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccessMsg("");
 
     if (!client.trim()) {
       setError("Informe a empresa");
       return;
     }
 
-    // Normalize: "atitude" variants → "atitudeservicos"
     const normalizedClient = client.trim().toLowerCase().replace(/\s+/g, "");
     const finalClient = normalizedClient === "atitude" || normalizedClient === "atitudeserviços"
       ? "atitudeservicos"
       : normalizedClient;
 
-    if (mode === "login") {
-      const result = login(username, password);
-      if (!result.success) setError(result.error || "Erro ao fazer login");
-    } else {
-      if (!name.trim()) {
-        setError("Informe o nome completo");
-        return;
-      }
-      const pwError = validatePassword(password);
-      if (pwError) {
-        setError(pwError);
-        return;
-      }
-      const result = register(username, password, name, finalClient);
-      if (!result.success) {
-        setError(result.error || "Erro ao cadastrar");
-      } else {
-        setSuccessMsg("Cadastro enviado! Aguarde a aprovação do administrador para acessar o sistema.");
-        setMode("login");
-        setUsername("");
-        setPassword("");
-        setName("");
-        setClient("");
-      }
-    }
+    const result = login(username, password);
+    if (!result.success) setError(result.error || "Erro ao fazer login");
   };
 
   return (
@@ -76,19 +40,12 @@ export default function Login() {
           <div className="flex justify-center">
             <img src={nextiLogo} alt="Nexti" className="h-10 object-contain" />
           </div>
-          <CardTitle className="text-xl">
-            {mode === "login" ? "Entrar no Analytics" : "Criar Conta"}
-          </CardTitle>
-          <CardDescription>
-            {mode === "login"
-              ? "Informe suas credenciais para acessar"
-              : "Preencha os dados para se cadastrar"}
-          </CardDescription>
+          <CardTitle className="text-xl">Entrar no Analytics</CardTitle>
+          <CardDescription>Informe suas credenciais para acessar</CardDescription>
         </CardHeader>
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Empresa - text input */}
             <div className="space-y-2">
               <Label>Empresa</Label>
               <Input
@@ -98,17 +55,6 @@ export default function Login() {
                 autoComplete="organization"
               />
             </div>
-
-            {mode === "register" && (
-              <div className="space-y-2">
-                <Label>Nome completo</Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Seu nome"
-                />
-              </div>
-            )}
 
             <div className="space-y-2">
               <Label>Usuário</Label>
@@ -128,7 +74,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Sua senha"
-                  autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  autoComplete="current-password"
                   className="pr-10"
                 />
                 <button
@@ -139,31 +85,7 @@ export default function Login() {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-
-              {mode === "register" && password.length > 0 && (
-                <div className="space-y-1 mt-2">
-                  {passwordChecks.map((check) => (
-                    <div key={check.label} className="flex items-center gap-2 text-xs">
-                      {check.ok ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
-                      ) : (
-                        <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                      )}
-                      <span className={check.ok ? "text-green-600" : "text-muted-foreground"}>
-                        {check.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-
-            {successMsg && (
-              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-100 rounded-md px-3 py-2">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
-                {successMsg}
-              </div>
-            )}
 
             {error && (
               <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
@@ -173,34 +95,10 @@ export default function Login() {
             )}
 
             <Button type="submit" className="w-full" size="lg">
-              {mode === "login" ? (
-                <>
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Entrar
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Cadastrar
-                </>
-              )}
+              <LogIn className="h-4 w-4 mr-2" />
+              Entrar
             </Button>
           </form>
-
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setMode(mode === "login" ? "register" : "login");
-                setError("");
-              }}
-              className="text-sm text-primary hover:underline"
-            >
-              {mode === "login"
-                ? "Não tem conta? Cadastre-se"
-                : "Já tem conta? Faça login"}
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
