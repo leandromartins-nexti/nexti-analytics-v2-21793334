@@ -28,6 +28,7 @@ const STORAGE_KEY = "nexti_active_customer_id";
 /** Map client slugs to customer_ids */
 const CLIENT_CUSTOMER_MAP: Record<string, number> = {
   nexti: 642,
+  nextitalks: 1,
   orsegups: 2,
   atitudeservicos: 391,
   vigeyes: 642,
@@ -86,7 +87,7 @@ export function useCustomer() {
 
 // Vite glob for dynamic JSON loading from built-in customers folder
 const customerJsonModules = import.meta.glob<Record<string, any>>(
-  "/src/data/customers/*/qualidade-ponto/*.json",
+  "/src/data/customers/*/**/*.json",
   { eager: false }
 );
 

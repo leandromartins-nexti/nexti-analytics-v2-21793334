@@ -44,6 +44,15 @@
       "name": "Power",
       "role": "user",
       "status": "active"
+    },
+    {
+      "id": 6,
+      "username": "nextitalks",
+      "password": "Nex6770*",
+      "client": "nextitalks",
+      "name": "Nexti Talks",
+      "role": "user",
+      "status": "active"
     }
   ]
 }

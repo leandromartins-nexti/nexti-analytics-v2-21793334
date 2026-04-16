@@ -1,0 +1,862 @@
+[
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 71,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 33,
+    "competencia": "2025-04",
+    "qtd_ajustes": 2327,
+    "horas_extras_rateadas": 35.9
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 77,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 30,
+    "competencia": "2025-05",
+    "qtd_ajustes": 2317,
+    "horas_extras_rateadas": 32.4
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 72,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 29,
+    "competencia": "2025-06",
+    "qtd_ajustes": 2083,
+    "horas_extras_rateadas": 26.1
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 60,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 31,
+    "competencia": "2025-07",
+    "qtd_ajustes": 1870,
+    "horas_extras_rateadas": 25.9
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 55,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 30,
+    "competencia": "2025-08",
+    "qtd_ajustes": 1663,
+    "horas_extras_rateadas": 32.4
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 138,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 37,
+    "competencia": "2025-09",
+    "qtd_ajustes": 5104,
+    "horas_extras_rateadas": 58.8
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 64,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 35,
+    "competencia": "2025-10",
+    "qtd_ajustes": 2254,
+    "horas_extras_rateadas": 110.6
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 67,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 32,
+    "competencia": "2025-11",
+    "qtd_ajustes": 2146,
+    "horas_extras_rateadas": 53.0
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 65,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 38,
+    "competencia": "2025-12",
+    "qtd_ajustes": 2475,
+    "horas_extras_rateadas": 54.1
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 74,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 31,
+    "competencia": "2026-01",
+    "qtd_ajustes": 2293,
+    "horas_extras_rateadas": 61.0
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 70,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 32,
+    "competencia": "2026-02",
+    "qtd_ajustes": 2246,
+    "horas_extras_rateadas": 63.8
+  },
+  {
+    "company_name": "CASVIG CATARINENSE DE SEGURANÇA E VIGILÂNCIA LTDA.",
+    "ajustes_por_operador": 76,
+    "customer_id": 1,
+    "company_id": 2,
+    "operadores_ativos": 32,
+    "competencia": "2026-03",
+    "qtd_ajustes": 2447,
+    "horas_extras_rateadas": 30.7
+  },
+  {
+    "company_name": "ORSEGUPS SERVIÇOS DE LIMPEZA E MANUTENÇÃO LTDA",
+    "ajustes_por_operador": 1,
+    "customer_id": 1,
+    "company_id": 5,
+    "operadores_ativos": 5,
+    "competencia": "2025-10",
+    "qtd_ajustes": 6,
+    "horas_extras_rateadas": 0.8
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 15,
+    "competencia": "2025-04",
+    "qtd_ajustes": 79,
+    "horas_extras_rateadas": 9.5
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 4,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 10,
+    "competencia": "2025-05",
+    "qtd_ajustes": 37,
+    "horas_extras_rateadas": 1.2
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 11,
+    "competencia": "2025-06",
+    "qtd_ajustes": 55,
+    "horas_extras_rateadas": 3.2
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 4,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 10,
+    "competencia": "2025-07",
+    "qtd_ajustes": 39,
+    "horas_extras_rateadas": 0.1
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 13,
+    "competencia": "2025-08",
+    "qtd_ajustes": 68,
+    "horas_extras_rateadas": 13.2
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 14,
+    "competencia": "2025-09",
+    "qtd_ajustes": 73,
+    "horas_extras_rateadas": 4.3
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 13,
+    "competencia": "2025-10",
+    "qtd_ajustes": 69,
+    "horas_extras_rateadas": 2.9
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 8,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 8,
+    "competencia": "2025-11",
+    "qtd_ajustes": 60,
+    "horas_extras_rateadas": 1.0
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 9,
+    "competencia": "2025-12",
+    "qtd_ajustes": 45,
+    "horas_extras_rateadas": 1.4
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 7,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 13,
+    "competencia": "2026-01",
+    "qtd_ajustes": 91,
+    "horas_extras_rateadas": 2.5
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 6,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 12,
+    "competencia": "2026-02",
+    "qtd_ajustes": 69,
+    "horas_extras_rateadas": 0.9
+  },
+  {
+    "company_name": "ORSEGUPS MONITORAMENTO ELETRÔNICO LTDA.",
+    "ajustes_por_operador": 6,
+    "customer_id": 1,
+    "company_id": 8,
+    "operadores_ativos": 9,
+    "competencia": "2026-03",
+    "qtd_ajustes": 55,
+    "horas_extras_rateadas": 0.7
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 233,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 85,
+    "competencia": "2025-04",
+    "qtd_ajustes": 19815,
+    "horas_extras_rateadas": 782.6
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 221,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 81,
+    "competencia": "2025-05",
+    "qtd_ajustes": 17929,
+    "horas_extras_rateadas": 750.2
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 200,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 89,
+    "competencia": "2025-06",
+    "qtd_ajustes": 17762,
+    "horas_extras_rateadas": 683.7
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 190,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 92,
+    "competencia": "2025-07",
+    "qtd_ajustes": 17462,
+    "horas_extras_rateadas": 822.6
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 168,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 91,
+    "competencia": "2025-08",
+    "qtd_ajustes": 15276,
+    "horas_extras_rateadas": 845.2
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 180,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 91,
+    "competencia": "2025-09",
+    "qtd_ajustes": 16420,
+    "horas_extras_rateadas": 662.2
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 153,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 88,
+    "competencia": "2025-10",
+    "qtd_ajustes": 13425,
+    "horas_extras_rateadas": 913.9
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 185,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 79,
+    "competencia": "2025-11",
+    "qtd_ajustes": 14642,
+    "horas_extras_rateadas": 798.4
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 197,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 85,
+    "competencia": "2025-12",
+    "qtd_ajustes": 16720,
+    "horas_extras_rateadas": 827.5
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 187,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 87,
+    "competencia": "2026-01",
+    "qtd_ajustes": 16242,
+    "horas_extras_rateadas": 887.4
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 178,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 88,
+    "competencia": "2026-02",
+    "qtd_ajustes": 15668,
+    "horas_extras_rateadas": 756.3
+  },
+  {
+    "company_name": "ORSEGUPS SEGURANÇA E VIGILANCIA LTDA",
+    "ajustes_por_operador": 207,
+    "customer_id": 1,
+    "company_id": 9,
+    "operadores_ativos": 84,
+    "competencia": "2026-03",
+    "qtd_ajustes": 17356,
+    "horas_extras_rateadas": 620.4
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 425,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 54,
+    "competencia": "2025-04",
+    "qtd_ajustes": 22941,
+    "horas_extras_rateadas": 475.2
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 481,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 49,
+    "competencia": "2025-05",
+    "qtd_ajustes": 23573,
+    "horas_extras_rateadas": 470.4
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 468,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 52,
+    "competencia": "2025-06",
+    "qtd_ajustes": 24319,
+    "horas_extras_rateadas": 377.1
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 454,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 52,
+    "competencia": "2025-07",
+    "qtd_ajustes": 23584,
+    "horas_extras_rateadas": 394.2
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 345,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 53,
+    "competencia": "2025-08",
+    "qtd_ajustes": 18260,
+    "horas_extras_rateadas": 396.5
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 331,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 52,
+    "competencia": "2025-09",
+    "qtd_ajustes": 17211,
+    "horas_extras_rateadas": 362.2
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 365,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 50,
+    "competencia": "2025-10",
+    "qtd_ajustes": 18226,
+    "horas_extras_rateadas": 333.5
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 363,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 51,
+    "competencia": "2025-11",
+    "qtd_ajustes": 18503,
+    "horas_extras_rateadas": 372.8
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 435,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 52,
+    "competencia": "2025-12",
+    "qtd_ajustes": 22610,
+    "horas_extras_rateadas": 549.2
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 425,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 51,
+    "competencia": "2026-01",
+    "qtd_ajustes": 21681,
+    "horas_extras_rateadas": 596.5
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 425,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 50,
+    "competencia": "2026-02",
+    "qtd_ajustes": 21234,
+    "horas_extras_rateadas": 437.3
+  },
+  {
+    "company_name": "ORSEGUPS PRESTAÇÃO DE SERVIÇOS DE LIMPEZA LTDA",
+    "ajustes_por_operador": 449,
+    "customer_id": 1,
+    "company_id": 19,
+    "operadores_ativos": 55,
+    "competencia": "2026-03",
+    "qtd_ajustes": 24677,
+    "horas_extras_rateadas": 526.9
+  },
+  {
+    "company_name": "AGREGA SERVIÇOS E APOIO ADMINISTRATIVO LTDA",
+    "ajustes_por_operador": 2,
+    "customer_id": 1,
+    "company_id": 6330,
+    "operadores_ativos": 1,
+    "competencia": "2025-07",
+    "qtd_ajustes": 2,
+    "horas_extras_rateadas": 0.0
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 262,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 2,
+    "competencia": "2025-04",
+    "qtd_ajustes": 523,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 165,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 3,
+    "competencia": "2025-05",
+    "qtd_ajustes": 494,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 105,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 4,
+    "competencia": "2025-06",
+    "qtd_ajustes": 421,
+    "horas_extras_rateadas": 2.7
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 97,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 4,
+    "competencia": "2025-07",
+    "qtd_ajustes": 388,
+    "horas_extras_rateadas": 6
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 95,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 4,
+    "competencia": "2025-08",
+    "qtd_ajustes": 381,
+    "horas_extras_rateadas": 18.6
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 79,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 4,
+    "competencia": "2025-09",
+    "qtd_ajustes": 316,
+    "horas_extras_rateadas": 12.6
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 101,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 4,
+    "competencia": "2025-10",
+    "qtd_ajustes": 404,
+    "horas_extras_rateadas": 15.6
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 97,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 5,
+    "competencia": "2025-11",
+    "qtd_ajustes": 483,
+    "horas_extras_rateadas": 37.1
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 163,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 4,
+    "competencia": "2025-12",
+    "qtd_ajustes": 652,
+    "horas_extras_rateadas": 0.1
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 651,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 1,
+    "competencia": "2026-01",
+    "qtd_ajustes": 651,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 152,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 3,
+    "competencia": "2026-02",
+    "qtd_ajustes": 457,
+    "horas_extras_rateadas": 0.1
+  },
+  {
+    "company_name": "VIG EYES TERCEIRIZACAO DE SERVICOS LTDA",
+    "ajustes_por_operador": 120,
+    "customer_id": 1,
+    "company_id": 9379,
+    "operadores_ativos": 2,
+    "competencia": "2026-03",
+    "qtd_ajustes": 240,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 131,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 5,
+    "competencia": "2025-04",
+    "qtd_ajustes": 654,
+    "horas_extras_rateadas": 34.8
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 146,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 5,
+    "competencia": "2025-05",
+    "qtd_ajustes": 729,
+    "horas_extras_rateadas": 41.3
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 137,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 6,
+    "competencia": "2025-06",
+    "qtd_ajustes": 822,
+    "horas_extras_rateadas": 1
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 107,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 7,
+    "competencia": "2025-07",
+    "qtd_ajustes": 751,
+    "horas_extras_rateadas": 8.1
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 70,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 9,
+    "competencia": "2025-08",
+    "qtd_ajustes": 628,
+    "horas_extras_rateadas": 39.9
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 944,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2025-09",
+    "qtd_ajustes": 7553,
+    "horas_extras_rateadas": 141.6
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 785,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2025-10",
+    "qtd_ajustes": 6281,
+    "horas_extras_rateadas": 177.1
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 505,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2025-11",
+    "qtd_ajustes": 4043,
+    "horas_extras_rateadas": 199.8
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 298,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2025-12",
+    "qtd_ajustes": 2383,
+    "horas_extras_rateadas": 87.9
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 224,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2026-01",
+    "qtd_ajustes": 1793,
+    "horas_extras_rateadas": 143.3
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 242,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2026-02",
+    "qtd_ajustes": 1938,
+    "horas_extras_rateadas": 136.5
+  },
+  {
+    "company_name": "VIG EYES PORTARIA E LIMPEZA LTDA",
+    "ajustes_por_operador": 239,
+    "customer_id": 1,
+    "company_id": 9380,
+    "operadores_ativos": 8,
+    "competencia": "2026-03",
+    "qtd_ajustes": 1913,
+    "horas_extras_rateadas": 80.3
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 16,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 4,
+    "competencia": "2025-04",
+    "qtd_ajustes": 65,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 18,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 4,
+    "competencia": "2025-05",
+    "qtd_ajustes": 71,
+    "horas_extras_rateadas": 0.5
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 9,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 3,
+    "competencia": "2025-06",
+    "qtd_ajustes": 27,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 9,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 5,
+    "competencia": "2025-07",
+    "qtd_ajustes": 46,
+    "horas_extras_rateadas": 0.1
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 10,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 5,
+    "competencia": "2025-08",
+    "qtd_ajustes": 50,
+    "horas_extras_rateadas": 0.1
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 5,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 4,
+    "competencia": "2025-09",
+    "qtd_ajustes": 20,
+    "horas_extras_rateadas": 0.2
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 23,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 3,
+    "competencia": "2025-10",
+    "qtd_ajustes": 68,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 17,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 3,
+    "competencia": "2025-11",
+    "qtd_ajustes": 52,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 17,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 3,
+    "competencia": "2025-12",
+    "qtd_ajustes": 51,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 18,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 2,
+    "competencia": "2026-01",
+    "qtd_ajustes": 36,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 26,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 2,
+    "competencia": "2026-02",
+    "qtd_ajustes": 51,
+    "horas_extras_rateadas": 0
+  },
+  {
+    "company_name": "VIG EYES SEGURANCA PATRIMONIAL LTDA",
+    "ajustes_por_operador": 29,
+    "customer_id": 1,
+    "company_id": 9381,
+    "operadores_ativos": 2,
+    "competencia": "2026-03",
+    "qtd_ajustes": 57,
+    "horas_extras_rateadas": 0
+  }
+]
