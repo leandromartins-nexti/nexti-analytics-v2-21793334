@@ -123,7 +123,7 @@ export default function UserManagementTab() {
     }
   };
 
-  const UserRow = ({ u, actions }: { u: StoredUser; actions: React.ReactNode }) => {
+  const renderUserRow = (u: StoredUser, actions: React.ReactNode) => {
     const isEditing = editId === u.id;
 
     if (isEditing) {
