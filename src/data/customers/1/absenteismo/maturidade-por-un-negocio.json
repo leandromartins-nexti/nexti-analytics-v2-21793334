@@ -1,7 +1,7 @@
 [
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 65,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -11,7 +11,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 19,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -21,7 +21,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -31,7 +31,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -41,7 +41,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -51,7 +51,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 66,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -61,7 +61,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 19,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -71,7 +71,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 6,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -81,7 +81,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 1,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -91,7 +91,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 12,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -101,7 +101,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -111,7 +111,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 64,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -121,7 +121,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 25,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -131,7 +131,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -141,7 +141,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 4,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -151,7 +151,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 9,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -161,7 +161,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 3,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -171,7 +171,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 58,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -181,7 +181,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 16,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -191,7 +191,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 9,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -201,7 +201,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 3,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -211,7 +211,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 10,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -221,7 +221,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 1,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -231,7 +231,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 72,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -241,7 +241,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 20,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -251,7 +251,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 13,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -261,7 +261,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 1,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -271,7 +271,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 12,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -281,7 +281,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 61,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -291,7 +291,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 17,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -301,7 +301,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -311,7 +311,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 3,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -321,7 +321,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 5,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -331,7 +331,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 63,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -341,7 +341,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 20,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -351,7 +351,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 6,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -361,7 +361,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -371,7 +371,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 5,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -381,7 +381,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 1,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -391,7 +391,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 223,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -401,7 +401,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 24,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -411,7 +411,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 7,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -421,7 +421,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -431,7 +431,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 6,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -441,7 +441,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -451,7 +451,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 231,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -461,7 +461,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 30,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -471,7 +471,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -481,7 +481,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 3,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -491,7 +491,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 10,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -501,7 +501,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -511,7 +511,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 217,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -521,7 +521,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 34,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -531,7 +531,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 7,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -541,7 +541,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 2,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -551,7 +551,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -561,7 +561,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 10,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -571,7 +571,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 221,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -581,7 +581,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 34,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -591,7 +591,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 6,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -601,7 +601,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 4,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -611,7 +611,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 8,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -621,7 +621,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 6,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -631,7 +631,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 231,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -641,7 +641,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 36,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -651,7 +651,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 9,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -661,7 +661,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 1,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -671,7 +671,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 5,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -681,7 +681,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 3,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -691,7 +691,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 119,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -701,7 +701,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES PORTARIA E LIMPEZA",
+    "business_unit_name": "Unidade Industrial",
     "pessoas_distintas": 29,
     "customer_id": 1,
     "business_unit_id": 17518,
@@ -711,7 +711,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 9,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -721,7 +721,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES SEGURANCA PATRIMONIAL",
+    "business_unit_name": "Núcleo Alpha",
     "pessoas_distintas": 5,
     "customer_id": 1,
     "business_unit_id": 17519,
@@ -731,7 +731,7 @@
   },
   {
     "categoria": "1_planejado",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 6,
     "customer_id": 1,
     "business_unit_id": 17517,
@@ -741,7 +741,7 @@
   },
   {
     "categoria": "2_reativo",
-    "business_unit_name": "VIG EYES TERCEIRIZACAO",
+    "business_unit_name": "Unidade Comercial",
     "pessoas_distintas": 7,
     "customer_id": 1,
     "business_unit_id": 17517,
