@@ -155,7 +155,7 @@ export function DashboardSidebar() {
       <SidebarContent className="flex-1 overflow-y-auto bg-[#3d4449] gap-0 [&>*+*]:mt-0">
         {/* ── Analytics Section ── */}
         {isCollapsed ? (
-          <SidebarGroup className="px-3 py-1">
+          <SidebarGroup className="px-3 pt-0 pb-1">
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild className="text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3 justify-center">
@@ -167,7 +167,7 @@ export function DashboardSidebar() {
             </SidebarMenu>
           </SidebarGroup>
         ) : (
-          <Collapsible open={analyticsOpen} onOpenChange={setAnalyticsOpen} className="px-3 py-1" data-onboarding="analytics-menu">
+          <Collapsible open={analyticsOpen} onOpenChange={setAnalyticsOpen} className="px-3 pt-0 pb-1" data-onboarding="analytics-menu">
             <CollapsibleTrigger className="w-full">
               <SidebarMenuButton className="text-white hover:bg-[rgba(255,255,255,0.05)] h-10 px-3 w-full justify-between">
                 <div className="flex items-center">
