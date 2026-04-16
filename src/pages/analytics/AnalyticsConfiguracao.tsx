@@ -8,6 +8,7 @@ import CompositeChartDataModal from "@/components/analytics/CompositeChartDataMo
 import type { ChartDataSource } from "@/components/analytics/ChartDataModal";
 import ClientManagement from "@/components/analytics/ClientManagement";
 import { useCustomer } from "@/contexts/CustomerContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Import chart sources
 import {
@@ -194,6 +195,7 @@ function MenuSection({ menu }: { menu: MenuEntry }) {
 // ── Main Page ──
 export default function AnalyticsConfiguracao() {
   const { canSwitchClient } = useCustomer();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("base-dados");
   const [activeScore, setActiveScore] = useState("qualidade");
 
