@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info, Users } from "lucide-react";
+import { Database, Gauge, ChevronRight, ChevronDown, Table2, Eye, Info, Users, UserPlus } from "lucide-react";
 import ScoreQualidadeConfig from "./ScoreQualidadeConfig";
+import UserManagementTab from "@/components/analytics/UserManagementTab";
 import ScoreAbsenteismoConfig from "./ScoreAbsenteismoConfig";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
 import CompositeChartDataModal from "@/components/analytics/CompositeChartDataModal";
 import type { ChartDataSource } from "@/components/analytics/ChartDataModal";
 import ClientManagement from "@/components/analytics/ClientManagement";
 import { useCustomer } from "@/contexts/CustomerContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Import chart sources
 import {
@@ -193,6 +195,7 @@ function MenuSection({ menu }: { menu: MenuEntry }) {
 // ── Main Page ──
 export default function AnalyticsConfiguracao() {
   const { canSwitchClient } = useCustomer();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("base-dados");
   const [activeScore, setActiveScore] = useState("qualidade");
 
@@ -200,6 +203,7 @@ export default function AnalyticsConfiguracao() {
     { id: "base-dados", label: "Base de Dados", icon: Database },
     { id: "scores", label: "Scores", icon: Gauge },
     ...(canSwitchClient ? [{ id: "clientes", label: "Clientes", icon: Users }] : []),
+    ...(user?.role === "admin" ? [{ id: "usuarios", label: "Usuários", icon: UserPlus }] : []),
   ];
 
   const totalCharts = dataRegistry.reduce((acc, m) => acc + m.tabs.reduce((a, t) => a + t.charts.length, 0), 0);
@@ -302,6 +306,16 @@ export default function AnalyticsConfiguracao() {
         {activeTab === "clientes" && canSwitchClient && (
           <div className="flex-1 px-6 py-5">
             <ClientManagement />
+          </div>
+        )}
+
+        {activeTab === "usuarios" && user?.role === "admin" && (
+          <div className="flex-1 px-6 py-5 overflow-auto">
+            <div className="mb-4">
+              <h2 className="text-lg font-bold text-foreground">Gestão de Usuários</h2>
+              <p className="text-xs text-muted-foreground">Cadastre novos usuários e gerencie acessos</p>
+            </div>
+            <UserManagementTab />
           </div>
         )}
       </div>
