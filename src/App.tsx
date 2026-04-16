@@ -24,10 +24,8 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 // Analytics V1 pages
 import AnalyticsResumoExecutivo from "./pages/analytics/AnalyticsResumoExecutivo";
 import AnalyticsOperacional from "./pages/analytics/AnalyticsOperacional";
-import AnalyticsFinanceiro from "./pages/analytics/AnalyticsFinanceiro";
-import AnalyticsEstrategico from "./pages/analytics/AnalyticsEstrategico";
 import AnalyticsCompliance from "./pages/analytics/AnalyticsCompliance";
-import AnalyticsInteligencia from "./pages/analytics/AnalyticsInteligencia";
+import AnalyticsEngajamento from "./pages/analytics/AnalyticsEngajamento";
 import AnalyticsConfiguracao from "./pages/analytics/AnalyticsConfiguracao";
 import GaugeShowcase from "./pages/analytics/GaugeShowcase";
 
@@ -58,10 +56,8 @@ function ProtectedRoutes() {
               {/* Analytics V1 — 2-level menu */}
               <Route path="/analytics" element={<AnalyticsResumoExecutivo />} />
               <Route path="/analytics/operacional" element={<AnalyticsOperacional />} />
-              <Route path="/analytics/financeiro" element={<AnalyticsFinanceiro />} />
-              <Route path="/analytics/estrategico" element={<AnalyticsEstrategico />} />
               <Route path="/analytics/compliance" element={<AnalyticsCompliance />} />
-              <Route path="/analytics/inteligencia" element={<AnalyticsInteligencia />} />
+              <Route path="/analytics/engajamento" element={<AnalyticsEngajamento />} />
               <Route path="/analytics/configuracao" element={<AnalyticsConfiguracao />} />
               <Route path="/analytics/gauge-showcase" element={<GaugeShowcase />} />
             </Route>
