@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import {
-  ResponsiveContainer, LineChart, Line, Tooltip as RechartsTooltip,
+  ResponsiveContainer, LineChart, Line, AreaChart, Area, Tooltip as RechartsTooltip,
 } from "recharts";
 
 // ── Custom sparkline tooltip ────────────────────────────────
