@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check, X, Trash2, Users, Clock, UserPlus, Eye, EyeOff, AlertCircle, CheckCircle2, RefreshCw, Pencil, Save } from "lucide-react";
+import { Trash2, Users, UserPlus, Eye, EyeOff, AlertCircle, CheckCircle2, RefreshCw, Pencil, Save } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import customersIndex from "@/data/customers-index.json";
 
@@ -16,8 +16,7 @@ const CLIENT_OPTIONS = [
 ];
 
 export default function UserManagementTab() {
-  const { user, getUsers, approveUser, rejectUser, deleteUser, register, updateUser } = useAuth();
-  const [tab, setTab] = useState("active");
+  const { user, getUsers, deleteUser, register, updateUser } = useAuth();
   const [tick, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
@@ -48,20 +47,6 @@ export default function UserManagementTab() {
 
   const users = getUsers();
   const activeUsers = users.filter((u) => u.status === "active");
-  const pendingUsers = users.filter((u) => u.status === "pending");
-  const rejectedUsers = users.filter((u) => u.status === "rejected");
-
-  const handleApprove = (u: StoredUser) => {
-    approveUser(u.id);
-    toast({ title: "Usuário aprovado", description: `${u.name} agora pode acessar o sistema.` });
-    refresh();
-  };
-
-  const handleReject = (u: StoredUser) => {
-    rejectUser(u.id);
-    toast({ title: "Cadastro recusado", description: `${u.name} foi recusado.`, variant: "destructive" });
-    refresh();
-  };
 
   const handleDelete = (u: StoredUser) => {
     deleteUser(u.id);
@@ -82,7 +67,7 @@ export default function UserManagementTab() {
     if (!result.success) {
       setRegError(result.error || "Erro ao cadastrar");
     } else {
-      toast({ title: "Usuário cadastrado", description: `${newName} foi criado com status pendente.` });
+      toast({ title: "Usuário cadastrado", description: `${newName} foi criado e já pode acessar o sistema.` });
       setNewUsername("");
       setNewPassword("");
       setNewName("");
@@ -262,26 +247,17 @@ export default function UserManagementTab() {
         </form>
       </div>
 
-      {/* User lists */}
-      <Tabs value={tab} onValueChange={setTab}>
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="active" className="gap-1.5">
-              <Users className="h-3.5 w-3.5" /> Ativos ({activeUsers.length})
-            </TabsTrigger>
-            <TabsTrigger value="pending" className="gap-1.5">
-              <Clock className="h-3.5 w-3.5" /> Pendentes ({pendingUsers.length})
-            </TabsTrigger>
-            <TabsTrigger value="rejected" className="gap-1.5">
-              <X className="h-3.5 w-3.5" /> Recusados ({rejectedUsers.length})
-            </TabsTrigger>
-          </TabsList>
+      {/* User list */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Users className="h-4 w-4" /> Usuários Ativos ({activeUsers.length})
+          </h3>
           <Button size="sm" variant="outline" className="gap-1.5" onClick={refresh}>
             <RefreshCw className="h-3.5 w-3.5" /> Atualizar
           </Button>
         </div>
-
-        <TabsContent value="active" className="space-y-2 mt-4">
+        <div className="space-y-2">
           {activeUsers.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum usuário ativo.</p>}
           {activeUsers.map((u) => (
             <React.Fragment key={u.id}>
@@ -303,44 +279,8 @@ export default function UserManagementTab() {
               )}
             </React.Fragment>
           ))}
-        </TabsContent>
-
-        <TabsContent value="pending" className="space-y-2 mt-4">
-          {pendingUsers.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum cadastro pendente.</p>}
-          {pendingUsers.map((u) => (
-            <React.Fragment key={u.id}>
-              {renderUserRow(u,
-                <>
-                  <Button size="sm" variant="default" className="gap-1" onClick={() => handleApprove(u)}>
-                    <Check className="h-3.5 w-3.5" /> Aprovar
-                  </Button>
-                  <Button size="sm" variant="destructive" className="gap-1" onClick={() => handleReject(u)}>
-                    <X className="h-3.5 w-3.5" /> Recusar
-                  </Button>
-                </>
-              )}
-            </React.Fragment>
-          ))}
-        </TabsContent>
-
-        <TabsContent value="rejected" className="space-y-2 mt-4">
-          {rejectedUsers.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum cadastro recusado.</p>}
-          {rejectedUsers.map((u) => (
-            <React.Fragment key={u.id}>
-              {renderUserRow(u,
-                <>
-                  <Button size="sm" variant="outline" className="gap-1" onClick={() => handleApprove(u)}>
-                    <Check className="h-3.5 w-3.5" /> Reativar
-                  </Button>
-                  <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => handleDelete(u)}>
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </>
-              )}
-            </React.Fragment>
-          ))}
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
