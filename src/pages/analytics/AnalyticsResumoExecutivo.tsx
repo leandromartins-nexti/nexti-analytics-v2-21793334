@@ -158,8 +158,7 @@ export default function AnalyticsResumoExecutivo() {
     };
   }, [selectedRegional, groupBy, scoreConfig, sources, allMonths, kpiSummary.score]);
 
-  // Score Nexti — composição ponderada de Ponto + Absenteísmo
-  const { config: nextiConfig } = useNextiScoreConfig();
+  // Score Nexti — composição ponderada de Ponto + Absenteísmo (nextiConfig já carregado acima)
   const pontoScore = kpiSummary.score;
 
   // Previous period score for trend
