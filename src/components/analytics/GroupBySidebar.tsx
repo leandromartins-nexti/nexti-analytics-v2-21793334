@@ -96,7 +96,102 @@ export default function GroupBySidebar({
     onPagedItemsChange?.(pagedItems.map(i => i.value ?? i.nome));
   }, [pagedItems, onPagedItemsChange]);
 
-  // ── Collapsed mode ──
+  // ── Mobile: floating button + Sheet drawer (fullscreen) ──
+  if (isMobile) {
+    return (
+      <>
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="fixed bottom-6 right-6 z-40 bg-[#FF5722] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-[#E64A19] transition-colors"
+          aria-label="Abrir tipo de operação"
+        >
+          <SlidersHorizontal className="w-5 h-5" />
+        </button>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetContent side="right" className="w-full max-w-full p-0 flex flex-col">
+            <SheetHeader className="px-4 py-3 border-b border-border flex-row items-center justify-between space-y-0">
+              <SheetTitle className="text-sm font-semibold">Tipo de Operação</SheetTitle>
+            </SheetHeader>
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              <div className="flex gap-2">
+                {groupByOptions.map(o => (
+                  <button
+                    key={o.id}
+                    onClick={() => handleGroupChange(o.id)}
+                    className={`px-3 py-2 rounded text-xs font-medium border transition-colors flex-1 whitespace-nowrap ${
+                      groupBy === o.id
+                        ? "bg-[#FF5722] text-white border-[#FF5722]"
+                        : "text-muted-foreground border-border hover:border-[#FF5722]/40"
+                    }`}
+                  >
+                    {o.short}
+                  </button>
+                ))}
+              </div>
+              <div className="relative">
+                <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Buscar..."
+                  value={search}
+                  onChange={e => handleSearchChange(e.target.value)}
+                  className="w-full pl-7 pr-2 py-2 text-sm rounded border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#FF5722]/40"
+                />
+              </div>
+              {showPagination && (
+                <div className="flex gap-1 flex-wrap">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      className={`w-7 h-7 rounded text-xs font-medium transition-colors ${
+                        page === p ? "bg-[#FF5722] text-white" : "text-muted-foreground border border-border hover:border-[#FF5722]/40"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="flex items-center gap-2 px-1 pt-1">
+                <button onClick={() => toggleSort("nome")} className="flex-1 flex items-center gap-0.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground text-left">
+                  Nome <ArrowUpDown size={10} className={sortBy === "nome" ? "text-[#FF5722]" : ""} />
+                </button>
+                <button onClick={() => toggleSort("score")} className="shrink-0 flex items-center gap-0.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground">
+                  Score <ArrowUpDown size={10} className={sortBy === "score" ? "text-[#FF5722]" : ""} />
+                </button>
+              </div>
+              <div className="space-y-1">
+                {pagedItems.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center py-4">Nenhum resultado</p>
+                )}
+                {pagedItems.map(op => {
+                  const itemValue = op.value ?? op.nome;
+                  const isSelected = selectedRegional === itemValue;
+                  const isDimmed = selectedRegional && !isSelected;
+                  const scoreColor = getScoreClassification(op.score, scoreConfig).text;
+                  return (
+                    <div
+                      key={itemValue}
+                      onClick={() => { onRegionalClick(itemValue); setMobileOpen(false); }}
+                      className={`flex items-center gap-2 px-2 py-2.5 rounded-md cursor-pointer transition-all text-sm ${
+                        isSelected ? "bg-orange-50 border border-[#FF5722]/30" : "hover:bg-muted/40 border border-transparent"
+                      } ${isDimmed ? "opacity-50" : ""}`}
+                    >
+                      <span className="flex-1 font-medium truncate text-foreground">{op.nome}</span>
+                      <span className={`font-bold tabular-nums shrink-0 ${scoreColor}`}>{op.score}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </>
+    );
+  }
+
+  // ── Collapsed mode (desktop) ──
   if (collapsed) {
     return (
       <div className="w-[52px] shrink-0 self-stretch">
