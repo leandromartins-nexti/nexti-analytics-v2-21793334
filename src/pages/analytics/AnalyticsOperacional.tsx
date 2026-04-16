@@ -60,8 +60,6 @@ export default function AnalyticsOperacional() {
           <Separator orientation="vertical" className="h-6 hidden sm:block" />
           <InsightsCenter />
           <AnalyticsChat activeTab={activeTab} />
-          {/* TODO: REMOVER EM PRODUÇÃO — Badge de cliente ativo */}
-          <TestModeBadge />
         </div>
       </div>
 
