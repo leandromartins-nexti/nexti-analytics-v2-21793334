@@ -87,7 +87,7 @@ export function useCustomer() {
 
 // Vite glob for dynamic JSON loading from built-in customers folder
 const customerJsonModules = import.meta.glob<Record<string, any>>(
-  "/src/data/customers/*/qualidade-ponto/*.json",
+  "/src/data/customers/*/**/*.json",
   { eager: false }
 );
 
