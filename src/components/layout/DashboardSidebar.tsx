@@ -207,8 +207,7 @@ export function DashboardSidebar() {
         {/* ── Legacy items ── */}
         <LegacyMenuItems isCollapsed={isCollapsed} />
 
-        {/* ── Admin: User Management ── */}
-        <AdminUserManagementLink isCollapsed={isCollapsed} />
+      </SidebarContent>
       </SidebarContent>
     </Sidebar>
   );

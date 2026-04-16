@@ -51,7 +51,7 @@ function ProtectedRoutes() {
               <Route path="/analytics-v3" element={<AnalyticsV3 />} />
               <Route path="/roi-config" element={<ROIConfig />} />
               <Route path="/roi-config-v3" element={<ROIConfigV3 />} />
-              <Route path="/user-management" element={<UserManagement />} />
+              
 
               {/* Analytics V1 — 2-level menu */}
               <Route path="/analytics" element={<AnalyticsResumoExecutivo />} />
