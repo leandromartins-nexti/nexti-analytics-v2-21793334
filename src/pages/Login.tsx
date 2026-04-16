@@ -145,11 +145,11 @@ export default function Login() {
                   {passwordChecks.map((check) => (
                     <div key={check.label} className="flex items-center gap-2 text-xs">
                       {check.ok ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
                       ) : (
                         <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
                       )}
-                      <span className={check.ok ? "text-primary" : "text-muted-foreground"}>
+                      <span className={check.ok ? "text-green-600" : "text-muted-foreground"}>
                         {check.label}
                       </span>
                     </div>
@@ -159,8 +159,8 @@ export default function Login() {
             </div>
 
             {successMsg && (
-              <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 rounded-md px-3 py-2">
-                <CheckCircle2 className="h-4 w-4 shrink-0" />
+              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-100 rounded-md px-3 py-2">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
                 {successMsg}
               </div>
             )}
