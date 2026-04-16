@@ -159,8 +159,8 @@ export default function Login() {
             </div>
 
             {successMsg && (
-              <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 rounded-md px-3 py-2">
-                <CheckCircle2 className="h-4 w-4 shrink-0" />
+              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-100 rounded-md px-3 py-2">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
                 {successMsg}
               </div>
             )}
