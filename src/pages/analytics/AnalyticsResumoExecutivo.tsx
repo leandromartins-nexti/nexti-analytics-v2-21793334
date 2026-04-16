@@ -95,10 +95,24 @@ export default function AnalyticsResumoExecutivo() {
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
 
-  // Sidebar items from real JSON
-  const sidebarItems = useMemo(
+  // Score Nexti config (precisa estar disponível antes da sidebar)
+  const { config: nextiConfig } = useNextiScoreConfig();
+
+  // Sidebar items: combina Ponto + Absenteísmo via Score Nexti por entidade
+  const sidebarItemsRaw = useMemo(
     () => getSidebarItems(groupBy, scoreConfig, sources),
     [groupBy, scoreConfig, sources]
+  );
+  const sidebarItems = useMemo(
+    () =>
+      sidebarItemsRaw
+        .map((item) => {
+          const absScore = computeAbsenteismoCurrentScore(item.nome, groupBy as AbsGroupBy, absConfig);
+          const nextiScore = computeNextiScore(item.score, absScore, nextiConfig);
+          return { nome: item.nome, score: nextiScore };
+        })
+        .sort((a, b) => b.score - a.score),
+    [sidebarItemsRaw, groupBy, absConfig, nextiConfig]
   );
 
   // KPI summary from real JSON
