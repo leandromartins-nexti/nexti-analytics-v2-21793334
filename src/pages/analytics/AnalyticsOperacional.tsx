@@ -42,22 +42,22 @@ export default function AnalyticsOperacional() {
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
-      <div className="bg-white px-6 py-3 border-b border-border flex items-center justify-between">
-        <div className="flex items-center gap-3 flex-wrap">
+      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
           <div className="flex items-center gap-2 text-sm">
             <Filter className="w-4 h-4 text-[#FF5722]" />
-            <span className="font-semibold text-foreground">Filtros Aplicados:</span>
+            <span className="font-semibold text-foreground hidden sm:inline">Filtros Aplicados:</span>
           </div>
-          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium">Período: {resumo.periodo}</span>
+          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap">Período: {resumo.periodo}</span>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-gray-50">
-            <Filter className="w-4 h-4" /> Filtros
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-2 sm:px-4 py-2 rounded text-sm font-medium flex items-center gap-2 hover:bg-gray-50">
+            <Filter className="w-4 h-4" /> <span className="hidden sm:inline">Filtros</span>
           </button>
-          <button className="flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
+          <button className="hidden sm:flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
             <Eraser className="w-4 h-4" /> Limpar Filtros
           </button>
-          <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-6 hidden sm:block" />
           <InsightsCenter />
           <AnalyticsChat activeTab={activeTab} />
           {/* TODO: REMOVER EM PRODUÇÃO — Badge de cliente ativo */}
@@ -65,8 +65,8 @@ export default function AnalyticsOperacional() {
         </div>
       </div>
 
-      <div className="bg-white border-b border-border px-6">
-        <div className="flex gap-2">
+      <div className="bg-white border-b border-border px-2 sm:px-6 overflow-x-auto">
+        <div className="flex gap-1 sm:gap-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -74,14 +74,15 @@ export default function AnalyticsOperacional() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-40 py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
+                title={tab.label}
+                className={`flex-1 sm:w-40 sm:flex-none py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
                   isActive
                     ? "border-[#FF5722] text-[#FF5722]"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                {tab.label}
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             );
           })}
