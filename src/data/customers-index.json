@@ -1,6 +1,11 @@
 {
   "customers": [
     {
+      "customer_id": 1,
+      "label": "Nexti Talks",
+      "tabs_available": ["qualidade-ponto", "absenteismo"]
+    },
+    {
       "customer_id": 2,
       "label": "Orsegups",
       "tabs_available": ["qualidade-ponto"]

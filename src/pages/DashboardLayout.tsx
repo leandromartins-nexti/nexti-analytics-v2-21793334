@@ -12,6 +12,7 @@ import { LogOut, Menu, User } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CLIENT_OPTIONS = [
+  { value: "nextitalks", label: "Nexti Talks", customerId: 1 },
   { value: "orsegups", label: "Orsegups", customerId: 2 },
   { value: "atitudeservicos", label: "Atitude Serviços", customerId: 391 },
   { value: "vigeyes", label: "VigEyes", customerId: 642 },

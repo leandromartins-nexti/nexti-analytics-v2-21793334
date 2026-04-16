@@ -28,6 +28,7 @@ const STORAGE_KEY = "nexti_active_customer_id";
 /** Map client slugs to customer_ids */
 const CLIENT_CUSTOMER_MAP: Record<string, number> = {
   nexti: 642,
+  nextitalks: 1,
   orsegups: 2,
   atitudeservicos: 391,
   vigeyes: 642,
