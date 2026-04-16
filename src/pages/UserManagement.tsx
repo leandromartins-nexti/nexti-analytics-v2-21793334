@@ -72,9 +72,14 @@ export default function UserManagement() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-4">
-      <div>
-        <h1 className="text-xl font-bold">Gestão de Usuários</h1>
-        <p className="text-sm text-muted-foreground">Gerencie acessos e aprove novos cadastros.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold">Gestão de Usuários</h1>
+          <p className="text-sm text-muted-foreground">Gerencie acessos e aprove novos cadastros.</p>
+        </div>
+        <Button size="sm" variant="outline" className="gap-1.5" onClick={refresh}>
+          <RefreshCw className="h-3.5 w-3.5" /> Atualizar
+        </Button>
       </div>
 
       <Tabs value={tab} onValueChange={setTab}>
