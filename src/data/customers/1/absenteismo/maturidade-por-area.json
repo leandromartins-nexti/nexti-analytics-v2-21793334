@@ -4,7 +4,7 @@
     "area_id": 11046,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 155.0,
     "qtd_eventos": 14,
     "reference_date": "2025-03-01"
@@ -14,7 +14,7 @@
     "area_id": 11043,
     "pessoas_distintas": 18,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 671.3,
     "qtd_eventos": 85,
     "reference_date": "2025-03-01"
@@ -24,7 +24,7 @@
     "area_id": 11043,
     "pessoas_distintas": 5,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 329.0,
     "qtd_eventos": 55,
     "reference_date": "2025-03-01"
@@ -34,7 +34,7 @@
     "area_id": 11045,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 194.0,
     "qtd_eventos": 17,
     "reference_date": "2025-03-01"
@@ -44,7 +44,7 @@
     "area_id": 11046,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 44.0,
     "qtd_eventos": 4,
     "reference_date": "2025-04-01"
@@ -54,7 +54,7 @@
     "area_id": 11043,
     "pessoas_distintas": 18,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 816.4,
     "qtd_eventos": 94,
     "reference_date": "2025-04-01"
@@ -64,7 +64,7 @@
     "area_id": 11043,
     "pessoas_distintas": 5,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 77.5,
     "qtd_eventos": 10,
     "reference_date": "2025-04-01"
@@ -74,7 +74,7 @@
     "area_id": 11045,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 154.0,
     "qtd_eventos": 13,
     "reference_date": "2025-04-01"
@@ -84,7 +84,7 @@
     "area_id": 11046,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 196.9,
     "qtd_eventos": 18,
     "reference_date": "2025-05-01"
@@ -94,7 +94,7 @@
     "area_id": 11043,
     "pessoas_distintas": 19,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 1011.7,
     "qtd_eventos": 113,
     "reference_date": "2025-05-01"
@@ -104,7 +104,7 @@
     "area_id": 11043,
     "pessoas_distintas": 8,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 188.0,
     "qtd_eventos": 30,
     "reference_date": "2025-05-01"
@@ -114,7 +114,7 @@
     "area_id": 11045,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 139.0,
     "qtd_eventos": 12,
     "reference_date": "2025-05-01"
@@ -124,7 +124,7 @@
     "area_id": 11046,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 284.2,
     "qtd_eventos": 26,
     "reference_date": "2025-06-01"
@@ -134,7 +134,7 @@
     "area_id": 11043,
     "pessoas_distintas": 22,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 1514.9,
     "qtd_eventos": 156,
     "reference_date": "2025-06-01"
@@ -144,7 +144,7 @@
     "area_id": 11043,
     "pessoas_distintas": 6,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 143.0,
     "qtd_eventos": 17,
     "reference_date": "2025-06-01"
@@ -154,7 +154,7 @@
     "area_id": 11045,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 214.0,
     "qtd_eventos": 18,
     "reference_date": "2025-06-01"
@@ -164,7 +164,7 @@
     "area_id": 11045,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 11.0,
     "qtd_eventos": 1,
     "reference_date": "2025-06-01"
@@ -174,7 +174,7 @@
     "area_id": 11046,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 294.2,
     "qtd_eventos": 29,
     "reference_date": "2025-07-01"
@@ -184,7 +184,7 @@
     "area_id": 11043,
     "pessoas_distintas": 27,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 1132.8,
     "qtd_eventos": 117,
     "reference_date": "2025-07-01"
@@ -194,7 +194,7 @@
     "area_id": 11043,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 187.0,
     "qtd_eventos": 28,
     "reference_date": "2025-07-01"
@@ -204,7 +204,7 @@
     "area_id": 11045,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 11.0,
     "qtd_eventos": 1,
     "reference_date": "2025-07-01"
@@ -214,7 +214,7 @@
     "area_id": 11046,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 201.4,
     "qtd_eventos": 19,
     "reference_date": "2025-08-01"
@@ -224,7 +224,7 @@
     "area_id": 11043,
     "pessoas_distintas": 18,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 1074.4,
     "qtd_eventos": 101,
     "reference_date": "2025-08-01"
@@ -234,7 +234,7 @@
     "area_id": 11043,
     "pessoas_distintas": 6,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 173.0,
     "qtd_eventos": 18,
     "reference_date": "2025-08-01"
@@ -244,7 +244,7 @@
     "area_id": 11046,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 198.0,
     "qtd_eventos": 18,
     "reference_date": "2025-09-01"
@@ -254,7 +254,7 @@
     "area_id": 11043,
     "pessoas_distintas": 12,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 851.9,
     "qtd_eventos": 78,
     "reference_date": "2025-09-01"
@@ -264,7 +264,7 @@
     "area_id": 11043,
     "pessoas_distintas": 6,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 193.0,
     "qtd_eventos": 21,
     "reference_date": "2025-09-01"
@@ -274,7 +274,7 @@
     "area_id": 11045,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 46.0,
     "qtd_eventos": 4,
     "reference_date": "2025-09-01"
@@ -284,7 +284,7 @@
     "area_id": 11045,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 11.0,
     "qtd_eventos": 1,
     "reference_date": "2025-09-01"
@@ -294,7 +294,7 @@
     "area_id": 11046,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 254.0,
     "qtd_eventos": 23,
     "reference_date": "2025-10-01"
@@ -304,7 +304,7 @@
     "area_id": 11043,
     "pessoas_distintas": 16,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 645.0,
     "qtd_eventos": 62,
     "reference_date": "2025-10-01"
@@ -314,7 +314,7 @@
     "area_id": 11043,
     "pessoas_distintas": 6,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 163.0,
     "qtd_eventos": 16,
     "reference_date": "2025-10-01"
@@ -324,7 +324,7 @@
     "area_id": 11045,
     "pessoas_distintas": 11,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 269.2,
     "qtd_eventos": 29,
     "reference_date": "2025-10-01"
@@ -334,7 +334,7 @@
     "area_id": 11045,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 48.4,
     "qtd_eventos": 5,
     "reference_date": "2025-10-01"
@@ -344,7 +344,7 @@
     "area_id": 11046,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 308.7,
     "qtd_eventos": 28,
     "reference_date": "2025-11-01"
@@ -354,7 +354,7 @@
     "area_id": 11043,
     "pessoas_distintas": 20,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 881.3,
     "qtd_eventos": 86,
     "reference_date": "2025-11-01"
@@ -364,7 +364,7 @@
     "area_id": 11043,
     "pessoas_distintas": 5,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 198.0,
     "qtd_eventos": 20,
     "reference_date": "2025-11-01"
@@ -374,7 +374,7 @@
     "area_id": 11045,
     "pessoas_distintas": 7,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 158.4,
     "qtd_eventos": 18,
     "reference_date": "2025-11-01"
@@ -384,7 +384,7 @@
     "area_id": 11045,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 62.4,
     "qtd_eventos": 7,
     "reference_date": "2025-11-01"
@@ -394,7 +394,7 @@
     "area_id": 11046,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 77.0,
     "qtd_eventos": 7,
     "reference_date": "2025-12-01"
@@ -404,7 +404,7 @@
     "area_id": 11046,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 22.0,
     "qtd_eventos": 2,
     "reference_date": "2025-12-01"
@@ -414,7 +414,7 @@
     "area_id": 11043,
     "pessoas_distintas": 13,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 304.1,
     "qtd_eventos": 33,
     "reference_date": "2025-12-01"
@@ -424,7 +424,7 @@
     "area_id": 11043,
     "pessoas_distintas": 9,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 127.0,
     "qtd_eventos": 14,
     "reference_date": "2025-12-01"
@@ -434,7 +434,7 @@
     "area_id": 11045,
     "pessoas_distintas": 7,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 196.8,
     "qtd_eventos": 22,
     "reference_date": "2025-12-01"
@@ -444,7 +444,7 @@
     "area_id": 11045,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 70.4,
     "qtd_eventos": 8,
     "reference_date": "2025-12-01"
@@ -454,7 +454,7 @@
     "area_id": 11046,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 75.0,
     "qtd_eventos": 7,
     "reference_date": "2026-01-01"
@@ -464,7 +464,7 @@
     "area_id": 11046,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 11.0,
     "qtd_eventos": 1,
     "reference_date": "2026-01-01"
@@ -474,7 +474,7 @@
     "area_id": 11043,
     "pessoas_distintas": 15,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 494.3,
     "qtd_eventos": 56,
     "reference_date": "2026-01-01"
@@ -484,7 +484,7 @@
     "area_id": 11043,
     "pessoas_distintas": 9,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 266.5,
     "qtd_eventos": 41,
     "reference_date": "2026-01-01"
@@ -494,7 +494,7 @@
     "area_id": 11045,
     "pessoas_distintas": 7,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 64.8,
     "qtd_eventos": 7,
     "reference_date": "2026-01-01"
@@ -504,7 +504,7 @@
     "area_id": 11045,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 12.0,
     "qtd_eventos": 2,
     "reference_date": "2026-01-01"
@@ -514,7 +514,7 @@
     "area_id": 11046,
     "pessoas_distintas": 3,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 283.2,
     "qtd_eventos": 26,
     "reference_date": "2026-02-01"
@@ -524,7 +524,7 @@
     "area_id": 11046,
     "pessoas_distintas": 1,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 11.0,
     "qtd_eventos": 1,
     "reference_date": "2026-02-01"
@@ -534,7 +534,7 @@
     "area_id": 11043,
     "pessoas_distintas": 19,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 796.9,
     "qtd_eventos": 83,
     "reference_date": "2026-02-01"
@@ -544,7 +544,7 @@
     "area_id": 11043,
     "pessoas_distintas": 6,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 213.0,
     "qtd_eventos": 34,
     "reference_date": "2026-02-01"
@@ -554,7 +554,7 @@
     "area_id": 11045,
     "pessoas_distintas": 7,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 191.3,
     "qtd_eventos": 22,
     "reference_date": "2026-02-01"
@@ -564,7 +564,7 @@
     "area_id": 11045,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 44.0,
     "qtd_eventos": 5,
     "reference_date": "2026-02-01"
@@ -574,7 +574,7 @@
     "area_id": 11046,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 191.2,
     "qtd_eventos": 18,
     "reference_date": "2026-03-01"
@@ -584,7 +584,7 @@
     "area_id": 11046,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "PIRACICABA",
+    "area_name": "Dublin",
     "horas_total": 99.0,
     "qtd_eventos": 9,
     "reference_date": "2026-03-01"
@@ -594,7 +594,7 @@
     "area_id": 11043,
     "pessoas_distintas": 16,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 731.2,
     "qtd_eventos": 75,
     "reference_date": "2026-03-01"
@@ -604,7 +604,7 @@
     "area_id": 11043,
     "pessoas_distintas": 10,
     "customer_id": 1,
-    "area_name": "SAO PAULO",
+    "area_name": "Bristol",
     "horas_total": 283.0,
     "qtd_eventos": 37,
     "reference_date": "2026-03-01"
@@ -614,7 +614,7 @@
     "area_id": 11045,
     "pessoas_distintas": 4,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 29.6,
     "qtd_eventos": 5,
     "reference_date": "2026-03-01"
@@ -624,7 +624,7 @@
     "area_id": 11045,
     "pessoas_distintas": 2,
     "customer_id": 1,
-    "area_name": "SOROCABA",
+    "area_name": "Cairo",
     "horas_total": 59.2,
     "qtd_eventos": 8,
     "reference_date": "2026-03-01"
