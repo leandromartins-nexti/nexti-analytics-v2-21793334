@@ -514,8 +514,6 @@ export default function AnalyticsResumoExecutivo() {
               <div className="w-2" />
               <span className="flex-1 sm:flex-none sm:min-w-[140px]">Indicador</span>
               <div className="flex-1 sm:min-w-[120px] text-center">Histórico 12m</div>
-              <span className="hidden sm:inline-block min-w-[65px] text-center">Variação</span>
-              <span className="min-w-[45px] text-center">Score</span>
             </div>
             <div className="divide-y divide-border/40">
               {sparklineCards.map((card) => {
@@ -599,10 +597,6 @@ export default function AnalyticsResumoExecutivo() {
                       </ResponsiveContainer>
                     </div>
 
-                    <span className={`hidden sm:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full min-w-[65px] text-center ${card.corVariacao} ${
-                      card.corVariacao.includes('green') ? 'bg-green-50' : card.corVariacao.includes('red') ? 'bg-red-50' : 'bg-gray-50'
-                    }`}>{card.variacao}</span>
-                    <span className={`text-xs font-bold min-w-[45px] text-center px-1.5 py-0.5 rounded ${getScoreColor(card.score)} ${getScoreBg(card.score)}`}>{card.score}</span>
                   </div>
                 );
               })}
@@ -617,8 +611,6 @@ export default function AnalyticsResumoExecutivo() {
                     <span key={pt.competencia} className="text-[9px] text-muted-foreground">{pt.competencia.replace('/20', '/')}</span>
                   ))}
                 </div>
-                <span className="min-w-[65px]" />
-                <span className="min-w-[45px]" />
               </div>
             )}
           </div>
