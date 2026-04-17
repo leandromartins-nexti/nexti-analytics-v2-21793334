@@ -616,7 +616,7 @@ export default function AnalyticsResumoExecutivo() {
                       className="w-2 h-2 rounded-full shrink-0"
                       style={{ backgroundColor: card.forceColor ?? getLineColor(card.score) }}
                     />
-                    <span className="flex-1 sm:flex-none sm:min-w-[140px] truncate text-sm font-medium text-foreground">
+                    <span className="flex-1 sm:flex-none sm:min-w-[192px] truncate text-sm font-medium text-foreground">
                       {card.label}
                     </span>
                     {/* Mobile: heatmap horizontal */}
@@ -681,7 +681,7 @@ export default function AnalyticsResumoExecutivo() {
             {sparklineCards[0]?.evolucao.length > 0 && (
               <div className="hidden sm:flex items-center gap-4 px-4 py-1.5 border-t border-border/40">
                 <div className="w-2" />
-                <span className="min-w-[140px]" />
+                <span className="min-w-[192px]" />
                 <div className="flex-1 min-w-[120px] flex justify-between">
                   {sparklineCards[0].evolucao.map((pt) => (
                     <span key={pt.competencia} className="text-[9px] text-muted-foreground">{pt.competencia.replace('/20', '/')}</span>
