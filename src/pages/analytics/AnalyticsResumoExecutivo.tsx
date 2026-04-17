@@ -520,6 +520,49 @@ export default function AnalyticsResumoExecutivo() {
         perPointColors: true,
         subScoresByMonth: absSubsByMonth,
       },
+      ...(() => {
+        // Mock determinístico para os 3 novos indicadores (Turnover, Movimentações, Coberturas)
+        // até a integração real com seus contextos de score.
+        const mockFor = (seed: number, base: number, amp: number) =>
+          groupedEvolution.map((m, i) => {
+            const v = Math.round(
+              base + Math.sin((i + seed) * 0.7) * amp + Math.cos((i + seed) * 0.3) * (amp / 2)
+            );
+            return { competencia: m.competencia, valor: Math.max(0, Math.min(100, v)) };
+          });
+        const turnoverSeries = mockFor(1, 72, 6);
+        const movSeries = mockFor(3, 65, 8);
+        const cobSeries = mockFor(5, 80, 5);
+        const t = makeDelta(turnoverSeries);
+        const mv = makeDelta(movSeries);
+        const cb = makeDelta(cobSeries);
+        return [
+          {
+            label: "Turnover",
+            evolucao: turnoverSeries,
+            score: turnoverSeries[turnoverSeries.length - 1]?.valor ?? 0,
+            variacao: t.variacao,
+            corVariacao: t.corVariacao,
+            perPointColors: true,
+          },
+          {
+            label: "Movimentações",
+            evolucao: movSeries,
+            score: movSeries[movSeries.length - 1]?.valor ?? 0,
+            variacao: mv.variacao,
+            corVariacao: mv.corVariacao,
+            perPointColors: true,
+          },
+          {
+            label: "Coberturas",
+            evolucao: cobSeries,
+            score: cobSeries[cobSeries.length - 1]?.valor ?? 0,
+            variacao: cb.variacao,
+            corVariacao: cb.corVariacao,
+            perPointColors: true,
+          },
+        ];
+      })(),
     ];
   }, [groupedEvolution, nextiConfig]);
 
