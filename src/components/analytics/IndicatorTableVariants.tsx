@@ -1,5 +1,5 @@
 import {
-  ResponsiveContainer, AreaChart, Area, Tooltip as RechartsTooltip,
+  ResponsiveContainer, AreaChart, Area,
 } from "recharts";
 import { getLineColor } from "@/components/analytics/IndicatorTable";
 
@@ -40,7 +40,7 @@ function Sparkline({ card, gradId }: { card: CardData; gradId: string }) {
   );
 }
 
-// ── Marcadores (apenas o overlay sobre os 3 últimos meses muda) ──
+// ── 10 variações de "bracket/chave" sobre os últimos 3 meses ──
 const MARKERS: {
   id: number;
   nome: string;
@@ -48,11 +48,53 @@ const MARKERS: {
   rowHeight: number;
   render: (card: CardData) => JSX.Element;
 }[] = [
-  // 1 — Bracket superior estilo "chave" + score em pílula central
+  // 11 — Chave clássica refinada (curvas suaves) + pílula score acima
   {
-    id: 1,
-    nome: "Bracket superior tipo chave",
-    descricao: "Colchete fino curvado em cima dos 3 meses, score em pílula no meio",
+    id: 11,
+    nome: "Chave clássica refinada",
+    descricao: "Bracket curvo elegante (estilo {) com pílula do score flutuando acima",
+    rowHeight: 60,
+    render: (card) => {
+      const color = getLineColor(card.score);
+      const widthPct = (3 / card.evolucao.length) * 100;
+      return (
+        <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 22 }}>
+          <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <path d="M 1 21 C 1 12, 4 10, 10 10 L 40 10 C 46 10, 50 7, 50 1 C 50 7, 54 10, 60 10 L 90 10 C 96 10, 99 12, 99 21" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          </svg>
+          <div className="absolute left-1/2 -top-[2px] -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] font-bold shadow-md" style={{ backgroundColor: color }}>
+            {card.score}
+          </div>
+        </div>
+      );
+    },
+  },
+  // 12 — Bracket inferior (chave invertida)
+  {
+    id: 12,
+    nome: "Chave inferior",
+    descricao: "Bracket curvo embaixo dos 3 meses + pílula do score abaixo",
+    rowHeight: 64,
+    render: (card) => {
+      const color = getLineColor(card.score);
+      const widthPct = (3 / card.evolucao.length) * 100;
+      return (
+        <div className="absolute bottom-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 22 }}>
+          <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <path d="M 1 1 C 1 10, 4 12, 10 12 L 40 12 C 46 12, 50 15, 50 21 C 50 15, 54 12, 60 12 L 90 12 C 96 12, 99 10, 99 1" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          </svg>
+          <div className="absolute left-1/2 bottom-[-4px] -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] font-bold shadow-md" style={{ backgroundColor: color }}>
+            {card.score}
+          </div>
+        </div>
+      );
+    },
+  },
+  // 13 — Colchete reto [ ] sólido
+  {
+    id: 13,
+    nome: "Colchete reto sólido",
+    descricao: "Bracket [ ] reto e firme com pílula no centro",
     rowHeight: 56,
     render: (card) => {
       const color = getLineColor(card.score);
@@ -60,257 +102,185 @@ const MARKERS: {
       return (
         <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 18 }}>
           <svg viewBox="0 0 100 18" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-            <path d={`M 2 16 Q 2 2, 12 2 L 42 2 M 58 2 L 88 2 Q 98 2, 98 16`} stroke={color} strokeWidth="1.5" fill="none" />
+            <path d="M 1 17 L 1 4 L 99 4 L 99 17" stroke={color} strokeWidth="1.5" fill="none" strokeLinejoin="miter" />
           </svg>
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-[11px] font-bold shadow-sm" style={{ backgroundColor: color }}>
+          <div className="absolute left-1/2 -top-[2px] -translate-x-1/2 px-2 py-0.5 rounded text-white text-[11px] font-bold shadow" style={{ backgroundColor: color }}>
             {card.score}
           </div>
         </div>
       );
     },
   },
-  // 2 — Linha vertical pontilhada nas bordas + label "SCORE 3M = 90" centralizada acima
+  // 14 — Bracket com label contextual completo
   {
-    id: 2,
-    nome: "Delimitadores verticais + etiqueta",
-    descricao: "Duas linhas verticais finas marcam o início/fim e label flutua acima",
-    rowHeight: 56,
-    render: (card) => {
-      const color = getLineColor(card.score);
-      const widthPct = (3 / card.evolucao.length) * 100;
-      return (
-        <>
-          <div className="absolute top-2 bottom-0 border-l-[1.5px] border-dashed pointer-events-none" style={{ left: `${100 - widthPct}%`, borderColor: color }} />
-          <div className="absolute top-2 bottom-0 border-l-[1.5px] border-dashed pointer-events-none" style={{ right: 0, borderColor: color }} />
-          <div className="absolute top-0 pointer-events-none flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-semibold shadow-sm" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', backgroundColor: 'white', color, border: `1px solid ${color}` }}>
-            <span className="text-[8px] uppercase opacity-70">Score 3M</span>
-            <span className="font-bold">{card.score}</span>
-          </div>
-        </>
-      );
-    },
-  },
-  // 3 — Faixa colorida translúcida + bandeira/tag triangular acima
-  {
-    id: 3,
-    nome: "Faixa + bandeira",
-    descricao: "Faixa translúcida cobrindo os 3 meses + tag de bandeira no topo",
-    rowHeight: 56,
-    render: (card) => {
-      const color = getLineColor(card.score);
-      const widthPct = (3 / card.evolucao.length) * 100;
-      return (
-        <>
-          <div className="absolute top-3 bottom-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, backgroundColor: `${color}1A`, borderTop: `2px solid ${color}` }} />
-          <div className="absolute top-0 pointer-events-none flex flex-col items-center" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)' }}>
-            <div className="px-2 py-0.5 text-white text-[11px] font-bold" style={{ backgroundColor: color, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%)', paddingBottom: 6 }}>
-              {card.score}
-            </div>
-          </div>
-        </>
-      );
-    },
-  },
-  // 4 — Anel/oval grande circundando os 3 meses (estilo "destacador de marcador")
-  {
-    id: 4,
-    nome: "Marcador estilo highlighter",
-    descricao: "Oval pintado com aparência de marca-texto sobre os 3 meses",
-    rowHeight: 56,
-    render: (card) => {
-      const color = getLineColor(card.score);
-      const widthPct = (3 / card.evolucao.length) * 100;
-      return (
-        <>
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              right: `-2px`, top: 6, bottom: -2, width: `calc(${widthPct}% + 4px)`,
-              backgroundColor: `${color}30`,
-              borderRadius: '40% 60% 50% 50% / 50% 40% 60% 50%',
-              transform: 'rotate(-0.8deg)',
-              boxShadow: `inset 0 -3px 0 ${color}40`,
-            }}
-          />
-          <div className="absolute -top-1 pointer-events-none px-2 py-0.5 rounded-full text-[11px] font-bold text-white shadow" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', backgroundColor: color }}>
-            {card.score}
-          </div>
-        </>
-      );
-    },
-  },
-  // 5 — Régua superior com ticks dos 3 meses + balão "score" suspenso
-  {
-    id: 5,
-    nome: "Régua + balão suspenso",
-    descricao: "Régua medidora acima dos 3 meses com balão/tooltip do score",
+    id: 14,
+    nome: "Bracket com contexto",
+    descricao: "Chave + label 'ÚLT 3M · score' em pílula branca outline",
     rowHeight: 60,
     render: (card) => {
       const color = getLineColor(card.score);
       const widthPct = (3 / card.evolucao.length) * 100;
       return (
-        <>
-          <div className="absolute pointer-events-none" style={{ right: 0, top: 12, width: `${widthPct}%`, height: 6 }}>
-            <div className="w-full h-[2px] mt-[2px]" style={{ backgroundColor: color }} />
-            <div className="absolute left-0 top-0 w-[2px] h-full" style={{ backgroundColor: color }} />
-            <div className="absolute right-0 top-0 w-[2px] h-full" style={{ backgroundColor: color }} />
-            <div className="absolute left-1/2 top-0 w-[1px] h-1/2 -translate-x-1/2" style={{ backgroundColor: color }} />
+        <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 22 }}>
+          <svg viewBox="0 0 100 22" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <path d="M 1 21 C 1 12, 4 10, 10 10 L 38 10 M 62 10 L 90 10 C 96 10, 99 12, 99 21" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          </svg>
+          <div className="absolute left-1/2 -top-[3px] -translate-x-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white text-[10px] font-semibold shadow" style={{ border: `1.5px solid ${color}`, color }}>
+            <span className="text-[8px] uppercase opacity-60 tracking-wider">Últ 3M</span>
+            <span className="font-bold text-[11px]">{card.score}</span>
           </div>
-          <div className="absolute pointer-events-none" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', top: 0 }}>
-            <div className="relative px-2 py-0.5 rounded text-white text-[11px] font-bold shadow-md" style={{ backgroundColor: color }}>
-              {card.score}
-              <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-0 h-0" style={{ borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: `4px solid ${color}` }} />
-            </div>
+        </div>
+      );
+    },
+  },
+  // 15 — Chave dupla (sanduíche)
+  {
+    id: 15,
+    nome: "Chave dupla (sanduíche)",
+    descricao: "Brackets curvos no topo E na base com score no centro",
+    rowHeight: 64,
+    render: (card) => {
+      const color = getLineColor(card.score);
+      const widthPct = (3 / card.evolucao.length) * 100;
+      return (
+        <>
+          <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 14 }}>
+            <svg viewBox="0 0 100 14" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+              <path d="M 1 13 C 1 6, 4 4, 10 4 L 40 4 C 46 4, 50 2, 50 1 C 50 2, 54 4, 60 4 L 90 4 C 96 4, 99 6, 99 13" stroke={color} strokeWidth="1.3" fill="none" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div className="absolute bottom-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 14 }}>
+            <svg viewBox="0 0 100 14" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+              <path d="M 1 1 C 1 8, 4 10, 10 10 L 40 10 C 46 10, 50 12, 50 13 C 50 12, 54 10, 60 10 L 90 10 C 96 10, 99 8, 99 1" stroke={color} strokeWidth="1.3" fill="none" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-0.5 rounded-full bg-white text-[12px] font-bold shadow" style={{ color, border: `1.5px solid ${color}` }}>
+            {card.score}
           </div>
         </>
       );
     },
   },
-  // 6 — Lupa: anel circular grande sobre o ponto médio dos 3 meses
+  // 16 — Bracket + leader line tracejada
   {
-    id: 6,
-    nome: "Lupa de foco",
-    descricao: "Círculo tipo lupa centralizado nos 3 meses com score dentro",
+    id: 16,
+    nome: "Chave + leader line",
+    descricao: "Bracket no topo conectado ao eixo via linha guia tracejada",
+    rowHeight: 64,
+    render: (card) => {
+      const color = getLineColor(card.score);
+      const widthPct = (3 / card.evolucao.length) * 100;
+      return (
+        <>
+          <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 16 }}>
+            <svg viewBox="0 0 100 16" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+              <path d="M 1 15 C 1 6, 4 4, 10 4 L 90 4 C 96 4, 99 6, 99 15" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div className="absolute pointer-events-none" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', top: 4, bottom: 14, borderLeft: `1px dashed ${color}80` }} />
+          <div className="absolute -top-[4px] pointer-events-none px-2.5 py-0.5 rounded-full text-white text-[11px] font-bold shadow-md" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', backgroundColor: color }}>
+            {card.score}
+          </div>
+        </>
+      );
+    },
+  },
+  // 17 — Chave trapezoidal (bordas inclinadas)
+  {
+    id: 17,
+    nome: "Chave trapezoidal",
+    descricao: "Bracket inclinado para fora dando sensação de zoom/perspectiva",
     rowHeight: 60,
     render: (card) => {
       const color = getLineColor(card.score);
       const widthPct = (3 / card.evolucao.length) * 100;
       return (
-        <>
-          <div className="absolute top-0 bottom-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, background: `linear-gradient(180deg, ${color}10 0%, transparent 100%)` }} />
-          <div
-            className="absolute pointer-events-none flex items-center justify-center rounded-full bg-white shadow-md"
-            style={{
-              right: `${widthPct / 2}%`,
-              transform: 'translateX(50%)',
-              top: -2,
-              width: 32, height: 32,
-              border: `2.5px solid ${color}`,
-            }}
-          >
-            <span className="text-[12px] font-bold" style={{ color }}>{card.score}</span>
+        <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 20 }}>
+          <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <path d="M -4 19 L 8 6 L 92 6 L 104 19" stroke={color} strokeWidth="1.5" fill="none" strokeLinejoin="round" />
+          </svg>
+          <div className="absolute left-1/2 -top-[2px] -translate-x-1/2 px-2 py-0.5 rounded-md text-white text-[11px] font-bold shadow" style={{ backgroundColor: color }}>
+            {card.score}
           </div>
-        </>
+        </div>
       );
     },
   },
-  // 7 — Barra horizontal flutuante acima com texto "ÚLTIMOS 3M · 90"
+  // 18 — Bracket com terminais T (pernas verticais)
   {
-    id: 7,
-    nome: "Barra flutuante com contexto",
-    descricao: "Pílula informativa explícita acima dos 3 meses",
-    rowHeight: 56,
-    render: (card) => {
-      const color = getLineColor(card.score);
-      const widthPct = (3 / card.evolucao.length) * 100;
-      return (
-        <>
-          <div
-            className="absolute top-0 pointer-events-none flex items-center justify-center gap-1.5 rounded-full text-[10px] font-medium shadow-sm"
-            style={{
-              right: 0,
-              width: `${widthPct}%`,
-              height: 18,
-              backgroundColor: 'white',
-              border: `1.5px solid ${color}`,
-              color,
-            }}
-          >
-            <span className="text-[8px] uppercase opacity-70 tracking-wider">3M</span>
-            <span className="font-bold text-[12px]">{card.score}</span>
-          </div>
-          <div className="absolute pointer-events-none" style={{ right: 0, width: `${widthPct}%`, top: 18, borderLeft: `1px dashed ${color}80`, borderRight: `1px dashed ${color}80`, height: 'calc(100% - 18px)' }} />
-        </>
-      );
-    },
-  },
-  // 8 — Underline grosso (estilo marca-texto inferior) com score logo abaixo
-  {
-    id: 8,
-    nome: "Underline marca-texto",
-    descricao: "Linha grossa colorida embaixo dos 3 meses + score abaixo",
+    id: 18,
+    nome: "Bracket com terminais T",
+    descricao: "Linha horizontal com pernas verticais demarcando início, meio e fim",
     rowHeight: 60,
     render: (card) => {
       const color = getLineColor(card.score);
       const widthPct = (3 / card.evolucao.length) * 100;
       return (
-        <>
-          <div className="absolute pointer-events-none" style={{ right: 0, width: `${widthPct}%`, bottom: 14, height: 4, backgroundColor: color, borderRadius: 2, opacity: 0.85 }} />
-          <div className="absolute pointer-events-none flex items-center justify-center gap-1" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', bottom: 0 }}>
-            <span className="text-[8px] uppercase text-muted-foreground">Score 3M</span>
-            <span className="text-[12px] font-bold leading-none" style={{ color }}>{card.score}</span>
+        <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 18 }}>
+          <svg viewBox="0 0 100 18" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <line x1="2" y1="8" x2="98" y2="8" stroke={color} strokeWidth="1.5" />
+            <line x1="2" y1="3" x2="2" y2="14" stroke={color} strokeWidth="1.5" />
+            <line x1="98" y1="3" x2="98" y2="14" stroke={color} strokeWidth="1.5" />
+            <line x1="50" y1="8" x2="50" y2="3" stroke={color} strokeWidth="1.5" />
+          </svg>
+          <div className="absolute left-1/2 -top-[2px] -translate-x-1/2 px-2 py-0.5 rounded-full text-white text-[11px] font-bold shadow-md" style={{ backgroundColor: color }}>
+            {card.score}
           </div>
-        </>
+        </div>
       );
     },
   },
-  // 9 — Cantos chanfrados (canto superior + canto inferior esquerdo) emolduram a região
+  // 19 — Chave com gradiente nas pontas
   {
-    id: 9,
-    nome: "Cantos emolduradores",
-    descricao: "4 cantos em L emolduram os 3 meses (estilo viewfinder de câmera)",
-    rowHeight: 56,
+    id: 19,
+    nome: "Bracket com degradê",
+    descricao: "Chave que esmaece nas pontas e fica sólida no centro",
+    rowHeight: 60,
     render: (card) => {
       const color = getLineColor(card.score);
       const widthPct = (3 / card.evolucao.length) * 100;
-      const corner = "absolute pointer-events-none";
-      const cornerSize = 8;
+      const gradId = `bg-grad-19-${card.label.replace(/\s/g, '')}`;
       return (
-        <>
-          {/* 4 cantos em L */}
-          <div className={corner} style={{ right: `calc(${widthPct}% - 1px)`, top: 4, width: cornerSize, height: cornerSize, borderTop: `2px solid ${color}`, borderLeft: `2px solid ${color}` }} />
-          <div className={corner} style={{ right: 0, top: 4, width: cornerSize, height: cornerSize, borderTop: `2px solid ${color}`, borderRight: `2px solid ${color}` }} />
-          <div className={corner} style={{ right: `calc(${widthPct}% - 1px)`, bottom: 0, width: cornerSize, height: cornerSize, borderBottom: `2px solid ${color}`, borderLeft: `2px solid ${color}` }} />
-          <div className={corner} style={{ right: 0, bottom: 0, width: cornerSize, height: cornerSize, borderBottom: `2px solid ${color}`, borderRight: `2px solid ${color}` }} />
-          {/* Score */}
-          <div className="absolute -top-1 pointer-events-none px-1.5 py-0.5 rounded text-[11px] font-bold text-white shadow" style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', backgroundColor: color }}>
+        <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 20 }}>
+          <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <defs>
+              <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+                <stop offset="50%" stopColor={color} stopOpacity="1" />
+                <stop offset="100%" stopColor={color} stopOpacity="0.2" />
+              </linearGradient>
+            </defs>
+            <path d="M 1 19 C 1 9, 4 7, 10 7 L 90 7 C 96 7, 99 9, 99 19" stroke={`url(#${gradId})`} strokeWidth="2" fill="none" strokeLinecap="round" />
+          </svg>
+          <div className="absolute left-1/2 -top-[2px] -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] font-bold shadow-md" style={{ backgroundColor: color }}>
             {card.score}
           </div>
-        </>
+        </div>
       );
     },
   },
-  // 10 — Gradiente "spotlight" radial + número grande translúcido como marca d'água
+  // 20 — Chave + delta de tendência
   {
-    id: 10,
-    nome: "Spotlight + marca d'água",
-    descricao: "Iluminação radial sutil nos 3 meses e número do score como watermark",
-    rowHeight: 56,
+    id: 20,
+    nome: "Bracket com delta",
+    descricao: "Chave + pílula com score e seta de tendência (vs primeiro mês)",
+    rowHeight: 60,
     render: (card) => {
       const color = getLineColor(card.score);
       const widthPct = (3 / card.evolucao.length) * 100;
+      const first = card.evolucao[0]?.valor ?? card.score;
+      const delta = card.score - first;
+      const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '●';
       return (
-        <>
-          <div
-            className="absolute top-0 bottom-0 pointer-events-none"
-            style={{
-              right: 0,
-              width: `${widthPct}%`,
-              background: `radial-gradient(ellipse at center, ${color}22 0%, ${color}08 60%, transparent 100%)`,
-            }}
-          />
-          {/* Watermark number */}
-          <div
-            className="absolute pointer-events-none flex items-center justify-center font-black leading-none select-none"
-            style={{
-              right: `${widthPct / 2}%`,
-              transform: 'translateX(50%)',
-              top: 4,
-              fontSize: 28,
-              color,
-              opacity: 0.18,
-            }}
-          >
-            {card.score}
+        <div className="absolute top-0 pointer-events-none" style={{ right: 0, width: `${widthPct}%`, height: 20 }}>
+          <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <path d="M 1 19 C 1 9, 4 7, 10 7 L 40 7 C 46 7, 50 5, 50 1 C 50 5, 54 7, 60 7 L 90 7 C 96 7, 99 9, 99 19" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          </svg>
+          <div className="absolute left-1/2 -top-[3px] -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-[11px] font-bold shadow-md" style={{ backgroundColor: color }}>
+            <span>{card.score}</span>
+            <span className="text-[8px] opacity-90">{arrow}</span>
           </div>
-          {/* Crisp small label */}
-          <div
-            className="absolute pointer-events-none px-1.5 py-[1px] rounded text-[10px] font-bold text-white shadow"
-            style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)', bottom: 2, backgroundColor: color }}
-          >
-            {card.score}
-          </div>
-        </>
+        </div>
       );
     },
   },
@@ -320,9 +290,9 @@ export default function IndicatorTableVariants({ cards }: Props) {
   return (
     <div className="space-y-4 mt-4">
       <div className="px-2">
-        <p className="text-xs font-semibold text-foreground">🧪 10 marcadores diferentes para os últimos 3 meses</p>
+        <p className="text-xs font-semibold text-foreground">🧪 Mais 10 variações da família "Bracket / Chave"</p>
         <p className="text-[10px] text-muted-foreground mt-0.5">
-          Mesmo sparkline em todas — apenas a forma de destacar a janela do score (3M) varia
+          Mesmo sparkline em todas — apenas a forma da chave/bracket sobre os 3 meses muda
         </p>
       </div>
 
