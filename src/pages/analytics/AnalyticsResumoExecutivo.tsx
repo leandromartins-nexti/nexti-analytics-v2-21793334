@@ -354,7 +354,7 @@ export default function AnalyticsResumoExecutivo() {
                             <div
                               key={i}
                               className="flex-1 h-full rounded-[2px]"
-                              style={{ backgroundColor: c, opacity: 0.5 }}
+                              style={{ backgroundColor: c, opacity: 0.75 }}
                               title={`${pt.competencia}: ${pt.valor}`}
                             />
                           );
