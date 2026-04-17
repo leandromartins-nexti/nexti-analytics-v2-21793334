@@ -39,6 +39,8 @@ import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSection";
+import InsightDetailModal from "@/components/analytics/InsightDetailModal";
+import { getInsightsForCustomer, type QualidadeInsight } from "@/data/qualidadeInsightsData";
 
 // decomposicaoScore and kpisPeriodoAnterior now loaded dynamically via useQualidadePontoData hook
 import { evolucaoQualidadeHeadcountSource, evolucaoQualidadeHeadcountColumns } from "@/data/chart-sources/evolucao-qualidade-headcount";
@@ -911,6 +913,17 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
+  const { customerId } = useCustomer();
+  const [activeInsight, setActiveInsight] = useState<QualidadeInsight | null>(null);
+  // Map: chart name → mes label → insight id (chart pin annotations)
+  const chartInsightPins: Record<string, Record<string, string>> = {
+    sobrecarga: { "set/25": "C1" },
+  };
+  const openInsightById = useCallback((id: string) => {
+    const all = getInsightsForCustomer(customerId);
+    const found = all.find(i => i.id === id);
+    if (found) setActiveInsight(found);
+  }, [customerId]);
 
   // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
   const dataSources = useMemo(() => buildDataSources(customerData), [customerData]);
@@ -2009,6 +2022,30 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                           </g>
                         );
                       }} />
+                      <LabelList content={({ x, y, width: w, index }: any) => {
+                        const d = sobrecargaData[index];
+                        if (!d) return null;
+                        const insightId = chartInsightPins.sobrecarga?.[d.mes];
+                        if (!insightId) return null;
+                        const cx = (x ?? 0) + (w ?? 0) / 2;
+                        const cy = (y ?? 0) - 10;
+                        return (
+                          <g
+                            style={{ cursor: "pointer" }}
+                            onClick={(e) => { e.stopPropagation(); openInsightById(insightId); }}
+                          >
+                            <title>Ver insight: Recuperação dramática da qualidade</title>
+                            {/* Pulse ring */}
+                            <circle cx={cx} cy={cy} r={11} fill="#22c55e" opacity={0.18}>
+                              <animate attributeName="r" values="9;14;9" dur="1.6s" repeatCount="indefinite" />
+                              <animate attributeName="opacity" values="0.25;0.05;0.25" dur="1.6s" repeatCount="indefinite" />
+                            </circle>
+                            {/* Pin body */}
+                            <circle cx={cx} cy={cy} r={8} fill="#22c55e" stroke="#fff" strokeWidth={1.5} />
+                            <text x={cx} y={cy + 3} textAnchor="middle" fontSize={9} fontWeight={700} fill="#fff">💡</text>
+                          </g>
+                        );
+                      }} />
                     </Bar>
                     <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
                   </ComposedChart>
@@ -2030,6 +2067,14 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       </div>
 
       <GroupBySidebar items={sidebarItems} selectedRegional={selectedRegional} onRegionalClick={onRegionalClick} onItemDetail={onItemDetail} groupBy={groupBy} onGroupByChange={onGroupByChange} onPagedItemsChange={setVisibleNames} />
+
+      <InsightDetailModal
+        insight={activeInsight}
+        open={!!activeInsight}
+        onClose={() => setActiveInsight(null)}
+        onDismiss={() => setActiveInsight(null)}
+        onCrossRef={openInsightById}
+      />
 
       <ChartDataModal
         open={chartDataModal === "evoQualidade"}
