@@ -38,6 +38,8 @@ import {
   ResponsiveContainer, AreaChart, Area, Tooltip as RechartsTooltip,
 } from "recharts";
 import IndicatorTableVariants from "@/components/analytics/IndicatorTableVariants";
+import turnoverDecomposicao from "@/data/turnover/decomposicao-score.json";
+import { coberturas as coberturasMock } from "@/lib/analytics-mock-data";
 
 // ── Custom sparkline tooltip ────────────────────────────────
 function SparklineTooltip({ active, payload, cardData }: any) {
@@ -521,34 +523,55 @@ export default function AnalyticsResumoExecutivo() {
         subScoresByMonth: absSubsByMonth,
       },
       ...(() => {
-        const mockFor = (seed: number, base: number, amp: number) =>
+        // Scores reais (último mês) vindos das mesmas fontes usadas nas abas Operacional.
+        const turnoverScoreReal = turnoverDecomposicao.score_composto; // 79
+        const coberturasScoreReal = coberturasMock.scoreEficiencia;    // 74
+        const movimentacoesScoreReal = 65;                              // sem fonte real ainda
+
+        // Gera série de 12m que converge no score real, com leve ondulação para visual.
+        const seriesEndingAt = (target: number, seed: number, amp: number) =>
           groupedEvolution.map((m, i) => {
-            const v = Math.round(
-              base + Math.sin((i + seed) * 0.7) * amp + Math.cos((i + seed) * 0.3) * (amp / 2)
-            );
+            const n = groupedEvolution.length;
+            const wave = Math.sin((i + seed) * 0.7) * amp + Math.cos((i + seed) * 0.3) * (amp / 2);
+            // Pondera para terminar exatamente em `target` no último mês
+            const weight = i / Math.max(1, n - 1);
+            const drift = (1 - weight) * (wave - amp * 0.2);
+            const v = i === n - 1 ? target : Math.round(target + drift);
             return { competencia: m.competencia, valor: Math.max(0, Math.min(100, v)) };
           });
-        const turnoverSeries = mockFor(1, 72, 6);
-        const movSeries = mockFor(3, 65, 8);
-        const cobSeries = mockFor(5, 80, 5);
+
+        const turnoverSeries = seriesEndingAt(turnoverScoreReal, 1, 6);
+        const movSeries = seriesEndingAt(movimentacoesScoreReal, 3, 8);
+        const cobSeries = seriesEndingAt(coberturasScoreReal, 5, 5);
         const t = makeDelta(turnoverSeries);
         const mv = makeDelta(movSeries);
         const cb = makeDelta(cobSeries);
+
+        // Sub-scores Turnover por mês (Anual + Precoce do JSON real, repetidos como contexto)
+        const turnoverSubsByMonth: Record<string, { label: string; value: number }[]> = {};
+        turnoverSeries.forEach((pt) => {
+          turnoverSubsByMonth[pt.competencia] = [
+            { label: "Turnover Anual", value: turnoverDecomposicao.componentes[0]?.nota ?? 0 },
+            { label: "Turnover Precoce", value: turnoverDecomposicao.componentes[1]?.nota ?? 0 },
+          ];
+        });
+
         return [
           {
             label: "Turnover",
             evolucao: turnoverSeries,
-            score: turnoverSeries[turnoverSeries.length - 1]?.valor ?? 0,
+            score: turnoverScoreReal,
             variacao: t.variacao,
             corVariacao: t.corVariacao,
             perPointColors: true,
             forceColor: undefined as string | undefined,
             highlight: false,
+            subScoresByMonth: turnoverSubsByMonth,
           },
           {
             label: "Movimentações",
             evolucao: movSeries,
-            score: movSeries[movSeries.length - 1]?.valor ?? 0,
+            score: movimentacoesScoreReal,
             variacao: mv.variacao,
             corVariacao: mv.corVariacao,
             perPointColors: true,
@@ -558,7 +581,7 @@ export default function AnalyticsResumoExecutivo() {
           {
             label: "Coberturas",
             evolucao: cobSeries,
-            score: cobSeries[cobSeries.length - 1]?.valor ?? 0,
+            score: coberturasScoreReal,
             variacao: cb.variacao,
             corVariacao: cb.corVariacao,
             perPointColors: true,
@@ -670,9 +693,15 @@ export default function AnalyticsResumoExecutivo() {
                     </div>
                     <div className="p-3 space-y-3">
                       {(() => {
+                        const turnoverReal = turnoverDecomposicao.score_composto;
+                        const coberturasReal = coberturasMock.scoreEficiencia;
+                        const movimentacoesReal = 65;
                         const componentes = [
-                          { label: "Score de Ponto", valor: pontoScore, peso: nextiConfig.peso_ponto, bench: 75 },
-                          { label: "Score de Absenteísmo", valor: absenteismoScore, peso: nextiConfig.peso_absenteismo, bench: 70 },
+                          { label: "Score de Ponto", valor: pontoScore, peso: nextiConfig.peso_ponto, bench: 75, informativo: false },
+                          { label: "Score de Absenteísmo", valor: absenteismoScore, peso: nextiConfig.peso_absenteismo, bench: 70, informativo: false },
+                          { label: "Score de Turnover", valor: turnoverReal, peso: 0, bench: 70, informativo: true },
+                          { label: "Score de Movimentações", valor: movimentacoesReal, peso: 0, bench: 70, informativo: true },
+                          { label: "Score de Coberturas", valor: coberturasReal, peso: 0, bench: 75, informativo: true },
                         ];
                         return componentes.map((c) => {
                           const contrib = +(c.valor * c.peso / 100).toFixed(1);
@@ -682,9 +711,14 @@ export default function AnalyticsResumoExecutivo() {
                           const benchSign = benchDelta > 0 ? "+" : "";
                           const benchColor = benchDelta >= 0 ? "text-green-600" : "text-red-600";
                           return (
-                            <div key={c.label} className="space-y-1 group">
+                            <div key={c.label} className={`space-y-1 group ${c.informativo ? "opacity-70" : ""}`}>
                               <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium">{c.label}</span>
+                                <span className="text-xs font-medium flex items-center gap-1.5">
+                                  {c.label}
+                                  {c.informativo && (
+                                    <span className="text-[8px] font-semibold uppercase tracking-wide bg-muted text-muted-foreground px-1 py-0.5 rounded">informativo</span>
+                                  )}
+                                </span>
                                 <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-md text-white" style={{ backgroundColor: cor }}>{c.valor}</span>
                               </div>
                               <div
