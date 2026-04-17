@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { Separator } from "@/components/ui/separator";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import InsightsCenter from "@/components/analytics/InsightsCenter";
 import AnalyticsChat from "@/components/analytics/AnalyticsChat";
 
