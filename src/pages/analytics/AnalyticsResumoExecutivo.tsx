@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { getScoreColor, getScoreBg, getLineColor } from "@/components/analytics/IndicatorTable";
 import ScoreGauge from "@/components/analytics/ScoreGauge";
 import InfoTip from "@/components/analytics/InfoTip";
