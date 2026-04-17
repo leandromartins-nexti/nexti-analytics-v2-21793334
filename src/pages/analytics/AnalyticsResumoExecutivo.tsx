@@ -838,7 +838,7 @@ export default function AnalyticsResumoExecutivo() {
                   <tr
                     key={card.label}
                     data-onboarding={card.label === "Ponto" ? "row-qualidade" : undefined}
-                    className={`transition-colors cursor-pointer group hover:bg-muted/30 ${borderTopCls}`}
+                    className="bg-[#F5F0E6] cursor-pointer group"
                     onClick={(event) => {
                       const target = event.target as HTMLElement | null;
                       if (target?.closest('[data-block-row-click="true"]')) {
@@ -850,84 +850,88 @@ export default function AnalyticsResumoExecutivo() {
                     }}
                     title={`Ver detalhes de ${card.label}`}
                   >
-                    <td className="p-0 align-middle">
-                      <div className="border border-r-0 border-[#FF5722]/20 p-[10px] flex items-center">
-                        {card.label === "Ponto" ? (
-                          <Clock className="w-4 h-4 shrink-0" style={{ color: "#FF5722" }} />
-                        ) : card.label === "Absenteísmo" ? (
-                          <UserX className="w-4 h-4 shrink-0" style={{ color: "#FF5722" }} />
-                        ) : (
-                          <div
-                            className="w-2 h-2 rounded-full shrink-0"
-                            style={{ backgroundColor: card.forceColor ?? getLineColor(card.score) }}
-                          />
-                        )}
-                        <span className="truncate text-sm font-medium text-foreground ml-4">
-                          {card.label}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-0 align-middle">
-                      <div className="border border-l-0 border-[#FF5722]/20 p-[10px]">
-                        {/* Mobile: heatmap horizontal */}
-                        <div className="flex sm:hidden h-[27px] flex-col justify-between overflow-hidden">
-                        <div className="flex items-center gap-[2px] w-full h-[19px]">
-                          {card.evolucao.map((pt, i) => {
-                            const c = card.forceColor ?? (card.perPointColors ? getLineColor(pt.valor) : getLineColor(card.score));
-                            return (
+                    <td colSpan={2} className={`p-0 ${borderTopCls}`}>
+                      <div className="border border-[#FF5722]/20 relative p-[10px]">
+                        <div className="pointer-events-none absolute inset-x-0 -top-3 h-3 bg-gradient-to-t from-[#FF5722]/8 to-transparent" />
+                        <div className="pointer-events-none absolute inset-x-0 -bottom-3 h-3 bg-gradient-to-b from-[#FF5722]/8 to-transparent" />
+                        <div className="pointer-events-none absolute inset-y-0 -left-3 w-3 bg-gradient-to-l from-[#FF5722]/8 to-transparent" />
+                        <div className="pointer-events-none absolute inset-y-0 -right-3 w-3 bg-gradient-to-r from-[#FF5722]/8 to-transparent" />
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+                            {card.label === "Ponto" ? (
+                              <Clock className="w-5 h-5" style={{ color: "#FF5722" }} />
+                            ) : card.label === "Absenteísmo" ? (
+                              <UserX className="w-5 h-5" style={{ color: "#FF5722" }} />
+                            ) : (
                               <div
-                                key={i}
-                                className="flex-1 h-full rounded-[2px]"
-                                style={{ backgroundColor: c, opacity: 0.75 }}
-                                title={`${pt.competencia}: ${pt.valor}`}
+                                className="w-2 h-2 rounded-full"
+                                style={{ backgroundColor: card.forceColor ?? getLineColor(card.score) }}
                               />
-                            );
-                          })}
-                        </div>
-                        <div className="flex justify-between text-[8px] leading-[8px] text-muted-foreground px-0.5">
-                          <span>{firstMonth.replace('/20', '/')}</span>
-                          <span>{lastMonth.replace('/20', '/')}</span>
-                        </div>
-                      </div>
+                            )}
+                          </div>
+                          <div className="shrink-0 sm:flex-none sm:min-w-[160px]">
+                            <div className="text-sm font-medium text-foreground leading-tight whitespace-nowrap">{card.label}</div>
+                          </div>
+                          {/* Mobile: heatmap horizontal */}
+                          <div className="flex sm:hidden flex-1 min-w-0 h-[27px] flex-col justify-between overflow-hidden self-center mt-[6px] pl-3">
+                            <div className="flex items-center gap-[2px] w-full h-[19px]">
+                              {card.evolucao.map((pt, i) => {
+                                const c = card.forceColor ?? (card.perPointColors ? getLineColor(pt.valor) : getLineColor(card.score));
+                                return (
+                                  <div
+                                    key={i}
+                                    className="flex-1 h-full rounded-[2px]"
+                                    style={{ backgroundColor: c, opacity: 0.75 }}
+                                    title={`${pt.competencia}: ${pt.valor}`}
+                                  />
+                                );
+                              })}
+                            </div>
+                            <div className="flex justify-between text-[8px] leading-[8px] text-muted-foreground px-0.5">
+                              <span>{firstMonth.replace('/20', '/')}</span>
+                              <span>{lastMonth.replace('/20', '/')}</span>
+                            </div>
+                          </div>
 
-                      {/* Desktop: Sparkline */}
-                      <div className="hidden sm:block relative h-[17px] mt-[5px]">
-                        {card.evolucao.length >= 3 && (
-                          <DraggableBracket
-                            card={card}
-                            interactive={false}
-                            startIdx={bracketStartIdx ?? card.evolucao.length - 3}
-                            onStartIdxChange={setBracketStartIdx}
-                          />
-                        )}
-                        <ResponsiveContainer width="100%" height={17}>
-                          <AreaChart data={card.evolucao} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
-                            <defs>
-                              <linearGradient id={areaGradId} x1="0" y1="0" x2="1" y2="0">
-                                {card.evolucao.map((pt, i) => {
-                                  const pct = card.evolucao.length > 1 ? (i / (card.evolucao.length - 1)) * 100 : 0;
-                                  const stopColor = card.forceColor ?? getLineColor(pt.valor);
-                                  return <stop key={i} offset={`${pct}%`} stopColor={stopColor} stopOpacity={0.45} />;
-                                })}
-                              </linearGradient>
-                              <linearGradient id={`${areaGradId}-stroke`} x1="0" y1="0" x2="1" y2="0">
-                                {card.evolucao.map((pt, i) => {
-                                  const pct = card.evolucao.length > 1 ? (i / (card.evolucao.length - 1)) * 100 : 0;
-                                  const stopColor = card.forceColor ?? getLineColor(pt.valor);
-                                  return <stop key={i} offset={`${pct}%`} stopColor={stopColor} />;
-                                })}
-                              </linearGradient>
-                            </defs>
-                            <RechartsTooltip content={<SparklineTooltip cardData={card} />} cursor={false} wrapperStyle={{ zIndex: 9999 }} />
-                            <Area
-                              type="monotone"
-                              dataKey="valor"
-                              stroke={`url(#${areaGradId}-stroke)`}
-                              strokeWidth={2}
-                              fill={`url(#${areaGradId})`}
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
+                          {/* Desktop: Sparkline com bracket */}
+                          <div className="hidden sm:block flex-1 h-[17px] relative min-w-0 mt-[3px]">
+                            {card.evolucao.length >= 3 && (
+                              <DraggableBracket
+                                card={card}
+                                interactive={false}
+                                startIdx={bracketStartIdx ?? card.evolucao.length - 3}
+                                onStartIdxChange={setBracketStartIdx}
+                              />
+                            )}
+                            <ResponsiveContainer width="100%" height={17}>
+                              <AreaChart data={card.evolucao} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
+                                <defs>
+                                  <linearGradient id={areaGradId} x1="0" y1="0" x2="1" y2="0">
+                                    {card.evolucao.map((pt, i) => {
+                                      const pct = card.evolucao.length > 1 ? (i / (card.evolucao.length - 1)) * 100 : 0;
+                                      const stopColor = card.forceColor ?? getLineColor(pt.valor);
+                                      return <stop key={i} offset={`${pct}%`} stopColor={stopColor} stopOpacity={0.45} />;
+                                    })}
+                                  </linearGradient>
+                                  <linearGradient id={`${areaGradId}-stroke`} x1="0" y1="0" x2="1" y2="0">
+                                    {card.evolucao.map((pt, i) => {
+                                      const pct = card.evolucao.length > 1 ? (i / (card.evolucao.length - 1)) * 100 : 0;
+                                      const stopColor = card.forceColor ?? getLineColor(pt.valor);
+                                      return <stop key={i} offset={`${pct}%`} stopColor={stopColor} />;
+                                    })}
+                                  </linearGradient>
+                                </defs>
+                                <RechartsTooltip content={<SparklineTooltip cardData={card} />} cursor={false} wrapperStyle={{ zIndex: 9999 }} />
+                                <Area
+                                  type="monotone"
+                                  dataKey="valor"
+                                  stroke={`url(#${areaGradId}-stroke)`}
+                                  strokeWidth={2}
+                                  fill={`url(#${areaGradId})`}
+                                />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                          </div>
                         </div>
                       </div>
                     </td>
