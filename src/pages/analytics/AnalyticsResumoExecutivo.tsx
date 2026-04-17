@@ -626,16 +626,21 @@ export default function AnalyticsResumoExecutivo() {
                           const benchSign = benchDelta > 0 ? "+" : "";
                           const benchColor = benchDelta >= 0 ? "text-green-600" : "text-red-600";
                           return (
-                            <div key={c.label} className="space-y-1">
+                            <div key={c.label} className="space-y-1 group">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs font-medium">{c.label}</span>
                                 <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-md text-white" style={{ backgroundColor: cor }}>{c.valor}</span>
                               </div>
                               <div
-                                className="h-2 bg-muted/50 rounded-md overflow-hidden border border-border/40 transition-colors hover:border-2"
-                                style={{ ['--hover-border' as any]: cor }}
-                                onMouseEnter={(e) => { e.currentTarget.style.borderColor = cor; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.borderColor = ''; }}
+                                className="h-2 bg-muted/50 rounded-md overflow-hidden border border-border/40 transition-colors"
+                                ref={(el) => {
+                                  if (!el) return;
+                                  const parent = el.parentElement;
+                                  if (!parent || (parent as any).__hoverBound) return;
+                                  (parent as any).__hoverBound = true;
+                                  parent.addEventListener('mouseenter', () => { el.style.borderColor = cor; });
+                                  parent.addEventListener('mouseleave', () => { el.style.borderColor = ''; });
+                                }}
                               >
                                 <div className="h-full rounded-md transition-all" style={{ width: `${barWidth}%`, backgroundColor: cor }} />
                               </div>
