@@ -48,15 +48,26 @@ function SparklineTooltip({ active, payload, cardData }: any) {
   const next = idx < evolucao.length - 1 ? evolucao[idx + 1] : null;
   const fmt = (v: number) => `${v}`;
   const pointColor = getLineColor(valor);
+  const subScores: { label: string; value: number }[] | undefined =
+    cardData.subScoresByMonth?.[comp];
   return (
     <div className="bg-card border border-border rounded-lg shadow-lg px-3 py-2.5 text-xs min-w-[180px] z-[9999] relative">
       <p className="font-semibold text-foreground mb-2">{comp}</p>
       <div className="flex items-center gap-2 mb-2">
         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: pointColor }} />
         <span className="text-muted-foreground">{cardData.label}:</span>
-        <span className="font-bold text-foreground">{fmt(valor)}</span>
         <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(valor)} ${getScoreBg(valor)}`}>Score {valor}</span>
       </div>
+      {subScores && subScores.length > 0 && (
+        <div className="border-t border-border/50 pt-2 pb-1 mb-1 space-y-1">
+          {subScores.map((s) => (
+            <div key={s.label} className="flex justify-between gap-3">
+              <span className="text-muted-foreground">{s.label}:</span>
+              <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(s.value)} ${getScoreBg(s.value)}`}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="border-t border-border/50 pt-2 space-y-1">
         {prev && (() => {
           const d = valor - prev.valor;
