@@ -85,6 +85,7 @@ function SparklineTooltip({ active, payload, cardData }: any) {
 interface BracketCard {
   evolucao: { competencia: string; valor: number }[];
   score: number;
+  forceColor?: string;
 }
 function DraggableBracket({ card }: { card: BracketCard }) {
   const total = card.evolucao.length;
@@ -111,7 +112,7 @@ function DraggableBracket({ card }: { card: BracketCard }) {
   const widthPct = endPct - startPct;
   const windowMonths = card.evolucao.slice(startIdx, startIdx + windowSize);
   const avgScore = Math.round(windowMonths.reduce((sum, point) => sum + point.valor, 0) / windowMonths.length);
-  const scoreColor = getLineColor(avgScore);
+  const scoreColor = card.forceColor ?? getLineColor(avgScore);
   const highlightGlow = dragging || hovered;
 
   const stopEvent = useCallback((event: Event | React.SyntheticEvent) => {
