@@ -114,7 +114,7 @@ export default function AnalyticsLockedSection({ sectionName, sectionId, tabs }:
                 }`}
               >
                 <Lock className="w-5 h-5 shrink-0" />
-                <span className="text-[10px] leading-tight font-medium truncate max-w-[64px]">{tab.label}</span>
+                <span className="text-[10px] leading-tight font-medium text-center px-1">{tab.label}</span>
               </button>
             );
           })}
