@@ -90,58 +90,87 @@ function DraggableBracket({ card }: { card: BracketCard }) {
   const total = card.evolucao.length;
   const windowSize = 3;
   const maxStart = total - windowSize;
-  // Default: rightmost 3 months
   const [startIdx, setStartIdx] = useState(maxStart);
   const [dragging, setDragging] = useState(false);
   const [released, setReleased] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const dragStateRef = useRef<{ originX: number; originStart: number } | null>(null);
+  const dragStateRef = useRef<{
+    originX: number;
+    originStart: number;
+    moved: boolean;
+    suppressClickUntil: number;
+    pointerId: number;
+  } | null>(null);
 
   const widthPct = (windowSize / total) * 100;
   const leftPct = (startIdx / total) * 100;
-
   const windowMonths = card.evolucao.slice(startIdx, startIdx + windowSize);
-  const avgScore = Math.round(
-    windowMonths.reduce((s, p) => s + p.valor, 0) / windowMonths.length
-  );
+  const avgScore = Math.round(windowMonths.reduce((s, p) => s + p.valor, 0) / windowMonths.length);
   const scoreColor = getLineColor(avgScore);
+  const highlightGlow = dragging || hovered;
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const stopRowNavigation = useCallback((event: Event | React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
+
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    stopRowNavigation(e);
+    dragStateRef.current = {
+      originX: e.clientX,
+      originStart: startIdx,
+      moved: false,
+      suppressClickUntil: 0,
+      pointerId: e.pointerId,
+    };
     setDragging(true);
     setReleased(false);
-    dragStateRef.current = { originX: e.clientX, originStart: startIdx };
-    (e.target as Element).setPointerCapture?.(e.pointerId);
-  };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }, [startIdx, stopRowNavigation]);
 
   const onPointerMove = useCallback((e: PointerEvent) => {
     if (!dragStateRef.current || !containerRef.current?.parentElement) return;
     const parentWidth = containerRef.current.parentElement.getBoundingClientRect().width;
     const stepPx = parentWidth / total;
-    const deltaSteps = Math.round((e.clientX - dragStateRef.current.originX) / stepPx);
+    const deltaX = e.clientX - dragStateRef.current.originX;
+    const deltaSteps = Math.round(deltaX / stepPx);
     const next = Math.min(maxStart, Math.max(0, dragStateRef.current.originStart + deltaSteps));
-    setStartIdx(next);
-  }, [total, maxStart]);
 
-  const onPointerUp = useCallback(() => {
+    if (Math.abs(deltaX) > 4) {
+      dragStateRef.current.moved = true;
+    }
+
+    setStartIdx((prev) => (prev === next ? prev : next));
+  }, [maxStart, total]);
+
+  const finishDrag = useCallback(() => {
     if (!dragStateRef.current) return;
+    const didMove = dragStateRef.current.moved;
+    dragStateRef.current.suppressClickUntil = Date.now() + 400;
     dragStateRef.current = null;
     setDragging(false);
-    setReleased(true);
+    setReleased(didMove);
   }, []);
 
   useEffect(() => {
     if (!dragging) return;
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-    };
-  }, [dragging, onPointerMove, onPointerUp]);
 
-  // Auto-hide the released tooltip after 2.5s
+    const handleMove = (e: PointerEvent) => onPointerMove(e);
+    const handleUp = () => finishDrag();
+    const handleCancel = () => finishDrag();
+
+    window.addEventListener("pointermove", handleMove, { capture: true });
+    window.addEventListener("pointerup", handleUp, { capture: true });
+    window.addEventListener("pointercancel", handleCancel, { capture: true });
+
+    return () => {
+      window.removeEventListener("pointermove", handleMove, { capture: true });
+      window.removeEventListener("pointerup", handleUp, { capture: true });
+      window.removeEventListener("pointercancel", handleCancel, { capture: true });
+    };
+  }, [dragging, finishDrag, onPointerMove]);
+
   useEffect(() => {
     if (!released) return;
     const t = setTimeout(() => setReleased(false), 2500);
@@ -151,71 +180,85 @@ function DraggableBracket({ card }: { card: BracketCard }) {
   return (
     <div
       ref={containerRef}
-      className="absolute -top-[14px] z-10"
+      className="absolute -top-[14px] z-20 select-none"
       style={{
         left: `${leftPct}%`,
         width: `${widthPct}%`,
         height: 14,
-        transition: dragging ? "none" : "left 220ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        transition: dragging ? "none" : "left 260ms cubic-bezier(0.22, 1, 0.36, 1)",
       }}
-      onClick={(e) => { e.stopPropagation(); }}
-      onPointerDownCapture={(e) => { e.stopPropagation(); }}
+      onPointerDown={onPointerDown}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onClick={(e) => {
+        stopRowNavigation(e);
+        if (dragStateRef.current?.suppressClickUntil && Date.now() < dragStateRef.current.suppressClickUntil) {
+          return;
+        }
+      }}
     >
-      {/* Bracket SVG (drag handle) */}
+      <div
+        className="absolute inset-x-0 top-[2px] bottom-0 rounded-sm"
+        style={{
+          background: highlightGlow ? `linear-gradient(180deg, ${scoreColor}1A 0%, transparent 100%)` : "transparent",
+          boxShadow: highlightGlow ? `0 0 0 1px ${scoreColor}30 inset` : "none",
+          transition: "background 180ms ease, box-shadow 180ms ease",
+        }}
+      />
+
       <svg
         viewBox="0 0 100 14"
         preserveAspectRatio="none"
-        className={`absolute inset-0 w-full h-full ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`absolute inset-0 h-full w-full ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
         style={{
           touchAction: "none",
-          filter: dragging
-            ? `drop-shadow(0 0 6px ${scoreColor}) drop-shadow(0 2px 4px rgba(0,0,0,0.25))`
+          filter: highlightGlow
+            ? `drop-shadow(0 0 10px ${scoreColor}55) drop-shadow(0 4px 10px rgba(0,0,0,0.16))`
             : "none",
-          transition: "filter 200ms ease",
+          transform: dragging ? "translateY(-1px) scale(1.03)" : hovered ? "translateY(-1px)" : "none",
+          transition: dragging ? "filter 120ms ease" : "filter 180ms ease, transform 180ms ease",
         }}
-        onPointerDown={onPointerDown}
       >
         <path
           d="M 1 13 L 1 3 L 50 3 L 50 1 L 50 3 L 99 3 L 99 13"
-          stroke={dragging ? scoreColor : "#C8860D"}
-          strokeWidth={dragging ? 3 : 2.5}
+          stroke={highlightGlow ? scoreColor : "#C8860D"}
+          strokeWidth={dragging ? 3.1 : 2.5}
           fill="none"
           strokeLinecap="butt"
           strokeLinejoin="miter"
-          strokeDasharray={dragging ? "5 2" : "3 2"}
+          strokeDasharray={dragging ? "6 2" : "3 2"}
           vectorEffect="non-scaling-stroke"
-          style={{ transition: "stroke 180ms ease, stroke-width 180ms ease" }}
+          style={{ transition: "stroke 180ms ease, stroke-width 180ms ease, stroke-dasharray 180ms ease" }}
         />
       </svg>
 
-      {/* Score pill (live while dragging) */}
       <div
         className="absolute -top-[11px] z-20 pointer-events-none"
-        style={{ left: "50%", transform: `translateX(-50%) scale(${dragging ? 1.15 : 1})`, transition: "transform 180ms ease" }}
+        style={{
+          left: "50%",
+          transform: `translateX(-50%) scale(${dragging ? 1.14 : hovered ? 1.06 : 1})`,
+          transition: "transform 180ms ease",
+        }}
       >
         <span
           className="text-[10px] font-bold px-2 py-[2px] rounded-full text-white shadow-md whitespace-nowrap"
           style={{
             backgroundColor: scoreColor,
             border: "2px solid white",
-            transition: "background-color 200ms ease",
+            boxShadow: highlightGlow ? `0 6px 16px ${scoreColor}33` : undefined,
+            transition: "background-color 180ms ease, box-shadow 180ms ease",
           }}
         >
           {avgScore}
         </span>
       </div>
 
-      {/* Released tooltip — shows the 3 months and their scores */}
       {released && !dragging && (
         <div
           className="absolute z-30 pointer-events-none animate-in fade-in slide-in-from-top-1"
-          style={{
-            top: -82,
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
+          style={{ top: -82, left: "50%", transform: "translateX(-50%)" }}
         >
-          <div className="bg-card border border-border rounded-lg shadow-xl px-3 py-2 text-[10px] whitespace-nowrap">
+          <div className="relative bg-card border border-border rounded-lg shadow-xl px-3 py-2 text-[10px] whitespace-nowrap">
             <div className="font-semibold text-foreground mb-1 text-center">
               Média 3 meses: <span style={{ color: scoreColor }}>{avgScore}</span>
             </div>
@@ -232,10 +275,7 @@ function DraggableBracket({ card }: { card: BracketCard }) {
                 </div>
               ))}
             </div>
-            {/* Caret */}
-            <div
-              className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45 bg-card border-r border-b border-border"
-            />
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45 bg-card border-r border-b border-border" />
           </div>
         </div>
       )}
