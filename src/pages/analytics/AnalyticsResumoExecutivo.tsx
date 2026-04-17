@@ -573,24 +573,32 @@ export default function AnalyticsResumoExecutivo() {
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      {/* Top actions */}
-      <div className="px-3 sm:px-6 py-3 border-b border-border bg-card/60 backdrop-blur-sm flex items-center gap-3">
-        <button
-          onClick={() => setFilterOpen(true)}
-          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
-        >
-          <Filter className="w-4 h-4" />
-          Filtros
-        </button>
-        <button
-          onClick={() => { setSelectedRegional(null); setGroupBy("unidade"); }}
-          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
-        >
-          <Eraser className="w-4 h-4" />
-          Limpar Filtros
-        </button>
-        <Separator orientation="vertical" className="h-6" />
-        <div className="text-sm text-muted-foreground">{sidebarSelected ? `Filtro ativo: ${sidebarSelected.nome}` : "Sem filtros aplicados"}</div>
+      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
+          <span className="font-semibold text-foreground hidden sm:inline text-sm">Filtros Aplicados:</span>
+          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap">Período: abr/2025 – mar/2026</span>
+          {sidebarSelected && (
+            <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap">{sidebarSelected.nome}</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <button
+            onClick={() => { setSelectedRegional(null); setGroupBy("unidade"); }}
+            className="hidden sm:flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline"
+          >
+            <Eraser className="w-4 h-4" /> Limpar Filtros
+          </button>
+          <Separator orientation="vertical" className="h-6 hidden sm:block" />
+          <button
+            onClick={() => setFilterOpen(true)}
+            className="sm:hidden text-muted-foreground hover:text-foreground p-1.5 rounded-md transition-colors"
+            aria-label="Abrir filtros"
+          >
+            <Filter className="w-4 h-4" />
+          </button>
+          <InsightsCenter />
+          <AnalyticsChat activeTab="resumo" />
+        </div>
       </div>
 
       {/* Content: main + sidebar */}
