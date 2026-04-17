@@ -342,15 +342,24 @@ function DraggableBracket({
           transition: dragging ? "filter 120ms ease" : "filter 180ms ease, transform 180ms ease",
         }}
       >
+        <defs>
+          <linearGradient id={`bracketGrad-${card.label.replace(/\s/g,'')}-${startIdx}`} x1="0" y1="0" x2="1" y2="0">
+            {windowMonths.map((pt, i) => {
+              const c = card.forceColor ?? getLineColor(pt.valor);
+              const offset = (i / Math.max(1, windowMonths.length - 1)) * 100;
+              return <stop key={i} offset={`${offset}%`} stopColor={c} />;
+            })}
+          </linearGradient>
+        </defs>
         <path
           d="M 1 31 L 1 3 L 50 3 L 50 1 L 50 3 L 99 3 L 99 31"
-          stroke={highlightGlow ? scoreColor : "#B8B2AC"}
+          stroke={`url(#bracketGrad-${card.label.replace(/\s/g,'')}-${startIdx})`}
           strokeWidth={dragging ? 3.1 : 2.5}
           fill="none"
           strokeLinecap="butt"
           strokeLinejoin="miter"
           vectorEffect="non-scaling-stroke"
-          style={{ transition: "stroke 180ms ease, stroke-width 180ms ease" }}
+          style={{ transition: "stroke-width 180ms ease" }}
         />
       </svg>
 
