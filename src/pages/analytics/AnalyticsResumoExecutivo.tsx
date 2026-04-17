@@ -31,6 +31,7 @@ import {
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { Separator } from "@/components/ui/separator";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Tooltip as UITooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import InsightsCenter from "@/components/analytics/InsightsCenter";
 import AnalyticsChat from "@/components/analytics/AnalyticsChat";
 
@@ -92,6 +93,64 @@ function SparklineTooltip({ active, payload, cardData }: any) {
             <div className="flex justify-between gap-4">
               <span className="text-muted-foreground">{next.competencia}:</span>
               <span className={`font-medium ${color}`}>{fmt(next.valor)} ({sign}{d.toFixed(1)})</span>
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+// ── Bubble tooltip content (reuses sparkline tooltip layout) ─
+function BubbleTooltipContent({ cardData, idx }: { cardData: any; idx: number }) {
+  const evolucao = cardData.evolucao as { competencia: string; valor: number }[];
+  const pt = evolucao[idx];
+  if (!pt) return null;
+  const valor = pt.valor;
+  const comp = pt.competencia;
+  const prev = idx > 0 ? evolucao[idx - 1] : null;
+  const next = idx < evolucao.length - 1 ? evolucao[idx + 1] : null;
+  const pointColor = getLineColor(valor);
+  const subScores: { label: string; value: number }[] | undefined =
+    cardData.subScoresByMonth?.[comp];
+  return (
+    <div className="text-xs min-w-[180px]">
+      <p className="font-semibold text-foreground mb-2">{comp}</p>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: pointColor }} />
+        <span className="text-muted-foreground">{cardData.label}:</span>
+        <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(valor)} ${getScoreBg(valor)}`}>Score {valor}</span>
+      </div>
+      {subScores && subScores.length > 0 && (
+        <div className="border-t border-border/50 pt-2 pb-1 mb-1 space-y-1">
+          {subScores.map((s) => (
+            <div key={s.label} className="flex justify-between gap-3">
+              <span className="text-muted-foreground">{s.label}:</span>
+              <span className={`font-semibold px-1.5 py-0.5 rounded text-[10px] ${getScoreColor(s.value)} ${getScoreBg(s.value)}`}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="border-t border-border/50 pt-2 space-y-1">
+        {prev && (() => {
+          const d = valor - prev.valor;
+          const sign = d > 0 ? '+' : '';
+          const color = d >= 0 ? 'text-green-600' : 'text-red-500';
+          return (
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground">{prev.competencia}:</span>
+              <span className={`font-medium ${color}`}>{prev.valor} ({sign}{d.toFixed(1)})</span>
+            </div>
+          );
+        })()}
+        {next && (() => {
+          const d = next.valor - valor;
+          const sign = d > 0 ? '+' : '';
+          const color = d >= 0 ? 'text-green-600' : 'text-red-500';
+          return (
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground">{next.competencia}:</span>
+              <span className={`font-medium ${color}`}>{next.valor} ({sign}{d.toFixed(1)})</span>
             </div>
           );
         })()}
@@ -900,20 +959,25 @@ export default function AnalyticsResumoExecutivo() {
                                     const size = 10 + (pt.valor / max) * 20;
                                     const leftPct = (i / denom) * 100;
                                     return (
-                                      <div
-                                        key={i}
-                                        className="absolute top-1/2 rounded-full"
-                                        title={`${pt.competencia}: ${pt.valor}`}
-                                        style={{
-                                          left: `${leftPct}%`,
-                                          transform: 'translate(-50%, -50%)',
-                                          width: `${size}px`,
-                                          height: `${size}px`,
-                                          backgroundColor: c,
-                                          opacity: 0.85,
-                                          boxShadow: `0 0 0 2px ${c}25`,
-                                        }}
-                                      />
+                                      <UITooltip key={i} delayDuration={100}>
+                                        <TooltipTrigger asChild>
+                                          <div
+                                            className="absolute top-1/2 rounded-full cursor-pointer transition-transform hover:scale-125"
+                                            style={{
+                                              left: `${leftPct}%`,
+                                              transform: 'translate(-50%, -50%)',
+                                              width: `${size}px`,
+                                              height: `${size}px`,
+                                              backgroundColor: c,
+                                              opacity: 0.85,
+                                              boxShadow: `0 0 0 2px ${c}25`,
+                                            }}
+                                          />
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top" className="bg-card border border-border shadow-lg p-3">
+                                          <BubbleTooltipContent cardData={card} idx={i} />
+                                        </TooltipContent>
+                                      </UITooltip>
                                     );
                                   })}
                                 </div>
@@ -1005,20 +1069,25 @@ export default function AnalyticsResumoExecutivo() {
                                     const size = 10 + (pt.valor / max) * 20;
                                     const leftPct = (i / denom) * 100;
                                     return (
-                                      <div
-                                        key={i}
-                                        className="absolute top-1/2 rounded-full"
-                                        title={`${pt.competencia}: ${pt.valor}`}
-                                        style={{
-                                          left: `${leftPct}%`,
-                                          transform: 'translate(-50%, -50%)',
-                                          width: `${size}px`,
-                                          height: `${size}px`,
-                                          backgroundColor: c,
-                                          opacity: 0.85,
-                                          boxShadow: `0 0 0 2px ${c}25`,
-                                        }}
-                                      />
+                                      <UITooltip key={i} delayDuration={100}>
+                                        <TooltipTrigger asChild>
+                                          <div
+                                            className="absolute top-1/2 rounded-full cursor-pointer transition-transform hover:scale-125"
+                                            style={{
+                                              left: `${leftPct}%`,
+                                              transform: 'translate(-50%, -50%)',
+                                              width: `${size}px`,
+                                              height: `${size}px`,
+                                              backgroundColor: c,
+                                              opacity: 0.85,
+                                              boxShadow: `0 0 0 2px ${c}25`,
+                                            }}
+                                          />
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top" className="bg-card border border-border shadow-lg p-3">
+                                          <BubbleTooltipContent cardData={card} idx={i} />
+                                        </TooltipContent>
+                                      </UITooltip>
                                     );
                                   })}
                                 </div>
