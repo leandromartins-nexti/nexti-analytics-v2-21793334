@@ -797,6 +797,9 @@ export default function AnalyticsResumoExecutivo() {
                 const indicadorRouteMap: Record<string, string> = {
                   "Ponto": "/analytics/operacional?tab=qualidade",
                   "Absenteísmo": "/analytics/operacional?tab=absenteismo",
+                  "Turnover": "/analytics/operacional?tab=turnover",
+                  "Movimentações": "/analytics/operacional?tab=movimentacoes",
+                  "Coberturas": "/analytics/operacional?tab=coberturas",
                 };
                 const targetRoute = indicadorRouteMap[card.label];
                 const gradId = `grad-${card.label.replace(/\s/g,'')}`;
