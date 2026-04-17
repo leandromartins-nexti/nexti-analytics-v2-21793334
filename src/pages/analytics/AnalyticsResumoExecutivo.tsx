@@ -28,6 +28,7 @@ import { FilterPanel } from "@/components/layout/FilterPanel";
 import { Separator } from "@/components/ui/separator";
 import InsightsCenter from "@/components/analytics/InsightsCenter";
 import AnalyticsChat from "@/components/analytics/AnalyticsChat";
+import NextiHighlightVariants from "@/components/analytics/NextiHighlightVariants";
 import {
   ResponsiveContainer, AreaChart, Area, Tooltip as RechartsTooltip,
 } from "recharts";
