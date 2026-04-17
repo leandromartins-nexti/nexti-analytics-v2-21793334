@@ -374,7 +374,7 @@ export default function AnalyticsResumoExecutivo() {
                           <>
                             {/* Bracket/chave SVG sobre os últimos 3 meses */}
                             <div
-                              className="absolute -top-[6px] pointer-events-none z-10"
+                              className="absolute -top-[14px] pointer-events-none z-10"
                               style={{ right: 0, width: `${widthPct}%`, height: 14 }}
                             >
                               <svg viewBox="0 0 100 14" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
