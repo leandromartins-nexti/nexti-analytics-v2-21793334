@@ -5,7 +5,7 @@ import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import { useNavigate } from "react-router-dom";
 import GroupBySidebar, { type GroupBy } from "@/components/analytics/GroupBySidebar";
-import { getSidebarItems, getQualidadeKpiSummary, formatMesLabel } from "@/lib/ajustesData";
+import { aggregateQualidadeEvolucao, getSidebarItems, getQualidadeKpiSummary, formatMesLabel } from "@/lib/ajustesData";
 import { useScoreConfig, getScoreClassification, computeCompositeScore } from "@/contexts/ScoreConfigContext";
 import { useQualidadePontoData } from "@/hooks/useQualidadePontoData";
 import { buildDataSources } from "@/lib/qualidadeDataSources";
@@ -90,132 +90,179 @@ function DraggableBracket({ card }: { card: BracketCard }) {
   const total = card.evolucao.length;
   const windowSize = 3;
   const maxStart = total - windowSize;
-  // Default: rightmost 3 months
   const [startIdx, setStartIdx] = useState(maxStart);
   const [dragging, setDragging] = useState(false);
   const [released, setReleased] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const dragStateRef = useRef<{ originX: number; originStart: number } | null>(null);
+  const suppressRowClickRef = useRef(false);
+  const dragStateRef = useRef<{
+    originX: number;
+    originStart: number;
+    moved: boolean;
+  } | null>(null);
 
   const widthPct = (windowSize / total) * 100;
   const leftPct = (startIdx / total) * 100;
-
   const windowMonths = card.evolucao.slice(startIdx, startIdx + windowSize);
-  const avgScore = Math.round(
-    windowMonths.reduce((s, p) => s + p.valor, 0) / windowMonths.length
-  );
+  const avgScore = Math.round(windowMonths.reduce((sum, point) => sum + point.valor, 0) / windowMonths.length);
   const scoreColor = getLineColor(avgScore);
+  const highlightGlow = dragging || hovered;
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const stopEvent = useCallback((event: Event | React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
+
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    stopEvent(e);
+    suppressRowClickRef.current = false;
+    dragStateRef.current = {
+      originX: e.clientX,
+      originStart: startIdx,
+      moved: false,
+    };
     setDragging(true);
     setReleased(false);
-    dragStateRef.current = { originX: e.clientX, originStart: startIdx };
-    (e.target as Element).setPointerCapture?.(e.pointerId);
-  };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }, [startIdx, stopEvent]);
 
   const onPointerMove = useCallback((e: PointerEvent) => {
     if (!dragStateRef.current || !containerRef.current?.parentElement) return;
+
     const parentWidth = containerRef.current.parentElement.getBoundingClientRect().width;
     const stepPx = parentWidth / total;
-    const deltaSteps = Math.round((e.clientX - dragStateRef.current.originX) / stepPx);
+    const deltaX = e.clientX - dragStateRef.current.originX;
+    const deltaSteps = Math.round(deltaX / stepPx);
     const next = Math.min(maxStart, Math.max(0, dragStateRef.current.originStart + deltaSteps));
-    setStartIdx(next);
-  }, [total, maxStart]);
 
-  const onPointerUp = useCallback(() => {
+    if (Math.abs(deltaX) > 4) {
+      dragStateRef.current.moved = true;
+      suppressRowClickRef.current = true;
+    }
+
+    setStartIdx((prev) => (prev === next ? prev : next));
+  }, [maxStart, total]);
+
+  const finishDrag = useCallback(() => {
     if (!dragStateRef.current) return;
+
+    const didMove = dragStateRef.current.moved;
     dragStateRef.current = null;
     setDragging(false);
-    setReleased(true);
+    setReleased(didMove);
+
+    if (didMove) {
+      window.setTimeout(() => {
+        suppressRowClickRef.current = false;
+      }, 320);
+    }
   }, []);
 
   useEffect(() => {
     if (!dragging) return;
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-    };
-  }, [dragging, onPointerMove, onPointerUp]);
 
-  // Auto-hide the released tooltip after 2.5s
+    const handleMove = (e: PointerEvent) => onPointerMove(e);
+    const handleUp = () => finishDrag();
+    const handleCancel = () => finishDrag();
+
+    window.addEventListener("pointermove", handleMove, { capture: true });
+    window.addEventListener("pointerup", handleUp, { capture: true });
+    window.addEventListener("pointercancel", handleCancel, { capture: true });
+
+    return () => {
+      window.removeEventListener("pointermove", handleMove, { capture: true });
+      window.removeEventListener("pointerup", handleUp, { capture: true });
+      window.removeEventListener("pointercancel", handleCancel, { capture: true });
+    };
+  }, [dragging, finishDrag, onPointerMove]);
+
   useEffect(() => {
     if (!released) return;
-    const t = setTimeout(() => setReleased(false), 2500);
-    return () => clearTimeout(t);
+    const t = window.setTimeout(() => setReleased(false), 2500);
+    return () => window.clearTimeout(t);
   }, [released, startIdx]);
 
   return (
     <div
       ref={containerRef}
-      className="absolute -top-[14px] z-10"
+      data-block-row-click="true"
+      className="absolute -top-[14px] z-20 select-none"
       style={{
         left: `${leftPct}%`,
         width: `${widthPct}%`,
         height: 14,
-        transition: dragging ? "none" : "left 220ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        transition: dragging ? "none" : "left 260ms cubic-bezier(0.22, 1, 0.36, 1)",
       }}
-      onClick={(e) => { e.stopPropagation(); }}
-      onPointerDownCapture={(e) => { e.stopPropagation(); }}
+      onPointerDown={onPointerDown}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onClick={(e) => {
+        stopEvent(e);
+      }}
     >
-      {/* Bracket SVG (drag handle) */}
+      <div
+        className="absolute inset-x-0 top-[2px] bottom-0 rounded-sm"
+        style={{
+          background: highlightGlow ? `linear-gradient(180deg, ${scoreColor}1A 0%, transparent 100%)` : "transparent",
+          boxShadow: highlightGlow ? `0 0 0 1px ${scoreColor}30 inset` : "none",
+          transition: "background 180ms ease, box-shadow 180ms ease",
+        }}
+      />
+
       <svg
         viewBox="0 0 100 14"
         preserveAspectRatio="none"
-        className={`absolute inset-0 w-full h-full ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`absolute inset-0 h-full w-full ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
         style={{
           touchAction: "none",
-          filter: dragging
-            ? `drop-shadow(0 0 6px ${scoreColor}) drop-shadow(0 2px 4px rgba(0,0,0,0.25))`
+          filter: highlightGlow
+            ? `drop-shadow(0 0 10px ${scoreColor}55) drop-shadow(0 4px 10px rgba(0,0,0,0.16))`
             : "none",
-          transition: "filter 200ms ease",
+          transform: dragging ? "translateY(-1px) scale(1.03)" : hovered ? "translateY(-1px)" : "none",
+          transition: dragging ? "filter 120ms ease" : "filter 180ms ease, transform 180ms ease",
         }}
-        onPointerDown={onPointerDown}
       >
         <path
           d="M 1 13 L 1 3 L 50 3 L 50 1 L 50 3 L 99 3 L 99 13"
-          stroke={dragging ? scoreColor : "#C8860D"}
-          strokeWidth={dragging ? 3 : 2.5}
+          stroke={highlightGlow ? scoreColor : "#C8860D"}
+          strokeWidth={dragging ? 3.1 : 2.5}
           fill="none"
           strokeLinecap="butt"
           strokeLinejoin="miter"
-          strokeDasharray={dragging ? "5 2" : "3 2"}
+          strokeDasharray={dragging ? "6 2" : "3 2"}
           vectorEffect="non-scaling-stroke"
-          style={{ transition: "stroke 180ms ease, stroke-width 180ms ease" }}
+          style={{ transition: "stroke 180ms ease, stroke-width 180ms ease, stroke-dasharray 180ms ease" }}
         />
       </svg>
 
-      {/* Score pill (live while dragging) */}
       <div
         className="absolute -top-[11px] z-20 pointer-events-none"
-        style={{ left: "50%", transform: `translateX(-50%) scale(${dragging ? 1.15 : 1})`, transition: "transform 180ms ease" }}
+        style={{
+          left: "50%",
+          transform: `translateX(-50%) scale(${dragging ? 1.14 : hovered ? 1.06 : 1})`,
+          transition: "transform 180ms ease",
+        }}
       >
         <span
           className="text-[10px] font-bold px-2 py-[2px] rounded-full text-white shadow-md whitespace-nowrap"
           style={{
             backgroundColor: scoreColor,
             border: "2px solid white",
-            transition: "background-color 200ms ease",
+            boxShadow: highlightGlow ? `0 6px 16px ${scoreColor}33` : undefined,
+            transition: "background-color 180ms ease, box-shadow 180ms ease",
           }}
         >
           {avgScore}
         </span>
       </div>
 
-      {/* Released tooltip — shows the 3 months and their scores */}
       {released && !dragging && (
         <div
           className="absolute z-30 pointer-events-none animate-in fade-in slide-in-from-top-1"
-          style={{
-            top: -82,
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
+          style={{ top: -82, left: "50%", transform: "translateX(-50%)" }}
         >
-          <div className="bg-card border border-border rounded-lg shadow-xl px-3 py-2 text-[10px] whitespace-nowrap">
+          <div className="relative bg-card border border-border rounded-lg shadow-xl px-3 py-2 text-[10px] whitespace-nowrap">
             <div className="font-semibold text-foreground mb-1 text-center">
               Média 3 meses: <span style={{ color: scoreColor }}>{avgScore}</span>
             </div>
@@ -232,10 +279,7 @@ function DraggableBracket({ card }: { card: BracketCard }) {
                 </div>
               ))}
             </div>
-            {/* Caret */}
-            <div
-              className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45 bg-card border-r border-b border-border"
-            />
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45 bg-card border-r border-b border-border" />
           </div>
         </div>
       )}
@@ -257,75 +301,88 @@ export default function AnalyticsResumoExecutivo() {
   const [selectedRegional, setSelectedRegional] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const { config: absConfig } = useAbsenteismoScoreConfig();
+  const { config: nextiConfig } = useNextiScoreConfig();
 
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
+  const handleFeedbackSubmit = () => {
+    setFeedbackSubmitted(true);
+    setFeedbackComment("");
+    setRating(null);
+  };
 
-  // Score Nexti config (precisa estar disponível antes da sidebar)
-  const { config: nextiConfig } = useNextiScoreConfig();
+  const sidebarItems = useMemo(() => getSidebarItems(groupBy), [groupBy]);
+  const sidebarSelected = sidebarItems.find(item => item.nome === selectedRegional) ?? null;
 
-  // Sidebar items: combina Ponto + Absenteísmo via Score Nexti por entidade
-  const sidebarItemsRaw = useMemo(
-    () => getSidebarItems(groupBy, scoreConfig, sources),
-    [groupBy, scoreConfig, sources]
+  const chartGroupBy: AbsGroupBy = groupBy === "unidade" ? "unidade" : groupBy === "empresa" ? "empresa" : "area";
+
+  const pontoScore = useMemo(
+    () => computeCompositeScore(selectedRegional, groupBy as any, scoreConfig, undefined, sources),
+    [selectedRegional, groupBy, scoreConfig, sources]
   );
-  const sidebarItems = useMemo(
-    () =>
-      sidebarItemsRaw
-        .map((item) => {
-          const absScore = computeAbsenteismoCurrentScore(item.nome, groupBy as AbsGroupBy, absConfig);
-          const nextiScore = computeNextiScore(item.score, absScore, nextiConfig);
-          return { nome: item.nome, score: nextiScore };
-        })
-        .sort((a, b) => b.score - a.score),
-    [sidebarItemsRaw, groupBy, absConfig, nextiConfig]
+  const absenteismoScore = useMemo(
+    () => computeAbsenteismoCurrentScore(selectedRegional, chartGroupBy, absConfig),
+    [selectedRegional, chartGroupBy, absConfig]
   );
+  const activeScore = useMemo(
+    () => computeNextiScore(pontoScore, absenteismoScore, nextiConfig),
+    [pontoScore, absenteismoScore, nextiConfig]
+  );
+  const scoreClassif = getNextiScoreClassification(activeScore, nextiConfig);
 
-  // KPI summary from real JSON
+  const groupedEvolution = useMemo(() => {
+    const qual = aggregateQualidadeEvolucao(selectedRegional, groupBy, sources);
+    const abs = computeAbsenteismoEvolution(selectedRegional, chartGroupBy, absConfig);
+
+    return qual.map((q) => {
+      const match = abs.find((a) => formatMesLabel(a.month) === q.mes);
+      return {
+        competencia: q.mes,
+        ponto: Math.round(q.value),
+        absenteismo: match?.score ?? 0,
+      };
+    });
+  }, [selectedRegional, groupBy, sources, chartGroupBy, absConfig]);
+
+  const sparklineCards = useMemo(() => {
+    const pontoSeries = groupedEvolution.map((m) => ({ competencia: m.competencia, valor: m.ponto }));
+    const absSeries = groupedEvolution.map((m) => ({ competencia: m.competencia, valor: m.absenteismo }));
+    const makeDelta = (series: { valor: number }[]) => {
+      const prev = series[series.length - 2]?.valor ?? series[series.length - 1]?.valor ?? 0;
+      const curr = series[series.length - 1]?.valor ?? 0;
+      const d = curr - prev;
+      const sign = d > 0 ? "+" : "";
+      return {
+        variacao: `${sign}${d}`,
+        corVariacao: d > 0 ? "text-green-600" : d < 0 ? "text-red-600" : "text-gray-600",
+      };
+    };
+    const p = makeDelta(pontoSeries);
+    const a = makeDelta(absSeries);
+    return [
+      {
+        label: "Ponto",
+        evolucao: pontoSeries,
+        score: pontoSeries[pontoSeries.length - 1]?.valor ?? 0,
+        variacao: p.variacao,
+        corVariacao: p.corVariacao,
+        perPointColors: true,
+      },
+      {
+        label: "Absenteísmo",
+        evolucao: absSeries,
+        score: absSeries[absSeries.length - 1]?.valor ?? 0,
+        variacao: a.variacao,
+        corVariacao: a.corVariacao,
+        perPointColors: true,
+      },
+    ];
+  }, [groupedEvolution]);
+
   const kpiSummary = useMemo(
     () => getQualidadeKpiSummary(selectedRegional, groupBy, scoreConfig, null, sources),
     [selectedRegional, groupBy, scoreConfig, sources]
   );
-
-  // KPIs from periodo anterior JSON
-  const kpisPeriodo = customerData.kpisPeriodoAnterior;
-  const periodoLabel = kpisPeriodo?.periodo_atual
-    ? `${formatMonthShort(kpisPeriodo.periodo_atual.inicio)} – ${formatMonthShort(kpisPeriodo.periodo_atual.fim)}`
-    : "abr/2025 – mar/2026";
-
-  // Compute months from real data
-  const allMonths = useMemo(() => {
-    const months = new Set<string>();
-    for (const r of sources.hc.empresa) months.add(r.reference_month);
-    for (const r of sources.hc.unidade) months.add(r.reference_month);
-    for (const r of sources.hc.area) months.add(r.reference_month);
-    return [...months].sort();
-  }, [sources]);
-
-  // Score sparkline per month from real data
-  const qualidadeCard = useMemo(() => {
-    const evolucao = allMonths.map(month => {
-      const score = computeCompositeScore(selectedRegional, groupBy as any, scoreConfig, [month], sources);
-      return { competencia: formatMesLabel(month), valor: score };
-    });
-    const lastScore = kpiSummary.score;
-    const firstScore = evolucao[0]?.valor ?? 0;
-    const diff = lastScore - firstScore;
-    const variacao = diff >= 0 ? `+${diff} pts` : `${diff} pts`;
-    const corVariacao = diff >= 0 ? "text-green-600" : "text-red-600";
-    return {
-      label: "Ponto",
-      valor: `${lastScore}`,
-      variacao,
-      corVariacao,
-      score: lastScore,
-      evolucao,
-      perPointColors: true,
-    };
-  }, [selectedRegional, groupBy, scoreConfig, sources, allMonths, kpiSummary.score]);
-
-  // Score Nexti — composição ponderada de Ponto + Absenteísmo (nextiConfig já carregado acima)
-  const pontoScore = kpiSummary.score;
 
   // Previous period score for trend
   const prevScore = useMemo(
@@ -350,8 +407,16 @@ export default function AnalyticsResumoExecutivo() {
       const current = computeCompositeScore(item.nome, groupBy as any, scoreConfig, undefined, sources);
       const prev = computePrevTriScore(item.nome, groupBy as any, scoreConfig, sources);
       const delta = current - prev;
-      if (delta > bestDelta) { bestDelta = delta; bestName = item.nome; bestDetail = `${delta >= 0 ? '+' : ''}${delta} pts (${prev} → ${current})`; }
-      if (delta < worstDelta) { worstDelta = delta; worstName = item.nome; worstDetail = `${delta >= 0 ? '+' : ''}${delta} pts (${prev} → ${current})`; }
+      if (delta > bestDelta) {
+        bestDelta = delta;
+        bestName = item.nome;
+        bestDetail = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)} pts`;
+      }
+      if (delta < worstDelta) {
+        worstDelta = delta;
+        worstName = item.nome;
+        worstDetail = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)} pts`;
+      }
     }
 
     return {
@@ -360,75 +425,29 @@ export default function AnalyticsResumoExecutivo() {
     };
   }, [sidebarItems, groupBy, scoreConfig, sources]);
 
-  const handleFeedbackSubmit = () => {
-    console.log({ page: "resumo_executivo", rating, comment: feedbackComment, timestamp: Date.now() });
-    setFeedbackSubmitted(true);
-  };
-
-  // ── Absenteismo card: usa exatamente a mesma lógica da aba Absenteísmo ──
-  // Reage ao selectedRegional + groupBy (filtra por entidade quando aplicável)
-  const absGroupBy: AbsGroupBy = groupBy as AbsGroupBy;
-  const absenteismoCard = useMemo(() => {
-    const evolucaoRaw = computeAbsenteismoEvolution(selectedRegional, absGroupBy, absConfig);
-    const evolucao = evolucaoRaw.map((e) => ({
-      competencia: formatMesLabel(e.month),
-      valor: e.score,
-    }));
-    const lastScore = evolucao[evolucao.length - 1]?.valor ?? 0;
-    const firstScore = evolucao[0]?.valor ?? 0;
-    const diff = lastScore - firstScore;
-    const variacao = diff >= 0 ? `+${diff} pts` : `${diff} pts`;
-    const corVariacao = diff >= 0 ? "text-green-600" : "text-red-600";
-    return {
-      label: "Absenteísmo",
-      valor: `${lastScore}`,
-      variacao,
-      corVariacao,
-      score: lastScore,
-      evolucao,
-      perPointColors: true,
-    };
-  }, [absConfig, selectedRegional, absGroupBy]);
-
-  const sparklineCards = [qualidadeCard, absenteismoCard];
-
-  // Score Nexti final (gauge): combinação ponderada de Ponto + Absenteísmo
-  const absenteismoScore = absenteismoCard.score;
-  const activeScore = computeNextiScore(pontoScore, absenteismoScore, nextiConfig);
-  const scoreClassif = getNextiScoreClassification(activeScore, nextiConfig);
   const scoreDiff = activeScore - prevScore;
+  const scoreDiffLabel = `${scoreDiff > 0 ? "+" : ""}${scoreDiff.toFixed(1)} pts vs trim. anterior`;
 
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col overflow-x-hidden">
-      {/* Filter bar */}
-      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold text-foreground hidden sm:inline">Filtros Aplicados:</span>
-          </div>
-          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap">Período: {periodoLabel}</span>
-          {selectedRegional && (
-            <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium flex items-center gap-1 max-w-[160px] sm:max-w-none truncate">
-              <span className="truncate">{groupBy === "empresa" ? "Empresa" : groupBy === "unidade" ? "Un. Negócio" : "Área"}: {selectedRegional}</span>
-              <button onClick={() => setSelectedRegional(null)} className="ml-1 hover:text-red-600 shrink-0">✕</button>
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <button onClick={() => setSelectedRegional(null)} className="hidden sm:flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
-            <Eraser className="w-4 h-4" /> Limpar Filtros
-          </button>
-          <Separator orientation="vertical" className="h-6 hidden sm:block" />
-          <button
-            onClick={() => window.dispatchEvent(new Event("open-tipo-operacao"))}
-            className="sm:hidden text-muted-foreground hover:text-foreground p-1.5 rounded-md transition-colors"
-            aria-label="Abrir tipo de operação"
-          >
-            <Filter className="w-4 h-4" />
-          </button>
-          <InsightsCenter />
-          <AnalyticsChat activeTab="resumo" />
-        </div>
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Top actions */}
+      <div className="px-3 sm:px-6 py-3 border-b border-border bg-card/60 backdrop-blur-sm flex items-center gap-3">
+        <button
+          onClick={() => setFilterOpen(true)}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Filter className="w-4 h-4" />
+          Filtros
+        </button>
+        <button
+          onClick={() => { setSelectedRegional(null); setGroupBy("unidade"); }}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Eraser className="w-4 h-4" />
+          Limpar Filtros
+        </button>
+        <Separator orientation="vertical" className="h-6" />
+        <div className="text-sm text-muted-foreground">{sidebarSelected ? `Filtro ativo: ${sidebarSelected.nome}` : "Sem filtros aplicados"}</div>
       </div>
 
       {/* Content: main + sidebar */}
@@ -455,21 +474,23 @@ export default function AnalyticsResumoExecutivo() {
               tooltip="Operação com menor score composto (média dos últimos 3 meses) no período selecionado"
               value={kpiSummary.maiorRisco.nome}
               valueColor="text-red-600"
-              subtitle={`Score ${kpiSummary.maiorRisco.score} · ${kpiSummary.maiorRisco.indicador}`}
+              subtitle={`Score ${kpiSummary.maiorRisco.score}`}
             />
             <KPIBoard
-              title="Principal Melhora"
-              tooltip="Operação que mais evoluiu comparando o score dos últimos 3 meses com o trimestre anterior"
-              value={principalMelhora.nome}
-              valueColor="text-green-600"
-              subtitle={principalMelhora.detalhe}
+              title="Economia Gerada"
+              tooltip="Estimativa consolidada de ganho operacional com base na melhoria dos indicadores do período"
+              value={kpiSummary.diff}
+              valueColor="text-emerald-600"
+              subtitle="últimos 3 meses"
+              icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
             />
             <KPIBoard
-              title="Principal Piora"
-              tooltip="Operação com maior queda de score comparando os últimos 3 meses com o trimestre anterior"
-              value={principalPiora.nome}
-              valueColor="text-red-600"
-              subtitle={principalPiora.detalhe}
+              title="Confiabilidade"
+              tooltip="Nível de confiança da leitura com base na consistência e estabilidade da série histórica"
+              value={scoreDiffLabel}
+              valueColor={scoreDiff >= 0 ? "text-green-600" : "text-red-600"}
+              subtitle={scoreClassif.label}
+              icon={<CheckCircle className="w-4 h-4 text-primary" />}
             />
           </div>
 
@@ -500,7 +521,15 @@ export default function AnalyticsResumoExecutivo() {
                     key={card.label}
                     data-onboarding={card.label === "Ponto" ? "row-qualidade" : undefined}
                     className="flex items-center gap-2 sm:gap-4 px-3 sm:px-4 py-5 hover:bg-muted/30 transition-colors cursor-pointer group"
-                    onClick={() => targetRoute && navigate(targetRoute)}
+                    onClick={(event) => {
+                      const target = event.target as HTMLElement | null;
+                      if (target?.closest('[data-block-row-click="true"]')) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return;
+                      }
+                      if (targetRoute) navigate(targetRoute);
+                    }}
                     title={`Ver detalhes de ${card.label}`}
                   >
                     <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: getLineColor(card.score) }} />
