@@ -372,9 +372,9 @@ export default function AnalyticsResumoExecutivo() {
                         const scoreColor = getLineColor(card.score);
                         return (
                           <>
-                            {/* Bracket/chave SVG sobre os últimos 3 meses — centralizado na linha */}
+                            {/* Bracket/chave SVG sobre os últimos 3 meses */}
                             <div
-                              className="absolute top-1/2 -translate-y-1/2 pointer-events-none z-10"
+                              className="absolute -top-[14px] pointer-events-none z-10"
                               style={{ right: 0, width: `${widthPct}%`, height: 14 }}
                             >
                               <svg viewBox="0 0 100 14" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
@@ -387,10 +387,10 @@ export default function AnalyticsResumoExecutivo() {
                                 />
                               </svg>
                             </div>
-                            {/* Pílula do score com borda branca — centralizada na linha */}
+                            {/* Pílula do score com borda branca */}
                             <div
-                              className="absolute top-1/2 z-20 pointer-events-none"
-                              style={{ right: `${widthPct / 2}%`, transform: 'translate(50%, -50%)' }}
+                              className="absolute -top-[17px] z-20 pointer-events-none"
+                              style={{ right: `${widthPct / 2}%`, transform: 'translateX(50%)' }}
                             >
                               <span
                                 className="text-[10px] font-bold px-2 py-[2px] rounded-full text-white shadow-md whitespace-nowrap"
