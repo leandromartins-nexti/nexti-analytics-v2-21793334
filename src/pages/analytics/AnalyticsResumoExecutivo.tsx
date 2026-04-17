@@ -479,7 +479,7 @@ export default function AnalyticsResumoExecutivo() {
             <KPIBoard
               title="Economia Gerada"
               tooltip="Estimativa consolidada de ganho operacional com base na melhoria dos indicadores do período"
-              value={kpiSummary.economiaGerada}
+              value={kpiSummary.diff}
               valueColor="text-emerald-600"
               subtitle="últimos 3 meses"
               icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
