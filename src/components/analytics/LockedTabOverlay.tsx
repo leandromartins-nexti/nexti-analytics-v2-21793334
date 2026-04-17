@@ -13,9 +13,9 @@ interface LockedTabOverlayProps {
 
 export default function LockedTabOverlay({ nome, descricao, backgroundContent }: LockedTabOverlayProps) {
   return (
-    <div className="relative min-h-[500px] sm:min-h-[600px] overflow-hidden">
+    <div className="relative min-h-[500px] sm:min-h-[600px] w-full max-w-full overflow-hidden">
       {/* Blurred background content */}
-      <div className="filter blur-[3px] opacity-60 pointer-events-none select-none overflow-hidden">
+      <div className="filter blur-[3px] opacity-60 pointer-events-none select-none overflow-hidden w-full max-w-full">
         {backgroundContent ? (
           backgroundContent
         ) : (
@@ -44,8 +44,8 @@ export default function LockedTabOverlay({ nome, descricao, backgroundContent }:
       </div>
 
       {/* Overlay card */}
-      <div className="absolute inset-0 flex items-start sm:items-center justify-center z-10 p-3 pt-12 sm:pt-4">
-        <div className="bg-card border border-border rounded-xl shadow-2xl p-4 sm:p-10 text-center w-full max-w-[90%] sm:max-w-md mx-auto">
+      <div className="absolute inset-0 flex items-start sm:items-center justify-center z-10 px-4 pt-12 pb-4 sm:p-4">
+        <div className="bg-card border border-border rounded-xl shadow-2xl p-4 sm:p-10 text-center w-full max-w-[calc(100%-1rem)] sm:max-w-md mx-auto">
           <Lock className="mx-auto mb-2 sm:mb-4 text-muted-foreground w-7 h-7 sm:w-10 sm:h-10" />
           <h3 className="text-sm sm:text-xl font-semibold mb-1 sm:mb-2">Em breve: {nome}</h3>
           <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-6 leading-snug">{descricao}</p>
