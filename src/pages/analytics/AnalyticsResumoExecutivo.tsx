@@ -248,11 +248,11 @@ function DraggableBracket({ card }: { card: BracketCard }) {
       </svg>
 
       <div
-        className="absolute -top-[11px] z-20 pointer-events-none"
+        className="absolute -top-[11px] z-30 pointer-events-none"
         style={{
-          left: "50%",
+          left: `calc(50% + ${pillShiftPct}%)`,
           transform: `translateX(-50%) scale(${dragging ? 1.14 : hovered ? 1.06 : 1})`,
-          transition: "transform 180ms ease",
+          transition: "transform 180ms ease, left 260ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         <span
