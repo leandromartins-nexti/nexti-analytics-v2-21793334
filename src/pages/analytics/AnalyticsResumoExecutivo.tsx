@@ -222,7 +222,7 @@ function DraggableBracket({
     return Math.round(windowMonths.reduce((sum, point) => sum + point.valor, 0) / windowMonths.length);
   })();
   const scoreColor = card.forceColor ?? getLineColor(avgScore);
-  const highlightGlow = dragging || hovered;
+  const highlightGlow = dragging;
 
   const stopEvent = useCallback((event: Event | React.SyntheticEvent) => {
     event.preventDefault();
