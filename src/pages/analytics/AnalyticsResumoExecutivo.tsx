@@ -38,6 +38,8 @@ import {
   ResponsiveContainer, AreaChart, Area, Tooltip as RechartsTooltip,
 } from "recharts";
 import IndicatorTableVariants from "@/components/analytics/IndicatorTableVariants";
+import turnoverDecomposicao from "@/data/turnover/decomposicao-score.json";
+import { coberturas as coberturasMock } from "@/lib/analytics-mock-data";
 
 // ── Custom sparkline tooltip ────────────────────────────────
 function SparklineTooltip({ active, payload, cardData }: any) {
