@@ -990,7 +990,7 @@ export default function AnalyticsResumoExecutivo() {
                     <td colSpan={2} className={`p-0 ${borderTopCls}`}>
                       <div className="relative p-[10px] pr-[20px]">
                         <div className="flex items-center">
-                          <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+                          <div className="hidden sm:flex w-10 h-10 rounded-lg items-center justify-center shrink-0">
                             {card.label === "Ponto" ? (
                               <Clock className="w-5 h-5" style={{ color: "#FF5722" }} />
                             ) : card.label === "Absenteísmo" ? (
