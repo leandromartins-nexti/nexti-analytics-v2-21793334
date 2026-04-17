@@ -693,9 +693,15 @@ export default function AnalyticsResumoExecutivo() {
                     </div>
                     <div className="p-3 space-y-3">
                       {(() => {
+                        const turnoverReal = turnoverDecomposicao.score_composto;
+                        const coberturasReal = coberturasMock.scoreEficiencia;
+                        const movimentacoesReal = 65;
                         const componentes = [
-                          { label: "Score de Ponto", valor: pontoScore, peso: nextiConfig.peso_ponto, bench: 75 },
-                          { label: "Score de Absenteísmo", valor: absenteismoScore, peso: nextiConfig.peso_absenteismo, bench: 70 },
+                          { label: "Score de Ponto", valor: pontoScore, peso: nextiConfig.peso_ponto, bench: 75, informativo: false },
+                          { label: "Score de Absenteísmo", valor: absenteismoScore, peso: nextiConfig.peso_absenteismo, bench: 70, informativo: false },
+                          { label: "Score de Turnover", valor: turnoverReal, peso: 0, bench: 70, informativo: true },
+                          { label: "Score de Movimentações", valor: movimentacoesReal, peso: 0, bench: 70, informativo: true },
+                          { label: "Score de Coberturas", valor: coberturasReal, peso: 0, bench: 75, informativo: true },
                         ];
                         return componentes.map((c) => {
                           const contrib = +(c.valor * c.peso / 100).toFixed(1);
