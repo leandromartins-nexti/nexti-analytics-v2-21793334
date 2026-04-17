@@ -87,6 +87,9 @@ interface BracketCard {
   evolucao: { competencia: string; valor: number }[];
   score: number;
   forceColor?: string;
+  componentsPonto?: { competencia: string; valor: number }[];
+  componentsAbs?: { competencia: string; valor: number }[];
+  recomputeNexti?: (avgPonto: number, avgAbs: number) => number;
 }
 function DraggableBracket({ card }: { card: BracketCard }) {
   const total = card.evolucao.length;
@@ -104,15 +107,22 @@ function DraggableBracket({ card }: { card: BracketCard }) {
     moved: boolean;
   } | null>(null);
 
-  // Recharts distribui os pontos uniformemente entre left=0 e right=100% da área plot.
-  // Para alinhar exatamente sob os 3 pontos (do índice startIdx ao startIdx+2):
   const denom = Math.max(1, total - 1);
   const startPct = (startIdx / denom) * 100;
   const endPct = ((startIdx + windowSize - 1) / denom) * 100;
   const leftPct = startPct;
   const widthPct = endPct - startPct;
   const windowMonths = card.evolucao.slice(startIdx, startIdx + windowSize);
-  const avgScore = Math.round(windowMonths.reduce((sum, point) => sum + point.valor, 0) / windowMonths.length);
+  const avgScore = (() => {
+    if (card.recomputeNexti && card.componentsPonto && card.componentsAbs) {
+      const pSlice = card.componentsPonto.slice(startIdx, startIdx + windowSize);
+      const aSlice = card.componentsAbs.slice(startIdx, startIdx + windowSize);
+      const avgP = pSlice.reduce((s, x) => s + x.valor, 0) / Math.max(1, pSlice.length);
+      const avgA = aSlice.reduce((s, x) => s + x.valor, 0) / Math.max(1, aSlice.length);
+      return Math.round(card.recomputeNexti(avgP, avgA));
+    }
+    return Math.round(windowMonths.reduce((sum, point) => sum + point.valor, 0) / windowMonths.length);
+  })();
   const scoreColor = card.forceColor ?? getLineColor(avgScore);
   const highlightGlow = dragging || hovered;
 
