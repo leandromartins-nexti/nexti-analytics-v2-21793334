@@ -357,6 +357,10 @@ export default function AnalyticsResumoExecutivo() {
   const sparklineCards = useMemo(() => {
     const pontoSeries = groupedEvolution.map((m) => ({ competencia: m.competencia, valor: m.ponto }));
     const absSeries = groupedEvolution.map((m) => ({ competencia: m.competencia, valor: m.absenteismo }));
+    const nextiSeries = groupedEvolution.map((m) => ({
+      competencia: m.competencia,
+      valor: Math.round(computeNextiScore(m.ponto, m.absenteismo, nextiConfig)),
+    }));
     const makeDelta = (series: { valor: number }[]) => {
       const prev = series[series.length - 2]?.valor ?? series[series.length - 1]?.valor ?? 0;
       const curr = series[series.length - 1]?.valor ?? 0;
@@ -367,12 +371,23 @@ export default function AnalyticsResumoExecutivo() {
         corVariacao: d > 0 ? "text-green-600" : d < 0 ? "text-red-600" : "text-gray-600",
       };
     };
+    const n = makeDelta(nextiSeries);
     const p = makeDelta(pontoSeries);
     const a = makeDelta(absSeries);
-    // Score badge = último mês da série (mesma escala plotada).
+    const nextiLast = nextiSeries[nextiSeries.length - 1]?.valor ?? 0;
     const pontoLast = pontoSeries[pontoSeries.length - 1]?.valor ?? 0;
     const absLast = absSeries[absSeries.length - 1]?.valor ?? 0;
     return [
+      {
+        label: "Score Nexti",
+        evolucao: nextiSeries,
+        score: nextiLast,
+        variacao: n.variacao,
+        corVariacao: n.corVariacao,
+        perPointColors: false,
+        forceColor: "#FF5722",
+        highlight: true,
+      },
       {
         label: "Ponto",
         evolucao: pontoSeries,
@@ -390,7 +405,7 @@ export default function AnalyticsResumoExecutivo() {
         perPointColors: true,
       },
     ];
-  }, [groupedEvolution]);
+  }, [groupedEvolution, nextiConfig]);
 
   const kpiSummary = useMemo(
     () => getQualidadeKpiSummary(selectedRegional, groupBy, scoreConfig, null, sources),
