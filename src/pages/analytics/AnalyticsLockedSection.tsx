@@ -4,7 +4,16 @@ import { ChevronRight, Filter, Eraser, Lock } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { resumo, lockedTabs } from "@/lib/analytics-mock-data";
 import LockedTabOverlay from "@/components/analytics/LockedTabOverlay";
-import LockedTabMockBackground from "@/components/analytics/LockedTabMockBackground";
+import { QualidadeTab } from "./AnalyticsDisciplinaOperacional";
+
+const TAB_VARIANTS: Record<string, { hue: number; sat: number }> = {
+  sancoes: { hue: -8, sat: 1.05 },
+  "alertas-preventivos": { hue: 6, sat: 1.0 },
+  regulatorio: { hue: -14, sat: 0.95 },
+  pesquisas: { hue: 12, sat: 1.08 },
+  reconhecimento: { hue: -4, sat: 1.0 },
+  comunicacao: { hue: 18, sat: 0.92 },
+};
 
 interface TabDef {
   id: string;
@@ -69,8 +78,14 @@ export default function AnalyticsLockedSection({ sectionName, sectionId, tabs }:
           nome={currentLocked?.nome || activeTab}
           descricao={currentLocked?.descricao || "Funcionalidade em desenvolvimento"}
           backgroundContent={
-            <div key={activeTab} className="w-full max-w-full overflow-hidden">
-              <LockedTabMockBackground tabId={activeTab} />
+            <div
+              key={activeTab}
+              className="w-full max-w-full overflow-x-hidden"
+              style={{
+                filter: `hue-rotate(${TAB_VARIANTS[activeTab]?.hue ?? 0}deg) saturate(${TAB_VARIANTS[activeTab]?.sat ?? 1})`,
+              }}
+            >
+              <QualidadeTab />
             </div>
           }
         />
