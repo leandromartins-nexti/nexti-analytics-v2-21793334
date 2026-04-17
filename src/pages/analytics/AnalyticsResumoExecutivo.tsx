@@ -335,19 +335,24 @@ export default function AnalyticsResumoExecutivo() {
   );
   const scoreClassif = getNextiScoreClassification(activeScore, nextiConfig);
 
+  // Monthly composite score series for Ponto and Absenteísmo (mesma escala do badge "Score" da coluna).
   const groupedEvolution = useMemo(() => {
-    const qual = aggregateQualidadeEvolucao(selectedRegional, groupBy, sources);
+    const months = [
+      "2025-04-01","2025-05-01","2025-06-01","2025-07-01","2025-08-01","2025-09-01",
+      "2025-10-01","2025-11-01","2025-12-01","2026-01-01","2026-02-01","2026-03-01",
+    ];
     const abs = computeAbsenteismoEvolution(selectedRegional, chartGroupBy, absConfig);
 
-    return qual.map((q) => {
-      const match = abs.find((a) => formatMesLabel(a.month) === q.mes);
+    return months.map((m) => {
+      const pontoMonth = computeCompositeScore(selectedRegional, groupBy as any, scoreConfig, [m], sources);
+      const absMatch = abs.find((a) => a.month === m);
       return {
-        competencia: q.mes,
-        ponto: Math.round(q.value),
-        absenteismo: match?.score ?? 0,
+        competencia: formatMesLabel(m),
+        ponto: Math.round(pontoMonth),
+        absenteismo: absMatch?.score ?? 0,
       };
     });
-  }, [selectedRegional, groupBy, sources, chartGroupBy, absConfig]);
+  }, [selectedRegional, groupBy, sources, chartGroupBy, absConfig, scoreConfig]);
 
   const sparklineCards = useMemo(() => {
     const pontoSeries = groupedEvolution.map((m) => ({ competencia: m.competencia, valor: m.ponto }));
@@ -364,11 +369,14 @@ export default function AnalyticsResumoExecutivo() {
     };
     const p = makeDelta(pontoSeries);
     const a = makeDelta(absSeries);
+    // Score badge = último mês da série (mesma escala plotada).
+    const pontoLast = pontoSeries[pontoSeries.length - 1]?.valor ?? 0;
+    const absLast = absSeries[absSeries.length - 1]?.valor ?? 0;
     return [
       {
         label: "Ponto",
         evolucao: pontoSeries,
-        score: pontoScore,
+        score: pontoLast,
         variacao: p.variacao,
         corVariacao: p.corVariacao,
         perPointColors: true,
@@ -376,13 +384,13 @@ export default function AnalyticsResumoExecutivo() {
       {
         label: "Absenteísmo",
         evolucao: absSeries,
-        score: absenteismoScore,
+        score: absLast,
         variacao: a.variacao,
         corVariacao: a.corVariacao,
         perPointColors: true,
       },
     ];
-  }, [groupedEvolution, pontoScore, absenteismoScore]);
+  }, [groupedEvolution]);
 
   const kpiSummary = useMemo(
     () => getQualidadeKpiSummary(selectedRegional, groupBy, scoreConfig, null, sources),
