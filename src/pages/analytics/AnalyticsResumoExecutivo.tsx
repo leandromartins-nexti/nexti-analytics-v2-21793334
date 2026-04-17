@@ -383,8 +383,9 @@ export default function AnalyticsResumoExecutivo() {
                                   stroke="#C8860D"
                                   strokeWidth="1.5"
                                   fill="none"
-                                  strokeLinecap="square"
+                                  strokeLinecap="butt"
                                   strokeLinejoin="miter"
+                                  strokeDasharray="3 2"
                                   vectorEffect="non-scaling-stroke"
                                 />
                               </svg>
