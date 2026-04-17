@@ -426,6 +426,8 @@ function DraggableBracket({
 // ── Main Page ───────────────────────────────────────────────
 export default function AnalyticsResumoExecutivo() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const bubbleScale = isMobile ? 0.7 : 1;
   const { config: scoreConfig } = useScoreConfig();
   const { data: customerData } = useQualidadePontoData();
   const sources = useMemo(() => buildDataSources(customerData), [customerData]);
