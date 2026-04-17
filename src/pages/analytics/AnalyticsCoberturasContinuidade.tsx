@@ -72,9 +72,9 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
 
   const content = (
     <div className="flex flex-1 min-h-0">
-      <div className="flex-1 min-w-0 pl-6 pr-4 py-4 space-y-3 overflow-y-auto">
+      <div className="flex-1 min-w-0 px-3 sm:pl-6 sm:pr-4 py-4 pb-24 sm:pb-4 space-y-3 overflow-y-auto">
       {/* ═══ Linha 1: Score + 4 KPI Cards (idêntico ao Resumo Executivo) ═══ */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {/* Score Cobertura */}
         <div className="bg-card border border-border/50 rounded-xl p-3 flex flex-col items-center justify-center">
           <div className="flex items-center gap-1 mb-1">
@@ -136,7 +136,7 @@ export default function AnalyticsCoberturasContinuidade({ embedded }: { embedded
       </div>
 
       {/* ═══ Linha 2: Donut + AreaChart lado a lado ═══ */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-card border border-border/50 rounded-xl p-4">
           <div className="flex items-center gap-1.5 mb-2">
             <h4 className="text-sm font-semibold">Distribuição por Tipo de Evento</h4>
