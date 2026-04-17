@@ -31,6 +31,7 @@ import AnalyticsChat from "@/components/analytics/AnalyticsChat";
 import {
   ResponsiveContainer, LineChart, Line, AreaChart, Area, Tooltip as RechartsTooltip,
 } from "recharts";
+import IndicatorVizPlayground from "@/components/analytics/IndicatorVizPlayground";
 
 // ── Custom sparkline tooltip ────────────────────────────────
 function SparklineTooltip({ active, payload, cardData }: any) {
@@ -479,6 +480,8 @@ export default function AnalyticsResumoExecutivo() {
             )}
           </div>
 
+          {/* ═══ Playground de visualizações (validação) ═══ */}
+          {sparklineCards[0] && <IndicatorVizPlayground card={sparklineCards[0]} />}
 
           {/* ═══ CTA Financeiro ═══ */}
           <div className="bg-surface border border-border/50 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
