@@ -850,8 +850,8 @@ export default function AnalyticsResumoExecutivo() {
                     }}
                     title={`Ver detalhes de ${card.label}`}
                   >
-                    <td className="pl-[0.575rem] pr-2 sm:pr-4 py-5 align-middle">
-                      <div className="flex items-center gap-4">
+                    <td className="p-0 align-middle">
+                      <div className="border border-r-0 border-[#FF5722]/20 p-[10px] flex items-center">
                         {card.label === "Ponto" ? (
                           <Clock className="w-4 h-4 shrink-0" style={{ color: "#FF5722" }} />
                         ) : card.label === "Absenteísmo" ? (
@@ -862,14 +862,15 @@ export default function AnalyticsResumoExecutivo() {
                             style={{ backgroundColor: card.forceColor ?? getLineColor(card.score) }}
                           />
                         )}
-                        <span className="truncate text-sm font-medium text-foreground">
+                        <span className="truncate text-sm font-medium text-foreground ml-4">
                           {card.label}
                         </span>
                       </div>
                     </td>
-                    <td className="py-5 align-middle">
-                      {/* Mobile: heatmap horizontal */}
-                      <div className="flex sm:hidden h-[27px] flex-col justify-between overflow-hidden mt-[6px]">
+                    <td className="p-0 align-middle">
+                      <div className="border border-l-0 border-[#FF5722]/20 p-[10px]">
+                        {/* Mobile: heatmap horizontal */}
+                        <div className="flex sm:hidden h-[27px] flex-col justify-between overflow-hidden">
                         <div className="flex items-center gap-[2px] w-full h-[19px]">
                           {card.evolucao.map((pt, i) => {
                             const c = card.forceColor ?? (card.perPointColors ? getLineColor(pt.valor) : getLineColor(card.score));
@@ -927,6 +928,7 @@ export default function AnalyticsResumoExecutivo() {
                             />
                           </AreaChart>
                         </ResponsiveContainer>
+                        </div>
                       </div>
                     </td>
                   </tr>
