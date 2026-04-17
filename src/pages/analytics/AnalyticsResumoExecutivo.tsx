@@ -113,6 +113,12 @@ function DraggableBracket({ card }: { card: BracketCard }) {
   const avgScore = Math.round(windowMonths.reduce((sum, point) => sum + point.valor, 0) / windowMonths.length);
   const scoreColor = getLineColor(avgScore);
   const highlightGlow = dragging || hovered;
+  // Mantém a pill (badge de score) sempre visível dentro do container do sparkline
+  const centerInParentPct = leftPct + widthPct / 2;
+  const pillHalfMarginPct = 12;
+  const clampedCenterPct = Math.min(100 - pillHalfMarginPct, Math.max(pillHalfMarginPct, centerInParentPct));
+  // Deslocamento em % da largura do bracket para compensar o translateX(-50%)
+  const pillShiftPct = ((clampedCenterPct - centerInParentPct) / Math.max(widthPct, 0.0001)) * 100;
 
   const stopEvent = useCallback((event: Event | React.SyntheticEvent) => {
     event.preventDefault();
