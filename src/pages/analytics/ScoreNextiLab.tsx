@@ -1,4 +1,4 @@
-import { ScoreGauge } from "@/components/analytics/ScoreGauge";
+import ScoreGauge from "@/components/analytics/ScoreGauge";
 import { TrendingUp, Sparkles, Award, Zap, Activity } from "lucide-react";
 
 const SCORE = 78;
