@@ -31,6 +31,7 @@ import AnalyticsChat from "@/components/analytics/AnalyticsChat";
 import {
   ResponsiveContainer, LineChart, Line, AreaChart, Area, Tooltip as RechartsTooltip,
 } from "recharts";
+import IndicatorVizPlayground from "@/components/analytics/IndicatorVizPlayground";
 
 // ── Custom sparkline tooltip ────────────────────────────────
 function SparklineTooltip({ active, payload, cardData }: any) {
