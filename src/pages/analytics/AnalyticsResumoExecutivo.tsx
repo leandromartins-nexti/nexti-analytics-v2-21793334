@@ -364,7 +364,7 @@ export default function AnalyticsResumoExecutivo() {
                                 {card.evolucao.map((pt, i) => {
                                   const pct = card.evolucao.length > 1 ? (i / (card.evolucao.length - 1)) * 100 : 0;
                                   const c = card.perPointColors ? getLineColor(pt.valor) : getLineColor(card.score);
-                                  return <stop key={i} offset={`${pct}%`} stopColor={c} stopOpacity={0.55} />;
+                                  return <stop key={i} offset={`${pct}%`} stopColor={c} stopOpacity={0.28} />;
                                 })}
                               </linearGradient>
                             </defs>
