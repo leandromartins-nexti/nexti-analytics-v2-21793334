@@ -629,7 +629,7 @@ export default function AnalyticsResumoExecutivo() {
                             <div key={c.label} className="space-y-1">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs font-medium">{c.label}</span>
-                                <span className="text-[11px] font-semibold">Score {c.valor}</span>
+                                <span className="text-[11px] font-bold px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: cor }}>{c.valor}</span>
                               </div>
                               <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
                                 <div className="h-full rounded-full transition-all" style={{ width: `${barWidth}%`, backgroundColor: cor }} />
