@@ -909,6 +909,12 @@ export default function AnalyticsResumoExecutivo() {
                               <Clock className="w-5 h-5" style={{ color: "#FF5722" }} />
                             ) : card.label === "Absenteísmo" ? (
                               <UserX className="w-5 h-5" style={{ color: "#FF5722" }} />
+                            ) : card.label === "Turnover" ? (
+                              <TrendingDown className="w-5 h-5" style={{ color: "#FF5722" }} />
+                            ) : card.label === "Movimentações" ? (
+                              <ArrowLeftRight className="w-5 h-5" style={{ color: "#FF5722" }} />
+                            ) : card.label === "Coberturas" ? (
+                              <ShieldCheck className="w-5 h-5" style={{ color: "#FF5722" }} />
                             ) : (
                               <div
                                 className="w-2 h-2 rounded-full"
