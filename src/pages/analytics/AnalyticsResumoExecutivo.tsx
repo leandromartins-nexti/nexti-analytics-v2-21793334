@@ -93,11 +93,27 @@ interface BracketCard {
   /** Recalcula score agregando a janela exatamente como o gauge superior. */
   computeWindowScore?: (startIdx: number, endIdxExclusive: number) => number;
 }
-function DraggableBracket({ card }: { card: BracketCard }) {
+function DraggableBracket({
+  card,
+  interactive = true,
+  startIdx: controlledStartIdx,
+  onStartIdxChange,
+}: {
+  card: BracketCard;
+  interactive?: boolean;
+  startIdx?: number;
+  onStartIdxChange?: (idx: number) => void;
+}) {
   const total = card.evolucao.length;
   const windowSize = 3;
   const maxStart = total - windowSize;
-  const [startIdx, setStartIdx] = useState(maxStart);
+  const [internalStartIdx, setInternalStartIdx] = useState(maxStart);
+  const startIdx = controlledStartIdx ?? internalStartIdx;
+  const setStartIdx = (updater: number | ((prev: number) => number)) => {
+    const next = typeof updater === "function" ? (updater as (p: number) => number)(startIdx) : updater;
+    if (controlledStartIdx !== undefined) onStartIdxChange?.(next);
+    else setInternalStartIdx(next);
+  };
   const [dragging, setDragging] = useState(false);
   const [released, setReleased] = useState(false);
   const [hovered, setHovered] = useState(false);
