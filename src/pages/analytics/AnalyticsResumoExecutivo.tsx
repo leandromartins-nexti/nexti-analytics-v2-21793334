@@ -360,7 +360,7 @@ export default function AnalyticsResumoExecutivo() {
                           );
                         })}
                       </div>
-                      <div className="absolute left-0 right-0 top-full flex justify-between text-[9px] text-muted-foreground mt-1 px-0.5 pointer-events-none">
+                      <div className="absolute left-0 right-0 top-full flex justify-between text-[9px] text-muted-foreground mt-0.5 px-0.5 pointer-events-none">
                         <span>{firstMonth.replace('/20', '/')}</span>
                         <span>{lastMonth.replace('/20', '/')}</span>
                       </div>
