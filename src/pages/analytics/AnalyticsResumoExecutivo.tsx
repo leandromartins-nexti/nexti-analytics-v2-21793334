@@ -974,7 +974,7 @@ export default function AnalyticsResumoExecutivo() {
                                             }}
                                           />
                                         </TooltipTrigger>
-                                        <TooltipContent side="top" className="bg-card border border-border shadow-lg p-3">
+                                        <TooltipContent side="bottom" sideOffset={8} className="bg-card border border-border shadow-lg p-3 relative overflow-visible">
                                           <BubbleTooltipContent cardData={card} idx={i} />
                                         </TooltipContent>
                                       </UITooltip>
@@ -1084,7 +1084,7 @@ export default function AnalyticsResumoExecutivo() {
                                             }}
                                           />
                                         </TooltipTrigger>
-                                        <TooltipContent side="top" className="bg-card border border-border shadow-lg p-3">
+                                        <TooltipContent side="bottom" sideOffset={8} className="bg-card border border-border shadow-lg p-3 relative overflow-visible">
                                           <BubbleTooltipContent cardData={card} idx={i} />
                                         </TooltipContent>
                                       </UITooltip>
