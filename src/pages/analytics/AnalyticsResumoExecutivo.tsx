@@ -711,9 +711,14 @@ export default function AnalyticsResumoExecutivo() {
                           const benchSign = benchDelta > 0 ? "+" : "";
                           const benchColor = benchDelta >= 0 ? "text-green-600" : "text-red-600";
                           return (
-                            <div key={c.label} className="space-y-1 group">
+                            <div key={c.label} className={`space-y-1 group ${c.informativo ? "opacity-70" : ""}`}>
                               <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium">{c.label}</span>
+                                <span className="text-xs font-medium flex items-center gap-1.5">
+                                  {c.label}
+                                  {c.informativo && (
+                                    <span className="text-[8px] font-semibold uppercase tracking-wide bg-muted text-muted-foreground px-1 py-0.5 rounded">informativo</span>
+                                  )}
+                                </span>
                                 <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-md text-white" style={{ backgroundColor: cor }}>{c.valor}</span>
                               </div>
                               <div
