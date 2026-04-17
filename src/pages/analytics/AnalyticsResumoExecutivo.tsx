@@ -268,8 +268,8 @@ function DraggableBracket({ card }: { card: BracketCard }) {
         <span
           className="text-[10px] font-bold px-2 py-[2px] rounded-none shadow-md whitespace-nowrap"
           style={{
-            backgroundColor: getLineColor(avgScore),
-            color: "#ffffff",
+            backgroundColor: "#ffffff",
+            color: getLineColor(avgScore),
             border: "2px solid #9CA3AF",
             boxShadow: highlightGlow ? `0 6px 16px ${scoreColor}33` : undefined,
             transition: "color 180ms ease, box-shadow 180ms ease",
