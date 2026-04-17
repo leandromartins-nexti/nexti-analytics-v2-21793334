@@ -480,6 +480,8 @@ export default function AnalyticsResumoExecutivo() {
             )}
           </div>
 
+          {/* ═══ Playground de visualizações (validação) ═══ */}
+          {sparklineCards[0] && <IndicatorVizPlayground card={sparklineCards[0]} />}
 
           {/* ═══ CTA Financeiro ═══ */}
           <div className="bg-surface border border-border/50 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
