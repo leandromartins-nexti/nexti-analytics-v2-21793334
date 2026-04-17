@@ -548,12 +548,12 @@ export default function AnalyticsResumoExecutivo() {
                   // ═══ Hero Rocket — linha-mestre ═══
                   <div
                     key={card.label}
-                    className="px-3 sm:px-4 py-3"
+                    className="px-3 sm:px-4"
                     onClick={() => { /* hero não navega */ }}
                   >
                     <div className="rounded-xl bg-white border border-[#FF5722]/40 shadow-[0_8px_24px_-8px_rgba(255,87,34,0.35)] relative overflow-hidden">
                       <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-orange-50 to-transparent pointer-events-none" />
-                      <div className="flex items-center gap-4 px-4 py-3 relative">
+                      <div className="flex items-center gap-4 py-3 relative">
                         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF5722] to-[#D84315] text-white flex items-center justify-center shadow-md shrink-0">
                           <Rocket className="w-5 h-5" />
                         </div>
