@@ -347,7 +347,7 @@ export default function AnalyticsResumoExecutivo() {
 
                     {/* Mobile: heatmap horizontal — alinhado verticalmente com o score */}
                     <div className="flex sm:hidden flex-1 min-w-0 relative">
-                      <div className="flex items-center gap-[2px] w-full h-[18px]">
+                      <div className="flex items-center gap-[2px] w-full h-[22px]">
                         {card.evolucao.map((pt, i) => {
                           const c = card.perPointColors ? getLineColor(pt.valor) : getLineColor(card.score);
                           return (
