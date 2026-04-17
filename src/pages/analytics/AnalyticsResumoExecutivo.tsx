@@ -1063,7 +1063,7 @@ export default function AnalyticsResumoExecutivo() {
             </tbody>
             {/* Month legend footer (desktop only) */}
             {sparklineCards[0]?.evolucao.length > 0 && (
-              <tfoot className="hidden sm:table-footer-group">
+              <tfoot className="table-footer-group">
                 <tr>
                   <td className="border-t border-border/40 px-4 py-1.5" />
                   <td className="border-t border-border/40 py-1.5">
@@ -1249,7 +1249,7 @@ function IndicatorVariantTable({
           })}
         </tbody>
         {first.length > 0 && (
-          <tfoot className="hidden sm:table-footer-group">
+          <tfoot className="table-footer-group">
             <tr>
               <td className="border-t border-border/40 px-4 py-1.5" />
               <td className="border-t border-border/40 py-1.5">
