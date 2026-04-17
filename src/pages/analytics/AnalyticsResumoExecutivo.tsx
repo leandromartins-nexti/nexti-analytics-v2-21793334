@@ -303,17 +303,39 @@ function DraggableBracket({
               Média 3 meses: <span style={{ color: scoreColor }}>{avgScore}</span>
             </div>
             <div className="flex items-center gap-2">
-              {windowMonths.map((m) => (
-                <div key={m.competencia} className="flex flex-col items-center">
-                  <span className="text-muted-foreground">{m.competencia.replace("/20", "/")}</span>
-                  <span
-                    className="font-bold px-1.5 py-0.5 rounded mt-0.5 text-white"
-                    style={{ backgroundColor: getLineColor(m.valor) }}
-                  >
-                    {m.valor}
-                  </span>
-                </div>
-              ))}
+              {windowMonths.map((m) => {
+                // Interpolação linear contínua entre as paradas de cor (55→85)
+                const stops = [
+                  { v: 55, c: [220, 38, 38] },   // #dc2626
+                  { v: 65, c: [234, 88, 12] },   // #ea580c
+                  { v: 75, c: [202, 138, 4] },   // #ca8a04
+                  { v: 85, c: [101, 163, 13] },  // #65a30d
+                  { v: 100, c: [22, 163, 74] },  // #16a34a
+                ];
+                const v = Math.max(stops[0].v, Math.min(stops[stops.length - 1].v, m.valor));
+                let bg = `rgb(${stops[0].c.join(",")})`;
+                for (let i = 0; i < stops.length - 1; i++) {
+                  if (v >= stops[i].v && v <= stops[i + 1].v) {
+                    const t = (v - stops[i].v) / (stops[i + 1].v - stops[i].v);
+                    const r = Math.round(stops[i].c[0] + (stops[i + 1].c[0] - stops[i].c[0]) * t);
+                    const g = Math.round(stops[i].c[1] + (stops[i + 1].c[1] - stops[i].c[1]) * t);
+                    const b = Math.round(stops[i].c[2] + (stops[i + 1].c[2] - stops[i].c[2]) * t);
+                    bg = `rgb(${r},${g},${b})`;
+                    break;
+                  }
+                }
+                return (
+                  <div key={m.competencia} className="flex flex-col items-center">
+                    <span className="text-muted-foreground">{m.competencia.replace("/20", "/")}</span>
+                    <span
+                      className="font-bold px-1.5 py-0.5 rounded mt-0.5 text-white"
+                      style={{ backgroundColor: bg }}
+                    >
+                      {m.valor}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
             <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45 bg-card border-r border-b border-border" />
           </div>
