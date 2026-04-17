@@ -25,7 +25,7 @@ import {
   getNextiScoreClassification,
 } from "@/contexts/NextiScoreConfigContext";
 import {
-  Filter, Eraser, DollarSign, CheckCircle, Rocket,
+  Filter, Eraser, DollarSign, CheckCircle, Rocket, Clock, UserX,
 } from "lucide-react";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { Separator } from "@/components/ui/separator";
@@ -810,10 +810,16 @@ export default function AnalyticsResumoExecutivo() {
                     }}
                     title={`Ver detalhes de ${card.label}`}
                   >
-                    <div
-                      className="w-2 h-2 rounded-full shrink-0"
-                      style={{ backgroundColor: card.forceColor ?? getLineColor(card.score) }}
-                    />
+                    {card.label === "Ponto" ? (
+                      <Clock className="w-4 h-4 shrink-0" style={{ color: "#FF5722" }} />
+                    ) : card.label === "Absenteísmo" ? (
+                      <UserX className="w-4 h-4 shrink-0" style={{ color: "#FF5722" }} />
+                    ) : (
+                      <div
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ backgroundColor: card.forceColor ?? getLineColor(card.score) }}
+                      />
+                    )}
                     <span className="flex-1 sm:flex-none sm:min-w-[202px] truncate text-sm font-medium text-foreground">
                       {card.label}
                     </span>
