@@ -399,6 +399,10 @@ export default function AnalyticsResumoExecutivo() {
         perPointColors: false,
         forceColor: "#FF5722",
         highlight: true,
+        componentsPonto: pontoSeries,
+        componentsAbs: absSeries,
+        recomputeNexti: (avgP: number, avgA: number) =>
+          computeNextiScore(avgP, avgA, nextiConfig),
       },
       {
         label: "Ponto",
