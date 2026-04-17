@@ -631,8 +631,8 @@ export default function AnalyticsResumoExecutivo() {
                                 <span className="text-xs font-medium">{c.label}</span>
                                 <span className="text-[11px] font-bold px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: cor }}>{c.valor}</span>
                               </div>
-                              <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
-                                <div className="h-full rounded-full transition-all" style={{ width: `${barWidth}%`, backgroundColor: cor }} />
+                              <div className="h-2 bg-muted/50 rounded-sm overflow-hidden border border-border/40">
+                                <div className="h-full rounded-sm transition-all" style={{ width: `${barWidth}%`, backgroundColor: cor }} />
                               </div>
                               <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                                 <span className="flex items-center gap-1">
