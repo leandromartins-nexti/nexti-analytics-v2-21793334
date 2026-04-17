@@ -35,13 +35,10 @@ export default function AnalyticsLockedSection({ sectionName, sectionId, tabs }:
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
-      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
-          <div className="flex items-center gap-2 text-xs sm:text-sm">
-            <Filter className="w-4 h-4 text-[#FF5722] shrink-0" />
-            <span className="font-semibold text-foreground">Filtros Aplicados:</span>
-          </div>
-          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-2 sm:px-3 py-1 text-[10px] sm:text-[11px] font-medium">Período: {resumo.periodo}</span>
+          <span className="font-semibold text-foreground hidden sm:inline text-sm">Filtros Aplicados:</span>
+          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap">Período: {resumo.periodo}</span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button onClick={() => setFilterOpen(true)} className="border border-border text-muted-foreground px-3 sm:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-medium flex items-center gap-1.5 sm:gap-2 hover:bg-gray-50">
