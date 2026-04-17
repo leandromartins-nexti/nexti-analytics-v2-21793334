@@ -515,7 +515,6 @@ export default function AnalyticsResumoExecutivo() {
               <span className="flex-1 sm:flex-none sm:min-w-[140px]">Indicador</span>
               <div className="flex-1 sm:min-w-[120px] text-center">Histórico 12m</div>
             </div>
-            </div>
             <div className="divide-y divide-border/40">
               {sparklineCards.map((card) => {
                 const lastIdx = card.evolucao.length - 1;
@@ -598,10 +597,23 @@ export default function AnalyticsResumoExecutivo() {
                       </ResponsiveContainer>
                     </div>
 
-                    <span className={`hidden sm:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full min-w-[65px] text-center ${card.corVariacao} ${
-                      card.corVariacao.includes('green') ? 'bg-green-50' : card.corVariacao.includes('red') ? 'bg-red-50' : 'bg-gray-50'
-                    }`}>{card.variacao}</span>
-                    <span className={`text-xs font-bold min-w-[45px] text-center px-1.5 py-0.5 rounded ${getScoreColor(card.score)} ${getScoreBg(card.score)}`}>{card.score}</span>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Month legend footer (desktop only) */}
+            {sparklineCards[0]?.evolucao.length > 0 && (
+              <div className="hidden sm:flex items-center gap-4 px-4 py-1.5 border-t border-border/40">
+                <div className="w-2" />
+                <span className="min-w-[140px]" />
+                <div className="flex-1 min-w-[120px] flex justify-between">
+                  {sparklineCards[0].evolucao.map((pt) => (
+                    <span key={pt.competencia} className="text-[9px] text-muted-foreground">{pt.competencia.replace('/20', '/')}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
                   </div>
                 );
               })}
