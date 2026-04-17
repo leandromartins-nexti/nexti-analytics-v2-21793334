@@ -90,6 +90,8 @@ interface BracketCard {
   componentsPonto?: { competencia: string; valor: number }[];
   componentsAbs?: { competencia: string; valor: number }[];
   recomputeNexti?: (avgPonto: number, avgAbs: number) => number;
+  /** Recalcula score agregando a janela exatamente como o gauge superior. */
+  computeWindowScore?: (startIdx: number, endIdxExclusive: number) => number;
 }
 function DraggableBracket({ card }: { card: BracketCard }) {
   const total = card.evolucao.length;
@@ -114,6 +116,9 @@ function DraggableBracket({ card }: { card: BracketCard }) {
   const widthPct = endPct - startPct;
   const windowMonths = card.evolucao.slice(startIdx, startIdx + windowSize);
   const avgScore = (() => {
+    if (card.computeWindowScore) {
+      return Math.round(card.computeWindowScore(startIdx, startIdx + windowSize));
+    }
     if (card.recomputeNexti && card.componentsPonto && card.componentsAbs) {
       const pSlice = card.componentsPonto.slice(startIdx, startIdx + windowSize);
       const aSlice = card.componentsAbs.slice(startIdx, startIdx + windowSize);
@@ -341,10 +346,20 @@ export default function AnalyticsResumoExecutivo() {
     () => computeAbsenteismoCurrentScore(selectedRegional, chartGroupBy, absConfig),
     [selectedRegional, chartGroupBy, absConfig]
   );
-  const activeScore = useMemo(
-    () => computeNextiScore(pontoScore, absenteismoScore, nextiConfig),
-    [pontoScore, absenteismoScore, nextiConfig]
-  );
+  // Score Nexti exibido no gauge: usa o último trimestre (3 meses finais), agregando
+  // os componentes Ponto e Absenteísmo da mesma forma que o bracket inicial.
+  const activeScore = useMemo(() => {
+    // Calcula média de ponto e absenteísmo dos últimos 3 meses
+    const months = [
+      "2025-04-01","2025-05-01","2025-06-01","2025-07-01","2025-08-01","2025-09-01",
+      "2025-10-01","2025-11-01","2025-12-01","2026-01-01","2026-02-01","2026-03-01",
+    ];
+    const last3 = months.slice(-3);
+    const absEvolution = computeAbsenteismoEvolution(selectedRegional, chartGroupBy, absConfig);
+    const pontoAvg = last3.reduce((sum, m) => sum + computeCompositeScore(selectedRegional, groupBy as any, scoreConfig, [m], sources), 0) / 3;
+    const absAvg = last3.reduce((sum, m) => sum + (absEvolution.find(a => a.month === m)?.score ?? 0), 0) / 3;
+    return Math.round(computeNextiScore(pontoAvg, absAvg, nextiConfig));
+  }, [selectedRegional, groupBy, scoreConfig, sources, chartGroupBy, absConfig, nextiConfig]);
   const scoreClassif = getNextiScoreClassification(activeScore, nextiConfig);
 
   // Monthly composite score series for Ponto and Absenteísmo (mesma escala do badge "Score" da coluna).
