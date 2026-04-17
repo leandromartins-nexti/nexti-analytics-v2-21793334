@@ -338,6 +338,7 @@ export default function AnalyticsResumoExecutivo() {
   const [groupBy, setGroupBy] = useState<GroupBy>("unidade");
   const { config: absConfig } = useAbsenteismoScoreConfig();
   const { config: nextiConfig } = useNextiScoreConfig();
+  const [bracketStartIdx, setBracketStartIdx] = useState<number | null>(null);
 
   const handleRegionalClick = (nome: string) => setSelectedRegional(prev => prev === nome ? null : nome);
   const handleGroupByChange = (g: GroupBy) => { setGroupBy(g); setSelectedRegional(null); };
