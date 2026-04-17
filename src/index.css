@@ -138,3 +138,25 @@ Nexti Official Theme
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Mobile: maximize chart plot area by shrinking axis/legend space */
+@media (max-width: 640px) {
+  .recharts-cartesian-axis-tick text,
+  .recharts-polar-angle-axis-tick-value,
+  .recharts-polar-radius-axis-tick-value {
+    font-size: 9px !important;
+  }
+  /* Hide angled axis labels (vertical "Volume", "Headcount", etc.) on mobile */
+  .recharts-label,
+  .recharts-cartesian-axis-label {
+    display: none !important;
+  }
+  /* Tighten legend spacing */
+  .recharts-legend-wrapper {
+    font-size: 10px !important;
+    padding-top: 2px !important;
+  }
+  .recharts-default-legend .recharts-legend-item {
+    margin-right: 6px !important;
+  }
+}
