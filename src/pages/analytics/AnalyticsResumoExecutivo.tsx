@@ -365,7 +365,7 @@ export default function AnalyticsResumoExecutivo() {
                     </div>
 
                     {/* Desktop: Sparkline com área gradiente semântica + highlight dos últimos 3 meses */}
-                    <div className="hidden sm:block flex-1 sm:min-w-[120px] h-[14px] relative">
+                    <div className="hidden sm:block flex-1 sm:min-w-[120px] h-[17px] relative">
                       {/* Highlight box sobre os últimos 3 de 12 meses (25% da largura) */}
                       {card.evolucao.length >= 3 && (() => {
                         const widthPct = (3 / card.evolucao.length) * 100;
@@ -402,7 +402,7 @@ export default function AnalyticsResumoExecutivo() {
                           </>
                         );
                       })()}
-                      <ResponsiveContainer width="100%" height={14}>
+                      <ResponsiveContainer width="100%" height={17}>
                         <AreaChart data={card.evolucao} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
                           <defs>
                             <linearGradient id={areaGradId} x1="0" y1="0" x2="1" y2="0">
