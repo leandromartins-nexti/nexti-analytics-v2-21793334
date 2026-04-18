@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Search, ArrowUpDown, PanelRightClose, PanelRightOpen, Building2, Network, LayoutGrid, SlidersHorizontal, X, Filter, Lightbulb, ListFilter } from "lucide-react";
+import { Search, ArrowUpDown, Building2, Network, LayoutGrid, X, Filter, Lightbulb } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -16,12 +16,6 @@ export const groupByOptions: { id: GroupBy; label: string; short: string; icon: 
   { id: "unidade", label: "Un. Negócio", short: "Un. Negócio", icon: Network },
   { id: "area", label: "Área", short: "Área", icon: LayoutGrid },
 ];
-
-function abreviar(nome: string): string {
-  const clean = nome.replace(/^VIG\s*EYES\s*/i, "").trim();
-  if (!clean) return nome.slice(0, 3).toUpperCase();
-  return clean.split(/\s+/)[0]?.slice(0, 3).toUpperCase() || nome.slice(0, 3).toUpperCase();
-}
 
 interface GroupBySidebarProps {
   items: { nome: string; score: number; value?: string }[];
@@ -46,7 +40,6 @@ export default function GroupBySidebar({
 }: GroupBySidebarProps) {
   const { config: scoreConfig } = useScoreConfig();
   const isMobile = useIsMobile();
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mode, setMode] = useState<SidebarMode>(null);
   const [search, setSearch] = useState("");
@@ -58,41 +51,6 @@ export default function GroupBySidebar({
   const handleModeClick = (target: "ops" | "insights") => {
     setMode(prev => (prev === target ? null : target));
   };
-
-  // Floating launcher: 2 vertical buttons (Filtro / Insights), always visible when sidebar closed
-  const Launcher = () => (
-    <div className="w-[44px] shrink-0 self-stretch">
-      <div className="bg-white border-l border-border/40 p-1.5 h-full flex flex-col items-center gap-1">
-        {([
-          { id: "ops" as const, icon: Filter, label: "Tipo de Operação" },
-          { id: "insights" as const, icon: Lightbulb, label: "Insights" },
-        ]).map(o => {
-          const active = mode === o.id;
-          const Icon = o.icon;
-          return (
-            <UITooltip key={o.id}>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => handleModeClick(o.id)}
-                  className={`p-2 rounded-md transition-colors flex items-center justify-center ${
-                    active
-                      ? "bg-[#FF5722] text-white"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                  }`}
-                  aria-label={o.label}
-                >
-                  <Icon size={15} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="left" className="text-xs">{o.label}</TooltipContent>
-            </UITooltip>
-          );
-        })}
-      </div>
-    </div>
-  );
-
-
 
   const searchTimerRef = useState<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = (value: string) => {
@@ -147,40 +105,70 @@ export default function GroupBySidebar({
     return () => window.removeEventListener("open-tipo-operacao", handler);
   }, [isMobile]);
 
-  // ── Mobile: Sheet drawer (fullscreen) — opened by external header button ──
+  // Reusable launcher rail (2 buttons: Filtro / Insights)
+  const LauncherRail = () => (
+    <div className="w-[44px] bg-white border-l border-border/40 p-1.5 flex flex-col items-center gap-1 self-stretch">
+      {([
+        { id: "ops" as const, icon: Filter, label: "Tipo de Operação" },
+        { id: "insights" as const, icon: Lightbulb, label: "Insights" },
+      ]).map(o => {
+        const active = mode === o.id;
+        const Icon = o.icon;
+        return (
+          <UITooltip key={o.id}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => handleModeClick(o.id)}
+                className={`p-2 rounded-md transition-colors flex items-center justify-center ${
+                  active
+                    ? "bg-[#FF5722] text-white"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                }`}
+                aria-label={o.label}
+              >
+                <Icon size={15} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="left" className="text-xs">{o.label}</TooltipContent>
+          </UITooltip>
+        );
+      })}
+    </div>
+  );
+
+  // ── Mobile: Sheet drawer (fullscreen) ──
   if (isMobile) {
     const mobileMode = mode ?? "ops";
     return (
-      <>
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetContent side="right" className="w-full max-w-full p-0 flex flex-col">
-            <SheetHeader className="px-4 py-3 border-b border-border flex-row items-center justify-between space-y-0">
-              <SheetTitle className="text-sm font-semibold">{mobileMode === "ops" ? "Tipo de Operação" : "Insights"}</SheetTitle>
-            </SheetHeader>
-            <div className="px-3 pt-2 flex gap-1">
-              {([
-                { id: "ops" as const, icon: Filter, label: "Filtro" },
-                { id: "insights" as const, icon: Lightbulb, label: "Insights" },
-              ]).map(o => {
-                const active = mobileMode === o.id;
-                const Icon = o.icon;
-                return (
-                  <button
-                    key={o.id}
-                    onClick={() => setMode(o.id)}
-                    className={`flex-1 px-2 py-1.5 rounded-md transition-colors flex items-center justify-center gap-1 ${
-                      active ? "bg-[#FF5722] text-white" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border border-border"
-                    }`}
-                  >
-                    <Icon size={13} />
-                    <span className="text-[11px] font-semibold">{o.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-            {mobileMode === "insights" ? (
-              <div className="flex-1 overflow-y-auto p-3"><RightSidebarInsightsPanel /></div>
-            ) : (
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent side="right" className="w-full max-w-full p-0 flex flex-col">
+          <SheetHeader className="px-4 py-3 border-b border-border flex-row items-center justify-between space-y-0">
+            <SheetTitle className="text-sm font-semibold">{mobileMode === "ops" ? "Tipo de Operação" : "Insights"}</SheetTitle>
+          </SheetHeader>
+          <div className="px-3 pt-2 flex gap-1">
+            {([
+              { id: "ops" as const, icon: Filter, label: "Filtro" },
+              { id: "insights" as const, icon: Lightbulb, label: "Insights" },
+            ]).map(o => {
+              const active = mobileMode === o.id;
+              const Icon = o.icon;
+              return (
+                <button
+                  key={o.id}
+                  onClick={() => setMode(o.id)}
+                  className={`flex-1 px-2 py-1.5 rounded-md transition-colors flex items-center justify-center gap-1 ${
+                    active ? "bg-[#FF5722] text-white" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border border-border"
+                  }`}
+                >
+                  <Icon size={13} />
+                  <span className="text-[11px] font-semibold">{o.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {mobileMode === "insights" ? (
+            <div className="flex-1 overflow-y-auto p-3"><RightSidebarInsightsPanel /></div>
+          ) : (
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
               <div className="flex gap-2">
                 {groupByOptions.map(o => (
@@ -254,126 +242,36 @@ export default function GroupBySidebar({
                 })}
               </div>
             </div>
-            )}
-          </SheetContent>
-        </Sheet>
-      </>
-    );
-  }
-
-  // ── Desktop: Closed (Launcher only) ──
-  if (mode === null) {
-    return <Launcher />;
-  }
-
-
-  // ── Collapsed mode (desktop) ──
-  if (collapsed) {
-    return (
-      <div className="w-[52px] shrink-0 self-stretch">
-        <div className="bg-white border-l border-border/40 p-1.5 h-full flex flex-col items-center gap-1">
-          {/* Expand button */}
-          <button
-            onClick={() => setCollapsed(false)}
-            className="p-1.5 rounded-md hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors mb-1"
-            title="Expandir sidebar"
-          >
-            <PanelRightClose size={14} />
-          </button>
-
-          {/* Mode toggle (Ops | Insights) */}
-          <ModeToggle vertical />
-          <div className="w-6 border-t border-border/50 my-1" />
-
-          {mode === "insights" ? (
-            <div className="flex-1 overflow-y-auto w-full pt-1">
-              <RightSidebarInsightsPanel collapsed />
-            </div>
-          ) : (
-            <>
-              {/* GroupBy icon buttons */}
-              <div className="flex flex-col gap-0.5 mb-1.5">
-                {groupByOptions.map(o => (
-                  <UITooltip key={o.id}>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => handleGroupChange(o.id)}
-                        className={`p-1.5 rounded-md transition-colors ${
-                          groupBy === o.id
-                            ? "bg-[#FF5722] text-white"
-                            : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                        }`}
-                      >
-                        <o.icon size={13} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="left" className="text-xs">{o.label}</TooltipContent>
-                  </UITooltip>
-                ))}
-              </div>
-
-              {/* Divider */}
-              <div className="w-6 border-t border-border/50 mb-1" />
-
-              {/* Abbreviated items */}
-              <div className="flex flex-col gap-0.5 overflow-y-auto flex-1">
-                {pagedItems.map(op => {
-                  const itemValue = op.value ?? op.nome;
-                  const isSelected = selectedRegional === itemValue;
-                  const isDimmed = selectedRegional && !isSelected;
-                  const scoreColor = getScoreClassification(op.score, scoreConfig).text;
-                  const abbr = abreviar(op.nome);
-                  return (
-                    <UITooltip key={itemValue}>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={() => onRegionalClick(itemValue)}
-                          onContextMenu={e => { e.preventDefault(); onItemDetail?.(itemValue); }}
-                          className={`flex flex-col items-center px-1 py-1 rounded-md cursor-pointer transition-all text-[9px] leading-tight ${
-                            isSelected
-                              ? "bg-orange-50 border border-[#FF5722]/30"
-                              : "hover:bg-muted/40 border border-transparent"
-                          } ${isDimmed ? "opacity-35" : ""}`}
-                        >
-                          <span className="font-bold text-foreground">{abbr}</span>
-                          <span className={`font-bold tabular-nums ${scoreColor}`}>{op.score}</span>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent side="left" className="text-xs max-w-[200px]">
-                        <p className="font-semibold">{op.nome}</p>
-                        <p className="text-muted-foreground">Score: {op.score}</p>
-                      </TooltipContent>
-                    </UITooltip>
-                  );
-                })}
-              </div>
-            </>
           )}
-        </div>
-      </div>
+        </SheetContent>
+      </Sheet>
     );
   }
 
-  // ── Expanded mode ──
+  // ── Desktop: Closed (Launcher rail only) ──
+  if (mode === null) {
+    return <LauncherRail />;
+  }
+
+  // ── Desktop: Open (Launcher rail + content panel) ──
   return (
-    <div className="w-[240px] shrink-0 self-stretch" data-onboarding="tipo-operacao">
-       <div className="bg-white border-l border-border/40 pl-3 pr-1 pt-2 h-full flex flex-col">
-        {/* Header: title + collapse button */}
+    <div className="flex shrink-0 self-stretch" data-onboarding="tipo-operacao">
+      <LauncherRail />
+
+      <div className="w-[240px] bg-white border-l border-border/40 pl-3 pr-1 pt-2 flex flex-col">
+        {/* Header: title + close button */}
         <div className="flex items-center justify-between mb-1.5">
           <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase">
             {mode === "ops" ? "Tipo de Operação" : "Insights"}
           </p>
           <button
-            onClick={() => setCollapsed(true)}
+            onClick={() => setMode(null)}
             className="p-1 rounded-md hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors shrink-0"
-            title="Recolher sidebar"
+            title="Fechar"
           >
-            <PanelRightOpen size={13} />
+            <X size={13} />
           </button>
         </div>
-
-        {/* Mode toggle (Ops | Insights) */}
-        <ModeToggle />
 
         {mode === "insights" ? (
           <RightSidebarInsightsPanel />
