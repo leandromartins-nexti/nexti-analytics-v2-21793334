@@ -94,30 +94,76 @@ export default function RightSidebarInsightsPanel({ collapsed = false, groupBy =
         <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
           {filtered.length} {filtered.length === 1 ? "insight" : "insights"}
         </span>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={() => {
-                if (tourActive) { stopTour(); return; }
-                const pinned = filtered.filter(i => pinnedIds.has(i.id));
-                startTour(pinned.length ? pinned : filtered);
-              }}
-              disabled={!tourActive && filtered.length === 0}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{
-                background: tourActive ? "#ef4444" : "#FF5722",
-                color: "#fff",
-              }}
-            >
-              {tourActive ? <Square size={9} fill="#fff" /> : <Play size={9} fill="#fff" />}
-              {tourActive ? "Parar" : `Tour (${filtered.filter(i => pinnedIds.has(i.id)).length || filtered.length})`}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="top" sideOffset={6}>
-            {tourActive ? "Encerrar tour guiado (ESC)" : "Iniciar tour guiado pelos insights"}
-            <TooltipPrimitive.Arrow className="fill-popover" width={10} height={5} />
-          </TooltipContent>
-        </Tooltip>
+        <div className="flex items-center gap-1">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                aria-label="Configurações do tour"
+                title="Configurações do tour"
+              >
+                <Settings2 size={11} />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="end" className="w-64 p-3">
+              <div className="space-y-3">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[11px] font-semibold text-foreground">Tempo por insight</label>
+                    <span className="text-[10px] tabular-nums text-muted-foreground">{(stepMs / 1000).toFixed(0)}s</span>
+                  </div>
+                  <Slider
+                    min={2}
+                    max={30}
+                    step={1}
+                    value={[stepMs / 1000]}
+                    onValueChange={(v) => setStepMs(v[0] * 1000)}
+                  />
+                  <div className="flex justify-between text-[9px] text-muted-foreground/60 mt-1">
+                    <span>2s</span><span>30s</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                  <div className="flex items-center gap-1.5">
+                    <Repeat size={12} className="text-muted-foreground" />
+                    <label htmlFor="tour-loop" className="text-[11px] font-medium text-foreground cursor-pointer">
+                      Repetir continuamente
+                    </label>
+                  </div>
+                  <Switch id="tour-loop" checked={loop} onCheckedChange={setLoop} />
+                </div>
+                <p className="text-[9px] text-muted-foreground/70 leading-relaxed pt-1">
+                  Quando ativado, o tour reinicia automaticamente após o último insight.
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => {
+                  if (tourActive) { stopTour(); return; }
+                  const pinned = filtered.filter(i => pinnedIds.has(i.id));
+                  startTour(pinned.length ? pinned : filtered);
+                }}
+                disabled={!tourActive && filtered.length === 0}
+                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  background: tourActive ? "#ef4444" : "#FF5722",
+                  color: "#fff",
+                }}
+              >
+                {tourActive ? <Square size={9} fill="#fff" /> : <Play size={9} fill="#fff" />}
+                {tourActive ? "Parar" : `Tour (${filtered.filter(i => pinnedIds.has(i.id)).length || filtered.length})`}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              {tourActive ? "Encerrar tour guiado (ESC)" : `Tour ${(stepMs/1000).toFixed(0)}s/insight${loop ? " · loop" : ""}`}
+              <TooltipPrimitive.Arrow className="fill-popover" width={10} height={5} />
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       {/* Filter chips */}
