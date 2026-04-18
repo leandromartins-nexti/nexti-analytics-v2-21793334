@@ -149,15 +149,36 @@ export default function GroupBySidebar({
 
   // ── Mobile: Sheet drawer (fullscreen) — opened by external header button ──
   if (isMobile) {
+    const mobileMode = mode ?? "ops";
     return (
       <>
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent side="right" className="w-full max-w-full p-0 flex flex-col">
             <SheetHeader className="px-4 py-3 border-b border-border flex-row items-center justify-between space-y-0">
-              <SheetTitle className="text-sm font-semibold">{mode === "ops" ? "Tipo de Operação" : "Insights"}</SheetTitle>
+              <SheetTitle className="text-sm font-semibold">{mobileMode === "ops" ? "Tipo de Operação" : "Insights"}</SheetTitle>
             </SheetHeader>
-            <div className="px-3 pt-2"><ModeToggle /></div>
-            {mode === "insights" ? (
+            <div className="px-3 pt-2 flex gap-1">
+              {([
+                { id: "ops" as const, icon: Filter, label: "Filtro" },
+                { id: "insights" as const, icon: Lightbulb, label: "Insights" },
+              ]).map(o => {
+                const active = mobileMode === o.id;
+                const Icon = o.icon;
+                return (
+                  <button
+                    key={o.id}
+                    onClick={() => setMode(o.id)}
+                    className={`flex-1 px-2 py-1.5 rounded-md transition-colors flex items-center justify-center gap-1 ${
+                      active ? "bg-[#FF5722] text-white" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border border-border"
+                    }`}
+                  >
+                    <Icon size={13} />
+                    <span className="text-[11px] font-semibold">{o.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {mobileMode === "insights" ? (
               <div className="flex-1 overflow-y-auto p-3"><RightSidebarInsightsPanel /></div>
             ) : (
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
@@ -239,6 +260,12 @@ export default function GroupBySidebar({
       </>
     );
   }
+
+  // ── Desktop: Closed (Launcher only) ──
+  if (mode === null) {
+    return <Launcher />;
+  }
+
 
   // ── Collapsed mode (desktop) ──
   if (collapsed) {
