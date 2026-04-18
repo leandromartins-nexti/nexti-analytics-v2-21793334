@@ -702,7 +702,11 @@
     "faixa_mais_15_dias": 341,
     "tempo_min_horas": 0,
     "tempo_max_horas": 728,
-    "tempo_medio_horas": 17.05
+    "tempo_medio_horas": 17.05,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 1,

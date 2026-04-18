@@ -1329,7 +1329,11 @@
     "justified_count": 342,
     "quality_percentage": 85.26,
     "headcount": 71,
-    "active_headcount": 79
+    "active_headcount": 79,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1341,7 +1345,11 @@
     "justified_count": 237,
     "quality_percentage": 81.18,
     "headcount": 31,
-    "active_headcount": 35
+    "active_headcount": 35,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1353,7 +1361,11 @@
     "justified_count": 846,
     "quality_percentage": 89.91,
     "headcount": 213,
-    "active_headcount": 219
+    "active_headcount": 219,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1365,7 +1377,11 @@
     "justified_count": 742,
     "quality_percentage": 87.21,
     "headcount": 212,
-    "active_headcount": 227
+    "active_headcount": 227,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1377,7 +1393,11 @@
     "justified_count": 916,
     "quality_percentage": 82.63,
     "headcount": 130,
-    "active_headcount": 126
+    "active_headcount": 126,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1389,7 +1409,11 @@
     "justified_count": 9,
     "quality_percentage": 96.19,
     "headcount": 6,
-    "active_headcount": 7
+    "active_headcount": 7,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1401,7 +1425,11 @@
     "justified_count": 5522,
     "quality_percentage": 86.76,
     "headcount": 1262,
-    "active_headcount": 1326
+    "active_headcount": 1326,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1413,7 +1441,11 @@
     "justified_count": 6830,
     "quality_percentage": 83.43,
     "headcount": 1545,
-    "active_headcount": 1630
+    "active_headcount": 1630,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1425,7 +1457,11 @@
     "justified_count": 139,
     "quality_percentage": 77.72,
     "headcount": 27,
-    "active_headcount": 49
+    "active_headcount": 49,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1437,7 +1473,11 @@
     "justified_count": 1349,
     "quality_percentage": 85.57,
     "headcount": 306,
-    "active_headcount": 321
+    "active_headcount": 321,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1449,7 +1489,11 @@
     "justified_count": 1407,
     "quality_percentage": 82.29,
     "headcount": 186,
-    "active_headcount": 185
+    "active_headcount": 185,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1461,7 +1505,11 @@
     "justified_count": 1,
     "quality_percentage": 98.1,
     "headcount": 7,
-    "active_headcount": 11
+    "active_headcount": 11,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1473,7 +1521,11 @@
     "justified_count": 4,
     "quality_percentage": 86.01,
     "headcount": 7,
-    "active_headcount": 7
+    "active_headcount": 7,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1485,7 +1537,11 @@
     "justified_count": 2,
     "quality_percentage": 85.14,
     "headcount": 1,
-    "active_headcount": 1
+    "active_headcount": 1,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1497,7 +1553,11 @@
     "justified_count": 217,
     "quality_percentage": 88.58,
     "headcount": 55,
-    "active_headcount": 81
+    "active_headcount": 81,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1509,7 +1569,11 @@
     "justified_count": 1701,
     "quality_percentage": 87.2,
     "headcount": 440,
-    "active_headcount": 487
+    "active_headcount": 487,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1521,7 +1585,11 @@
     "justified_count": 6786,
     "quality_percentage": 84.41,
     "headcount": 1318,
-    "active_headcount": 1336
+    "active_headcount": 1336,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1533,7 +1601,11 @@
     "justified_count": 6476,
     "quality_percentage": 85.27,
     "headcount": 822,
-    "active_headcount": 937
+    "active_headcount": 937,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1545,7 +1617,11 @@
     "justified_count": 1317,
     "quality_percentage": 86.25,
     "headcount": 354,
-    "active_headcount": 386
+    "active_headcount": 386,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1557,7 +1633,11 @@
     "justified_count": 2936,
     "quality_percentage": 91.51,
     "headcount": 555,
-    "active_headcount": 741
+    "active_headcount": 741,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1569,7 +1649,11 @@
     "justified_count": 1002,
     "quality_percentage": 92.27,
     "headcount": 375,
-    "active_headcount": 394
+    "active_headcount": 394,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -1581,7 +1665,11 @@
     "justified_count": 27,
     "quality_percentage": 95.42,
     "headcount": 17,
-    "active_headcount": 15
+    "active_headcount": 15,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -2913,7 +3001,11 @@
     "justified_count": 0,
     "quality_percentage": 100.0,
     "headcount": 1,
-    "active_headcount": 1
+    "active_headcount": 1,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2925,7 +3017,11 @@
     "justified_count": 126,
     "quality_percentage": 81.97,
     "headcount": 31,
-    "active_headcount": 55
+    "active_headcount": 55,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2937,7 +3033,11 @@
     "justified_count": 834,
     "quality_percentage": 82.82,
     "headcount": 189,
-    "active_headcount": 217
+    "active_headcount": 217,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2949,7 +3049,11 @@
     "justified_count": 58,
     "quality_percentage": 93.01,
     "headcount": 17,
-    "active_headcount": 17
+    "active_headcount": 17,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2961,7 +3065,11 @@
     "justified_count": 2081,
     "quality_percentage": 83.7,
     "headcount": 416,
-    "active_headcount": 489
+    "active_headcount": 489,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2973,7 +3081,11 @@
     "justified_count": 1813,
     "quality_percentage": 76.81,
     "headcount": 178,
-    "active_headcount": 203
+    "active_headcount": 203,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2985,7 +3097,11 @@
     "justified_count": 28,
     "quality_percentage": 81.92,
     "headcount": 5,
-    "active_headcount": 7
+    "active_headcount": 7,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -2997,7 +3113,11 @@
     "justified_count": 1072,
     "quality_percentage": 78.22,
     "headcount": 134,
-    "active_headcount": 144
+    "active_headcount": 144,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3009,7 +3129,11 @@
     "justified_count": 5710,
     "quality_percentage": 85.69,
     "headcount": 1200,
-    "active_headcount": 1341
+    "active_headcount": 1341,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3021,7 +3145,11 @@
     "justified_count": 391,
     "quality_percentage": 85.84,
     "headcount": 97,
-    "active_headcount": 97
+    "active_headcount": 97,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3033,7 +3161,11 @@
     "justified_count": 3535,
     "quality_percentage": 89.42,
     "headcount": 581,
-    "active_headcount": 755
+    "active_headcount": 755,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3045,7 +3177,11 @@
     "justified_count": 1431,
     "quality_percentage": 83.02,
     "headcount": 286,
-    "active_headcount": 322
+    "active_headcount": 322,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3057,7 +3193,11 @@
     "justified_count": 5199,
     "quality_percentage": 84.76,
     "headcount": 1418,
-    "active_headcount": 1616
+    "active_headcount": 1616,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3069,7 +3209,11 @@
     "justified_count": 917,
     "quality_percentage": 88.7,
     "headcount": 209,
-    "active_headcount": 223
+    "active_headcount": 223,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3081,7 +3225,11 @@
     "justified_count": 1506,
     "quality_percentage": 82.82,
     "headcount": 323,
-    "active_headcount": 372
+    "active_headcount": 372,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3093,7 +3241,11 @@
     "justified_count": 467,
     "quality_percentage": 78.89,
     "headcount": 68,
-    "active_headcount": 90
+    "active_headcount": 90,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3105,7 +3257,11 @@
     "justified_count": 10100,
     "quality_percentage": 77.16,
     "headcount": 904,
-    "active_headcount": 1153
+    "active_headcount": 1153,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3117,7 +3273,11 @@
     "justified_count": 2,
     "quality_percentage": 97.43,
     "headcount": 7,
-    "active_headcount": 12
+    "active_headcount": 12,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3129,7 +3289,11 @@
     "justified_count": 163,
     "quality_percentage": 91.17,
     "headcount": 47,
-    "active_headcount": 81
+    "active_headcount": 81,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3141,7 +3305,11 @@
     "justified_count": 2,
     "quality_percentage": 94.56,
     "headcount": 8,
-    "active_headcount": 10
+    "active_headcount": 10,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3153,7 +3321,11 @@
     "justified_count": 1295,
     "quality_percentage": 89.05,
     "headcount": 355,
-    "active_headcount": 402
+    "active_headcount": 402,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   },
   {
     "customer_id": 2,
@@ -3165,6 +3337,10 @@
     "justified_count": 7805,
     "quality_percentage": 79.74,
     "headcount": 1262,
-    "active_headcount": 1459
+    "active_headcount": 1459,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   }
 ]

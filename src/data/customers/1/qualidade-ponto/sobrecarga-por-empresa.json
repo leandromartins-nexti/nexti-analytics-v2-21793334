@@ -487,7 +487,11 @@
     "qtd_ajustes": 24677,
     "operadores_ativos": 55,
     "ajustes_por_operador": 449,
-    "horas_extras_rateadas": 526.9
+    "horas_extras_rateadas": 526.9,
+    "pin": {
+      "insight_id": 8,
+      "type": "opportunity"
+    }
   },
   {
     "customer_id": 1,

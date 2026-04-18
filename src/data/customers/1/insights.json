@@ -68,7 +68,8 @@
       "related_cards": [
         "opp_001"
       ]
-    }
+    },
+    "numeric_id": 1
   },
   {
     "id": "risk_002",
@@ -133,7 +134,8 @@
       "related_cards": [
         "opp_003"
       ]
-    }
+    },
+    "numeric_id": 2
   },
   {
     "id": "risk_003",
@@ -189,7 +191,8 @@
       "related_cards": [
         "opp_002"
       ]
-    }
+    },
+    "numeric_id": 3
   },
   {
     "id": "risk_004",
@@ -247,7 +250,8 @@
         "Revisar a cada trimestre"
       ],
       "related_cards": []
-    }
+    },
+    "numeric_id": 4
   },
   {
     "id": "ach_001",
@@ -305,7 +309,8 @@
         "Considerar publicação como case Nexti (post LinkedIn, evento RH)"
       ],
       "related_cards": []
-    }
+    },
+    "numeric_id": 5
   },
   {
     "id": "ach_002",
@@ -366,7 +371,8 @@
       "related_cards": [
         "opp_002"
       ]
-    }
+    },
+    "numeric_id": 6
   },
   {
     "id": "ach_003",
@@ -417,7 +423,8 @@
         "Manter monitoramento mensal: variações >5% disparam análise"
       ],
       "related_cards": []
-    }
+    },
+    "numeric_id": 7
   },
   {
     "id": "opp_001",
@@ -485,7 +492,8 @@
       "related_cards": [
         "risk_001"
       ]
-    }
+    },
+    "numeric_id": 8
   },
   {
     "id": "opp_002",
@@ -549,7 +557,8 @@
         "ach_002",
         "risk_003"
       ]
-    }
+    },
+    "numeric_id": 9
   },
   {
     "id": "opp_003",
@@ -604,7 +613,8 @@
       "related_cards": [
         "risk_002"
       ]
-    }
+    },
+    "numeric_id": 10
   },
   {
     "id": "opp_004",
@@ -662,7 +672,8 @@
         "Se não justificado: ação de melhoria com meta de tempo médio 1.5d em 90 dias"
       ],
       "related_cards": []
-    }
+    },
+    "numeric_id": 11
   },
   {
     "id": "event_001",
@@ -710,7 +721,8 @@
         "Se sustentado, atualizar baseline operacional"
       ],
       "related_cards": []
-    }
+    },
+    "numeric_id": 12
   },
   {
     "id": "event_002",
@@ -762,6 +774,7 @@
         "Meta: estabilizar qualidade em 85%+ até jun/26 e voltar para 88% até dez/26"
       ],
       "related_cards": []
-    }
+    },
+    "numeric_id": 13
   }
 ]

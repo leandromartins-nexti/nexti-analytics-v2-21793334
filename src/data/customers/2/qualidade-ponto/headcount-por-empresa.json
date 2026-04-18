@@ -321,7 +321,11 @@
     "justified_count": 17211,
     "quality_percentage": 85.32,
     "headcount": 2719,
-    "active_headcount": 3053
+    "active_headcount": 3053,
+    "pin": {
+      "insight_id": 12,
+      "type": "trend"
+    }
   },
   {
     "customer_id": 2,
@@ -657,6 +661,10 @@
     "justified_count": 24677,
     "quality_percentage": 78.8,
     "headcount": 2820,
-    "active_headcount": 3634
+    "active_headcount": 3634,
+    "pin": {
+      "insight_id": 5,
+      "type": "achievement"
+    }
   }
 ]

@@ -16032,7 +16032,11 @@
     "faixa_mais_15_dias": 44,
     "tempo_min_horas": 0,
     "tempo_max_horas": 677,
-    "tempo_medio_horas": 29.14
+    "tempo_medio_horas": 29.14,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16047,7 +16051,11 @@
     "faixa_mais_15_dias": 4,
     "tempo_min_horas": 0,
     "tempo_max_horas": 514,
-    "tempo_medio_horas": 8.62
+    "tempo_medio_horas": 8.62,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16062,7 +16070,11 @@
     "faixa_mais_15_dias": 33,
     "tempo_min_horas": 0,
     "tempo_max_horas": 687,
-    "tempo_medio_horas": 24.61
+    "tempo_medio_horas": 24.61,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16077,7 +16089,11 @@
     "faixa_mais_15_dias": 47,
     "tempo_min_horas": 0,
     "tempo_max_horas": 724,
-    "tempo_medio_horas": 35.37
+    "tempo_medio_horas": 35.37,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16092,7 +16108,11 @@
     "faixa_mais_15_dias": 6,
     "tempo_min_horas": 0,
     "tempo_max_horas": 696,
-    "tempo_medio_horas": 7.07
+    "tempo_medio_horas": 7.07,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16107,7 +16127,11 @@
     "faixa_mais_15_dias": 3,
     "tempo_min_horas": 0,
     "tempo_max_horas": 625,
-    "tempo_medio_horas": 7.94
+    "tempo_medio_horas": 7.94,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16122,7 +16146,11 @@
     "faixa_mais_15_dias": 14,
     "tempo_min_horas": 0,
     "tempo_max_horas": 579,
-    "tempo_medio_horas": 17.41
+    "tempo_medio_horas": 17.41,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16137,7 +16165,11 @@
     "faixa_mais_15_dias": 10,
     "tempo_min_horas": 0,
     "tempo_max_horas": 693,
-    "tempo_medio_horas": 20.86
+    "tempo_medio_horas": 20.86,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16152,7 +16184,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 597,
-    "tempo_medio_horas": 9.34
+    "tempo_medio_horas": 9.34,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16167,7 +16203,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 415,
-    "tempo_medio_horas": 6.12
+    "tempo_medio_horas": 6.12,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16182,7 +16222,11 @@
     "faixa_mais_15_dias": 3,
     "tempo_min_horas": 0,
     "tempo_max_horas": 532,
-    "tempo_medio_horas": 13.34
+    "tempo_medio_horas": 13.34,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16197,7 +16241,11 @@
     "faixa_mais_15_dias": 5,
     "tempo_min_horas": 0,
     "tempo_max_horas": 687,
-    "tempo_medio_horas": 11.28
+    "tempo_medio_horas": 11.28,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16212,7 +16260,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 602,
-    "tempo_medio_horas": 9.46
+    "tempo_medio_horas": 9.46,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16227,7 +16279,11 @@
     "faixa_mais_15_dias": 5,
     "tempo_min_horas": 0,
     "tempo_max_horas": 413,
-    "tempo_medio_horas": 10.38
+    "tempo_medio_horas": 10.38,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16242,7 +16298,11 @@
     "faixa_mais_15_dias": 17,
     "tempo_min_horas": 0,
     "tempo_max_horas": 679,
-    "tempo_medio_horas": 21.34
+    "tempo_medio_horas": 21.34,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16257,7 +16317,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 354,
-    "tempo_medio_horas": 8.52
+    "tempo_medio_horas": 8.52,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16272,7 +16336,11 @@
     "faixa_mais_15_dias": 15,
     "tempo_min_horas": 0,
     "tempo_max_horas": 686,
-    "tempo_medio_horas": 23.83
+    "tempo_medio_horas": 23.83,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16287,7 +16355,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 498,
-    "tempo_medio_horas": 7.0
+    "tempo_medio_horas": 7.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16302,7 +16374,11 @@
     "faixa_mais_15_dias": 4,
     "tempo_min_horas": 0,
     "tempo_max_horas": 490,
-    "tempo_medio_horas": 11.02
+    "tempo_medio_horas": 11.02,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16317,7 +16393,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 602,
-    "tempo_medio_horas": 66.66
+    "tempo_medio_horas": 66.66,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16332,7 +16412,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 442,
-    "tempo_medio_horas": 7.19
+    "tempo_medio_horas": 7.19,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16347,7 +16431,11 @@
     "faixa_mais_15_dias": 14,
     "tempo_min_horas": 0,
     "tempo_max_horas": 448,
-    "tempo_medio_horas": 135.19
+    "tempo_medio_horas": 135.19,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16362,7 +16450,11 @@
     "faixa_mais_15_dias": 6,
     "tempo_min_horas": 0,
     "tempo_max_horas": 691,
-    "tempo_medio_horas": 13.08
+    "tempo_medio_horas": 13.08,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16377,7 +16469,11 @@
     "faixa_mais_15_dias": 4,
     "tempo_min_horas": 0,
     "tempo_max_horas": 674,
-    "tempo_medio_horas": 15.14
+    "tempo_medio_horas": 15.14,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16392,7 +16488,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 309,
-    "tempo_medio_horas": 5.51
+    "tempo_medio_horas": 5.51,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16407,7 +16507,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 498,
-    "tempo_medio_horas": 22.26
+    "tempo_medio_horas": 22.26,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16422,7 +16526,11 @@
     "faixa_mais_15_dias": 12,
     "tempo_min_horas": 0,
     "tempo_max_horas": 679,
-    "tempo_medio_horas": 27.54
+    "tempo_medio_horas": 27.54,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16437,7 +16545,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 391,
-    "tempo_medio_horas": 9.4
+    "tempo_medio_horas": 9.4,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16452,7 +16564,11 @@
     "faixa_mais_15_dias": 3,
     "tempo_min_horas": 0,
     "tempo_max_horas": 728,
-    "tempo_medio_horas": 10.08
+    "tempo_medio_horas": 10.08,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16467,7 +16583,11 @@
     "faixa_mais_15_dias": 6,
     "tempo_min_horas": 0,
     "tempo_max_horas": 574,
-    "tempo_medio_horas": 15.81
+    "tempo_medio_horas": 15.81,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16482,7 +16602,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 374,
-    "tempo_medio_horas": 9.69
+    "tempo_medio_horas": 9.69,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16497,7 +16621,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 525,
-    "tempo_medio_horas": 8.28
+    "tempo_medio_horas": 8.28,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16512,7 +16640,11 @@
     "faixa_mais_15_dias": 3,
     "tempo_min_horas": 0,
     "tempo_max_horas": 545,
-    "tempo_medio_horas": 9.97
+    "tempo_medio_horas": 9.97,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16527,7 +16659,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 591,
-    "tempo_medio_horas": 8.46
+    "tempo_medio_horas": 8.46,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16542,7 +16678,11 @@
     "faixa_mais_15_dias": 8,
     "tempo_min_horas": 0,
     "tempo_max_horas": 697,
-    "tempo_medio_horas": 27.87
+    "tempo_medio_horas": 27.87,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16557,7 +16697,11 @@
     "faixa_mais_15_dias": 14,
     "tempo_min_horas": 0,
     "tempo_max_horas": 678,
-    "tempo_medio_horas": 30.49
+    "tempo_medio_horas": 30.49,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16572,7 +16716,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 243,
-    "tempo_medio_horas": 9.71
+    "tempo_medio_horas": 9.71,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16587,7 +16735,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 288,
-    "tempo_medio_horas": 4.86
+    "tempo_medio_horas": 4.86,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16602,7 +16754,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 200,
-    "tempo_medio_horas": 7.11
+    "tempo_medio_horas": 7.11,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16617,7 +16773,11 @@
     "faixa_mais_15_dias": 4,
     "tempo_min_horas": 0,
     "tempo_max_horas": 431,
-    "tempo_medio_horas": 16.27
+    "tempo_medio_horas": 16.27,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16632,7 +16792,11 @@
     "faixa_mais_15_dias": 7,
     "tempo_min_horas": 0,
     "tempo_max_horas": 562,
-    "tempo_medio_horas": 108.44
+    "tempo_medio_horas": 108.44,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16647,7 +16811,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 223,
-    "tempo_medio_horas": 6.92
+    "tempo_medio_horas": 6.92,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16662,7 +16830,11 @@
     "faixa_mais_15_dias": 5,
     "tempo_min_horas": 0,
     "tempo_max_horas": 670,
-    "tempo_medio_horas": 23.45
+    "tempo_medio_horas": 23.45,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16677,7 +16849,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 439,
-    "tempo_medio_horas": 4.97
+    "tempo_medio_horas": 4.97,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16692,7 +16868,11 @@
     "faixa_mais_15_dias": 10,
     "tempo_min_horas": 0,
     "tempo_max_horas": 629,
-    "tempo_medio_horas": 43.03
+    "tempo_medio_horas": 43.03,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16707,7 +16887,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 617,
-    "tempo_medio_horas": 16.15
+    "tempo_medio_horas": 16.15,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16722,7 +16906,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 345,
-    "tempo_medio_horas": 7.92
+    "tempo_medio_horas": 7.92,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16737,7 +16925,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 144,
-    "tempo_medio_horas": 5.73
+    "tempo_medio_horas": 5.73,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16752,7 +16944,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 87,
-    "tempo_medio_horas": 11.41
+    "tempo_medio_horas": 11.41,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16767,7 +16963,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 561,
-    "tempo_medio_horas": 5.9
+    "tempo_medio_horas": 5.9,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16782,7 +16982,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 390,
-    "tempo_medio_horas": 9.2
+    "tempo_medio_horas": 9.2,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16797,7 +17001,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 566,
-    "tempo_medio_horas": 7.63
+    "tempo_medio_horas": 7.63,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16812,7 +17020,11 @@
     "faixa_mais_15_dias": 14,
     "tempo_min_horas": 0,
     "tempo_max_horas": 525,
-    "tempo_medio_horas": 158.04
+    "tempo_medio_horas": 158.04,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16827,7 +17039,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 75,
-    "tempo_medio_horas": 30.61
+    "tempo_medio_horas": 30.61,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16842,7 +17058,11 @@
     "faixa_mais_15_dias": 46,
     "tempo_min_horas": 0,
     "tempo_max_horas": 721,
-    "tempo_medio_horas": 226.93
+    "tempo_medio_horas": 226.93,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16857,7 +17077,11 @@
     "faixa_mais_15_dias": 4,
     "tempo_min_horas": 0,
     "tempo_max_horas": 735,
-    "tempo_medio_horas": 35.49
+    "tempo_medio_horas": 35.49,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16872,7 +17096,11 @@
     "faixa_mais_15_dias": 16,
     "tempo_min_horas": 0,
     "tempo_max_horas": 601,
-    "tempo_medio_horas": 152.75
+    "tempo_medio_horas": 152.75,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16887,7 +17115,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 333,
-    "tempo_medio_horas": 46.96
+    "tempo_medio_horas": 46.96,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16902,7 +17134,11 @@
     "faixa_mais_15_dias": 6,
     "tempo_min_horas": 0,
     "tempo_max_horas": 552,
-    "tempo_medio_horas": 36.53
+    "tempo_medio_horas": 36.53,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16917,7 +17153,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 197,
-    "tempo_medio_horas": 8.99
+    "tempo_medio_horas": 8.99,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16932,7 +17172,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 75,
-    "tempo_medio_horas": 3.71
+    "tempo_medio_horas": 3.71,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16947,7 +17191,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 74,
-    "tempo_medio_horas": 3.6
+    "tempo_medio_horas": 3.6,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16962,7 +17210,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 202,
-    "tempo_medio_horas": 25.47
+    "tempo_medio_horas": 25.47,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16977,7 +17229,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 189,
-    "tempo_medio_horas": 65.63
+    "tempo_medio_horas": 65.63,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -16992,7 +17248,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 144,
-    "tempo_medio_horas": 64.11
+    "tempo_medio_horas": 64.11,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17007,7 +17267,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 71,
-    "tempo_medio_horas": 3.36
+    "tempo_medio_horas": 3.36,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17022,7 +17286,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 534,
-    "tempo_medio_horas": 25.76
+    "tempo_medio_horas": 25.76,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17037,7 +17305,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 174,
-    "tempo_medio_horas": 30.14
+    "tempo_medio_horas": 30.14,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17052,7 +17324,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 3,
     "tempo_max_horas": 340,
-    "tempo_medio_horas": 67.87
+    "tempo_medio_horas": 67.87,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17067,7 +17343,11 @@
     "faixa_mais_15_dias": 4,
     "tempo_min_horas": 0,
     "tempo_max_horas": 529,
-    "tempo_medio_horas": 163.93
+    "tempo_medio_horas": 163.93,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17082,7 +17362,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 516,
-    "tempo_medio_horas": 51.6
+    "tempo_medio_horas": 51.6,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17097,7 +17381,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 102,
-    "tempo_medio_horas": 15.95
+    "tempo_medio_horas": 15.95,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17112,7 +17400,11 @@
     "faixa_mais_15_dias": 17,
     "tempo_min_horas": 26,
     "tempo_max_horas": 700,
-    "tempo_medio_horas": 345.0
+    "tempo_medio_horas": 345.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17127,7 +17419,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 102,
-    "tempo_medio_horas": 3.59
+    "tempo_medio_horas": 3.59,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17142,7 +17438,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 9,
-    "tempo_medio_horas": 2.1
+    "tempo_medio_horas": 2.1,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17157,7 +17457,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 119,
-    "tempo_medio_horas": 36.0
+    "tempo_medio_horas": 36.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17172,7 +17476,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 114,
-    "tempo_medio_horas": 17.69
+    "tempo_medio_horas": 17.69,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17187,7 +17495,11 @@
     "faixa_mais_15_dias": 1,
     "tempo_min_horas": 0,
     "tempo_max_horas": 433,
-    "tempo_medio_horas": 75.92
+    "tempo_medio_horas": 75.92,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17202,7 +17514,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 662,
-    "tempo_medio_horas": 243.17
+    "tempo_medio_horas": 243.17,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17217,7 +17533,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 292,
-    "tempo_medio_horas": 22.83
+    "tempo_medio_horas": 22.83,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17232,7 +17552,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 187,
-    "tempo_medio_horas": 14.75
+    "tempo_medio_horas": 14.75,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17247,7 +17571,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 1,
     "tempo_max_horas": 284,
-    "tempo_medio_horas": 118.67
+    "tempo_medio_horas": 118.67,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17262,7 +17590,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 18,
     "tempo_max_horas": 343,
-    "tempo_medio_horas": 143.18
+    "tempo_medio_horas": 143.18,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17277,7 +17609,11 @@
     "faixa_mais_15_dias": 2,
     "tempo_min_horas": 0,
     "tempo_max_horas": 418,
-    "tempo_medio_horas": 49.94
+    "tempo_medio_horas": 49.94,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17292,7 +17628,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 10,
-    "tempo_medio_horas": 4.07
+    "tempo_medio_horas": 4.07,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17307,7 +17647,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 6,
     "tempo_max_horas": 90,
-    "tempo_medio_horas": 35.7
+    "tempo_medio_horas": 35.7,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17322,7 +17666,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 145,
-    "tempo_medio_horas": 46.6
+    "tempo_medio_horas": 46.6,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17337,7 +17685,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 68,
     "tempo_max_horas": 258,
-    "tempo_medio_horas": 135.8
+    "tempo_medio_horas": 135.8,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17352,7 +17704,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 23,
     "tempo_max_horas": 138,
-    "tempo_medio_horas": 62.5
+    "tempo_medio_horas": 62.5,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17367,7 +17723,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 279,
     "tempo_max_horas": 289,
-    "tempo_medio_horas": 283.75
+    "tempo_medio_horas": 283.75,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17382,7 +17742,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 15,
-    "tempo_medio_horas": 7.33
+    "tempo_medio_horas": 7.33,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17397,7 +17761,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 4,
-    "tempo_medio_horas": 2.0
+    "tempo_medio_horas": 2.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17412,7 +17780,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 0,
     "tempo_max_horas": 24,
-    "tempo_medio_horas": 12.0
+    "tempo_medio_horas": 12.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17427,7 +17799,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 114,
     "tempo_max_horas": 114,
-    "tempo_medio_horas": 114.0
+    "tempo_medio_horas": 114.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17442,7 +17818,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 66,
     "tempo_max_horas": 66,
-    "tempo_medio_horas": 66.0
+    "tempo_medio_horas": 66.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17457,7 +17837,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 2,
     "tempo_max_horas": 2,
-    "tempo_medio_horas": 2.0
+    "tempo_medio_horas": 2.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17472,7 +17856,11 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 20,
     "tempo_max_horas": 20,
-    "tempo_medio_horas": 20.0
+    "tempo_medio_horas": 20.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 2,
@@ -17487,6 +17875,10 @@
     "faixa_mais_15_dias": 0,
     "tempo_min_horas": 2,
     "tempo_max_horas": 2,
-    "tempo_medio_horas": 2.0
+    "tempo_medio_horas": 2.0,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   }
 ]

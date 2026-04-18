@@ -3762,7 +3762,11 @@
     "faixa_mais_15_dias": 20,
     "tempo_min_horas": 0,
     "tempo_max_horas": 700,
-    "tempo_medio_horas": 19.77
+    "tempo_medio_horas": 19.77,
+    "pin": {
+      "insight_id": 2,
+      "type": "risk"
+    }
   },
   {
     "customer_id": 1,
