@@ -1805,13 +1805,34 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 groupBy === "unidade" ? customerData.hcUnidade :
                 customerData.hcArea;
               const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
+              const leftMax = Math.max(1, ...qualidadeComHeadcount.map(d => (d.registradas ?? 0) + (d.justificadas ?? 0)));
+              const yDomainLeft: [number, number] = [0, leftMax];
+              const yDomainRight: [number, number] = [0, rightDomainMax];
               const pins: InsightOverlayPin[] = qualidadeComHeadcount
                 .map((d, i) => {
                   const p = pinsByMes[d.mes];
-                  return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
+                  if (!p) return null;
+                  const seriesValue = (() => {
+                    if (!p.series) return undefined;
+                    if (p.series === "total") return (d.registradas ?? 0) + (d.justificadas ?? 0);
+                    if (p.series === "registradas") return d.registradas;
+                    if (p.series === "justificadas") return d.justificadas;
+                    if (p.series === "activeHeadcount" || p.series === "headcount") return (d as any).activeHeadcount;
+                    return (d as any)[p.series];
+                  })();
+                  return {
+                    mesIndex: i,
+                    insightId: String(p.insight_id),
+                    numericId: p.insight_id,
+                    type: p.type,
+                    series: p.series,
+                    axis: p.axis,
+                    offsetY: p.offsetY,
+                    value: typeof seriesValue === "number" ? seriesValue : p.value,
+                  };
                 })
                 .filter(Boolean) as InsightOverlayPin[];
-              return <InsightOverlayPins pins={pins} totalMeses={qualidadeComHeadcount.length} onPinClick={openInsightById} direction="down" />;
+              return <InsightOverlayPins pins={pins} totalMeses={qualidadeComHeadcount.length} onPinClick={openInsightById} direction="down" yDomainLeft={yDomainLeft} yDomainRight={yDomainRight} />;
             })()}
             </div>
           </div>
