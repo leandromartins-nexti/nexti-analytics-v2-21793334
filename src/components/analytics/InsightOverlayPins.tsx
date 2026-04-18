@@ -4,13 +4,13 @@
  *
  * Posicionamento:
  *  - Horizontal: paddingLeft + (i + 0.5) * usableWidth / N
- *  - Vertical: `topPx` pixels a partir do topo do container (default 20px,
- *    ou seja, 20px abaixo do topo do gráfico, DENTRO da área do plot).
+ *  - Vertical: calculado AUTOMATICAMENTE a partir do `value` da série âncora,
+ *    convertendo-o em pixels usando a área do plot (medida via SVG do Recharts)
+ *    e o domínio Y indicado (`axis`: left | right). Pode ser refinado com `offsetY`.
  *
- * Para evitar que o pin seja cortado quando posicionado próximo ao topo,
- * o componente ChartCard que envolve o gráfico deve ter `pt-6` (ou similar)
- * para abrir espaço acima do plot area.
+ *  - Fallback: se `value` não vier, usa `topPx` (legado) ou 20px.
  */
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import InsightSunPin from "./InsightSunPin";
 import type { PinType } from "@/data/qualidadeInsightsData";
 
@@ -19,7 +19,16 @@ export interface InsightOverlayPin {
   insightId: string; // legacy id (kept for click resolution)
   numericId?: number; // preferred id used by JSON-driven pins
   type?: PinType; // visual variant
-  topPx?: number; // pixels a partir do topo do container (default 20)
+  topPx?: number; // legacy: pixels a partir do topo do container
+
+  /** Nome da série a ancorar (apenas para cálculo automático). */
+  series?: string;
+  /** Valor (numérico) da série naquele índice — necessário para cálculo automático. */
+  value?: number;
+  /** Eixo Y a usar no cálculo. */
+  axis?: "left" | "right";
+  /** Ajuste fino vertical em pixels (negativo = sobe). Default: -28. */
+  offsetY?: number;
 }
 
 interface Props {
@@ -29,6 +38,50 @@ interface Props {
   paddingLeftPct?: number;
   paddingRightPct?: number;
   direction?: "up" | "down";
+  /** Domínio do eixo Y esquerdo [min, max]. Necessário para pins ancorados em axis=left. */
+  yDomainLeft?: [number, number];
+  /** Domínio do eixo Y direito [min, max]. Necessário para pins ancorados em axis=right. */
+  yDomainRight?: [number, number];
+}
+
+/**
+ * Mede a área do plot do gráfico Recharts (recharts-cartesian-grid)
+ * em coordenadas relativas ao container do overlay.
+ */
+function usePlotArea(containerRef: React.RefObject<HTMLDivElement>) {
+  const [area, setArea] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      const grid = el.querySelector(".recharts-cartesian-grid") as SVGGraphicsElement | null;
+      if (!grid) return;
+      const containerRect = el.getBoundingClientRect();
+      const gridRect = grid.getBoundingClientRect();
+      setArea({
+        top: gridRect.top - containerRect.top,
+        left: gridRect.left - containerRect.left,
+        width: gridRect.width,
+        height: gridRect.height,
+      });
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    // re-measure após render do Recharts
+    const t = setTimeout(measure, 50);
+    const t2 = setTimeout(measure, 200);
+    return () => {
+      ro.disconnect();
+      clearTimeout(t);
+      clearTimeout(t2);
+    };
+  }, [containerRef]);
+
+  return area;
 }
 
 export default function InsightOverlayPins({
@@ -38,21 +91,52 @@ export default function InsightOverlayPins({
   paddingLeftPct = 0.07,
   paddingRightPct = 0.04,
   direction = "down",
+  yDomainLeft,
+  yDomainRight,
 }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const plot = usePlotArea(containerRef);
   const usable = 1 - paddingLeftPct - paddingRightPct;
 
   return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 20 }}>
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 20 }}>
       {pins.map((pin, idx) => {
-        const xPct = paddingLeftPct + ((pin.mesIndex + 0.5) / totalMeses) * usable;
-        const topPx = pin.topPx ?? 20;
+        // Horizontal: usa o plot real se disponível (mais preciso), senão fallback proporcional
+        let leftPx: number;
+        if (plot) {
+          leftPx = plot.left + ((pin.mesIndex + 0.5) / totalMeses) * plot.width;
+        } else {
+          leftPx = 0; // será sobrescrito pelo style abaixo
+        }
+
+        // Vertical: cálculo automático baseado no value/axis, fallback para topPx legado
+        let topPx: number;
+        const offsetY = pin.offsetY ?? -28;
+
+        if (plot && pin.value !== undefined && pin.axis) {
+          const domain = pin.axis === "right" ? yDomainRight : yDomainLeft;
+          if (domain) {
+            const [min, max] = domain;
+            const ratio = max === min ? 0 : (pin.value - min) / (max - min);
+            const clamped = Math.max(0, Math.min(1, ratio));
+            topPx = plot.top + plot.height * (1 - clamped) + offsetY;
+          } else {
+            topPx = pin.topPx ?? 20;
+          }
+        } else {
+          topPx = pin.topPx ?? 20;
+        }
+
+        const positioning: React.CSSProperties = plot
+          ? { left: `${leftPx}px`, top: `${topPx}px` }
+          : { left: `${(paddingLeftPct + ((pin.mesIndex + 0.5) / totalMeses) * usable) * 100}%`, top: `${pin.topPx ?? 20}px` };
+
         return (
           <div
             key={`${pin.insightId}-${idx}`}
             className="absolute"
             style={{
-              left: `${xPct * 100}%`,
-              top: `${topPx}px`,
+              ...positioning,
               transform: "translate(-50%, -50%)",
               pointerEvents: "auto",
             }}
@@ -74,4 +158,3 @@ export default function InsightOverlayPins({
     </div>
   );
 }
-
