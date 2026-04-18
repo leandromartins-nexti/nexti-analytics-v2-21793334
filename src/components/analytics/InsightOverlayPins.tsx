@@ -12,17 +12,20 @@
  * para abrir espaço acima do plot area.
  */
 import InsightSunPin from "./InsightSunPin";
+import type { PinType } from "@/data/qualidadeInsightsData";
 
 export interface InsightOverlayPin {
   mesIndex: number; // 0-based index dentro do array de meses
-  insightId: string;
+  insightId: string; // legacy id (kept for click resolution)
+  numericId?: number; // preferred id used by JSON-driven pins
+  type?: PinType; // visual variant
   topPx?: number; // pixels a partir do topo do container (default 20)
 }
 
 interface Props {
   pins: InsightOverlayPin[];
   totalMeses: number;
-  onPinClick: (id: string) => void;
+  onPinClick: (id: string, numericId?: number) => void;
   paddingLeftPct?: number;
   paddingRightPct?: number;
   direction?: "up" | "down";
@@ -58,10 +61,11 @@ export default function InsightOverlayPins({
               <InsightSunPin
                 cx={0}
                 cy={0}
-                onClick={() => onPinClick(pin.insightId)}
+                onClick={() => onPinClick(pin.insightId, pin.numericId)}
                 scale={0.6}
                 distance={0}
                 direction={direction}
+                type={pin.type}
               />
             </svg>
           </div>
@@ -70,3 +74,4 @@ export default function InsightOverlayPins({
     </div>
   );
 }
+
