@@ -2047,22 +2047,16 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         );
                       }} />
                     </Bar>
-                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
-                    <Customized component={(props: any) => {
-                      const { xAxisMap, yAxisMap, offset } = props;
-                      const xAxis = xAxisMap?.[Object.keys(xAxisMap)[0]];
-                      const yAxis = yAxisMap?.["right"] ?? yAxisMap?.[Object.keys(yAxisMap)[0]];
-                      if (!xAxis || !yAxis) return null;
-                      const pins: JSX.Element[] = [];
-                      sobrecargaData.forEach((d: any, i: number) => {
+                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }}>
+                      <LabelList content={(props: any) => {
+                        const { index, x, y } = props;
+                        const d = sobrecargaData[index];
+                        if (!d) return null;
                         const insightId = chartInsightPins.sobrecarga?.[d.mes];
-                        if (!insightId) return;
-                        const cx = xAxis.scale(d.mes) + (xAxis.bandwidth ? xAxis.bandwidth() / 2 : 0);
-                        const cy = yAxis.scale(d.he);
-                        pins.push(<InsightSunPin key={`pin-s-${i}`} cx={cx} cy={cy} plotTop={offset?.top ?? 0} plotBottom={(offset?.top ?? 0) + (offset?.height ?? 0)} onClick={() => openInsightById(insightId)} />);
-                      });
-                      return <g style={{ pointerEvents: "all" }}>{pins}</g>;
-                    }} />
+                        if (!insightId) return null;
+                        return <InsightSunPin cx={x} cy={y} onClick={() => openInsightById(insightId)} />;
+                      }} />
+                    </Line>
                   </ComposedChart>
                 </ResponsiveContainer>
                 {/* Legend */}
