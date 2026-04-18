@@ -241,7 +241,11 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
     resumeTour,
     nextStep,
     prevStep,
-  }), [hoveredId, setHoveredId, registerPin, unregisterPin, getPinPosition, pinnedIds, tourActive, tourPaused, tourIndex, queue, tourProgress, startTour, stopTour, pauseTour, resumeTour, nextStep, prevStep]);
+    stepMs,
+    setStepMs,
+    loop,
+    setLoop,
+  }), [hoveredId, setHoveredId, registerPin, unregisterPin, getPinPosition, pinnedIds, tourActive, tourPaused, tourIndex, queue, tourProgress, startTour, stopTour, pauseTour, resumeTour, nextStep, prevStep, stepMs, setStepMs, loop, setLoop]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
