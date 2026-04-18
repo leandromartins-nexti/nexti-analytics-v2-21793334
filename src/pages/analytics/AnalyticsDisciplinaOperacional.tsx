@@ -917,31 +917,21 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
   const { customerId } = useCustomer();
   const [activeInsight, setActiveInsight] = useState<QualidadeInsight | null>(null);
-  // Map: chart name → mes label → insight id (chart pin annotations) — por customer
-  const CHART_PINS_BY_CUSTOMER: Record<number, Record<string, Record<string, string>>> = {
-    642: {
-      evoQualidade: { "set/25": "E1", "mar/26": "C1" },
-      evoTratativa: { "mar/26": "R3" },
-      sobrecarga: { "mar/26": "O1" },
-    },
-    2: {
-      evoQualidade: { "set/25": "event_001", "mar/26": "ach_001" },
-      evoTratativa: { "mar/26": "risk_002" },
-      sobrecarga: { "mar/26": "opp_001" },
-    },
-    391: {
-      evoQualidade: { "set/25": "event_001", "mar/26": "ach_002" },
-      evoTratativa: { "mar/26": "risk_002" },
-      sobrecarga: { "mar/26": "opp_001" },
-    },
-  };
-  const chartInsightPins: Record<string, Record<string, string>> = CHART_PINS_BY_CUSTOMER[customerId] ?? {};
-  const openInsightById = useCallback((id: string) => {
+  // Pins agora vêm dos próprios JSONs (campo `pin: { insight_id, type }` por linha).
+  // Resolvemos o clique pelo numeric_id ou pelo id string (legacy fallback).
+  const openInsightById = useCallback((id: string, numericId?: number) => {
     const all = getInsightsForCustomer(customerId);
-    const found = all.find(i => i.id === id);
-    console.log("[openInsightById]", { id, found: !!found, totalInsights: all.length });
+    const found =
+      (numericId !== undefined && all.find(i => (i as any).numeric_id === numericId)) ||
+      all.find(i => i.id === id);
     if (found) setActiveInsight(found);
   }, [customerId]);
+
+  /** Helper: extract pin data from a row. Returns undefined if no pin. */
+  const extractPin = (row: any): { insight_id: number; type: "risk"|"achievement"|"opportunity"|"trend" } | undefined => {
+    return row?.pin && typeof row.pin === "object" ? row.pin : undefined;
+  };
+
 
   // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
   const dataSources = useMemo(() => buildDataSources(customerData), [customerData]);
