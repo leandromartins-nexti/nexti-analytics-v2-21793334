@@ -9,7 +9,7 @@
  *
  *  O pin é centralizado no ponto via translate(-50%, -50%) — nada mais.
  */
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import InsightSunPin from "./InsightSunPin";
 import type { PinType } from "@/data/qualidadeInsightsData";
 import { useInsightsTour } from "@/contexts/InsightsTourContext";
