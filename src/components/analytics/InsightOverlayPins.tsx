@@ -48,8 +48,17 @@ interface Props {
  * Mede a área do plot do gráfico Recharts (recharts-cartesian-grid)
  * em coordenadas relativas ao container do overlay.
  */
+interface PlotInfo {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  /** Centros x reais (em px relativos ao container) de cada tick do eixo X. */
+  tickCentersX: number[];
+}
+
 function usePlotArea(containerRef: React.RefObject<HTMLDivElement>) {
-  const [area, setArea] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const [area, setArea] = useState<PlotInfo | null>(null);
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -60,24 +69,38 @@ function usePlotArea(containerRef: React.RefObject<HTMLDivElement>) {
       if (!grid) return;
       const containerRect = el.getBoundingClientRect();
       const gridRect = grid.getBoundingClientRect();
+
+      // Lê os ticks reais do eixo X (xAxis) — pega o centro de cada label/tick
+      const xAxis = el.querySelector(".recharts-xAxis") as SVGGElement | null;
+      let tickCentersX: number[] = [];
+      if (xAxis) {
+        const ticks = xAxis.querySelectorAll(".recharts-cartesian-axis-tick");
+        ticks.forEach((t) => {
+          const r = (t as SVGGraphicsElement).getBoundingClientRect();
+          tickCentersX.push(r.left + r.width / 2 - containerRect.left);
+        });
+      }
+
       setArea({
         top: gridRect.top - containerRect.top,
         left: gridRect.left - containerRect.left,
         width: gridRect.width,
         height: gridRect.height,
+        tickCentersX,
       });
     };
 
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    // re-measure após render do Recharts
     const t = setTimeout(measure, 50);
     const t2 = setTimeout(measure, 200);
+    const t3 = setTimeout(measure, 500);
     return () => {
       ro.disconnect();
       clearTimeout(t);
       clearTimeout(t2);
+      clearTimeout(t3);
     };
   }, [containerRef]);
 
