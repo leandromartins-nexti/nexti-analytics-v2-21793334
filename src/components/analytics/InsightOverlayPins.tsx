@@ -106,6 +106,9 @@ function usePlotArea(containerRef: React.RefObject<HTMLDivElement>) {
         height: gridRect.height,
         tickCentersX,
       });
+      // DEBUG
+      // eslint-disable-next-line no-console
+      console.log("[InsightOverlayPins] measured", { tickCount: tickCentersX.length, gridLeft: gridRect.left - containerRect.left, gridWidth: gridRect.width });
       return true;
     };
 
