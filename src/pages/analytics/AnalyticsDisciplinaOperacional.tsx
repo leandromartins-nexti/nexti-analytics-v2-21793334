@@ -2910,7 +2910,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         if (!d) return null;
                         const insightId = chartInsightPins.sobrecarga?.[d.mes];
                         if (!insightId) return null;
-                        const isOverlayVariant = ["v31", "v32", "v33", "v34", "v35"].includes(variant.id);
+                        const isOverlayVariant = ["v31", "v32", "v33", "v34", "v35", "v36", "v37", "v38", "v39", "v40"].includes(variant.id);
                         if (!isOverlayVariant) return null;
                         const pinY = 50;
                         return variant.renderPin(x, pinY, () => openInsightById(insightId));
