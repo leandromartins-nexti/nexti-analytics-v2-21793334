@@ -2647,6 +2647,162 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   </g>
                 ),
               },
+              {
+                id: "v31",
+                label: "Variação 31 — Lâmpada GIGANTE com glow",
+                description: "Lâmpada 2x maior (28px) com glow amarelo intenso, dominando o topo da barra.",
+                renderPin: (cx, cy, onClick) => (
+                  <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    <title>Ver insight</title>
+                    {/* Glow pulsante grande */}
+                    <circle cx={cx} cy={cy} r={36} fill="#fde047" opacity={0.25}>
+                      <animate attributeName="opacity" values="0.15;0.5;0.15" dur="1.6s" repeatCount="indefinite" />
+                      <animate attributeName="r" values="32;42;32" dur="1.6s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx={cx} cy={cy} r={26} fill="#fef9c3" opacity={0.7}>
+                      <animate attributeName="opacity" values="0.5;0.9;0.5" dur="1.6s" repeatCount="indefinite" />
+                    </circle>
+                    {/* Bulbo gigante */}
+                    <circle cx={cx} cy={cy} r={20} fill="#facc15" stroke="#fff" strokeWidth={3}>
+                      <animate attributeName="fill" values="#facc15;#fde047;#facc15" dur="1.6s" repeatCount="indefinite" />
+                    </circle>
+                    <text x={cx} y={cy + 8} textAnchor="middle" fontSize={24}>💡</text>
+                  </g>
+                ),
+              },
+              {
+                id: "v32",
+                label: "Variação 32 — Lâmpada flutuando ALTO (acima da linha)",
+                description: "Lâmpada posicionada bem acima do topo da barra, com haste conectora — fica na frente da linha azul.",
+                renderPin: (cx, cy, onClick) => {
+                  const pinY = cy - 28; // sobe para ficar acima da linha
+                  return (
+                    <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                      <title>Ver insight</title>
+                      {/* Haste conectora pontilhada */}
+                      <line x1={cx} y1={cy + 6} x2={cx} y2={pinY + 14} stroke="#facc15" strokeWidth={2} strokeDasharray="3 2" opacity={0.7} />
+                      {/* Glow */}
+                      <circle cx={cx} cy={pinY} r={26} fill="#fde047" opacity={0.3}>
+                        <animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.4s" repeatCount="indefinite" />
+                        <animate attributeName="r" values="22;30;22" dur="1.4s" repeatCount="indefinite" />
+                      </circle>
+                      {/* Bulbo grande flutuante */}
+                      <g>
+                        <animateTransform attributeName="transform" type="translate" values="0 -2;0 2;0 -2" dur="2s" repeatCount="indefinite" />
+                        <circle cx={cx} cy={pinY} r={18} fill="#facc15" stroke="#fff" strokeWidth={2.5}>
+                          <animate attributeName="fill" values="#fde047;#facc15;#fde047" dur="1.4s" repeatCount="indefinite" />
+                        </circle>
+                        <text x={cx} y={pinY + 7} textAnchor="middle" fontSize={20}>💡</text>
+                      </g>
+                    </g>
+                  );
+                },
+              },
+              {
+                id: "v33",
+                label: "Variação 33 — Lâmpada 3D com sombra projetada",
+                description: "Lâmpada grande com efeito de profundidade: sombra escura embaixo e brilho radial intenso.",
+                renderPin: (cx, cy, onClick) => (
+                  <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    <title>Ver insight</title>
+                    {/* Sombra projetada */}
+                    <ellipse cx={cx + 3} cy={cy + 4} rx={20} ry={18} fill="#000" opacity={0.25} />
+                    {/* Glow radial externo */}
+                    <circle cx={cx} cy={cy} r={32} fill="#fbbf24" opacity={0.2}>
+                      <animate attributeName="opacity" values="0.1;0.4;0.1" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                    {/* Bulbo principal */}
+                    <circle cx={cx} cy={cy} r={22} fill="#facc15" stroke="#fff" strokeWidth={3}>
+                      <animate attributeName="fill" values="#facc15;#fde047;#fcd34d;#fde047;#facc15" dur="1.8s" repeatCount="indefinite" />
+                    </circle>
+                    {/* Highlight de brilho 3D */}
+                    <ellipse cx={cx - 6} cy={cy - 6} rx={6} ry={8} fill="#fff" opacity={0.6} />
+                    <text x={cx} y={cy + 9} textAnchor="middle" fontSize={26}>💡</text>
+                  </g>
+                ),
+              },
+              {
+                id: "v34",
+                label: "Variação 34 — Lâmpada com balão 'IDEIA!' acima da linha",
+                description: "Lâmpada gigante + balão de fala 'IDEIA!' posicionados bem alto, na frente da linha azul.",
+                renderPin: (cx, cy, onClick) => {
+                  const pinY = cy - 32;
+                  return (
+                    <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                      <title>Ver insight</title>
+                      {/* Balão de fala IDEIA */}
+                      <g transform={`translate(0 ${pinY - 32})`}>
+                        <rect x={cx + 14} y={cy - 8} width={68} height={22} rx={11} fill="#fbbf24" stroke="#fff" strokeWidth={2}>
+                          <animate attributeName="fill" values="#fbbf24;#fde047;#fbbf24" dur="1.2s" repeatCount="indefinite" />
+                        </rect>
+                        <polygon points={`${cx+14},${cy+2} ${cx+8},${cy+10} ${cx+18},${cy+6}`} fill="#fbbf24" />
+                        <text x={cx + 48} y={cy + 7} textAnchor="middle" fontSize={11} fontWeight={900} fill="#1e293b">IDEIA!</text>
+                      </g>
+                      {/* Haste */}
+                      <line x1={cx} y1={cy + 6} x2={cx} y2={pinY + 16} stroke="#facc15" strokeWidth={2.5} strokeDasharray="3 2" opacity={0.8} />
+                      {/* Glow */}
+                      <circle cx={cx} cy={pinY} r={28} fill="#fde047" opacity={0.35}>
+                        <animate attributeName="opacity" values="0.2;0.65;0.2" dur="1.4s" repeatCount="indefinite" />
+                        <animate attributeName="r" values="24;32;24" dur="1.4s" repeatCount="indefinite" />
+                      </circle>
+                      {/* Bulbo grande */}
+                      <circle cx={cx} cy={pinY} r={20} fill="#facc15" stroke="#fff" strokeWidth={3}>
+                        <animate attributeName="fill" values="#fde047;#facc15;#fde047" dur="1.4s" repeatCount="indefinite" />
+                      </circle>
+                      <text x={cx} y={pinY + 8} textAnchor="middle" fontSize={24}>💡</text>
+                    </g>
+                  );
+                },
+              },
+              {
+                id: "v35",
+                label: "Variação 35 — Lâmpada SOL com raios divergentes (acima da linha)",
+                description: "Lâmpada estilo sol com 16 raios cintilantes, posicionada acima do topo, ficando na frente da linha azul.",
+                renderPin: (cx, cy, onClick) => {
+                  const pinY = cy - 30;
+                  return (
+                    <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                      <title>Ver insight</title>
+                      {/* Haste */}
+                      <line x1={cx} y1={cy + 6} x2={cx} y2={pinY + 18} stroke="#facc15" strokeWidth={2} strokeDasharray="3 2" opacity={0.6} />
+                      {/* Raios divergentes 16 direções */}
+                      <g>
+                        <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${pinY}`} to={`360 ${cx} ${pinY}`} dur="12s" repeatCount="indefinite" />
+                        {Array.from({ length: 16 }).map((_, i) => {
+                          const a = (i * 22.5 * Math.PI) / 180;
+                          const long = i % 2 === 0;
+                          const r1 = 22;
+                          const r2 = long ? 36 : 30;
+                          return (
+                            <line
+                              key={i}
+                              x1={cx + Math.cos(a) * r1}
+                              y1={pinY + Math.sin(a) * r1}
+                              x2={cx + Math.cos(a) * r2}
+                              y2={pinY + Math.sin(a) * r2}
+                              stroke="#facc15"
+                              strokeWidth={long ? 3 : 2}
+                              strokeLinecap="round"
+                              opacity={0.85}
+                            >
+                              <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.07}s`} />
+                            </line>
+                          );
+                        })}
+                      </g>
+                      {/* Glow forte */}
+                      <circle cx={cx} cy={pinY} r={28} fill="#fde047" opacity={0.4}>
+                        <animate attributeName="opacity" values="0.25;0.7;0.25" dur="1.2s" repeatCount="indefinite" />
+                      </circle>
+                      {/* Bulbo central grande */}
+                      <circle cx={cx} cy={pinY} r={20} fill="#facc15" stroke="#fff" strokeWidth={3}>
+                        <animate attributeName="fill" values="#fde047;#facc15;#fde047" dur="1.2s" repeatCount="indefinite" />
+                      </circle>
+                      <text x={cx} y={pinY + 8} textAnchor="middle" fontSize={24}>💡</text>
+                    </g>
+                  );
+                },
+              },
             ];
 
             const renderVariant = (variant: typeof variants[number]) => (
@@ -2690,7 +2846,20 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         return variant.renderPin(cx, cy, () => openInsightById(insightId));
                       }} />
                     </Bar>
-                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
+                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }}>
+                      {/* Camada extra: pin renderizado DEPOIS da Line para ficar na FRENTE da linha azul (apenas v31-v35) */}
+                      <LabelList content={(props: any) => {
+                        const { index, x } = props;
+                        const d = sobrecargaData[index];
+                        if (!d) return null;
+                        const insightId = chartInsightPins.sobrecarga?.[d.mes];
+                        if (!insightId) return null;
+                        const isOverlayVariant = ["v31", "v32", "v33", "v34", "v35"].includes(variant.id);
+                        if (!isOverlayVariant) return null;
+                        const pinY = 50;
+                        return variant.renderPin(x, pinY, () => openInsightById(insightId));
+                      }} />
+                    </Line>
                   </ComposedChart>
                 </ResponsiveContainer>
                 <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
