@@ -1752,15 +1752,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       </text>
                     );
                   }} />
-                  <LabelList content={({ x, y, width, index }: any) => {
-                    const d = qualidadeComHeadcount[index];
-                    if (!d) return null;
-                    const insightId = chartInsightPins.evoQualidade?.[d.mes];
-                    if (!insightId) return null;
-                    const cx = (x ?? 0) + (width ?? 0) / 2;
-                    const cy = (y ?? 0);
-                    return <InsightSunPin cx={cx} cy={cy} onClick={() => openInsightById(insightId)} />;
-                  }} />
                 </Bar>
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: "Registradas", type: "square", color: "#22c55e" },
@@ -1769,6 +1760,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
+            {(() => {
+              const pins: InsightOverlayPin[] = qualidadeComHeadcount
+                .map((d, i) => {
+                  const id = chartInsightPins.evoQualidade?.[d.mes];
+                  return id ? { mesIndex: i, insightId: id, topPct: 0.18 } : null;
+                })
+                .filter(Boolean) as InsightOverlayPin[];
+              return <InsightOverlayPins pins={pins} totalMeses={qualidadeComHeadcount.length} onPinClick={openInsightById} direction="down" />;
+            })()}
           </div>
         </div>
 
