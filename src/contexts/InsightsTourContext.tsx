@@ -53,6 +53,12 @@ interface InsightsTourContextValue {
   resumeTour: () => void;
   nextStep: () => void;
   prevStep: () => void;
+
+  // Settings (persistidos em localStorage)
+  stepMs: number;
+  setStepMs: (ms: number) => void;
+  loop: boolean;
+  setLoop: (v: boolean) => void;
 }
 
 const Ctx = createContext<InsightsTourContextValue | null>(null);
