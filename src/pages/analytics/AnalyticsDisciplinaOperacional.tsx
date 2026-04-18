@@ -2846,7 +2846,20 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         return variant.renderPin(cx, cy, () => openInsightById(insightId));
                       }} />
                     </Bar>
-                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
+                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }}>
+                      {/* Camada extra: pin renderizado DEPOIS da Line para ficar na FRENTE da linha azul (apenas v31-v35) */}
+                      <LabelList content={(props: any) => {
+                        const { index, x } = props;
+                        const d = sobrecargaData[index];
+                        if (!d) return null;
+                        const insightId = chartInsightPins.sobrecarga?.[d.mes];
+                        if (!insightId) return null;
+                        const isOverlayVariant = ["v31", "v32", "v33", "v34", "v35"].includes(variant.id);
+                        if (!isOverlayVariant) return null;
+                        const pinY = 50;
+                        return variant.renderPin(x, pinY, () => openInsightById(insightId));
+                      }} />
+                    </Line>
                   </ComposedChart>
                 </ResponsiveContainer>
                 <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
