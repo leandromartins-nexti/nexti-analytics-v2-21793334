@@ -147,8 +147,12 @@ export default function GroupBySidebar({
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent side="right" className="w-full max-w-full p-0 flex flex-col">
             <SheetHeader className="px-4 py-3 border-b border-border flex-row items-center justify-between space-y-0">
-              <SheetTitle className="text-sm font-semibold">Tipo de Operação</SheetTitle>
+              <SheetTitle className="text-sm font-semibold">{mode === "ops" ? "Tipo de Operação" : "Insights"}</SheetTitle>
             </SheetHeader>
+            <div className="px-3 pt-2"><ModeToggle /></div>
+            {mode === "insights" ? (
+              <div className="flex-1 overflow-y-auto p-3"><RightSidebarInsightsPanel /></div>
+            ) : (
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
               <div className="flex gap-2">
                 {groupByOptions.map(o => (
@@ -222,6 +226,7 @@ export default function GroupBySidebar({
                 })}
               </div>
             </div>
+            )}
           </SheetContent>
         </Sheet>
       </>
