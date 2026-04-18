@@ -117,11 +117,7 @@
     "qtd_ajustes": 541,
     "operadores_ativos": 7,
     "ajustes_por_operador": 77,
-    "horas_extras_rateadas": 129.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 129.4
   },
   {
     "customer_id": 2,
@@ -151,11 +147,7 @@
     "qtd_ajustes": 1,
     "operadores_ativos": 1,
     "ajustes_por_operador": 1,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -425,11 +417,7 @@
     "qtd_ajustes": 45,
     "operadores_ativos": 2,
     "ajustes_por_operador": 23,
-    "horas_extras_rateadas": 1.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 1.2
   },
   {
     "customer_id": 2,
@@ -549,11 +537,7 @@
     "qtd_ajustes": 39,
     "operadores_ativos": 1,
     "ajustes_por_operador": 39,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -673,11 +657,7 @@
     "qtd_ajustes": 10,
     "operadores_ativos": 2,
     "ajustes_por_operador": 5,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -797,11 +777,7 @@
     "qtd_ajustes": 129,
     "operadores_ativos": 2,
     "ajustes_por_operador": 65,
-    "horas_extras_rateadas": 5.3,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.3
   },
   {
     "customer_id": 2,
@@ -921,11 +897,7 @@
     "qtd_ajustes": 480,
     "operadores_ativos": 3,
     "ajustes_por_operador": 160,
-    "horas_extras_rateadas": 19.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 19.5
   },
   {
     "customer_id": 2,
@@ -1035,11 +1007,7 @@
     "qtd_ajustes": 10,
     "operadores_ativos": 2,
     "ajustes_por_operador": 5,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -1159,11 +1127,7 @@
     "qtd_ajustes": 22,
     "operadores_ativos": 1,
     "ajustes_por_operador": 22,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -1283,11 +1247,7 @@
     "qtd_ajustes": 554,
     "operadores_ativos": 2,
     "ajustes_por_operador": 277,
-    "horas_extras_rateadas": 0.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.6
   },
   {
     "customer_id": 2,
@@ -1357,11 +1317,7 @@
     "qtd_ajustes": 1,
     "operadores_ativos": 1,
     "ajustes_por_operador": 1,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -1471,11 +1427,7 @@
     "qtd_ajustes": 5,
     "operadores_ativos": 1,
     "ajustes_por_operador": 5,
-    "horas_extras_rateadas": 38.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 38.9
   },
   {
     "customer_id": 2,
@@ -1595,11 +1547,7 @@
     "qtd_ajustes": 41,
     "operadores_ativos": 2,
     "ajustes_por_operador": 21,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -1719,11 +1667,7 @@
     "qtd_ajustes": 196,
     "operadores_ativos": 1,
     "ajustes_por_operador": 196,
-    "horas_extras_rateadas": 8.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 8.6
   },
   {
     "customer_id": 2,
@@ -1843,11 +1787,7 @@
     "qtd_ajustes": 298,
     "operadores_ativos": 1,
     "ajustes_por_operador": 298,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -2037,11 +1977,7 @@
     "qtd_ajustes": 49,
     "operadores_ativos": 6,
     "ajustes_por_operador": 8,
-    "horas_extras_rateadas": 0.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.2
   },
   {
     "customer_id": 2,
@@ -2141,11 +2077,7 @@
     "qtd_ajustes": 4,
     "operadores_ativos": 1,
     "ajustes_por_operador": 4,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -2265,11 +2197,7 @@
     "qtd_ajustes": 24,
     "operadores_ativos": 1,
     "ajustes_por_operador": 24,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -2379,11 +2307,7 @@
     "qtd_ajustes": 166,
     "operadores_ativos": 1,
     "ajustes_por_operador": 166,
-    "horas_extras_rateadas": 11.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 11.0
   },
   {
     "customer_id": 2,
@@ -2483,11 +2407,7 @@
     "qtd_ajustes": 4,
     "operadores_ativos": 1,
     "ajustes_por_operador": 4,
-    "horas_extras_rateadas": null,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": null
   },
   {
     "customer_id": 2,
@@ -2567,11 +2487,7 @@
     "qtd_ajustes": 1,
     "operadores_ativos": 1,
     "ajustes_por_operador": 1,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -2721,11 +2637,7 @@
     "qtd_ajustes": 179,
     "operadores_ativos": 2,
     "ajustes_por_operador": 90,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -2805,11 +2717,7 @@
     "qtd_ajustes": 29,
     "operadores_ativos": 1,
     "ajustes_por_operador": 29,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -2929,11 +2837,7 @@
     "qtd_ajustes": 26,
     "operadores_ativos": 6,
     "ajustes_por_operador": 4,
-    "horas_extras_rateadas": 1.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 1.0
   },
   {
     "customer_id": 2,
@@ -3053,11 +2957,7 @@
     "qtd_ajustes": 43,
     "operadores_ativos": 2,
     "ajustes_por_operador": 22,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -3157,11 +3057,7 @@
     "qtd_ajustes": 2,
     "operadores_ativos": 1,
     "ajustes_por_operador": 2,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -3281,11 +3177,7 @@
     "qtd_ajustes": 164,
     "operadores_ativos": 11,
     "ajustes_por_operador": 15,
-    "horas_extras_rateadas": 10.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 10.4
   },
   {
     "customer_id": 2,
@@ -3405,11 +3297,7 @@
     "qtd_ajustes": 70,
     "operadores_ativos": 3,
     "ajustes_por_operador": 23,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -3529,11 +3417,7 @@
     "qtd_ajustes": 599,
     "operadores_ativos": 12,
     "ajustes_por_operador": 50,
-    "horas_extras_rateadas": 7.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 7.2
   },
   {
     "customer_id": 2,
@@ -3653,11 +3537,7 @@
     "qtd_ajustes": 657,
     "operadores_ativos": 14,
     "ajustes_por_operador": 47,
-    "horas_extras_rateadas": 11.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 11.1
   },
   {
     "customer_id": 2,
@@ -3777,11 +3657,7 @@
     "qtd_ajustes": 703,
     "operadores_ativos": 18,
     "ajustes_por_operador": 39,
-    "horas_extras_rateadas": 18.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 18.7
   },
   {
     "customer_id": 2,
@@ -3901,11 +3777,7 @@
     "qtd_ajustes": 490,
     "operadores_ativos": 13,
     "ajustes_por_operador": 38,
-    "horas_extras_rateadas": 13.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 13.5
   },
   {
     "customer_id": 2,
@@ -4025,11 +3897,7 @@
     "qtd_ajustes": 762,
     "operadores_ativos": 11,
     "ajustes_por_operador": 69,
-    "horas_extras_rateadas": 17.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 17.5
   },
   {
     "customer_id": 2,
@@ -4149,11 +4017,7 @@
     "qtd_ajustes": 215,
     "operadores_ativos": 9,
     "ajustes_por_operador": 24,
-    "horas_extras_rateadas": 2.8,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 2.8
   },
   {
     "customer_id": 2,
@@ -4273,11 +4137,7 @@
     "qtd_ajustes": 158,
     "operadores_ativos": 11,
     "ajustes_por_operador": 14,
-    "horas_extras_rateadas": 8.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 8.5
   },
   {
     "customer_id": 2,
@@ -4397,11 +4257,7 @@
     "qtd_ajustes": 812,
     "operadores_ativos": 13,
     "ajustes_por_operador": 62,
-    "horas_extras_rateadas": 20.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 20.5
   },
   {
     "customer_id": 2,
@@ -4521,11 +4377,7 @@
     "qtd_ajustes": 95,
     "operadores_ativos": 5,
     "ajustes_por_operador": 19,
-    "horas_extras_rateadas": 0.8,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.8
   },
   {
     "customer_id": 2,
@@ -4645,11 +4497,7 @@
     "qtd_ajustes": 442,
     "operadores_ativos": 9,
     "ajustes_por_operador": 49,
-    "horas_extras_rateadas": 5.8,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.8
   },
   {
     "customer_id": 2,
@@ -4769,11 +4617,7 @@
     "qtd_ajustes": 381,
     "operadores_ativos": 12,
     "ajustes_por_operador": 32,
-    "horas_extras_rateadas": 6.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 6.7
   },
   {
     "customer_id": 2,
@@ -4893,11 +4737,7 @@
     "qtd_ajustes": 433,
     "operadores_ativos": 11,
     "ajustes_por_operador": 39,
-    "horas_extras_rateadas": 9.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 9.2
   },
   {
     "customer_id": 2,
@@ -5017,11 +4857,7 @@
     "qtd_ajustes": 412,
     "operadores_ativos": 11,
     "ajustes_por_operador": 37,
-    "horas_extras_rateadas": 9.3,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 9.3
   },
   {
     "customer_id": 2,
@@ -5141,11 +4977,7 @@
     "qtd_ajustes": 267,
     "operadores_ativos": 9,
     "ajustes_por_operador": 30,
-    "horas_extras_rateadas": 3.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 3.9
   },
   {
     "customer_id": 2,
@@ -5265,11 +5097,7 @@
     "qtd_ajustes": 749,
     "operadores_ativos": 11,
     "ajustes_por_operador": 68,
-    "horas_extras_rateadas": 41.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 41.6
   },
   {
     "customer_id": 2,
@@ -5389,11 +5217,7 @@
     "qtd_ajustes": 181,
     "operadores_ativos": 8,
     "ajustes_por_operador": 23,
-    "horas_extras_rateadas": 2.3,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 2.3
   },
   {
     "customer_id": 2,
@@ -5513,11 +5337,7 @@
     "qtd_ajustes": 1078,
     "operadores_ativos": 10,
     "ajustes_por_operador": 108,
-    "horas_extras_rateadas": 17.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 17.1
   },
   {
     "customer_id": 2,
@@ -5637,11 +5457,7 @@
     "qtd_ajustes": 720,
     "operadores_ativos": 14,
     "ajustes_por_operador": 51,
-    "horas_extras_rateadas": 16.3,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 16.3
   },
   {
     "customer_id": 2,
@@ -5761,11 +5577,7 @@
     "qtd_ajustes": 545,
     "operadores_ativos": 13,
     "ajustes_por_operador": 42,
-    "horas_extras_rateadas": 7.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 7.5
   },
   {
     "customer_id": 2,
@@ -5885,11 +5697,7 @@
     "qtd_ajustes": 336,
     "operadores_ativos": 11,
     "ajustes_por_operador": 31,
-    "horas_extras_rateadas": 5.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.4
   },
   {
     "customer_id": 2,
@@ -6009,11 +5817,7 @@
     "qtd_ajustes": 413,
     "operadores_ativos": 9,
     "ajustes_por_operador": 46,
-    "horas_extras_rateadas": 6.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 6.0
   },
   {
     "customer_id": 2,
@@ -6133,11 +5937,7 @@
     "qtd_ajustes": 792,
     "operadores_ativos": 14,
     "ajustes_por_operador": 57,
-    "horas_extras_rateadas": 21.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 21.2
   },
   {
     "customer_id": 2,
@@ -6257,11 +6057,7 @@
     "qtd_ajustes": 615,
     "operadores_ativos": 12,
     "ajustes_por_operador": 51,
-    "horas_extras_rateadas": 11.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 11.7
   },
   {
     "customer_id": 2,
@@ -6381,11 +6177,7 @@
     "qtd_ajustes": 581,
     "operadores_ativos": 14,
     "ajustes_por_operador": 42,
-    "horas_extras_rateadas": 7.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 7.6
   },
   {
     "customer_id": 2,
@@ -6505,11 +6297,7 @@
     "qtd_ajustes": 483,
     "operadores_ativos": 12,
     "ajustes_por_operador": 40,
-    "horas_extras_rateadas": 8.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 8.7
   },
   {
     "customer_id": 2,
@@ -6629,11 +6417,7 @@
     "qtd_ajustes": 85,
     "operadores_ativos": 10,
     "ajustes_por_operador": 9,
-    "horas_extras_rateadas": 0.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.9
   },
   {
     "customer_id": 2,
@@ -6753,11 +6537,7 @@
     "qtd_ajustes": 359,
     "operadores_ativos": 13,
     "ajustes_por_operador": 28,
-    "horas_extras_rateadas": 3.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 3.6
   },
   {
     "customer_id": 2,
@@ -6877,11 +6657,7 @@
     "qtd_ajustes": 421,
     "operadores_ativos": 13,
     "ajustes_por_operador": 32,
-    "horas_extras_rateadas": 10.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 10.9
   },
   {
     "customer_id": 2,
@@ -7001,11 +6777,7 @@
     "qtd_ajustes": 339,
     "operadores_ativos": 14,
     "ajustes_por_operador": 24,
-    "horas_extras_rateadas": 8.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 8.0
   },
   {
     "customer_id": 2,
@@ -7125,11 +6897,7 @@
     "qtd_ajustes": 232,
     "operadores_ativos": 12,
     "ajustes_por_operador": 19,
-    "horas_extras_rateadas": 2.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 2.6
   },
   {
     "customer_id": 2,
@@ -7309,11 +7077,7 @@
     "qtd_ajustes": 24,
     "operadores_ativos": 6,
     "ajustes_por_operador": 4,
-    "horas_extras_rateadas": 1.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 1.0
   },
   {
     "customer_id": 2,
@@ -7433,11 +7197,7 @@
     "qtd_ajustes": 729,
     "operadores_ativos": 18,
     "ajustes_por_operador": 41,
-    "horas_extras_rateadas": 13.8,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 13.8
   },
   {
     "customer_id": 2,
@@ -7547,11 +7307,7 @@
     "qtd_ajustes": 18,
     "operadores_ativos": 7,
     "ajustes_por_operador": 3,
-    "horas_extras_rateadas": 0.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.2
   },
   {
     "customer_id": 2,
@@ -7671,11 +7427,7 @@
     "qtd_ajustes": 342,
     "operadores_ativos": 11,
     "ajustes_por_operador": 31,
-    "horas_extras_rateadas": 6.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 6.9
   },
   {
     "customer_id": 2,
@@ -7765,11 +7517,7 @@
     "qtd_ajustes": 1,
     "operadores_ativos": 1,
     "ajustes_por_operador": 1,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -7889,11 +7637,7 @@
     "qtd_ajustes": 208,
     "operadores_ativos": 10,
     "ajustes_por_operador": 21,
-    "horas_extras_rateadas": 1.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 1.9
   },
   {
     "customer_id": 2,
@@ -8013,11 +7757,7 @@
     "qtd_ajustes": 182,
     "operadores_ativos": 12,
     "ajustes_por_operador": 15,
-    "horas_extras_rateadas": 6.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 6.0
   },
   {
     "customer_id": 2,
@@ -8137,11 +7877,7 @@
     "qtd_ajustes": 397,
     "operadores_ativos": 13,
     "ajustes_por_operador": 31,
-    "horas_extras_rateadas": 6.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 6.0
   },
   {
     "customer_id": 2,
@@ -8261,11 +7997,7 @@
     "qtd_ajustes": 1108,
     "operadores_ativos": 19,
     "ajustes_por_operador": 58,
-    "horas_extras_rateadas": 16.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 16.0
   },
   {
     "customer_id": 2,
@@ -8385,11 +8117,7 @@
     "qtd_ajustes": 1130,
     "operadores_ativos": 10,
     "ajustes_por_operador": 113,
-    "horas_extras_rateadas": 15.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 15.4
   },
   {
     "customer_id": 2,
@@ -8509,11 +8237,7 @@
     "qtd_ajustes": 456,
     "operadores_ativos": 10,
     "ajustes_por_operador": 46,
-    "horas_extras_rateadas": 5.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.5
   },
   {
     "customer_id": 2,
@@ -8633,11 +8357,7 @@
     "qtd_ajustes": 537,
     "operadores_ativos": 14,
     "ajustes_por_operador": 38,
-    "horas_extras_rateadas": 8.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 8.0
   },
   {
     "customer_id": 2,
@@ -8757,11 +8477,7 @@
     "qtd_ajustes": 1458,
     "operadores_ativos": 16,
     "ajustes_por_operador": 91,
-    "horas_extras_rateadas": 23.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 23.4
   },
   {
     "customer_id": 2,
@@ -8881,11 +8597,7 @@
     "qtd_ajustes": 1185,
     "operadores_ativos": 14,
     "ajustes_por_operador": 85,
-    "horas_extras_rateadas": 24.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 24.5
   },
   {
     "customer_id": 2,
@@ -9005,11 +8717,7 @@
     "qtd_ajustes": 747,
     "operadores_ativos": 10,
     "ajustes_por_operador": 75,
-    "horas_extras_rateadas": 7.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 7.1
   },
   {
     "customer_id": 2,
@@ -9129,11 +8837,7 @@
     "qtd_ajustes": 879,
     "operadores_ativos": 13,
     "ajustes_por_operador": 68,
-    "horas_extras_rateadas": 29.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 29.7
   },
   {
     "customer_id": 2,
@@ -9253,11 +8957,7 @@
     "qtd_ajustes": 220,
     "operadores_ativos": 9,
     "ajustes_por_operador": 24,
-    "horas_extras_rateadas": 3.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 3.9
   },
   {
     "customer_id": 2,
@@ -9377,11 +9077,7 @@
     "qtd_ajustes": 300,
     "operadores_ativos": 12,
     "ajustes_por_operador": 25,
-    "horas_extras_rateadas": 5.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.4
   },
   {
     "customer_id": 2,
@@ -9451,11 +9147,7 @@
     "qtd_ajustes": 1,
     "operadores_ativos": 1,
     "ajustes_por_operador": 1,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -9575,11 +9267,7 @@
     "qtd_ajustes": 1024,
     "operadores_ativos": 13,
     "ajustes_por_operador": 79,
-    "horas_extras_rateadas": 13.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 13.7
   },
   {
     "customer_id": 2,
@@ -9699,11 +9387,7 @@
     "qtd_ajustes": 267,
     "operadores_ativos": 9,
     "ajustes_por_operador": 30,
-    "horas_extras_rateadas": 5.7,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.7
   },
   {
     "customer_id": 2,
@@ -9823,11 +9507,7 @@
     "qtd_ajustes": 29,
     "operadores_ativos": 5,
     "ajustes_por_operador": 6,
-    "horas_extras_rateadas": 0.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.2
   },
   {
     "customer_id": 2,
@@ -9947,11 +9627,7 @@
     "qtd_ajustes": 3,
     "operadores_ativos": 2,
     "ajustes_por_operador": 2,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -10071,11 +9747,7 @@
     "qtd_ajustes": 34,
     "operadores_ativos": 5,
     "ajustes_por_operador": 7,
-    "horas_extras_rateadas": 0.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.4
   },
   {
     "customer_id": 2,
@@ -10195,11 +9867,7 @@
     "qtd_ajustes": 193,
     "operadores_ativos": 8,
     "ajustes_por_operador": 24,
-    "horas_extras_rateadas": 2.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 2.0
   },
   {
     "customer_id": 2,
@@ -10319,11 +9987,7 @@
     "qtd_ajustes": 124,
     "operadores_ativos": 12,
     "ajustes_por_operador": 10,
-    "horas_extras_rateadas": 6.5,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 6.5
   },
   {
     "customer_id": 2,
@@ -10423,11 +10087,7 @@
     "qtd_ajustes": 45,
     "operadores_ativos": 2,
     "ajustes_por_operador": 23,
-    "horas_extras_rateadas": 5.4,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.4
   },
   {
     "customer_id": 2,
@@ -10547,11 +10207,7 @@
     "qtd_ajustes": 64,
     "operadores_ativos": 8,
     "ajustes_por_operador": 8,
-    "horas_extras_rateadas": 0.6,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.6
   },
   {
     "customer_id": 2,
@@ -10671,11 +10327,7 @@
     "qtd_ajustes": 24,
     "operadores_ativos": 6,
     "ajustes_por_operador": 4,
-    "horas_extras_rateadas": 0.2,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.2
   },
   {
     "customer_id": 2,
@@ -10795,11 +10447,7 @@
     "qtd_ajustes": 101,
     "operadores_ativos": 8,
     "ajustes_por_operador": 13,
-    "horas_extras_rateadas": 1.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 1.0
   },
   {
     "customer_id": 2,
@@ -10919,11 +10567,7 @@
     "qtd_ajustes": 99,
     "operadores_ativos": 9,
     "ajustes_por_operador": 11,
-    "horas_extras_rateadas": 0.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.9
   },
   {
     "customer_id": 2,
@@ -11043,11 +10687,7 @@
     "qtd_ajustes": 58,
     "operadores_ativos": 8,
     "ajustes_por_operador": 7,
-    "horas_extras_rateadas": 1.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 1.1
   },
   {
     "customer_id": 2,
@@ -11167,11 +10807,7 @@
     "qtd_ajustes": 15,
     "operadores_ativos": 3,
     "ajustes_por_operador": 5,
-    "horas_extras_rateadas": 0.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.1
   },
   {
     "customer_id": 2,
@@ -11291,11 +10927,7 @@
     "qtd_ajustes": 236,
     "operadores_ativos": 8,
     "ajustes_por_operador": 30,
-    "horas_extras_rateadas": 2.9,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 2.9
   },
   {
     "customer_id": 2,
@@ -11415,11 +11047,7 @@
     "qtd_ajustes": 316,
     "operadores_ativos": 12,
     "ajustes_por_operador": 26,
-    "horas_extras_rateadas": 5.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 5.0
   },
   {
     "customer_id": 2,
@@ -11559,11 +11187,7 @@
     "qtd_ajustes": 24,
     "operadores_ativos": 1,
     "ajustes_por_operador": 24,
-    "horas_extras_rateadas": 4.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 4.1
   },
   {
     "customer_id": 2,
@@ -11673,11 +11297,7 @@
     "qtd_ajustes": 68,
     "operadores_ativos": 1,
     "ajustes_por_operador": 68,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -11797,11 +11417,7 @@
     "qtd_ajustes": 26,
     "operadores_ativos": 2,
     "ajustes_por_operador": 13,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -11871,11 +11487,7 @@
     "qtd_ajustes": 2,
     "operadores_ativos": 2,
     "ajustes_por_operador": 1,
-    "horas_extras_rateadas": 0.0,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 0.0
   },
   {
     "customer_id": 2,
@@ -11995,11 +11607,7 @@
     "qtd_ajustes": 65,
     "operadores_ativos": 4,
     "ajustes_por_operador": 16,
-    "horas_extras_rateadas": 14.1,
-    "pin": {
-      "insight_id": 8,
-      "type": "opportunity"
-    }
+    "horas_extras_rateadas": 14.1
   },
   {
     "customer_id": 2,
