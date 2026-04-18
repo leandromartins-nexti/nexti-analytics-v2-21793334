@@ -32,11 +32,13 @@ function computePos(pin: { x: number; y: number }): PopoverPos {
   const spaceLeft = pin.x;
   const spaceRight = vw - pin.x;
 
-  let side: Side = "bottom";
-  if (spaceBottom >= POPOVER_H + PIN_GAP + MARGIN) side = "bottom";
-  else if (spaceTop >= POPOVER_H + PIN_GAP + MARGIN) side = "top";
-  else if (spaceLeft >= POPOVER_W + PIN_GAP + MARGIN) side = "left";
-  else side = "right";
+  // Sempre preferir exibir ACIMA do pin para não cobrir o gráfico abaixo.
+  // Fallback para baixo só quando não houver espaço acima; depois lados.
+  let side: Side = "top";
+  if (spaceTop >= POPOVER_H + PIN_GAP + MARGIN) side = "top";
+  else if (spaceBottom >= POPOVER_H + PIN_GAP + MARGIN) side = "bottom";
+  else if (spaceRight >= POPOVER_W + PIN_GAP + MARGIN) side = "right";
+  else side = "left";
 
   let left = 0;
   let top = 0;
