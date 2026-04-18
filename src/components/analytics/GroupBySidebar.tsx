@@ -1,12 +1,15 @@
 import { useState, useMemo, useEffect } from "react";
-import { Search, ArrowUpDown, Building2, Network, LayoutGrid, Filter, Lightbulb } from "lucide-react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { Search, ArrowUpDown, Building2, Network, LayoutGrid, Filter, Lightbulb, MessageCircle } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useScoreConfig, getScoreClassification } from "@/contexts/ScoreConfigContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useSearchParams } from "react-router-dom";
 import RightSidebarInsightsPanel from "./RightSidebarInsightsPanel";
+import InlineAnalyticsChat from "./InlineAnalyticsChat";
 
-type SidebarMode = "ops" | "insights";
+type SidebarMode = "ops" | "insights" | "chat";
 
 // ── Types ──
 export type GroupBy = "unidade" | "empresa" | "area";
@@ -40,6 +43,8 @@ export default function GroupBySidebar({
 }: GroupBySidebarProps) {
   const { config: scoreConfig } = useScoreConfig();
   const isMobile = useIsMobile();
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "qualidade";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mode, setMode] = useState<SidebarMode>("ops");
   const [search, setSearch] = useState("");
@@ -101,12 +106,13 @@ export default function GroupBySidebar({
     return () => window.removeEventListener("open-tipo-operacao", handler);
   }, [isMobile]);
 
-  // Header toggle: 2 icon buttons (Filtro / Insights) at top of sidebar
+  // Header toggle: 3 icon buttons (Filtro / Insights / Chat AI)
   const HeaderToggle = () => (
     <div className="flex items-center gap-1 mb-1.5">
       {([
         { id: "ops" as const, icon: Filter, label: "Tipo de Operação" },
         { id: "insights" as const, icon: Lightbulb, label: "Insights" },
+        { id: "chat" as const, icon: MessageCircle, label: "Chat AI" },
       ]).map(o => {
         const active = mode === o.id;
         const Icon = o.icon;
@@ -125,7 +131,10 @@ export default function GroupBySidebar({
                 <Icon size={14} />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="left" className="text-xs">{o.label}</TooltipContent>
+            <TooltipContent side="top" sideOffset={6} className="text-xs">
+              {o.label}
+              <TooltipPrimitive.Arrow className="fill-popover" width={10} height={5} />
+            </TooltipContent>
           </UITooltip>
         );
       })}
@@ -139,12 +148,13 @@ export default function GroupBySidebar({
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="right" className="w-full max-w-full p-0 flex flex-col">
           <SheetHeader className="px-4 py-3 border-b border-border flex-row items-center justify-between space-y-0">
-            <SheetTitle className="text-sm font-semibold">{mobileMode === "ops" ? "Tipo de Operação" : "Insights"}</SheetTitle>
+            <SheetTitle className="text-sm font-semibold">{mobileMode === "ops" ? "Tipo de Operação" : mobileMode === "insights" ? "Insights" : "Chat AI"}</SheetTitle>
           </SheetHeader>
           <div className="px-3 pt-2 flex gap-1">
             {([
               { id: "ops" as const, icon: Filter, label: "Filtro" },
               { id: "insights" as const, icon: Lightbulb, label: "Insights" },
+              { id: "chat" as const, icon: MessageCircle, label: "Chat" },
             ]).map(o => {
               const active = mobileMode === o.id;
               const Icon = o.icon;
@@ -162,7 +172,9 @@ export default function GroupBySidebar({
               );
             })}
           </div>
-          {mobileMode === "insights" ? (
+          {mobileMode === "chat" ? (
+            <div className="flex-1 overflow-y-auto p-3"><InlineAnalyticsChat activeTab={activeTab} groupBy={groupBy} /></div>
+          ) : mobileMode === "insights" ? (
             <div className="flex-1 overflow-y-auto p-3"><RightSidebarInsightsPanel /></div>
           ) : (
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
@@ -245,18 +257,22 @@ export default function GroupBySidebar({
   }
 
   // ── Desktop: always-open sidebar with header toggle ──
+  const titleByMode = mode === "ops" ? "Tipo de Operação" : mode === "insights" ? "Insights" : "Chat AI";
+  const widthClass = mode === "chat" ? "w-[320px]" : "w-[240px]";
   return (
     <div className="flex shrink-0 self-stretch" data-onboarding="tipo-operacao">
-      <div className="w-[240px] bg-white border-l border-border/40 pl-3 pr-1 pt-2 flex flex-col">
-        {/* Header: toggle (Filtro / Insights) + title */}
+      <div className={`${widthClass} bg-white border-l border-border/40 pl-3 pr-1 pt-2 flex flex-col`}>
+        {/* Header: toggle + title */}
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <HeaderToggle />
           <p className="text-[10px] font-semibold text-muted-foreground tracking-wide uppercase truncate">
-            {mode === "ops" ? "Tipo de Operação" : "Insights"}
+            {titleByMode}
           </p>
         </div>
 
-        {mode === "insights" ? (
+        {mode === "chat" ? (
+          <InlineAnalyticsChat activeTab={activeTab} groupBy={groupBy} />
+        ) : mode === "insights" ? (
           <RightSidebarInsightsPanel />
         ) : (
           <>
