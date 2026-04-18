@@ -22,21 +22,19 @@ interface PopoverPos {
   arrowOffset: number; // posição da seta no eixo perpendicular ao side
 }
 
-function computePos(pin: { x: number; y: number }): PopoverPos {
+function computePos(pin: { x: number; y: number }, popH: number = POPOVER_H): PopoverPos {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  // Decide o lado preferido com base no espaço disponível.
   const spaceTop = pin.y;
   const spaceBottom = vh - pin.y;
   const spaceLeft = pin.x;
   const spaceRight = vw - pin.x;
 
   // Sempre preferir exibir ACIMA do pin para não cobrir o gráfico abaixo.
-  // Fallback para baixo só quando não houver espaço acima; depois lados.
   let side: Side = "top";
-  if (spaceTop >= POPOVER_H + PIN_GAP + MARGIN) side = "top";
-  else if (spaceBottom >= POPOVER_H + PIN_GAP + MARGIN) side = "bottom";
+  if (spaceTop >= popH + PIN_GAP + MARGIN) side = "top";
+  else if (spaceBottom >= popH + PIN_GAP + MARGIN) side = "bottom";
   else if (spaceRight >= POPOVER_W + PIN_GAP + MARGIN) side = "right";
   else side = "left";
 
@@ -45,19 +43,18 @@ function computePos(pin: { x: number; y: number }): PopoverPos {
   let arrowOffset = POPOVER_W / 2;
 
   if (side === "bottom" || side === "top") {
-    // Centraliza horizontalmente no pin, com clamp dentro do viewport
     let desiredLeft = pin.x - POPOVER_W / 2;
     desiredLeft = Math.max(MARGIN, Math.min(vw - POPOVER_W - MARGIN, desiredLeft));
     left = desiredLeft;
-    arrowOffset = pin.x - left; // posição da seta dentro do popover
+    arrowOffset = pin.x - left;
     arrowOffset = Math.max(16, Math.min(POPOVER_W - 16, arrowOffset));
-    top = side === "bottom" ? pin.y + PIN_GAP : pin.y - POPOVER_H - PIN_GAP;
+    top = side === "bottom" ? pin.y + PIN_GAP : pin.y - popH - PIN_GAP;
   } else {
-    let desiredTop = pin.y - POPOVER_H / 2;
-    desiredTop = Math.max(MARGIN, Math.min(vh - POPOVER_H - MARGIN, desiredTop));
+    let desiredTop = pin.y - popH / 2;
+    desiredTop = Math.max(MARGIN, Math.min(vh - popH - MARGIN, desiredTop));
     top = desiredTop;
     arrowOffset = pin.y - top;
-    arrowOffset = Math.max(16, Math.min(POPOVER_H - 16, arrowOffset));
+    arrowOffset = Math.max(16, Math.min(popH - 16, arrowOffset));
     left = side === "right" ? pin.x + PIN_GAP : pin.x - POPOVER_W - PIN_GAP;
   }
 
@@ -95,7 +92,8 @@ export default function InsightsTourOverlay() {
         setPos(null);
         return;
       }
-      setPos(computePos(pin));
+      const measuredH = popoverRef.current?.offsetHeight || POPOVER_H;
+      setPos(computePos(pin, measuredH));
     };
     update();
     // Reagenda nas próximas frames pra capturar pins que ainda estão sendo medidos
