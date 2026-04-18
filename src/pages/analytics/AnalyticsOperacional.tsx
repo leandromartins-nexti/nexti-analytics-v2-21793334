@@ -59,8 +59,6 @@ export default function AnalyticsOperacional() {
           >
             <Filter className="w-4 h-4" />
           </button>
-          <InsightsCenter />
-          <AnalyticsChat activeTab={activeTab} />
         </div>
       </div>
 
