@@ -2022,32 +2022,63 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                           </g>
                         );
                       }} />
-                      <LabelList content={({ x, y, width: w, index }: any) => {
+                    </Bar>
+                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }}>
+                      {/* Pin SOL mini (v39) — renderizado dentro da Line para ficar na FRENTE da linha azul */}
+                      <LabelList content={(props: any) => {
+                        const { index, x, y } = props;
                         const d = sobrecargaData[index];
                         if (!d) return null;
                         const insightId = chartInsightPins.sobrecarga?.[d.mes];
                         if (!insightId) return null;
-                        const cx = (x ?? 0) + (w ?? 0) / 2;
-                        const cy = (y ?? 0) - 10;
+                        const scale = 0.45;
+                        const cx = x;
+                        const cy = y;
+                        const pinY = cy - 8;
+                        const r1 = 22 * scale;
+                        const longR2 = 36 * scale;
+                        const shortR2 = 30 * scale;
+                        const glowR = 28 * scale;
+                        const bulbR = 20 * scale;
+                        const fontSize = Math.max(10, Math.round(24 * scale));
                         return (
-                          <g
-                            style={{ cursor: "pointer" }}
-                            onClick={(e) => { e.stopPropagation(); openInsightById(insightId); }}
-                          >
-                            <title>Ver insight: Recuperação dramática da qualidade</title>
-                            {/* Pulse ring */}
-                            <circle cx={cx} cy={cy} r={11} fill="#22c55e" opacity={0.18}>
-                              <animate attributeName="r" values="9;14;9" dur="1.6s" repeatCount="indefinite" />
-                              <animate attributeName="opacity" values="0.25;0.05;0.25" dur="1.6s" repeatCount="indefinite" />
+                          <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); openInsightById(insightId); }}>
+                            <title>Ver insight</title>
+                            <line x1={cx} y1={cy + 4} x2={cx} y2={pinY + bulbR * 0.9} stroke="#facc15" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.6} />
+                            <g>
+                              <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${pinY}`} to={`360 ${cx} ${pinY}`} dur="12s" repeatCount="indefinite" />
+                              {Array.from({ length: 16 }).map((_, i) => {
+                                const a = (i * 22.5 * Math.PI) / 180;
+                                const long = i % 2 === 0;
+                                const r2 = long ? longR2 : shortR2;
+                                return (
+                                  <line
+                                    key={i}
+                                    x1={cx + Math.cos(a) * r1}
+                                    y1={pinY + Math.sin(a) * r1}
+                                    x2={cx + Math.cos(a) * r2}
+                                    y2={pinY + Math.sin(a) * r2}
+                                    stroke="#facc15"
+                                    strokeWidth={long ? 2.5 * scale : 1.8 * scale}
+                                    strokeLinecap="round"
+                                    opacity={0.85}
+                                  >
+                                    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.07}s`} />
+                                  </line>
+                                );
+                              })}
+                            </g>
+                            <circle cx={cx} cy={pinY} r={glowR} fill="#fde047" opacity={0.4}>
+                              <animate attributeName="opacity" values="0.25;0.7;0.25" dur="1.2s" repeatCount="indefinite" />
                             </circle>
-                            {/* Pin body */}
-                            <circle cx={cx} cy={cy} r={8} fill="#22c55e" stroke="#fff" strokeWidth={1.5} />
-                            <text x={cx} y={cy + 3} textAnchor="middle" fontSize={9} fontWeight={700} fill="#fff">💡</text>
+                            <circle cx={cx} cy={pinY} r={bulbR} fill="#facc15" stroke="#fff" strokeWidth={Math.max(1.5, 3 * scale)}>
+                              <animate attributeName="fill" values="#fde047;#facc15;#fde047" dur="1.2s" repeatCount="indefinite" />
+                            </circle>
+                            <text x={cx} y={pinY + fontSize / 3} textAnchor="middle" fontSize={fontSize}>💡</text>
                           </g>
                         );
                       }} />
-                    </Bar>
-                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
+                    </Line>
                   </ComposedChart>
                 </ResponsiveContainer>
                 {/* Legend */}
