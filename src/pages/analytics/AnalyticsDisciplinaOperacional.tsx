@@ -2060,6 +2060,194 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </div>
             );
           })()}
+
+          {/* ============ 5 VARIAÇÕES DE PIN PARA O MESMO GRÁFICO ============ */}
+          {(() => {
+            const allEntries = [
+              { mes: "mai/25", produtividade: 110, operadores: 10, he: 35 },
+              { mes: "jun/25", produtividade: 120, operadores: 11, he: 40 },
+              { mes: "jul/25", produtividade: 95, operadores: 12, he: 30 },
+              { mes: "ago/25", produtividade: 80, operadores: 11, he: 28 },
+              { mes: "set/25", produtividade: 500, operadores: 16, he: 215 },
+              { mes: "out/25", produtividade: 480, operadores: 14, he: 240 },
+              { mes: "nov/25", produtividade: 260, operadores: 17, he: 95 },
+              { mes: "dez/25", produtividade: 200, operadores: 16, he: 145 },
+              { mes: "jan/26", produtividade: 220, operadores: 11, he: 130 },
+              { mes: "fev/26", produtividade: 180, operadores: 14, he: 110 },
+              { mes: "mar/26", produtividade: 185, operadores: 12, he: 70 },
+            ];
+            const limiteSaudavel = 270;
+            const sobrecargaData = allEntries.map(d => {
+              const categoria = d.produtividade > 470 ? "Pico crítico" : d.produtividade > limiteSaudavel ? "Acima do limite" : "Saudável";
+              const barColor = d.produtividade > 470 ? "#ef4444" : d.produtividade > limiteSaudavel ? "#f59e0b" : "#22c55e";
+              return { ...d, categoria, barColor, limiteSaudavel };
+            });
+
+            const variants: Array<{ id: string; label: string; description: string; renderPin: (cx: number, cy: number, onClick: () => void) => JSX.Element }> = [
+              {
+                id: "v1",
+                label: "Variação 1 — Bandeira flutuante",
+                description: "Pin em formato de bandeira com haste, balança suavemente.",
+                renderPin: (cx, cy, onClick) => (
+                  <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    <title>Ver insight</title>
+                    <line x1={cx} y1={cy + 4} x2={cx} y2={cy + 24} stroke="#7c3aed" strokeWidth={2} />
+                    <g>
+                      <animateTransform attributeName="transform" type="rotate" values={`-6 ${cx} ${cy+4};6 ${cx} ${cy+4};-6 ${cx} ${cy+4}`} dur="2s" repeatCount="indefinite" />
+                      <path d={`M ${cx} ${cy - 8} L ${cx + 22} ${cy - 4} L ${cx + 18} ${cy} L ${cx + 22} ${cy + 4} L ${cx} ${cy + 8} Z`} fill="#7c3aed" stroke="#fff" strokeWidth={1.2} />
+                      <text x={cx + 10} y={cy + 1} textAnchor="middle" fontSize={9} fontWeight={700} fill="#fff">!</text>
+                    </g>
+                  </g>
+                ),
+              },
+              {
+                id: "v2",
+                label: "Variação 2 — Balão de fala grande",
+                description: "Tooltip persistente apontando para a barra com texto curto.",
+                renderPin: (cx, cy, onClick) => (
+                  <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    <title>Ver insight</title>
+                    <rect x={cx - 60} y={cy - 30} width={120} height={22} rx={11} fill="#0ea5e9" stroke="#fff" strokeWidth={1.5}>
+                      <animate attributeName="opacity" values="1;0.7;1" dur="1.8s" repeatCount="indefinite" />
+                    </rect>
+                    <polygon points={`${cx-5},${cy-8} ${cx+5},${cy-8} ${cx},${cy-2}`} fill="#0ea5e9" />
+                    <text x={cx} y={cy - 15} textAnchor="middle" fontSize={10} fontWeight={700} fill="#fff">💡 Ver insight</text>
+                  </g>
+                ),
+              },
+              {
+                id: "v3",
+                label: "Variação 3 — Estrela pulsante grande",
+                description: "Estrela laranja ampliada com anel de pulso intenso.",
+                renderPin: (cx, cy, onClick) => {
+                  const star = (r: number) => {
+                    const pts: string[] = [];
+                    for (let i = 0; i < 10; i++) {
+                      const angle = (Math.PI / 5) * i - Math.PI / 2;
+                      const rr = i % 2 === 0 ? r : r / 2.3;
+                      pts.push(`${cx + Math.cos(angle) * rr},${cy + Math.sin(angle) * rr}`);
+                    }
+                    return pts.join(" ");
+                  };
+                  return (
+                    <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                      <title>Ver insight</title>
+                      <circle cx={cx} cy={cy} r={18} fill="#f97316" opacity={0.2}>
+                        <animate attributeName="r" values="14;26;14" dur="1.4s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.35;0.05;0.35" dur="1.4s" repeatCount="indefinite" />
+                      </circle>
+                      <polygon points={star(13)} fill="#f97316" stroke="#fff" strokeWidth={1.5} />
+                      <text x={cx} y={cy + 4} textAnchor="middle" fontSize={11} fontWeight={700} fill="#fff">!</text>
+                    </g>
+                  );
+                },
+              },
+              {
+                id: "v4",
+                label: "Variação 4 — Coroa com raios",
+                description: "Pin com raios saindo, indicando momento de destaque.",
+                renderPin: (cx, cy, onClick) => (
+                  <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    <title>Ver insight</title>
+                    <g>
+                      <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="6s" repeatCount="indefinite" />
+                      {[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => {
+                        const rad = (a * Math.PI) / 180;
+                        const x1 = cx + Math.cos(rad) * 13;
+                        const y1 = cy + Math.sin(rad) * 13;
+                        const x2 = cx + Math.cos(rad) * 20;
+                        const y2 = cy + Math.sin(rad) * 20;
+                        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#eab308" strokeWidth={2.5} strokeLinecap="round" />;
+                      })}
+                    </g>
+                    <circle cx={cx} cy={cy} r={11} fill="#eab308" stroke="#fff" strokeWidth={1.8} />
+                    <text x={cx} y={cy + 4} textAnchor="middle" fontSize={11} fontWeight={700} fill="#fff">★</text>
+                  </g>
+                ),
+              },
+              {
+                id: "v5",
+                label: "Variação 5 — Marcador de mapa (drop pin)",
+                description: "Pin estilo Google Maps caindo sobre a barra.",
+                renderPin: (cx, cy, onClick) => (
+                  <g style={{ cursor: "pointer" }} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    <title>Ver insight</title>
+                    <ellipse cx={cx} cy={cy + 18} rx={6} ry={1.5} fill="#000" opacity={0.25}>
+                      <animate attributeName="rx" values="4;7;4" dur="1.2s" repeatCount="indefinite" />
+                    </ellipse>
+                    <g>
+                      <animateTransform attributeName="transform" type="translate" values="0 -6;0 0;0 -6" dur="1.2s" repeatCount="indefinite" />
+                      <path d={`M ${cx} ${cy - 18} C ${cx - 11} ${cy - 18}, ${cx - 11} ${cy - 2}, ${cx} ${cy + 14} C ${cx + 11} ${cy - 2}, ${cx + 11} ${cy - 18}, ${cx} ${cy - 18} Z`} fill="#dc2626" stroke="#fff" strokeWidth={1.5} />
+                      <circle cx={cx} cy={cy - 10} r={4.5} fill="#fff" />
+                      <text x={cx} y={cy - 7} textAnchor="middle" fontSize={8} fontWeight={700} fill="#dc2626">!</text>
+                    </g>
+                  </g>
+                ),
+              },
+            ];
+
+            const renderVariant = (variant: typeof variants[number]) => (
+              <div key={variant.id} className="bg-card border border-border/50 rounded-xl p-4">
+                <div className="flex items-center justify-between mb-0.5">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-sm font-semibold">Sobrecarga do Back-office</h4>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">{variant.label}</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mb-1">{variant.description}</p>
+                  </div>
+                </div>
+                <ResponsiveContainer width="100%" height={280}>
+                  <ComposedChart data={sobrecargaData} margin={{ top: 36, right: 10, bottom: 0, left: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
+                    <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} label={{ value: "HE (h)", angle: 90, position: "insideRight", fontSize: 9, fill: "hsl(var(--muted-foreground))" }} />
+                    <ReferenceLine yAxisId="left" y={limiteSaudavel} stroke="#22c55e" strokeDasharray="5 3" strokeWidth={1.2} />
+                    <Bar yAxisId="left" dataKey="produtividade" radius={[4, 4, 0, 0]} name="Carga por operador">
+                      {sobrecargaData.map((entry, idx) => (
+                        <Cell key={idx} fill={entry.barColor} fillOpacity={0.75} />
+                      ))}
+                      <LabelList content={({ x, y, width: w, height: h, index }: any) => {
+                        const d = sobrecargaData[index];
+                        if (!d) return null;
+                        return (
+                          <text x={(x ?? 0) + (w ?? 0) / 2} y={(y ?? 0) + (h ?? 0) / 2 + 3} textAnchor="middle" fontSize={9} fill="#fff" fontWeight={600}>
+                            {d.operadores}
+                          </text>
+                        );
+                      }} />
+                      <LabelList content={({ x, y, width: w, index }: any) => {
+                        const d = sobrecargaData[index];
+                        if (!d) return null;
+                        const insightId = chartInsightPins.sobrecarga?.[d.mes];
+                        if (!insightId) return null;
+                        const cx = (x ?? 0) + (w ?? 0) / 2;
+                        const cy = (y ?? 0) - 14;
+                        return variant.renderPin(cx, cy, () => openInsightById(insightId));
+                      }} />
+                    </Bar>
+                    <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }} />
+                  </ComposedChart>
+                </ResponsiveContainer>
+                <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#22c55e", opacity: 0.75 }} /> Saudável</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#f59e0b", opacity: 0.75 }} /> Acima do limite</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#ef4444", opacity: 0.75 }} /> Pico crítico</span>
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-0 inline-block border-t-2 border-dashed" style={{ borderColor: "#3b82f6", width: 12 }} /> HE do time</span>
+                </div>
+              </div>
+            );
+
+            return (
+              <div className="space-y-3 mt-3">
+                <div className="flex items-center gap-2 px-1">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">🧪 Variações de Pin (testes visuais)</span>
+                </div>
+                {variants.map(renderVariant)}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Insights da Qualidade do Ponto */}
