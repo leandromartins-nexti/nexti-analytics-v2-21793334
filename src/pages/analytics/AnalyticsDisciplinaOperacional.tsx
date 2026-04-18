@@ -1797,7 +1797,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </div>
               <button onClick={() => setChartDataModal("evoTratativa")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
-            <div className="relative">
+            <div className="relative pt-6">
             <ResponsiveContainer width="100%" height={280}>
               <ComposedChart data={(() => {
                 const faixas = tratativaFaixasFiltrada;
@@ -1980,7 +1980,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                     <Database className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="relative">
+                <div className="relative pt-6">
                 <ResponsiveContainer width="100%" height={280}>
                   <ComposedChart data={sobrecargaData} margin={{ top: 24, right: 10, bottom: 0, left: 0 }} onClick={(e: any) => {
                     if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
