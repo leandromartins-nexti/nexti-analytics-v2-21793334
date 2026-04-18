@@ -178,17 +178,25 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
     }
     const tick = () => {
       const elapsed = accumulatedRef.current + (performance.now() - stepStartRef.current);
-      const p = Math.min(1, elapsed / STEP_MS);
+      const p = Math.min(1, elapsed / stepMs);
       setTourProgress(p);
       if (p >= 1) {
         if (tourIndex + 1 >= queue.length) {
-          stopTour();
-          return;
+          if (loop && queue.length > 0) {
+            setTourIndex(0);
+            setTourProgress(0);
+            accumulatedRef.current = 0;
+            stepStartRef.current = performance.now();
+          } else {
+            stopTour();
+            return;
+          }
+        } else {
+          setTourIndex((i) => i + 1);
+          setTourProgress(0);
+          accumulatedRef.current = 0;
+          stepStartRef.current = performance.now();
         }
-        setTourIndex((i) => i + 1);
-        setTourProgress(0);
-        accumulatedRef.current = 0;
-        stepStartRef.current = performance.now();
       }
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -196,7 +204,7 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [tourActive, tourPaused, tourIndex, queue.length, stopTour]);
+  }, [tourActive, tourPaused, tourIndex, queue.length, stopTour, stepMs, loop]);
 
   // ESC encerra o tour
   useEffect(() => {
