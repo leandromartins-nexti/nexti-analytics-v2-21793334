@@ -928,20 +928,31 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   }, [customerId]);
 
   /** Helper: extract pin data from a row. Returns undefined if no pin. */
-  const extractPin = (row: any): { insight_id: number; type: "risk"|"achievement"|"opportunity"|"trend" } | undefined => {
+  type PinMeta = {
+    insight_id: number;
+    type: "risk"|"achievement"|"opportunity"|"trend";
+    /** Campo da série a ancorar (ex: "tempo_medio_horas"). */
+    series?: string;
+    /** Eixo Y a usar. */
+    axis?: "left" | "right";
+    /** Ajuste fino vertical em px. */
+    offsetY?: number;
+  };
+  const extractPin = (row: any): PinMeta | undefined => {
     return row?.pin && typeof row.pin === "object" ? row.pin : undefined;
   };
 
   /**
    * Build a map { mesLabel → pin } from a source array with `pin` fields.
    * Picks the FIRST row per month that contains a pin (data is annotated only on anchor rows).
+   * Também retorna o valor da série âncora extraído da própria row, quando `series` é informado.
    */
   const buildPinsByMonth = (
     source: any[] | undefined,
     dateField: "reference_month" | "competencia",
     dateToLabel: (raw: string) => string,
-  ): Record<string, { insight_id: number; type: "risk"|"achievement"|"opportunity"|"trend" }> => {
-    const out: Record<string, any> = {};
+  ): Record<string, PinMeta & { value?: number }> => {
+    const out: Record<string, PinMeta & { value?: number }> = {};
     if (!Array.isArray(source)) return out;
     for (const row of source) {
       const pin = extractPin(row);
@@ -949,7 +960,10 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
       const raw = row[dateField];
       if (!raw) continue;
       const label = dateToLabel(raw);
-      if (!out[label]) out[label] = pin;
+      if (!out[label]) {
+        const value = pin.series && typeof row[pin.series] === "number" ? row[pin.series] : undefined;
+        out[label] = { ...pin, value };
+      }
     }
     return out;
   };
