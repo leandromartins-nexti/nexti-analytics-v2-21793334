@@ -1751,23 +1751,16 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       </text>
                     );
                   }} />
-                </Bar>
-                <Customized component={(props: any) => {
-                  const { xAxisMap, yAxisMap, offset } = props;
-                  const xAxis = xAxisMap?.[Object.keys(xAxisMap)[0]];
-                  const yAxis = yAxisMap?.["left"] ?? yAxisMap?.[Object.keys(yAxisMap)[0]];
-                  if (!xAxis || !yAxis) return null;
-                  const pins: JSX.Element[] = [];
-                  qualidadeComHeadcount.forEach((d, i) => {
+                  <LabelList content={({ x, y, width, index }: any) => {
+                    const d = qualidadeComHeadcount[index];
+                    if (!d) return null;
                     const insightId = chartInsightPins.evoQualidade?.[d.mes];
-                    if (!insightId) return;
-                    const cx = xAxis.scale(d.mes) + (xAxis.bandwidth ? xAxis.bandwidth() / 2 : 0);
-                    const total = (d.registradas ?? 0) + (d.justificadas ?? 0);
-                    const cy = yAxis.scale(total);
-                    pins.push(<InsightSunPin key={`pin-q-${i}`} cx={cx} cy={cy} plotTop={offset?.top ?? 0} plotBottom={(offset?.top ?? 0) + (offset?.height ?? 0)} onClick={() => openInsightById(insightId)} />);
-                  });
-                  return <g style={{ pointerEvents: "all" }}>{pins}</g>;
-                }} />
+                    if (!insightId) return null;
+                    const cx = (x ?? 0) + (width ?? 0) / 2;
+                    const cy = (y ?? 0);
+                    return <InsightSunPin cx={cx} cy={cy} onClick={() => openInsightById(insightId)} />;
+                  }} />
+                </Bar>
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: "Registradas", type: "square", color: "#22c55e" },
                   { value: "Justificadas", type: "square", color: "#ef4444" },
