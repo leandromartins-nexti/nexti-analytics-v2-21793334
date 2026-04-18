@@ -52,8 +52,27 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
   const rafRef = useRef<number | null>(null);
   const stepStartRef = useRef<number>(0);
   const accumulatedRef = useRef<number>(0);
+  const pinPositionsRef = useRef<Map<string, PinPosition>>(new Map());
+  const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set());
 
   const setHoveredId = useCallback((id: string | null) => setHoveredIdState(id), []);
+
+  const registerPin = useCallback((insightId: string, pos: PinPosition) => {
+    const cur = pinPositionsRef.current.get(insightId);
+    if (cur && Math.abs(cur.x - pos.x) < 0.5 && Math.abs(cur.y - pos.y) < 0.5) return;
+    pinPositionsRef.current.set(insightId, pos);
+    setPinnedIds(new Set(pinPositionsRef.current.keys()));
+  }, []);
+
+  const unregisterPin = useCallback((insightId: string) => {
+    if (!pinPositionsRef.current.has(insightId)) return;
+    pinPositionsRef.current.delete(insightId);
+    setPinnedIds(new Set(pinPositionsRef.current.keys()));
+  }, []);
+
+  const getPinPosition = useCallback((insightId: string) => {
+    return pinPositionsRef.current.get(insightId) ?? null;
+  }, []);
 
   const stopTour = useCallback(() => {
     setTourActive(false);
