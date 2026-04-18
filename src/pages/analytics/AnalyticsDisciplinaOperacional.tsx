@@ -40,6 +40,7 @@ import InfoTip from "@/components/analytics/InfoTip";
 import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSection";
 import InsightDetailModal from "@/components/analytics/InsightDetailModal";
+import InsightSunPin from "@/components/analytics/InsightSunPin";
 import { getInsightsForCustomer, type QualidadeInsight } from "@/data/qualidadeInsightsData";
 
 // decomposicaoScore and kpisPeriodoAnterior now loaded dynamically via useQualidadePontoData hook
@@ -917,7 +918,12 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [activeInsight, setActiveInsight] = useState<QualidadeInsight | null>(null);
   // Map: chart name → mes label → insight id (chart pin annotations)
   const chartInsightPins: Record<string, Record<string, string>> = {
-    sobrecarga: { "set/25": "C1" },
+    // Evolução da Qualidade e Headcount: evento de set/25 + recuperação em mar/26
+    evoQualidade: { "set/25": "E1", "mar/26": "C1" },
+    // Evolução do Tempo de Tratativa: estoque acumulado >15d (risco trabalhista)
+    evoTratativa: { "mar/26": "R3" },
+    // Sobrecarga do Back-office: oportunidade de contratar 2 operadores
+    sobrecarga: { "mar/26": "O1" },
   };
   const openInsightById = useCallback((id: string) => {
     const all = getInsightsForCustomer(customerId);
