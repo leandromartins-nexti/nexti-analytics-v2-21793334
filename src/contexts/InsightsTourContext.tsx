@@ -75,6 +75,22 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
   const accumulatedRef = useRef<number>(0);
   const pinPositionsRef = useRef<Map<string, PinPosition>>(new Map());
   const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set());
+  const initialSettings = loadSettings();
+  const [stepMs, setStepMsState] = useState<number>(initialSettings.stepMs);
+  const [loop, setLoopState] = useState<boolean>(initialSettings.loop);
+
+  const persist = useCallback((s: { stepMs: number; loop: boolean }) => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch { /* ignore */ }
+  }, []);
+  const setStepMs = useCallback((ms: number) => {
+    const clamped = Math.max(MIN_STEP_MS, Math.min(MAX_STEP_MS, ms));
+    setStepMsState(clamped);
+    persist({ stepMs: clamped, loop });
+  }, [loop, persist]);
+  const setLoop = useCallback((v: boolean) => {
+    setLoopState(v);
+    persist({ stepMs, loop: v });
+  }, [stepMs, persist]);
 
   const setHoveredId = useCallback((id: string | null) => setHoveredIdState(id), []);
 
