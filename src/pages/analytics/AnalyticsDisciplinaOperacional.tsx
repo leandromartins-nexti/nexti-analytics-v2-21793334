@@ -1786,6 +1786,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </div>
               <button onClick={() => setChartDataModal("evoTratativa")} className="p-1.5 rounded-md hover:bg-muted transition-colors" title="Ver dados"><Database className="w-4 h-4 text-muted-foreground" /></button>
             </div>
+            <div className="relative">
             <ResponsiveContainer width="100%" height={280}>
               <ComposedChart data={(() => {
                 const faixas = tratativaFaixasFiltrada;
@@ -1853,14 +1854,6 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 <Area yAxisId="left" type="monotone" dataKey="de7a15d" stackId="faixa" fill="#f97316" fillOpacity={0.35} stroke="#f97316" strokeWidth={0.5} name="7-15 dias" />
                 <Area yAxisId="left" type="monotone" dataKey="mais15d" stackId="faixa" fill="#ef4444" fillOpacity={0.35} stroke="#ef4444" strokeWidth={0.5} name="+15 dias" />
                 <Line yAxisId="right" type="monotone" dataKey="tempoMedio" name="Tempo médio (dias)" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }}>
-                  <LabelList content={(props: any) => {
-                    const { index, x, y } = props;
-                    const d = tratativaFaixasFiltrada[index];
-                    if (!d) return null;
-                    const insightId = chartInsightPins.evoTratativa?.[d.mes];
-                    if (!insightId) return null;
-                    return <InsightSunPin cx={x} cy={y} onClick={() => openInsightById(insightId)} />;
-                  }} />
                 </Line>
                 <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 10, paddingTop: 8 }} payload={[
                   { value: "Até 1 dia", type: "square" as const, color: "#22c55e" },
@@ -1872,6 +1865,16 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                 ]} />
               </ComposedChart>
             </ResponsiveContainer>
+            {(() => {
+              const pins: InsightOverlayPin[] = tratativaFaixasFiltrada
+                .map((d, i) => {
+                  const id = chartInsightPins.evoTratativa?.[d.mes];
+                  return id ? { mesIndex: i, insightId: id, topPct: 0.18 } : null;
+                })
+                .filter(Boolean) as InsightOverlayPin[];
+              return <InsightOverlayPins pins={pins} totalMeses={tratativaFaixasFiltrada.length} onPinClick={openInsightById} direction="down" />;
+            })()}
+            </div>
           </div>
 
           {(() => {
