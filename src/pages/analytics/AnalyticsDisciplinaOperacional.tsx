@@ -1930,42 +1930,39 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ComposedChart>
             </ResponsiveContainer>
             {(() => {
-              const sourceArr =
-                groupBy === "empresa" ? customerData.tratTempoEmpresa :
-                groupBy === "unidade" ? customerData.tratTempoUnidade :
-                customerData.tratTempoArea;
-              const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
-              // Domínio left fixo 0–100% (faixas), right = max do tempoMedio com headroom
+              const allInsights = getInsightsForCustomer(customerId);
+              const scopedInsights = filterInsightsByEntity(allInsights, groupBy as any, selectedRegional);
+              const anchors = buildAnchorsForChart(scopedInsights, "tratativa_tempo" as InsightChartId);
+              const labelToIdx = new Map(tratativaFaixasFiltrada.map((d: any, i: number) => [d.mes, i]));
               const yDomainLeft: [number, number] = [0, 100];
               const rightMax = Math.max(1, ...tratativaFaixasFiltrada.map((d: any) => {
                 const total = d.total || 1;
                 return Math.round(((d.ate1d * 0.5 + d.de1a3d * 2 + d.de3a7d * 5 + d.de7a15d * 11 + d.mais15d * 20) / total) * 10) / 10;
               }));
               const yDomainRight: [number, number] = [0, Math.ceil(rightMax * 1.1)];
-              const pins: InsightOverlayPin[] = tratativaFaixasFiltrada
-                .map((d: any, i: number) => {
-                  const p = pinsByMes[d.mes];
-                  if (!p) return null;
-                  // Resolver value: tempoMedio é a série mais comum (linha azul, eixo right)
+              const pins: InsightOverlayPin[] = anchors
+                .map((a) => {
+                  const label = MONTH_LABEL_MAP[a.monthKey + "-01"] ?? a.monthKey;
+                  const idx = labelToIdx.get(label);
+                  if (idx === undefined) return null;
+                  const d: any = tratativaFaixasFiltrada[idx];
                   const total = d.total || 1;
                   const tempoMedio = Math.round(((d.ate1d * 0.5 + d.de1a3d * 2 + d.de3a7d * 5 + d.de7a15d * 11 + d.mais15d * 20) / total) * 10) / 10;
-                  const seriesValue = (() => {
-                    if (!p.series) return undefined;
-                    if (p.series === "tempo_medio_horas" || p.series === "tempoMedio") return tempoMedio;
-                    if (p.series === "mais15d") return Math.round((d.mais15d / total) * 100);
-                    if (p.series === "ate1d") return Math.round((d.ate1d / total) * 100);
-                    return p.value;
+                  const value = (() => {
+                    if (a.series === "tempo_medio_horas" || a.series === "tempoMedio") return tempoMedio;
+                    if (a.series === "mais15d") return Math.round((d.mais15d / total) * 100);
+                    if (a.series === "ate1d") return Math.round((d.ate1d / total) * 100);
+                    return undefined;
                   })();
                   return {
-                    mesIndex: i,
-                    insightId: String(p.insight_id),
-                    numericId: p.insight_id,
-                    type: p.type,
-                    series: p.series,
-                    axis: p.axis,
-                    offsetY: p.offsetY,
-                    value: typeof seriesValue === "number" ? seriesValue : p.value,
-                  };
+                    mesIndex: idx,
+                    insightId: a.insightId,
+                    numericId: a.numericId,
+                    type: a.type,
+                    series: a.series,
+                    axis: a.axis,
+                    value: typeof value === "number" ? value : undefined,
+                  } as InsightOverlayPin;
                 })
                 .filter(Boolean) as InsightOverlayPin[];
               return <InsightOverlayPins pins={pins} totalMeses={tratativaFaixasFiltrada.length} onPinClick={openInsightById} direction="down" yDomainLeft={yDomainLeft} yDomainRight={yDomainRight} />;
@@ -2155,43 +2152,41 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   </ComposedChart>
                 </ResponsiveContainer>
                 {(() => {
-                  const sourceArr =
-                    groupBy === "empresa" ? customerData.sobrecargaEmpresa :
-                    groupBy === "unidade" ? customerData.sobrecargaUnidade :
-                    customerData.sobrecargaArea;
                   const SOBRECARGA_LABELS: Record<string, string> = {
                     "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
                     "2025-07": "jul/25", "2025-08": "ago/25", "2025-09": "set/25",
                     "2025-10": "out/25", "2025-11": "nov/25", "2025-12": "dez/25",
                     "2026-01": "jan/26", "2026-02": "fev/26", "2026-03": "mar/26",
                   };
-                  const pinsByMes = buildPinsByMonth(sourceArr, "competencia", (raw) => SOBRECARGA_LABELS[raw] ?? raw);
-                  // Domínios calculados (Recharts usa ~max+headroom quando "auto")
+                  const allInsights = getInsightsForCustomer(customerId);
+                  const scopedInsights = filterInsightsByEntity(allInsights, groupBy as any, selectedRegional);
+                  const anchors = buildAnchorsForChart(scopedInsights, "sobrecarga_backoffice" as InsightChartId);
+                  const labelToIdx = new Map(sobrecargaData.map((d: any, i: number) => [d.mes, i]));
                   const leftMax = Math.max(1, ...sobrecargaData.map((d: any) => d.produtividade ?? 0));
                   const rightMax = Math.max(1, ...sobrecargaData.map((d: any) => d.he ?? 0));
                   const yDomainLeft: [number, number] = [0, Math.ceil(leftMax * 1.1)];
                   const yDomainRight: [number, number] = [0, Math.ceil(rightMax * 1.1)];
-                  const pins: InsightOverlayPin[] = sobrecargaData
-                    .map((d: any, i: number) => {
-                      const p = pinsByMes[d.mes];
-                      if (!p) return null;
-                      const seriesValue = (() => {
-                        if (!p.series) return undefined;
-                        if (p.series === "ajustes_por_operador" || p.series === "produtividade") return d.produtividade;
-                        if (p.series === "horas_extras_rateadas" || p.series === "he") return d.he;
-                        if (p.series === "operadores_ativos" || p.series === "operadores") return d.operadores;
-                        return (d as any)[p.series];
+                  const pins: InsightOverlayPin[] = anchors
+                    .map((a) => {
+                      const label = SOBRECARGA_LABELS[a.monthKey] ?? a.monthKey;
+                      const idx = labelToIdx.get(label);
+                      if (idx === undefined) return null;
+                      const d: any = sobrecargaData[idx];
+                      const value = (() => {
+                        if (a.series === "ajustes_por_operador" || a.series === "produtividade") return d.produtividade;
+                        if (a.series === "horas_extras_rateadas" || a.series === "he") return d.he;
+                        if (a.series === "operadores_ativos" || a.series === "operadores") return d.operadores;
+                        return d[a.series];
                       })();
                       return {
-                        mesIndex: i,
-                        insightId: String(p.insight_id),
-                        numericId: p.insight_id,
-                        type: p.type,
-                        series: p.series,
-                        axis: p.axis,
-                        offsetY: p.offsetY,
-                        value: typeof seriesValue === "number" ? seriesValue : p.value,
-                      };
+                        mesIndex: idx,
+                        insightId: a.insightId,
+                        numericId: a.numericId,
+                        type: a.type,
+                        series: a.series,
+                        axis: a.axis,
+                        value: typeof value === "number" ? value : undefined,
+                      } as InsightOverlayPin;
                     })
                     .filter(Boolean) as InsightOverlayPin[];
                   return <InsightOverlayPins pins={pins} totalMeses={sobrecargaData.length} onPinClick={openInsightById} direction="down" yDomainLeft={yDomainLeft} yDomainRight={yDomainRight} />;
