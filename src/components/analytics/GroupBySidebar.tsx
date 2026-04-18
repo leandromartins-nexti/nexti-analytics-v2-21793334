@@ -48,11 +48,44 @@ export default function GroupBySidebar({
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mode, setMode] = useState<SidebarMode>("ops");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortBy, setSortBy] = useState<"score" | "nome">("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
+
+  // Reusable mode toggle (Ops | Insights)
+  const ModeToggle = ({ vertical = false }: { vertical?: boolean }) => (
+    <div className={`flex ${vertical ? "flex-col" : "flex-row"} gap-0.5 ${vertical ? "" : "mb-1.5"}`}>
+      {([
+        { id: "ops" as const, icon: ListFilter, label: "Tipo de Operação" },
+        { id: "insights" as const, icon: Lightbulb, label: "Insights" },
+      ]).map(o => {
+        const active = mode === o.id;
+        const Icon = o.icon;
+        return (
+          <UITooltip key={o.id}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setMode(o.id)}
+                className={`${vertical ? "p-1.5" : "flex-1 px-2 py-1"} rounded-md transition-colors flex items-center justify-center gap-1 ${
+                  active
+                    ? "bg-[#FF5722] text-white"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                }`}
+              >
+                <Icon size={vertical ? 13 : 12} />
+                {!vertical && <span className="text-[10px] font-semibold">{o.label.split(" ")[0]}</span>}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="left" className="text-xs">{o.label}</TooltipContent>
+          </UITooltip>
+        );
+      })}
+    </div>
+  );
+
 
   const searchTimerRef = useState<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = (value: string) => {
