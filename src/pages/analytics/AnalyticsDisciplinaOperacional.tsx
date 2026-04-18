@@ -932,6 +932,29 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
     return row?.pin && typeof row.pin === "object" ? row.pin : undefined;
   };
 
+  /**
+   * Build a map { mesLabel → pin } from a source array with `pin` fields.
+   * Picks the FIRST row per month that contains a pin (data is annotated only on anchor rows).
+   */
+  const buildPinsByMonth = (
+    source: any[] | undefined,
+    dateField: "reference_month" | "competencia",
+    dateToLabel: (raw: string) => string,
+  ): Record<string, { insight_id: number; type: "risk"|"achievement"|"opportunity"|"trend" }> => {
+    const out: Record<string, any> = {};
+    if (!Array.isArray(source)) return out;
+    for (const row of source) {
+      const pin = extractPin(row);
+      if (!pin) continue;
+      const raw = row[dateField];
+      if (!raw) continue;
+      const label = dateToLabel(raw);
+      if (!out[label]) out[label] = pin;
+    }
+    return out;
+  };
+
+
 
   // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
   const dataSources = useMemo(() => buildDataSources(customerData), [customerData]);
