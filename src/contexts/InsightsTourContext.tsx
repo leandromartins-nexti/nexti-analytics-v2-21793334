@@ -208,6 +208,10 @@ export function useInsightsTour() {
     return {
       hoveredId: null,
       setHoveredId: () => {},
+      registerPin: () => {},
+      unregisterPin: () => {},
+      getPinPosition: () => null,
+      pinnedIds: new Set<string>(),
       tourActive: false,
       tourPaused: false,
       tourIndex: 0,
