@@ -180,6 +180,10 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
   const value = useMemo<InsightsTourContextValue>(() => ({
     hoveredId,
     setHoveredId,
+    registerPin,
+    unregisterPin,
+    getPinPosition,
+    pinnedIds,
     tourActive,
     tourPaused,
     tourIndex,
@@ -192,7 +196,7 @@ export function InsightsTourProvider({ children }: { children: ReactNode }) {
     resumeTour,
     nextStep,
     prevStep,
-  }), [hoveredId, setHoveredId, tourActive, tourPaused, tourIndex, queue, tourProgress, startTour, stopTour, pauseTour, resumeTour, nextStep, prevStep]);
+  }), [hoveredId, setHoveredId, registerPin, unregisterPin, getPinPosition, pinnedIds, tourActive, tourPaused, tourIndex, queue, tourProgress, startTour, stopTour, pauseTour, resumeTour, nextStep, prevStep]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
