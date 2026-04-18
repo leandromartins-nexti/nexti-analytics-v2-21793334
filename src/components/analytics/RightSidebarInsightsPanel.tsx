@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, Trophy, Lightbulb, Activity, Play, Square } from "lucide-react";
+import { AlertTriangle, Trophy, Lightbulb, Activity, Play, Square, Settings2, Repeat } from "lucide-react";
 import { useCustomer } from "@/contexts/CustomerContext";
 import { getInsightsForCustomer, filterInsightsByEntity, categoryConfig, type QualidadeInsight, type GroupByLevel } from "@/data/qualidadeInsightsData";
 import InsightDetailModal from "./InsightDetailModal";
 import { useDismissedInsights } from "@/hooks/useDismissedInsights";
 import { useInsightsTour } from "@/contexts/InsightsTourContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 const iconMap = { AlertTriangle, Trophy, Lightbulb, Activity } as const;
