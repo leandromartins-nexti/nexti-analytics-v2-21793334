@@ -41,6 +41,7 @@ import { ScoreBoard, KPIBoard } from "@/components/analytics/KPIBoard";
 import QualidadeInsightsSection from "@/components/analytics/QualidadeInsightsSection";
 import InsightDetailModal from "@/components/analytics/InsightDetailModal";
 import InsightSunPin from "@/components/analytics/InsightSunPin";
+import InsightOverlayPins, { type InsightOverlayPin } from "@/components/analytics/InsightOverlayPins";
 import { getInsightsForCustomer, type QualidadeInsight } from "@/data/qualidadeInsightsData";
 
 // decomposicaoScore and kpisPeriodoAnterior now loaded dynamically via useQualidadePontoData hook
