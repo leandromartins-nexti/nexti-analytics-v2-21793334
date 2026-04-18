@@ -1786,10 +1786,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ComposedChart>
             </ResponsiveContainer>
             {(() => {
+              const sourceArr =
+                groupBy === "empresa" ? customerData.hcEmpresa :
+                groupBy === "unidade" ? customerData.hcUnidade :
+                customerData.hcArea;
+              const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
               const pins: InsightOverlayPin[] = qualidadeComHeadcount
                 .map((d, i) => {
-                  const id = chartInsightPins.evoQualidade?.[d.mes];
-                  return id ? { mesIndex: i, insightId: id } : null;
+                  const p = pinsByMes[d.mes];
+                  return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
                 })
                 .filter(Boolean) as InsightOverlayPin[];
               return <InsightOverlayPins pins={pins} totalMeses={qualidadeComHeadcount.length} onPinClick={openInsightById} direction="down" />;
@@ -1890,10 +1895,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ComposedChart>
             </ResponsiveContainer>
             {(() => {
+              const sourceArr =
+                groupBy === "empresa" ? customerData.tratEmpresa :
+                groupBy === "unidade" ? customerData.tratUnidade :
+                customerData.tratArea;
+              const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
               const pins: InsightOverlayPin[] = tratativaFaixasFiltrada
                 .map((d, i) => {
-                  const id = chartInsightPins.evoTratativa?.[d.mes];
-                  return id ? { mesIndex: i, insightId: id } : null;
+                  const p = pinsByMes[d.mes];
+                  return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
                 })
                 .filter(Boolean) as InsightOverlayPin[];
               return <InsightOverlayPins pins={pins} totalMeses={tratativaFaixasFiltrada.length} onPinClick={openInsightById} direction="down" />;
@@ -2083,10 +2093,22 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   </ComposedChart>
                 </ResponsiveContainer>
                 {(() => {
+                  // Build month-pin map from the raw sobrecarga source for the active groupBy
+                  const sourceArr =
+                    groupBy === "empresa" ? customerData.sobrecargaEmpresa :
+                    groupBy === "unidade" ? customerData.sobrecargaUnidade :
+                    customerData.sobrecargaArea;
+                  const SOBRECARGA_LABELS: Record<string, string> = {
+                    "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
+                    "2025-07": "jul/25", "2025-08": "ago/25", "2025-09": "set/25",
+                    "2025-10": "out/25", "2025-11": "nov/25", "2025-12": "dez/25",
+                    "2026-01": "jan/26", "2026-02": "fev/26", "2026-03": "mar/26",
+                  };
+                  const pinsByMes = buildPinsByMonth(sourceArr, "competencia", (raw) => SOBRECARGA_LABELS[raw] ?? raw);
                   const pins: InsightOverlayPin[] = sobrecargaData
                     .map((d, i) => {
-                      const id = chartInsightPins.sobrecarga?.[d.mes];
-                      return id ? { mesIndex: i, insightId: id } : null;
+                      const p = pinsByMes[d.mes];
+                      return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
                     })
                     .filter(Boolean) as InsightOverlayPin[];
                   return <InsightOverlayPins pins={pins} totalMeses={sobrecargaData.length} onPinClick={openInsightById} direction="down" />;
