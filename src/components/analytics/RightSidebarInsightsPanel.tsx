@@ -209,13 +209,13 @@ export default function RightSidebarInsightsPanel({ collapsed = false, groupBy =
               onClick={() => setSelected(ins)}
               onMouseEnter={() => setHoveredId(ins.id)}
               onMouseLeave={() => !tourActive && setHoveredId(null)}
-              className="w-full text-left bg-white rounded-md transition-all p-2"
+              className="w-full text-left bg-white rounded-md transition-[box-shadow,background-color] duration-200 p-2"
               style={{
                 borderLeft: `3px solid ${cfg.borderColor}`,
                 boxShadow: isHovered
-                  ? `0 0 0 2px ${cfg.borderColor}, 0 4px 12px ${cfg.borderColor}40`
+                  ? `inset 3px 0 0 ${cfg.borderColor}, 0 2px 8px ${cfg.borderColor}33`
                   : "0 1px 2px rgba(0,0,0,0.06)",
-                transform: isHovered ? "translateX(-2px)" : "translateX(0)",
+                background: isHovered ? `${cfg.borderColor}08` : "#fff",
               }}
             >
               <span className="text-[8px] font-bold uppercase tracking-wider block mb-0.5" style={{ color: cfg.borderColor }}>
