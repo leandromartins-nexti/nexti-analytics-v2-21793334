@@ -16350,7 +16350,10 @@
     "tempo_medio_horas": 135.19,
     "pin": {
       "insight_id": 2,
-      "type": "risk"
+      "type": "risk",
+      "series": "tempo_medio_horas",
+      "axis": "right",
+      "offsetY": -24
     }
   },
   {

@@ -72,7 +72,10 @@
     "active_headcount": 45,
     "pin": {
       "insight_id": 12,
-      "type": "trend"
+      "type": "trend",
+      "series": "total",
+      "axis": "left",
+      "offsetY": -24
     }
   },
   {
@@ -148,7 +151,10 @@
     "active_headcount": 46,
     "pin": {
       "insight_id": 5,
-      "type": "achievement"
+      "type": "achievement",
+      "series": "total",
+      "axis": "left",
+      "offsetY": -24
     }
   },
   {

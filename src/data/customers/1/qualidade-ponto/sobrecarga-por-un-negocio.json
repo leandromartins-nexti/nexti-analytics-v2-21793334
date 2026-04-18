@@ -1680,7 +1680,10 @@
     "horas_extras_rateadas": 23.1,
     "pin": {
       "insight_id": 8,
-      "type": "opportunity"
+      "type": "opportunity",
+      "series": "ajustes_por_operador",
+      "axis": "left",
+      "offsetY": -24
     }
   },
   {
