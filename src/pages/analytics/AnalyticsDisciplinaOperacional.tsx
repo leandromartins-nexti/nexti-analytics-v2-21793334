@@ -1969,6 +1969,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                     <Database className="w-4 h-4" />
                   </button>
                 </div>
+                <div className="relative">
                 <ResponsiveContainer width="100%" height={280}>
                   <ComposedChart data={sobrecargaData} margin={{ top: 24, right: 10, bottom: 0, left: 0 }} onClick={(e: any) => {
                     if (e?.activeLabel) setSelectedMes(prev => prev === e.activeLabel ? null : e.activeLabel);
@@ -2054,17 +2055,19 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                       }} />
                     </Bar>
                     <Line yAxisId="right" type="monotone" dataKey="he" name="Horas extras" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 3, fill: "#3b82f6" }}>
-                      <LabelList content={(props: any) => {
-                        const { index, x, y } = props;
-                        const d = sobrecargaData[index];
-                        if (!d) return null;
-                        const insightId = chartInsightPins.sobrecarga?.[d.mes];
-                        if (!insightId) return null;
-                        return <InsightSunPin cx={x} cy={y} onClick={() => openInsightById(insightId)} />;
-                      }} />
                     </Line>
                   </ComposedChart>
                 </ResponsiveContainer>
+                {(() => {
+                  const pins: InsightOverlayPin[] = sobrecargaData
+                    .map((d, i) => {
+                      const id = chartInsightPins.sobrecarga?.[d.mes];
+                      return id ? { mesIndex: i, insightId: id, topPct: 0.18 } : null;
+                    })
+                    .filter(Boolean) as InsightOverlayPin[];
+                  return <InsightOverlayPins pins={pins} totalMeses={sobrecargaData.length} onPinClick={openInsightById} direction="down" />;
+                })()}
+                </div>
                 {/* Legend */}
                 <div className="flex items-center justify-center gap-4 mt-1 text-[10px] text-muted-foreground">
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: "#22c55e", opacity: 0.75 }} /> Saudável</span>
