@@ -1,9 +1,10 @@
 /**
  * InsightSunPin — pin de insight estilo "SOL mini" com lâmpada animada.
- * Renderizado como SVG dentro de Recharts via <LabelList content={...}>.
- * Por padrão posiciona-se 40px ACIMA do ponto (cx, cy). Se não houver espaço
- * suficiente acima (estouraria o topo do plot area), inverte para BAIXO.
+ * Suporta 4 variantes via prop `type` (risk/achievement/opportunity/trend),
+ * cada uma com cor + emoji próprios mapeados em PIN_TYPE_VISUALS.
  */
+import { PIN_TYPE_VISUALS, type PinType } from "@/data/qualidadeInsightsData";
+
 interface InsightSunPinProps {
   cx: number;
   cy: number;
@@ -14,6 +15,7 @@ interface InsightSunPinProps {
   plotBottom?: number;
   direction?: "up" | "down" | "auto";
   title?: string;
+  type?: PinType;
 }
 
 export default function InsightSunPin({
@@ -26,7 +28,12 @@ export default function InsightSunPin({
   plotBottom,
   direction = "auto",
   title = "Ver insight",
+  type = "opportunity",
 }: InsightSunPinProps) {
+  const visuals = PIN_TYPE_VISUALS[type];
+  const color = visuals.color;
+  const emoji = visuals.emoji;
+
   const longR2 = 36 * scale;
   const r1 = 22 * scale;
   const shortR2 = 30 * scale;
@@ -52,7 +59,6 @@ export default function InsightSunPin({
   const stemY2 = placeBelow ? pinY - bulbR * 0.9 : pinY + bulbR * 0.9;
 
   const handle = (e: React.MouseEvent) => {
-    console.log("[InsightSunPin] click", { cx, cy, pinY });
     e.stopPropagation();
     e.preventDefault();
     onClick();
@@ -60,10 +66,9 @@ export default function InsightSunPin({
 
   return (
     <g style={{ cursor: "pointer" }} onClick={handle}>
-      <title>{title}</title>
-      {/* Hit area transparente maior cobrindo toda a lâmpada + raios */}
+      <title>{`${visuals.label}: ${title}`}</title>
       <circle cx={cx} cy={pinY} r={longR2 + 6} fill="#000" fillOpacity={0.001} onClick={handle} />
-      <line x1={cx} y1={stemY1} x2={cx} y2={stemY2} stroke="#facc15" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.6} pointerEvents="none" />
+      <line x1={cx} y1={stemY1} x2={cx} y2={stemY2} stroke={color} strokeWidth={1.5} strokeDasharray="3 2" opacity={0.6} pointerEvents="none" />
       <g pointerEvents="none">
         <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${pinY}`} to={`360 ${cx} ${pinY}`} dur="12s" repeatCount="indefinite" />
         {Array.from({ length: 16 }).map((_, i) => {
@@ -77,7 +82,7 @@ export default function InsightSunPin({
               y1={pinY + Math.sin(a) * r1}
               x2={cx + Math.cos(a) * r2}
               y2={pinY + Math.sin(a) * r2}
-              stroke="#facc15"
+              stroke={color}
               strokeWidth={long ? 2.5 * scale : 1.8 * scale}
               strokeLinecap="round"
               opacity={0.85}
@@ -87,11 +92,12 @@ export default function InsightSunPin({
           );
         })}
       </g>
-      <circle cx={cx} cy={pinY} r={glowR} fill="#fde047" opacity={0.4} pointerEvents="none">
-        <animate attributeName="opacity" values="0.25;0.7;0.25" dur="1.2s" repeatCount="indefinite" />
+      <circle cx={cx} cy={pinY} r={glowR} fill={color} opacity={0.35} pointerEvents="none">
+        <animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.2s" repeatCount="indefinite" />
       </circle>
-      <circle cx={cx} cy={pinY} r={bulbR} fill="#facc15" stroke="#fff" strokeWidth={Math.max(1.5, 3 * scale)} onClick={handle} />
-      <text x={cx} y={pinY + fontSize / 3} textAnchor="middle" fontSize={fontSize} pointerEvents="none">💡</text>
+      <circle cx={cx} cy={pinY} r={bulbR} fill={color} stroke="#fff" strokeWidth={Math.max(1.5, 3 * scale)} onClick={handle} />
+      <text x={cx} y={pinY + fontSize / 3} textAnchor="middle" fontSize={fontSize} pointerEvents="none">{emoji}</text>
     </g>
   );
 }
+

@@ -917,31 +917,44 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
   const { customerId } = useCustomer();
   const [activeInsight, setActiveInsight] = useState<QualidadeInsight | null>(null);
-  // Map: chart name → mes label → insight id (chart pin annotations) — por customer
-  const CHART_PINS_BY_CUSTOMER: Record<number, Record<string, Record<string, string>>> = {
-    642: {
-      evoQualidade: { "set/25": "E1", "mar/26": "C1" },
-      evoTratativa: { "mar/26": "R3" },
-      sobrecarga: { "mar/26": "O1" },
-    },
-    2: {
-      evoQualidade: { "set/25": "event_001", "mar/26": "ach_001" },
-      evoTratativa: { "mar/26": "risk_002" },
-      sobrecarga: { "mar/26": "opp_001" },
-    },
-    391: {
-      evoQualidade: { "set/25": "event_001", "mar/26": "ach_002" },
-      evoTratativa: { "mar/26": "risk_002" },
-      sobrecarga: { "mar/26": "opp_001" },
-    },
-  };
-  const chartInsightPins: Record<string, Record<string, string>> = CHART_PINS_BY_CUSTOMER[customerId] ?? {};
-  const openInsightById = useCallback((id: string) => {
+  // Pins agora vêm dos próprios JSONs (campo `pin: { insight_id, type }` por linha).
+  // Resolvemos o clique pelo numeric_id ou pelo id string (legacy fallback).
+  const openInsightById = useCallback((id: string, numericId?: number) => {
     const all = getInsightsForCustomer(customerId);
-    const found = all.find(i => i.id === id);
-    console.log("[openInsightById]", { id, found: !!found, totalInsights: all.length });
+    const found =
+      (numericId !== undefined && all.find(i => (i as any).numeric_id === numericId)) ||
+      all.find(i => i.id === id);
     if (found) setActiveInsight(found);
   }, [customerId]);
+
+  /** Helper: extract pin data from a row. Returns undefined if no pin. */
+  const extractPin = (row: any): { insight_id: number; type: "risk"|"achievement"|"opportunity"|"trend" } | undefined => {
+    return row?.pin && typeof row.pin === "object" ? row.pin : undefined;
+  };
+
+  /**
+   * Build a map { mesLabel → pin } from a source array with `pin` fields.
+   * Picks the FIRST row per month that contains a pin (data is annotated only on anchor rows).
+   */
+  const buildPinsByMonth = (
+    source: any[] | undefined,
+    dateField: "reference_month" | "competencia",
+    dateToLabel: (raw: string) => string,
+  ): Record<string, { insight_id: number; type: "risk"|"achievement"|"opportunity"|"trend" }> => {
+    const out: Record<string, any> = {};
+    if (!Array.isArray(source)) return out;
+    for (const row of source) {
+      const pin = extractPin(row);
+      if (!pin) continue;
+      const raw = row[dateField];
+      if (!raw) continue;
+      const label = dateToLabel(raw);
+      if (!out[label]) out[label] = pin;
+    }
+    return out;
+  };
+
+
 
   // TODO: REMOVER EM PRODUÇÃO — build dynamic data sources from active customer
   const dataSources = useMemo(() => buildDataSources(customerData), [customerData]);
@@ -1773,10 +1786,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ComposedChart>
             </ResponsiveContainer>
             {(() => {
+              const sourceArr =
+                groupBy === "empresa" ? customerData.hcEmpresa :
+                groupBy === "unidade" ? customerData.hcUnidade :
+                customerData.hcArea;
+              const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
               const pins: InsightOverlayPin[] = qualidadeComHeadcount
                 .map((d, i) => {
-                  const id = chartInsightPins.evoQualidade?.[d.mes];
-                  return id ? { mesIndex: i, insightId: id } : null;
+                  const p = pinsByMes[d.mes];
+                  return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
                 })
                 .filter(Boolean) as InsightOverlayPin[];
               return <InsightOverlayPins pins={pins} totalMeses={qualidadeComHeadcount.length} onPinClick={openInsightById} direction="down" />;
@@ -1877,10 +1895,15 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
               </ComposedChart>
             </ResponsiveContainer>
             {(() => {
+              const sourceArr =
+                groupBy === "empresa" ? customerData.tratTempoEmpresa :
+                groupBy === "unidade" ? customerData.tratTempoUnidade :
+                customerData.tratTempoArea;
+              const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
               const pins: InsightOverlayPin[] = tratativaFaixasFiltrada
                 .map((d, i) => {
-                  const id = chartInsightPins.evoTratativa?.[d.mes];
-                  return id ? { mesIndex: i, insightId: id } : null;
+                  const p = pinsByMes[d.mes];
+                  return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
                 })
                 .filter(Boolean) as InsightOverlayPin[];
               return <InsightOverlayPins pins={pins} totalMeses={tratativaFaixasFiltrada.length} onPinClick={openInsightById} direction="down" />;
@@ -2070,10 +2093,22 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                   </ComposedChart>
                 </ResponsiveContainer>
                 {(() => {
+                  // Build month-pin map from the raw sobrecarga source for the active groupBy
+                  const sourceArr =
+                    groupBy === "empresa" ? customerData.sobrecargaEmpresa :
+                    groupBy === "unidade" ? customerData.sobrecargaUnidade :
+                    customerData.sobrecargaArea;
+                  const SOBRECARGA_LABELS: Record<string, string> = {
+                    "2025-04": "abr/25", "2025-05": "mai/25", "2025-06": "jun/25",
+                    "2025-07": "jul/25", "2025-08": "ago/25", "2025-09": "set/25",
+                    "2025-10": "out/25", "2025-11": "nov/25", "2025-12": "dez/25",
+                    "2026-01": "jan/26", "2026-02": "fev/26", "2026-03": "mar/26",
+                  };
+                  const pinsByMes = buildPinsByMonth(sourceArr, "competencia", (raw) => SOBRECARGA_LABELS[raw] ?? raw);
                   const pins: InsightOverlayPin[] = sobrecargaData
                     .map((d, i) => {
-                      const id = chartInsightPins.sobrecarga?.[d.mes];
-                      return id ? { mesIndex: i, insightId: id } : null;
+                      const p = pinsByMes[d.mes];
+                      return p ? { mesIndex: i, insightId: String(p.insight_id), numericId: p.insight_id, type: p.type } : null;
                     })
                     .filter(Boolean) as InsightOverlayPin[];
                   return <InsightOverlayPins pins={pins} totalMeses={sobrecargaData.length} onPinClick={openInsightById} direction="down" />;
