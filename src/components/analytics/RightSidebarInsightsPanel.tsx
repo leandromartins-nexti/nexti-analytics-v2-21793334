@@ -27,7 +27,7 @@ export default function RightSidebarInsightsPanel({ collapsed = false }: Props) 
   const { dismissed } = useDismissedInsights(String(customerId));
   const [filter, setFilter] = useState<string>("all");
   const [selected, setSelected] = useState<QualidadeInsight | null>(null);
-  const { hoveredId, setHoveredId, tourActive, startTour, stopTour } = useInsightsTour();
+  const { hoveredId, setHoveredId, tourActive, startTour, stopTour, pinnedIds } = useInsightsTour();
   const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   const all = useMemo(() => getInsightsForCustomer(customerId), [customerId]);
