@@ -47,11 +47,11 @@ export function findInsightByNumericId(customerId: number, numericId: number): Q
 export type PinType = "risk" | "achievement" | "opportunity" | "trend";
 
 /** Visual mapping for the 4 pin types (matches Insights Center icons) */
-export const PIN_TYPE_VISUALS: Record<PinType, { color: string; emoji: string; label: string }> = {
-  risk:        { color: "#ef4444", emoji: "🚨", label: "Risco" },
-  achievement: { color: "#22c55e", emoji: "🏆", label: "Conquista" },
-  opportunity: { color: "#facc15", emoji: "💡", label: "Oportunidade" },
-  trend:       { color: "#3b82f6", emoji: "📊", label: "Tendência" },
+export const PIN_TYPE_VISUALS: Record<PinType, { color: string; icon: LucideIcon; label: string }> = {
+  risk:        { color: "#ef4444", icon: AlertTriangle, label: "Risco" },
+  achievement: { color: "#22c55e", icon: Trophy,        label: "Conquista" },
+  opportunity: { color: "#facc15", icon: Lightbulb,     label: "Oportunidade" },
+  trend:       { color: "#3b82f6", icon: TrendingUp,    label: "Tendência" },
 };
 
 // Legacy export for backward compat
