@@ -1896,9 +1896,9 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
             </ResponsiveContainer>
             {(() => {
               const sourceArr =
-                groupBy === "empresa" ? customerData.tratEmpresa :
-                groupBy === "unidade" ? customerData.tratUnidade :
-                customerData.tratArea;
+                groupBy === "empresa" ? customerData.tratTempoEmpresa :
+                groupBy === "unidade" ? customerData.tratTempoUnidade :
+                customerData.tratTempoArea;
               const pinsByMes = buildPinsByMonth(sourceArr, "reference_month", (raw) => MONTH_LABEL_MAP[raw] ?? raw);
               const pins: InsightOverlayPin[] = tratativaFaixasFiltrada
                 .map((d, i) => {
