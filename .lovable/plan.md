@@ -1,31 +1,80 @@
 
+Ajuste: trocar `insight_id` (string como `"E1"`) por um id numérico.
 
-# Persistir dados Orsegups (cliente 2) em JSON no código-fonte
+## Modelo final
 
-## Problema
-Os dados da Orsegups importados via ZIP ficam no `localStorage` do navegador. Ao limpar cache ou acessar de outro dispositivo/deploy, os gráficos aparecem vazios.
+```json
+{
+  "pin": {
+    "insight_id": 1,
+    "type": "trend"
+  }
+}
+```
 
-## Solução
-Extrair os JSONs do ZIP `2_-_Orsegups.zip` e salvá-los em `src/data/customers/2/qualidade-ponto/`, seguindo exatamente a estrutura do cliente 642.
+- `insight_id`: **number** — id numérico estável e único do insight dentro do cliente.
+- `type`: `"risk" | "achievement" | "opportunity" | "trend"` (mapeia 1-pra-1 com `category` do insight).
 
-## Passos
+## Implicação importante
 
-### 1. Extrair ZIP e criar arquivos JSON
-- Copiar o ZIP para `/tmp`
-- Usar script Python com `zipfile` para extrair os JSONs
-- Mapear os nomes de dimensão do ZIP (empresa, un-negocio, area) para os nomes de arquivo esperados pelo hook:
-  - `headcount-por-empresa.json`, `headcount-por-un-negocio.json`, `headcount-por-area.json`
-  - `tratativa-tempo-por-empresa.json`, `tratativa-tempo-por-un-negocio.json`, `tratativa-tempo-por-area.json`
-  - `sobrecarga-por-empresa.json`, `sobrecarga-por-un-negocio.json`, `sobrecarga-por-area.json`
-  - `decomposicao-score.json`, `kpis-periodo-anterior.json`
-- Salvar em `src/data/customers/2/qualidade-ponto/`
+Hoje os insights em `customers/{id}/insights.json` (e `qualidade-ponto/insights.json`) usam `id` string (`"E1"`, `"risk_001"`, `"ach_002"`...). Para o `insight_id` numérico funcionar, precisamos adicionar um campo numérico aos insights também:
 
-### 2. Atualizar `src/data/customers-index.json`
-- Confirmar que o cliente 2 já tem `"qualidade-ponto"` em `tabs_available` (já está)
+```json
+{
+  "id": "E1",
+  "numeric_id": 1,
+  "category": "event",
+  ...
+}
+```
 
-### 3. Sem alteração de código
-O sistema já carrega automaticamente via `import.meta.glob("/src/data/customers/*/qualidade-ponto/*.json")`. Basta os arquivos existirem no path correto.
+E o pin referencia via `numeric_id`. Mantemos `id` string para não quebrar o resto do código que já usa.
 
-## Resultado
-Gráficos da Orsegups preenchidos em qualquer ambiente, sem depender de localStorage.
+## Exemplo Orsegups (customer 642) — mapeamento proposto
 
+| numeric_id | id (legacy) | category | type (pin) | Mês-âncora | Gráfico |
+|---|---|---|---|---|---|
+| 1 | E1 | event | `trend` | set/25 | Evolução Qualidade e Headcount |
+| 2 | C1 | achievement | `achievement` | mar/26 | Evolução Qualidade e Headcount |
+| 3 | R1 | risk | `risk` | mar/26 | Sobrecarga do Back-office |
+| 4 | E2 | event | `trend` | fev/26 | Evolução do Tempo de Tratativa |
+
+## Exemplo aplicado em `headcount-por-empresa.json`
+
+```json
+{
+  "company_name": "PORTARIA E LIMPEZA",
+  "reference_month": "2025-09-01",
+  "active_headcount": 1240,
+  "quality_percentage": 82.4,
+  "registered_count": 18420,
+  "justified_count": 3940,
+  "pin": {
+    "insight_id": 1,
+    "type": "trend"
+  }
+}
+```
+
+E no `insights.json`:
+
+```json
+{
+  "id": "E1",
+  "numeric_id": 1,
+  "category": "event",
+  "title": "Crescimento do contrato em set/25",
+  ...
+}
+```
+
+## Próximos passos (após sua aprovação)
+
+1. Adicionar `numeric_id` em todos os insights de 642 (e depois 1, 2, 391).
+2. Adicionar `pin: { insight_id, type }` nas linhas-âncora dos JSONs de série temporal de 642.
+3. Refatorar `InsightOverlayPins` + `AnalyticsDisciplinaOperacional` para varrer o array do gráfico procurando `row.pin` (em vez do mapa hardcoded `CHART_PINS_BY_CUSTOMER`), resolvendo o insight via `numeric_id`.
+4. Mapear `type` → variante visual do `InsightSunPin` (cor/ícone por categoria).
+
+**Validação:**
+- Modelo `pin: { insight_id: number, type: string }` + adição de `numeric_id` nos insights — OK?
+- Posso seguir começando pelo Orsegups (642)?
