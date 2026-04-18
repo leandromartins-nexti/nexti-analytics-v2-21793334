@@ -96,7 +96,11 @@ export default function InsightSunPin({
         <animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.2s" repeatCount="indefinite" />
       </circle>
       <circle cx={cx} cy={pinY} r={bulbR} fill={color} stroke="#fff" strokeWidth={Math.max(1.5, 3 * scale)} onClick={handle} />
-      <text x={cx} y={pinY + fontSize / 3} textAnchor="middle" fontSize={fontSize} pointerEvents="none">{emoji}</text>
+      <foreignObject x={cx - iconSize / 2} y={pinY - iconSize / 2} width={iconSize} height={iconSize} pointerEvents="none">
+        <div style={{ width: iconSize, height: iconSize, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
+          <IconCmp size={iconSize} strokeWidth={2.5} />
+        </div>
+      </foreignObject>
     </g>
   );
 }
