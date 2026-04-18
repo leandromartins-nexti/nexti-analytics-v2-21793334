@@ -1984,7 +1984,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
                         </g>
                       );
                     }} />
-                    <RechartsTooltip content={({ active, payload, label }) => {
+                    <RechartsTooltip cursor={false} wrapperStyle={{ pointerEvents: "none" }} content={({ active, payload, label }) => {
                       if (!active || !payload?.length) return null;
                       const d = payload[0]?.payload;
                       if (!d) return null;
