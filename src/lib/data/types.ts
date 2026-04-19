@@ -1,13 +1,12 @@
 /**
- * Shared type contracts for the analytics data layer.
+ * Type contracts for the analytics data layer.
  *
- * Types here mirror the nexti-analytics-api response shape. When the
- * Aurora DDL is finalized, the `unknown` row types tighten into
- * per-table interfaces. For now the wrapper is strict; the rows stay
- * loose on purpose so the consumer JSX keeps working unchanged.
+ * Row shapes live in ./goldTables.types.ts — they mirror the real
+ * Aurora columns. The wrapper types here are the HTTP envelope shared
+ * by MockDataSource and ApiDataSource.
  */
 
-import type { DimType } from "@/config/customer";
+import type { DimType, GoldTableRowMap, AnalyticsInsightRow } from "./goldTables.types";
 
 export const GOLD_TABLES = [
   "clocking_quality_monthly",
@@ -23,12 +22,15 @@ export type GoldTable = (typeof GOLD_TABLES)[number];
 export const INSIGHTS_TABLE = "analytics_insights" as const;
 export type InsightsTable = typeof INSIGHTS_TABLE;
 
+/** Row type associated with a given gold table. */
+export type GoldRowFor<T extends GoldTable> = GoldTableRowMap[T];
+
 export interface Period {
-  readonly start: string; // ISO date (YYYY-MM-DD)
-  readonly end: string; // ISO date (YYYY-MM-DD)
+  readonly start: string; // YYYY-MM-DD
+  readonly end: string; // YYYY-MM-DD
 }
 
-export interface AnalyticsResponse<T = unknown> {
+export interface AnalyticsResponse<T> {
   readonly table: string;
   readonly customer_id: number;
   readonly generated_at: string; // ISO timestamp
@@ -59,3 +61,6 @@ export interface HealthResponse {
   readonly version: string;
   readonly checked_at: string;
 }
+
+export type GoldResponse<T extends GoldTable> = AnalyticsResponse<GoldRowFor<T>>;
+export type InsightsResponse = AnalyticsResponse<AnalyticsInsightRow>;

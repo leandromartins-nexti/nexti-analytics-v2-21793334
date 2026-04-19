@@ -34,10 +34,13 @@ export type { DataSource } from "./DataSource";
 export type {
   AnalyticsResponse,
   GoldQuery,
+  GoldResponse,
   GoldTable,
   HealthResponse,
   InsightsQuery,
+  InsightsResponse,
   Period,
 } from "./types";
 export { GOLD_TABLES, INSIGHTS_TABLE } from "./types";
 export { ApiError } from "./ApiDataSource";
+export type * from "./goldTables.types";

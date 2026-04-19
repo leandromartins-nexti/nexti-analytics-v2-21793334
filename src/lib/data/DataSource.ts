@@ -3,7 +3,8 @@
  *
  * The canonical abstraction for reading gold tables + insights. Two
  * implementations today:
- *   - MockDataSource: serves the bundled JSONs under src/data/customers/642
+ *   - MockDataSource: serves the bundled Aurora snapshot at
+ *     src/data/aurora-real/vig-eyes-642.json
  *   - ApiDataSource:  fetches the nexti-analytics-api HTTP endpoints
  *
  * Consumers depend on this interface, not on concrete imports, so flipping
@@ -11,11 +12,12 @@
  */
 
 import type {
-  AnalyticsResponse,
   GoldQuery,
+  GoldResponse,
   GoldTable,
   HealthResponse,
   InsightsQuery,
+  InsightsResponse,
 } from "./types";
 
 export interface DataSource {
@@ -26,8 +28,11 @@ export interface DataSource {
   health(): Promise<HealthResponse>;
 
   /** Fetch a gold table for the active tenant. */
-  getGold(table: GoldTable, query: GoldQuery): Promise<AnalyticsResponse>;
+  getGold<T extends GoldTable>(
+    table: T,
+    query: GoldQuery,
+  ): Promise<GoldResponse<T>>;
 
   /** Fetch tenant insights, optionally filtered by chart id. */
-  getInsights(query: InsightsQuery): Promise<AnalyticsResponse>;
+  getInsights(query: InsightsQuery): Promise<InsightsResponse>;
 }

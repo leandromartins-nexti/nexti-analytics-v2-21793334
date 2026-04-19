@@ -8,11 +8,12 @@
 
 import type { DataSource } from "./DataSource";
 import type {
-  AnalyticsResponse,
   GoldQuery,
+  GoldResponse,
   GoldTable,
   HealthResponse,
   InsightsQuery,
+  InsightsResponse,
 } from "./types";
 
 export class ApiError extends Error {
@@ -89,10 +90,10 @@ export function createApiDataSource(baseUrl: string): DataSource {
       return getJson<HealthResponse>("/api/health");
     },
 
-    async getGold(
-      table: GoldTable,
+    async getGold<T extends GoldTable>(
+      table: T,
       query: GoldQuery,
-    ): Promise<AnalyticsResponse> {
+    ): Promise<GoldResponse<T>> {
       const qs = buildQueryString({
         customer_id: query.customer_id,
         dim_type: query.dim_type,
@@ -100,15 +101,15 @@ export function createApiDataSource(baseUrl: string): DataSource {
         start: query.start,
         end: query.end,
       });
-      return getJson<AnalyticsResponse>(`/api/analytics/gold/${table}${qs}`);
+      return getJson<GoldResponse<T>>(`/api/analytics/gold/${table}${qs}`);
     },
 
-    async getInsights(query: InsightsQuery): Promise<AnalyticsResponse> {
+    async getInsights(query: InsightsQuery): Promise<InsightsResponse> {
       const qs = buildQueryString({
         customer_id: query.customer_id,
         chart: query.chart,
       });
-      return getJson<AnalyticsResponse>(`/api/analytics/insights${qs}`);
+      return getJson<InsightsResponse>(`/api/analytics/insights${qs}`);
     },
   };
 }

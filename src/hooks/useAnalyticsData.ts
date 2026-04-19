@@ -9,11 +9,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { dataSource } from "@/lib/data";
 import type {
-  AnalyticsResponse,
   GoldQuery,
+  GoldResponse,
   GoldTable,
   HealthResponse,
   InsightsQuery,
+  InsightsResponse,
 } from "@/lib/data/types";
 
 /** Stable cache keys. Keep `dataSource.name` in the key so mock and api
@@ -36,8 +37,8 @@ export function useBackendHealth(options?: { refetchIntervalMs?: number }) {
   });
 }
 
-export function useGoldTable(table: GoldTable, query: GoldQuery) {
-  return useQuery<AnalyticsResponse>({
+export function useGoldTable<T extends GoldTable>(table: T, query: GoldQuery) {
+  return useQuery<GoldResponse<T>>({
     queryKey: keys.gold(table, query),
     queryFn: () => dataSource.getGold(table, query),
     staleTime: 60_000,
@@ -46,7 +47,7 @@ export function useGoldTable(table: GoldTable, query: GoldQuery) {
 }
 
 export function useInsights(query: InsightsQuery) {
-  return useQuery<AnalyticsResponse>({
+  return useQuery<InsightsResponse>({
     queryKey: keys.insights(query),
     queryFn: () => dataSource.getInsights(query),
     staleTime: 60_000,
