@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { PrimeFilterProvider } from "@/contexts/PrimeFilterContext";
 import { FloatingActionMenu } from "@/components/layout/FloatingActionMenu";
 import OnboardingTour from "@/components/onboarding/OnboardingTour";
 import { useAuth } from "@/contexts/AuthContext";
@@ -42,8 +41,7 @@ const DashboardLayout = () => {
 
   return (
     <FilterProvider>
-      <PrimeFilterProvider>
-        <SidebarProvider>
+      <SidebarProvider>
           <div className="flex min-h-screen w-full bg-background">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col">
@@ -88,7 +86,6 @@ const DashboardLayout = () => {
           <FloatingActionMenu />
           <OnboardingTour />
         </SidebarProvider>
-      </PrimeFilterProvider>
     </FilterProvider>
   );
 };
