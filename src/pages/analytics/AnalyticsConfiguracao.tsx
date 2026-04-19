@@ -7,6 +7,7 @@ import ScoreAbsenteismoConfig from "./ScoreAbsenteismoConfig";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
 import CompositeChartDataModal from "@/components/analytics/CompositeChartDataModal";
 import type { ChartDataSource } from "@/components/analytics/ChartDataModal";
+import BackendStatusCard from "@/components/analytics/BackendStatusCard";
 import { useAuth } from "@/contexts/AuthContext";
 
 // Import chart sources
@@ -244,6 +245,7 @@ export default function AnalyticsConfiguracao() {
                 {totalCharts} gráficos mapeados
               </div>
             </div>
+            <BackendStatusCard />
             <div className="space-y-3">
               {dataRegistry.map(menu => (
                 <MenuSection key={menu.menuName} menu={menu} />
