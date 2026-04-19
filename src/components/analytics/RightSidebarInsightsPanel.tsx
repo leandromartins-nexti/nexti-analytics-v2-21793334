@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, Trophy, Lightbulb, Activity, Play, Square, Settings2, Repeat } from "lucide-react";
-import { useCustomer } from "@/contexts/CustomerContext";
+import { CURRENT_CUSTOMER } from "@/config/customer";
 import { getInsightsForCustomer, filterInsightsByEntity, categoryConfig, type QualidadeInsight, type GroupByLevel } from "@/data/qualidadeInsightsData";
 import InsightDetailModal from "./InsightDetailModal";
 import { useDismissedInsights } from "@/hooks/useDismissedInsights";
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export default function RightSidebarInsightsPanel({ collapsed = false, groupBy = "empresa", selectedEntity = null }: Props) {
-  const { customerId } = useCustomer();
+  const customerId = CURRENT_CUSTOMER.customer_id;
   const { dismissed } = useDismissedInsights(String(customerId));
   const [filter, setFilter] = useState<string>("all");
   const [selected, setSelected] = useState<QualidadeInsight | null>(null);

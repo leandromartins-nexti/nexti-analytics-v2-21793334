@@ -8,11 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trash2, Users, UserPlus, Eye, EyeOff, AlertCircle, CheckCircle2, RefreshCw, Pencil, Save } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import customersIndex from "@/data/customers-index.json";
+import { CURRENT_CUSTOMER } from "@/config/customer";
 
 const CLIENT_OPTIONS = [
   { value: "nexti", label: "Nexti (acesso total)" },
-  ...customersIndex.customers.map((c) => ({ value: c.label.toLowerCase().replace(/\s+/g, ""), label: c.label })),
+  { value: CURRENT_CUSTOMER.slug, label: CURRENT_CUSTOMER.name },
 ];
 
 export default function UserManagementTab() {

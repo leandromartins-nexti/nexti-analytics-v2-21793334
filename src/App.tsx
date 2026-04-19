@@ -9,7 +9,6 @@ import Login from "./pages/Login";
 import { ScoreConfigProvider } from "./contexts/ScoreConfigContext";
 import { AbsenteismoScoreConfigProvider } from "./contexts/AbsenteismoScoreConfigContext";
 import { NextiScoreConfigProvider } from "./contexts/NextiScoreConfigContext";
-import { CustomerProvider } from "./contexts/CustomerContext";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { InsightsTourProvider } from "./contexts/InsightsTourContext";
 import InsightsTourOverlay from "./components/analytics/InsightsTourOverlay";
@@ -28,10 +27,9 @@ function ProtectedRoutes() {
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   return (
-    <CustomerProvider>
-      <ScoreConfigProvider>
-        <AbsenteismoScoreConfigProvider>
-          <NextiScoreConfigProvider>
+    <ScoreConfigProvider>
+      <AbsenteismoScoreConfigProvider>
+        <NextiScoreConfigProvider>
           <InsightsTourProvider>
           <Routes>
             <Route element={<DashboardLayout />}>
@@ -48,10 +46,9 @@ function ProtectedRoutes() {
           </Routes>
           <InsightsTourOverlay />
           </InsightsTourProvider>
-          </NextiScoreConfigProvider>
-        </AbsenteismoScoreConfigProvider>
-      </ScoreConfigProvider>
-    </CustomerProvider>
+        </NextiScoreConfigProvider>
+      </AbsenteismoScoreConfigProvider>
+    </ScoreConfigProvider>
   );
 }
 

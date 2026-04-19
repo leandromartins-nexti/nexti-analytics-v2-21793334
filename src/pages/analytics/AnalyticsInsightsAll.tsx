@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { AlertTriangle, Trophy, Lightbulb, Activity, ExternalLink, Search } from "lucide-react";
-import { useCustomer } from "@/contexts/CustomerContext";
+import { CURRENT_CUSTOMER } from "@/config/customer";
 import { getInsightsForCustomer, categoryConfig, type QualidadeInsight } from "@/data/qualidadeInsightsData";
 import InsightDetailModal from "@/components/analytics/InsightDetailModal";
 import { useDismissedInsights } from "@/hooks/useDismissedInsights";
@@ -19,7 +19,7 @@ const filterChips: Array<{ key: FilterKey; label: string }> = [
 ];
 
 export default function AnalyticsInsightsAll() {
-  const { customerId } = useCustomer();
+  const customerId = CURRENT_CUSTOMER.customer_id;
   const { dismissed } = useDismissedInsights(String(customerId));
   const [filter, setFilter] = useState<FilterKey>("all");
   const [search, setSearch] = useState("");

@@ -1,7 +1,11 @@
 /**
- * TODO: REMOVER EM PRODUÇÃO — Data sources interface for multi-customer support.
- * Maps customerData from useQualidadePontoData to the formats expected by
- * ajustesData.ts and scoreComputations.ts functions.
+ * Shape adapter — transforms the raw `QualidadePontoDatasets` (as returned
+ * by useQualidadePontoData, mirroring the JSON/Aurora row shape) into the
+ * field names expected by the legacy computation helpers in
+ * `ajustesData.ts` and `scoreComputations.ts`.
+ *
+ * When the backend endpoint goes live this stays the same — only the
+ * source of `QualidadePontoDatasets` changes from static JSONs to fetch().
  */
 
 import type { QualidadePontoDatasets } from "@/hooks/useQualidadePontoData";

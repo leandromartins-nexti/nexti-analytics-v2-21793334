@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import AbsenteismoV2Content from "./AbsenteismoV2Content";
-// TODO: REMOVER EM PRODUÇÃO — useCustomer é do modo de teste multi-cliente
-import { useCustomer } from "@/contexts/CustomerContext";
+import { CURRENT_CUSTOMER } from "@/config/customer";
 import { useQualidadePontoData } from "@/hooks/useQualidadePontoData";
 import { buildDataSources } from "@/lib/qualidadeDataSources";
 import NoDataPlaceholder from "@/components/analytics/NoDataPlaceholder";
@@ -915,7 +914,7 @@ function QualidadeContent({ selectedRegional, onRegionalClick, onItemDetail, gro
 
   const [selectedMes, setSelectedMes] = useState<string | null>(null);
   const [chartDataModal, setChartDataModal] = useState<string | null>(null);
-  const { customerId } = useCustomer();
+  const customerId = CURRENT_CUSTOMER.customer_id;
   const [activeInsight, setActiveInsight] = useState<QualidadeInsight | null>(null);
   // Pins agora vêm dos próprios JSONs (campo `pin: { insight_id, type }` por linha).
   // Resolvemos o clique pelo numeric_id ou pelo id string (legacy fallback).

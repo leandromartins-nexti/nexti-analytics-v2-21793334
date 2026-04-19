@@ -7,8 +7,6 @@ import ScoreAbsenteismoConfig from "./ScoreAbsenteismoConfig";
 import ChartDataModal from "@/components/analytics/ChartDataModal";
 import CompositeChartDataModal from "@/components/analytics/CompositeChartDataModal";
 import type { ChartDataSource } from "@/components/analytics/ChartDataModal";
-import ClientManagement from "@/components/analytics/ClientManagement";
-import { useCustomer } from "@/contexts/CustomerContext";
 import { useAuth } from "@/contexts/AuthContext";
 
 // Import chart sources
@@ -196,7 +194,6 @@ function MenuSection({ menu }: { menu: MenuEntry }) {
 
 // ── Main Page ──
 export default function AnalyticsConfiguracao() {
-  const { canSwitchClient } = useCustomer();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("base-dados");
   const [activeScore, setActiveScore] = useState("nexti");
@@ -204,7 +201,6 @@ export default function AnalyticsConfiguracao() {
   const tabs = [
     { id: "base-dados", label: "Base de Dados", icon: Database },
     { id: "scores", label: "Scores", icon: Gauge },
-    ...(canSwitchClient ? [{ id: "clientes", label: "Clientes", icon: Users }] : []),
     ...(user?.role === "admin" ? [{ id: "usuarios", label: "Usuários", icon: UserPlus }] : []),
   ];
 
@@ -315,12 +311,6 @@ export default function AnalyticsConfiguracao() {
                 </>
               )}
             </div>
-          </div>
-        )}
-
-        {activeTab === "clientes" && canSwitchClient && (
-          <div className="flex-1 px-3 sm:px-6 py-4 sm:py-5 min-w-0 overflow-auto">
-            <ClientManagement />
           </div>
         )}
 

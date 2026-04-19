@@ -61,15 +61,9 @@ export interface QualidadeInsight {
 
 import { AlertTriangle, Trophy, Lightbulb, TrendingUp, type LucideIcon } from "lucide-react";
 import insights642 from "@/data/customers/642/qualidade-ponto/insights.json";
-import insights1 from "@/data/customers/1/insights.json";
-import insights2 from "@/data/customers/2/insights.json";
-import insights391 from "@/data/customers/391/insights.json";
 
 const insightsByCustomer: Record<number, QualidadeInsight[]> = {
   642: insights642 as QualidadeInsight[],
-  1: insights1 as QualidadeInsight[],
-  2: insights2 as QualidadeInsight[],
-  391: insights391 as QualidadeInsight[],
 };
 
 export function getInsightsForCustomer(customerId: number): QualidadeInsight[] {

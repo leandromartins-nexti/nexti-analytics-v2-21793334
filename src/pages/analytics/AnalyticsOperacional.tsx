@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Filter, Eraser } from "lucide-react";
-// TODO: REMOVER EM PRODUÇÃO — TestModeBadge é do modo de teste multi-cliente
-import TestModeBadge from "@/components/analytics/TestModeBadge";
 import { Separator } from "@/components/ui/separator";
 import { FilterPanel } from "@/components/layout/FilterPanel";
 import { resumo } from "@/lib/analytics-mock-data";

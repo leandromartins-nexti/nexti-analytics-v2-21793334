@@ -5,17 +5,8 @@ import { FilterProvider } from "@/contexts/FilterContext";
 import { FloatingActionMenu } from "@/components/layout/FloatingActionMenu";
 import OnboardingTour from "@/components/onboarding/OnboardingTour";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCustomer } from "@/contexts/CustomerContext";
 import { Button } from "@/components/ui/button";
 import { LogOut, Menu, User } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const CLIENT_OPTIONS = [
-  { value: "nextitalks", label: "Nexti Talks", customerId: 1 },
-  { value: "orsegups", label: "Orsegups", customerId: 2 },
-  { value: "atitudeservicos", label: "Atitude Serviços", customerId: 391 },
-  { value: "vigeyes", label: "VigEyes", customerId: 642 },
-];
 
 const MobileMenuButton = () => {
   const { toggleSidebar } = useSidebar();
@@ -29,15 +20,11 @@ const MobileMenuButton = () => {
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const { canSwitchClient, customerId, setCustomerId } = useCustomer();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
-
-  // For nexti users, find which client is active by customerId
-  const activeClientValue = CLIENT_OPTIONS.find(c => c.customerId === customerId)?.value ?? "";
 
   return (
     <FilterProvider>
@@ -48,24 +35,6 @@ const DashboardLayout = () => {
               <header className="h-12 flex items-center justify-between border-b border-border bg-card px-4">
                 <div className="flex items-center gap-3">
                   <MobileMenuButton />
-                  {canSwitchClient && (
-                    <Select
-                      value={activeClientValue}
-                      onValueChange={(v) => {
-                        const opt = CLIENT_OPTIONS.find(c => c.value === v);
-                        if (opt) setCustomerId(opt.customerId);
-                      }}
-                    >
-                      <SelectTrigger className="h-8 w-44 text-xs">
-                        <SelectValue placeholder="Selecionar cliente" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CLIENT_OPTIONS.map(c => (
-                          <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-muted-foreground flex items-center gap-1.5">
