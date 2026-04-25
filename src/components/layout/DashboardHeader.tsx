@@ -30,28 +30,18 @@ export function DashboardHeader({ title, breadcrumbs = [] }: DashboardHeaderProp
 
       <div className="flex items-center gap-3">
         {hasFilters && (
-          <div className="flex items-center gap-2">
-            <div className="flex flex-wrap gap-2 max-w-md">
-              {filters.map((filter, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="gap-1 cursor-pointer hover:bg-destructive/20"
-                  onClick={() => removeFilter(filter)}
-                >
-                  <span className="text-xs">{filter.label}</span>
-                  <X className="h-3 w-3" />
-                </Badge>
-              ))}
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="text-xs"
-            >
-              Limpar filtros
-            </Button>
+          <div className="flex flex-wrap gap-2 max-w-md">
+            {filters.map((filter, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="gap-1 cursor-pointer hover:bg-destructive/20"
+                onClick={() => removeFilter(filter)}
+              >
+                <span className="text-xs">{filter.label}</span>
+                <X className="h-3 w-3" />
+              </Badge>
+            ))}
           </div>
         )}
 

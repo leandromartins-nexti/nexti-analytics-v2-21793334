@@ -1,18 +1,11 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
+import { defineConfig, mergeConfig } from 'vite';
+import originalConfigOrFn from './vite.config.nexti-original.ts';
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-}));
+export default defineConfig(async (env) => {
+  const resolved = typeof originalConfigOrFn === 'function'
+    ? await originalConfigOrFn(env)
+    : originalConfigOrFn;
+  return mergeConfig(resolved, {
+    server: { allowedHosts: true, host: '0.0.0.0' },
+  });
+});
