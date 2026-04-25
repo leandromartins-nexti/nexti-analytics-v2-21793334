@@ -706,18 +706,6 @@ export default function AnalyticsResumoExecutivo() {
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex items-center justify-end gap-2 flex-wrap">
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <button
-            onClick={() => setFilterOpen(true)}
-            className="sm:hidden text-muted-foreground hover:text-foreground p-1.5 rounded-md transition-colors"
-            aria-label="Abrir filtros"
-          >
-            <Filter className="w-4 h-4" />
-          </button>
-          <AnalyticsChat activeTab="resumo" />
-        </div>
-      </div>
 
       {/* Content: main + sidebar */}
       <div className="flex-1 flex min-h-0">
