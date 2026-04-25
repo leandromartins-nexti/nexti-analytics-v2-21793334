@@ -54,7 +54,8 @@ export const OPERACIONAL_SUB_TABS: OperacionalSubTab[] = [
   { id: "movimentacoes", label: "Movimentações", order: 4, icon: Users },
   { id: "coberturas", label: "Coberturas", order: 5, icon: ShieldCheckIcon },
   { id: "ferias", label: "Férias", order: 6, icon: Palmtree },
-  { id: "insights", label: "Insights", order: 7, icon: Lightbulb },
+  { id: "ferias-v2", label: "Férias V2", order: 7, icon: Palmtree },
+  { id: "insights", label: "Insights", order: 8, icon: Lightbulb },
 ];
 
 // ── Top-level Analytics menu items ──
