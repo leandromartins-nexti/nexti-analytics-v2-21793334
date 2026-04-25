@@ -1,0 +1,29 @@
+{
+  "periodo": {"inicio": "2025-04-01", "fim": "2026-04-01"},
+  "totais_periodo": {
+    "ferias_total": 5551,
+    "ferias_com_ponto_batido_total": 5485,
+    "ferias_sem_cobertura_total": 1611,
+    "ponto_batido_ocorrencias_total": 135838,
+    "overtime_horas_total": 13683.2,
+    "ferias_equivalentes_com_he_total": 1710,
+    "pct_efetivo_afetado_periodo": 98.8
+  },
+  "serie_mensal": [
+    {"mes": "2025-04-01", "ferias_com_ponto_batido": 428, "ferias_sem_cobertura_identificada": 144, "ferias_equivalentes_com_he": 115, "total_ferias_no_mes": 433, "ponto_batido_ocorrencias_total": 10446, "overtime_horas": 917.3, "pct_efetivo_afetado_ponto_batido": 98.8},
+    {"mes": "2025-05-01", "ferias_com_ponto_batido": 426, "ferias_sem_cobertura_identificada": 130, "ferias_equivalentes_com_he": 159, "total_ferias_no_mes": 433, "ponto_batido_ocorrencias_total": 10525, "overtime_horas": 1273.2, "pct_efetivo_afetado_ponto_batido": 98.4},
+    {"mes": "2025-06-01", "ferias_com_ponto_batido": 437, "ferias_sem_cobertura_identificada": 133, "ferias_equivalentes_com_he": 150, "total_ferias_no_mes": 442, "ponto_batido_ocorrencias_total": 10928, "overtime_horas": 1200.1, "pct_efetivo_afetado_ponto_batido": 98.9},
+    {"mes": "2025-07-01", "ferias_com_ponto_batido": 536, "ferias_sem_cobertura_identificada": 169, "ferias_equivalentes_com_he": 168, "total_ferias_no_mes": 542, "ponto_batido_ocorrencias_total": 13006, "overtime_horas": 1340.9, "pct_efetivo_afetado_ponto_batido": 98.9},
+    {"mes": "2025-08-01", "ferias_com_ponto_batido": 489, "ferias_sem_cobertura_identificada": 150, "ferias_equivalentes_com_he": 108, "total_ferias_no_mes": 491, "ponto_batido_ocorrencias_total": 12028, "overtime_horas": 862.0, "pct_efetivo_afetado_ponto_batido": 99.6},
+    {"mes": "2025-09-01", "ferias_com_ponto_batido": 438, "ferias_sem_cobertura_identificada": 119, "ferias_equivalentes_com_he": 130, "total_ferias_no_mes": 442, "ponto_batido_ocorrencias_total": 10662, "overtime_horas": 1040.9, "pct_efetivo_afetado_ponto_batido": 99.1},
+    {"mes": "2025-10-01", "ferias_com_ponto_batido": 489, "ferias_sem_cobertura_identificada": 120, "ferias_equivalentes_com_he": 112, "total_ferias_no_mes": 493, "ponto_batido_ocorrencias_total": 12113, "overtime_horas": 892.7, "pct_efetivo_afetado_ponto_batido": 99.2},
+    {"mes": "2025-11-01", "ferias_com_ponto_batido": 402, "ferias_sem_cobertura_identificada": 83, "ferias_equivalentes_com_he": 154, "total_ferias_no_mes": 407, "ponto_batido_ocorrencias_total": 10230, "overtime_horas": 1231.8, "pct_efetivo_afetado_ponto_batido": 98.8},
+    {"mes": "2025-12-01", "ferias_com_ponto_batido": 526, "ferias_sem_cobertura_identificada": 220, "ferias_equivalentes_com_he": 117, "total_ferias_no_mes": 533, "ponto_batido_ocorrencias_total": 12704, "overtime_horas": 932.8, "pct_efetivo_afetado_ponto_batido": 98.7},
+    {"mes": "2026-01-01", "ferias_com_ponto_batido": 465, "ferias_sem_cobertura_identificada": 155, "ferias_equivalentes_com_he": 148, "total_ferias_no_mes": 476, "ponto_batido_ocorrencias_total": 11801, "overtime_horas": 1182.6, "pct_efetivo_afetado_ponto_batido": 97.7},
+    {"mes": "2026-02-01", "ferias_com_ponto_batido": 355, "ferias_sem_cobertura_identificada": 84, "ferias_equivalentes_com_he": 143, "total_ferias_no_mes": 359, "ponto_batido_ocorrencias_total": 8864, "overtime_horas": 1147.5, "pct_efetivo_afetado_ponto_batido": 98.9},
+    {"mes": "2026-03-01", "ferias_com_ponto_batido": 494, "ferias_sem_cobertura_identificada": 104, "ferias_equivalentes_com_he": 208, "total_ferias_no_mes": 500, "ponto_batido_ocorrencias_total": 12468, "overtime_horas": 1661.4, "pct_efetivo_afetado_ponto_batido": 98.8}
+  ],
+  "configuracao": {
+    "tolerancia_pct_efetivo_afetado": 5
+  }
+}

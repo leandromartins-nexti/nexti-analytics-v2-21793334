@@ -1,0 +1,27 @@
+{
+  "periodo": {"inicio": "2025-04-01", "fim": "2026-04-01"},
+  "totais_periodo": {
+    "horas_cobertura_total": 550041.5,
+    "ferista_dedicado_h_total": 238481.5,
+    "remanejo_h_total": 297878.8,
+    "overtime_h_total": 13683.2,
+    "pct_he_periodo": 2.49,
+    "ferias_total": 5551,
+    "ferias_sem_cobertura_total": 1611,
+    "pct_sem_cobertura_periodo": 29.0
+  },
+  "serie_mensal": [
+    {"mes": "2025-04-01", "ferista_dedicado_h": 14489.2, "remanejo_h": 21318.7, "overtime_h": 917.3, "total_horas_cobertura": 36725.2, "pct_he_sobre_cobertura": 2.50, "qtd_feristas_dedicados": 97, "qtd_remanejadores": 174, "ferias_sem_cobertura_qtd": 144, "ferias_sem_cobertura_pct": 33.3, "ferias_total_mes": 433},
+    {"mes": "2025-05-01", "ferista_dedicado_h": 16779.9, "remanejo_h": 23316.5, "overtime_h": 1273.2, "total_horas_cobertura": 41369.6, "pct_he_sobre_cobertura": 3.08, "qtd_feristas_dedicados": 105, "qtd_remanejadores": 181, "ferias_sem_cobertura_qtd": 130, "ferias_sem_cobertura_pct": 30.0, "ferias_total_mes": 433},
+    {"mes": "2025-06-01", "ferista_dedicado_h": 18637.0, "remanejo_h": 24725.8, "overtime_h": 1200.1, "total_horas_cobertura": 44562.9, "pct_he_sobre_cobertura": 2.69, "qtd_feristas_dedicados": 123, "qtd_remanejadores": 182, "ferias_sem_cobertura_qtd": 133, "ferias_sem_cobertura_pct": 30.1, "ferias_total_mes": 442},
+    {"mes": "2025-07-01", "ferista_dedicado_h": 23772.3, "remanejo_h": 27084.7, "overtime_h": 1340.9, "total_horas_cobertura": 52197.9, "pct_he_sobre_cobertura": 2.57, "qtd_feristas_dedicados": 147, "qtd_remanejadores": 208, "ferias_sem_cobertura_qtd": 169, "ferias_sem_cobertura_pct": 31.2, "ferias_total_mes": 542},
+    {"mes": "2025-08-01", "ferista_dedicado_h": 22962.7, "remanejo_h": 24181.9, "overtime_h": 862.0, "total_horas_cobertura": 48006.6, "pct_he_sobre_cobertura": 1.80, "qtd_feristas_dedicados": 155, "qtd_remanejadores": 184, "ferias_sem_cobertura_qtd": 150, "ferias_sem_cobertura_pct": 30.5, "ferias_total_mes": 491},
+    {"mes": "2025-09-01", "ferista_dedicado_h": 22514.5, "remanejo_h": 20958.2, "overtime_h": 1040.9, "total_horas_cobertura": 44513.6, "pct_he_sobre_cobertura": 2.34, "qtd_feristas_dedicados": 155, "qtd_remanejadores": 152, "ferias_sem_cobertura_qtd": 119, "ferias_sem_cobertura_pct": 26.9, "ferias_total_mes": 442},
+    {"mes": "2025-10-01", "ferista_dedicado_h": 25802.4, "remanejo_h": 25201.5, "overtime_h": 892.7, "total_horas_cobertura": 51896.6, "pct_he_sobre_cobertura": 1.72, "qtd_feristas_dedicados": 160, "qtd_remanejadores": 196, "ferias_sem_cobertura_qtd": 120, "ferias_sem_cobertura_pct": 24.3, "ferias_total_mes": 493},
+    {"mes": "2025-11-01", "ferista_dedicado_h": 23127.6, "remanejo_h": 21550.7, "overtime_h": 1231.8, "total_horas_cobertura": 45910.1, "pct_he_sobre_cobertura": 2.68, "qtd_feristas_dedicados": 149, "qtd_remanejadores": 180, "ferias_sem_cobertura_qtd": 83, "ferias_sem_cobertura_pct": 20.4, "ferias_total_mes": 407},
+    {"mes": "2025-12-01", "ferista_dedicado_h": 19902.2, "remanejo_h": 21450.5, "overtime_h": 932.8, "total_horas_cobertura": 42285.5, "pct_he_sobre_cobertura": 2.21, "qtd_feristas_dedicados": 130, "qtd_remanejadores": 179, "ferias_sem_cobertura_qtd": 220, "ferias_sem_cobertura_pct": 41.3, "ferias_total_mes": 533},
+    {"mes": "2026-01-01", "ferista_dedicado_h": 19433.6, "remanejo_h": 27099.8, "overtime_h": 1182.6, "total_horas_cobertura": 47716.0, "pct_he_sobre_cobertura": 2.48, "qtd_feristas_dedicados": 132, "qtd_remanejadores": 209, "ferias_sem_cobertura_qtd": 155, "ferias_sem_cobertura_pct": 32.6, "ferias_total_mes": 476},
+    {"mes": "2026-02-01", "ferista_dedicado_h": 14289.0, "remanejo_h": 23628.6, "overtime_h": 1147.5, "total_horas_cobertura": 39065.1, "pct_he_sobre_cobertura": 2.94, "qtd_feristas_dedicados": 105, "qtd_remanejadores": 190, "ferias_sem_cobertura_qtd": 84, "ferias_sem_cobertura_pct": 23.4, "ferias_total_mes": 359},
+    {"mes": "2026-03-01", "ferista_dedicado_h": 16768.1, "remanejo_h": 37362.9, "overtime_h": 1661.4, "total_horas_cobertura": 55792.4, "pct_he_sobre_cobertura": 2.98, "qtd_feristas_dedicados": 111, "qtd_remanejadores": 294, "ferias_sem_cobertura_qtd": 104, "ferias_sem_cobertura_pct": 20.8, "ferias_total_mes": 500}
+  ]
+}

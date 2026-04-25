@@ -1,0 +1,42 @@
+{
+  "periodo": {
+    "inicio": "2025-04-01",
+    "fim": "2026-04-01",
+    "label": "Últimos 12 meses"
+  },
+  "score_ferias": {
+    "valor": 58,
+    "label": "Atenção",
+    "delta_pp_vs_anterior": -8,
+    "comentario": "3 alertas: planejamento, ponto batido, cobertura informal"
+  },
+  "volume_total_ferias": {
+    "valor": 5551,
+    "label": "Período",
+    "comentario": "férias iniciadas no período"
+  },
+  "horas_cobertura_he_pct": {
+    "valor": 2.49,
+    "unidade": "%",
+    "label": "Bom",
+    "comentario": "HE é minoritária na cobertura"
+  },
+  "antecedencia_media_dias": {
+    "valor": 14.9,
+    "unidade": "dias",
+    "label": "Crítico",
+    "comentario": "Planejamento de última hora"
+  },
+  "ferias_com_ponto_batido_pct": {
+    "valor": 98.8,
+    "unidade": "%",
+    "label": "Crítico",
+    "comentario": "Escala não é desativada em férias"
+  },
+  "ferias_sem_cobertura_pct": {
+    "valor": 29.0,
+    "unidade": "%",
+    "label": "Atenção",
+    "comentario": "Posto descoberto ou cobertura informal"
+  }
+}

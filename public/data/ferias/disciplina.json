@@ -1,0 +1,35 @@
+{
+  "periodo": {"inicio": "2025-04-01", "fim": "2026-04-01"},
+  "totais_periodo": {
+    "ferias_total": 5551,
+    "antecipada_mais_30d_total": 550,
+    "razoavel_16_30d_total": 1593,
+    "apertada_8_15d_total": 1442,
+    "ultima_hora_0_7d_total": 1933,
+    "pct_ultima_hora_periodo": 35.0,
+    "antecedencia_media_dias_periodo": 14.9
+  },
+  "serie_mensal": [
+    {"mes": "2025-04-01", "antecipada_mais_30d": 43, "razoavel_16_30d": 137, "apertada_8_15d": 112, "ultima_hora_0_7d": 137, "total_ferias": 433, "pct_ultima_hora": 31.6, "antecedencia_media_dias": 15.4},
+    {"mes": "2025-05-01", "antecipada_mais_30d": 40, "razoavel_16_30d": 103, "apertada_8_15d": 87, "ultima_hora_0_7d": 200, "total_ferias": 433, "pct_ultima_hora": 46.2, "antecedencia_media_dias": 13.4},
+    {"mes": "2025-06-01", "antecipada_mais_30d": 19, "razoavel_16_30d": 69, "apertada_8_15d": 120, "ultima_hora_0_7d": 228, "total_ferias": 442, "pct_ultima_hora": 51.6, "antecedencia_media_dias": 10.6},
+    {"mes": "2025-07-01", "antecipada_mais_30d": 39, "razoavel_16_30d": 155, "apertada_8_15d": 131, "ultima_hora_0_7d": 215, "total_ferias": 542, "pct_ultima_hora": 39.7, "antecedencia_media_dias": 14.2},
+    {"mes": "2025-08-01", "antecipada_mais_30d": 61, "razoavel_16_30d": 120, "apertada_8_15d": 122, "ultima_hora_0_7d": 186, "total_ferias": 491, "pct_ultima_hora": 37.9, "antecedencia_media_dias": 15.1},
+    {"mes": "2025-09-01", "antecipada_mais_30d": 43, "razoavel_16_30d": 136, "apertada_8_15d": 127, "ultima_hora_0_7d": 135, "total_ferias": 442, "pct_ultima_hora": 30.5, "antecedencia_media_dias": 15.0},
+    {"mes": "2025-10-01", "antecipada_mais_30d": 43, "razoavel_16_30d": 119, "apertada_8_15d": 131, "ultima_hora_0_7d": 196, "total_ferias": 493, "pct_ultima_hora": 39.8, "antecedencia_media_dias": 13.9},
+    {"mes": "2025-11-01", "antecipada_mais_30d": 39, "razoavel_16_30d": 121, "apertada_8_15d": 132, "ultima_hora_0_7d": 113, "total_ferias": 407, "pct_ultima_hora": 27.8, "antecedencia_media_dias": 15.5},
+    {"mes": "2025-12-01", "antecipada_mais_30d": 55, "razoavel_16_30d": 177, "apertada_8_15d": 130, "ultima_hora_0_7d": 168, "total_ferias": 533, "pct_ultima_hora": 31.5, "antecedencia_media_dias": 15.5},
+    {"mes": "2026-01-01", "antecipada_mais_30d": 73, "razoavel_16_30d": 159, "apertada_8_15d": 113, "ultima_hora_0_7d": 128, "total_ferias": 476, "pct_ultima_hora": 26.9, "antecedencia_media_dias": 17.0},
+    {"mes": "2026-02-01", "antecipada_mais_30d": 38, "razoavel_16_30d": 130, "apertada_8_15d": 100, "ultima_hora_0_7d": 89, "total_ferias": 359, "pct_ultima_hora": 24.8, "antecedencia_media_dias": 16.4},
+    {"mes": "2026-03-01", "antecipada_mais_30d": 57, "razoavel_16_30d": 167, "apertada_8_15d": 137, "ultima_hora_0_7d": 138, "total_ferias": 500, "pct_ultima_hora": 27.6, "antecedencia_media_dias": 16.7}
+  ],
+  "configuracao": {
+    "meta_pct_ultima_hora": 30,
+    "faixas": {
+      "antecipada": "> 30 dias",
+      "razoavel": "16-30 dias",
+      "apertada": "8-15 dias",
+      "ultima_hora": "0-7 dias"
+    }
+  }
+}
