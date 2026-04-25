@@ -40,26 +40,6 @@ export default function AnalyticsOperacional() {
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col overflow-x-hidden">
-      <div className="bg-white px-3 sm:px-6 py-3 border-b border-border flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
-          <span className="font-semibold text-foreground hidden sm:inline text-sm">Filtros Aplicados:</span>
-          <span className="bg-orange-50 text-[#FF5722] border border-orange-200 rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap">Período: {resumo.periodo}</span>
-        </div>
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <button className="hidden sm:flex items-center gap-1.5 text-sm text-[#FF5722] hover:underline">
-            <Eraser className="w-4 h-4" /> Limpar Filtros
-          </button>
-          <Separator orientation="vertical" className="h-6 hidden sm:block" />
-          <button
-            onClick={() => window.dispatchEvent(new Event("open-tipo-operacao"))}
-            className="sm:hidden text-muted-foreground hover:text-foreground p-1.5 rounded-md transition-colors"
-            aria-label="Abrir tipo de operação"
-          >
-            <Filter className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
       {/* Tabs desktop/tablet (≥ sm) */}
       <div className="hidden sm:block bg-white border-b border-border px-2 sm:px-6 overflow-x-auto">
         <div className="flex gap-1 sm:gap-2">
