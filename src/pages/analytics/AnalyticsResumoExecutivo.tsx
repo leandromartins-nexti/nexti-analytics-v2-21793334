@@ -711,7 +711,6 @@ export default function AnalyticsResumoExecutivo() {
       <div className="flex-1 flex min-h-0">
         {/* Main content */}
         <div className="flex-1 min-w-0 px-3 sm:pl-6 sm:pr-4 py-4 pb-24 sm:pb-4 space-y-3 overflow-y-auto">
-          <h1 className="text-2xl font-bold text-foreground">abóbora</h1>
 
           {/* ═══ Linha 1: Score Compacto + 4 KPI Cards ═══ */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
